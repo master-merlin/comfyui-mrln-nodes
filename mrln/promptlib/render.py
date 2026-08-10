@@ -75,10 +75,12 @@ def _choices(resolved, fmt):
         lines.append(
             f"variant: {resolved.variant}  [{'random' if resolved.variant_random else 'fixed'}]"
         )
+    elif getattr(resolved, "variant_off", False):
+        lines.append("variant: (off)  [off]")
     for slot in resolved.slots:
         if slot.item_name is None:
-            mark = "[random]"
-            value = "(omitted)"
+            mark = "[random]" if slot.random else "[off]"
+            value = "(omitted)" if slot.random else "(muted)"
         else:
             value = slot.item_name
             if slot.fixed_first:

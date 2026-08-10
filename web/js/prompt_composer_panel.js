@@ -259,17 +259,28 @@ export function createComposerPanel(root, ctx) {
     return row.item || "random";
   }
 
-  function buildSelectionLines(forPreview = false) {
-    const audition = forPreview && auditionActive();
-    const vids = audition ? variantSlotIds() : null;
+  function buildSelectionLines() {
+    // Mute/solo serializes as 'off' lines — the SAME selection goes to the
+    // preview and to the node, so what you audition is what the node runs.
+    const audition = auditionActive();
+    const vids = variantSlotIds();
     const lines = [];
     const variants = state.rawData.variants ?? [];
-    if (variants.length && !(audition && !variantBlockAudible())) {
-      const fallback = state.rawData.variant_default || variants[0].name;
-      if (state.variant !== fallback) lines.push(`variant=${state.variant}`);
+    const blockOff = audition && variants.length > 0 && !variantBlockAudible();
+    if (variants.length) {
+      if (blockOff) lines.push("variant=off");
+      else {
+        const fallback = state.rawData.variant_default || variants[0].name;
+        if (state.variant !== fallback) lines.push(`variant=${state.variant}`);
+      }
     }
     for (const slot of activeSlots()) {
-      if (audition && !slotAudible(slot.id, vids.has(slot.id))) continue;
+      const isVar = vids.has(slot.id);
+      if (isVar && blockOff) continue; // variant=off already silences the block
+      if (audition && !slotAudible(slot.id, isVar)) {
+        lines.push(`${slot.id}=off`);
+        continue;
+      }
       const token = rowToken(slot);
       if (token !== (slot.default ?? "random")) lines.push(`${slot.id}=${token}`);
     }
@@ -277,9 +288,16 @@ export function createComposerPanel(root, ctx) {
   }
 
   function applyKvToRows(map) {
-    if (map.variant && (state.rawData.variants ?? []).length) state.variant = map.variant;
+    const offRe = /^(?:🔇 )?off$/;
+    if (map.variant && (state.rawData.variants ?? []).length) {
+      if (offRe.test(map.variant.trim())) state.muted.add("@variant");
+      else state.variant = map.variant;
+    }
     for (const slot of allSlots()) {
-      if (map[slot.id] !== undefined) state.rows.set(slot.id, parseToken(map[slot.id]));
+      const token = map[slot.id];
+      if (token === undefined) continue;
+      if (offRe.test(token.trim())) state.muted.add(slot.id);
+      else state.rows.set(slot.id, parseToken(token));
     }
   }
 
@@ -293,24 +311,6 @@ export function createComposerPanel(root, ctx) {
     return draft;
   }
 
-  function buildPreviewDraft() {
-    const draft = buildDraftData();
-    if (!auditionActive()) return draft;
-    draft.slots = (draft.slots ?? []).filter((s) => slotAudible(s.id, false));
-    if (variantBlockAudible()) {
-      for (const variant of draft.variants ?? []) {
-        variant.slots = (variant.slots ?? []).filter((s) => slotAudible(s.id, true));
-      }
-    } else {
-      delete draft.variants;
-      delete draft.variant_default;
-    }
-    const kept = new Set((draft.slots ?? []).map((s) => s.id));
-    draft.order = (draft.order ?? []).filter((id) =>
-      id === "@variant" ? variantBlockAudible() : kept.has(id)
-    );
-    return draft;
-  }
 
   function buildSaveData() {
     const draft = structuredClone(state.rawData);
@@ -377,12 +377,12 @@ export function createComposerPanel(root, ctx) {
       template: state.slug,
       seed: state.seed,
       mode: state.mode,
-      selection: buildSelectionLines(true),
+      selection: buildSelectionLines(),
       variables: state.variables,
       trigger: state.trigger,
       format: state.format,
     };
-    if (state.modified || auditionActive()) body.template_data = buildPreviewDraft();
+    if (state.modified) body.template_data = buildDraftData();
     let preview;
     try {
       preview = await ctx.apiJson("/mrln/prompt/preview", { method: "POST", body });
@@ -541,7 +541,7 @@ export function createComposerPanel(root, ctx) {
         "button",
         {
           class: `mrln-btn mrln-mini${state.muted.has(id) ? " mrln-m-on" : ""}`,
-          title: "Mute — exclude from the preview (audition only, the node is not affected)",
+          title: "Mute — exclude this section ('slot=off'); Apply to node carries it over",
           onclick: () => toggleAudition(state.muted, id),
         },
         "M"
@@ -550,7 +550,7 @@ export function createComposerPanel(root, ctx) {
         "button",
         {
           class: `mrln-btn mrln-mini${state.soloed.has(id) ? " mrln-s-on" : ""}`,
-          title: "Solo — preview only soloed sections (audition only; solo overrides mute)",
+          title: "Solo — only soloed sections render (others become 'off'; solo overrides mute)",
           onclick: () => toggleAudition(state.soloed, id),
         },
         "S"
@@ -1024,8 +1024,8 @@ export function createComposerPanel(root, ctx) {
               "button",
               {
                 class: "mrln-btn mrln-mini mrln-m-on",
-                title: "Mute/Solo audition is active — the preview differs from what the node "
-                  + "will output. Click to clear all mutes and solos.",
+                title: "Mute/Solo is active — Apply to node writes these as 'off' selection "
+                  + "lines. Click to clear all mutes and solos.",
                 onclick: () => clearAudition(),
               },
               `clear M/S (${state.muted.size + state.soloed.size})`
@@ -1092,7 +1092,7 @@ export function createComposerPanel(root, ctx) {
       "success",
       "Applied to node",
       `template: ${state.slug}` +
-        (auditionActive() ? " — note: mute/solo is preview-only and was not applied" : "")
+        (auditionActive() ? " — mute/solo written as 'off' selection lines" : "")
     );
   }
 

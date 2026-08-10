@@ -264,3 +264,33 @@ def test_label_expansion_does_not_disturb_draws(lib):
     }
     assert labels <= {"wildcard a and HycadeBodykit", "wildcard b and HycadeBodykit"}
     assert len(labels) == 2  # the @label rng actually varies with the seed
+
+
+# -- off / mute --------------------------------------------------------------
+
+
+def test_off_mutes_slot_without_shifting_other_draws(lib):
+    for seed in range(6):
+        normal = rt(lib, seed=seed)
+        muted = rt(lib, seed=seed, selection={"lighting": "off"})
+        lighting = slot(muted, "lighting")
+        assert lighting.item_name is None and lighting.random is False
+        assert lighting.text == "" and lighting.negative == ""
+        for sid in ("paint", "location", "extra"):
+            assert slot(muted, sid).item_name == slot(normal, sid).item_name
+
+
+def test_off_survives_randomize_all(lib):
+    muted = rt(lib, seed=3, mode="randomize all", selection={"paint": "off"})
+    assert slot(muted, "paint").item_name is None
+
+
+def test_all_fixed_defaults_unmutes(lib):
+    pinned = rt(lib, seed=3, mode="all fixed defaults", selection={"paint": "off"})
+    assert slot(pinned, "paint").item_name == "red"
+
+
+def test_variant_off(lib):
+    resolved = rt(lib, "varianted", selection={"variant": "off"})
+    assert resolved.variant is None and resolved.variant_off is True
+    assert [s.id for s in resolved.slots] == ["paint"]  # backdrop slot gone

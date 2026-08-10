@@ -99,7 +99,8 @@ class PromptTemplate:
                         "# location=random\n# lighting=random@1392\n# variant=outdoor",
                         "tooltip": "Per-slot overrides, one 'slot=item' per line. 'slot=random' "
                         "rolls the slot with the master seed, 'slot=random@123' with its "
-                        "own seed; 'variant=<name|random>' picks the variant branch. "
+                        "own seed; 'slot=off' mutes the slot entirely; "
+                        "'variant=<name|random|off>' picks or mutes the variant branch. "
                         "Blank lines and # comments are ignored; unlisted slots use "
                         "template defaults.",
                     },

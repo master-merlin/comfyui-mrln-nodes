@@ -10,6 +10,7 @@ from .textexpr import expand
 
 MODES = ("as configured", "randomize all", "all fixed defaults")
 RANDOM_TOKENS = (RANDOM_TOKEN, "🎲 random")
+OFF_TOKENS = ("off", "🔇 off")  # mute a slot (or the variant block) from the selection
 
 
 @dataclass(frozen=True)
@@ -41,6 +42,7 @@ class ResolvedPrompt:
     suffix: str
     slots: tuple  # ResolvedSlot, already in render order
     negative: str
+    variant_off: bool = False  # variant block muted via 'variant=off'
 
 
 def parse_kv_lines(text, *, what="line"):
@@ -63,8 +65,10 @@ def parse_kv_lines(text, *, what="line"):
 
 
 def _parse_token(token, line_hint):
-    """-> ("random", seed_override | None) or ("fixed", item_name)."""
+    """-> ("random", seed_override | None), ("off", None) or ("fixed", item_name)."""
     token = token.strip()
+    if token in OFF_TOKENS:
+        return "off", None
     for rand in RANDOM_TOKENS:
         if token == rand:
             return "random", None
@@ -92,7 +96,8 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
     fixed_first = False
 
     if mode == "randomize all":
-        kind, value = "random", value if kind == "random" else None
+        if kind != "off":  # a mute survives 'randomize all'
+            kind, value = "random", value if kind == "random" else None
     elif mode == "all fixed defaults":
         d_kind, d_value = _parse_token(slot.default or RANDOM_TOKEN, f"{slot.id}={slot.default}")
         if d_kind == "fixed":
@@ -104,6 +109,30 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
     pool = lib.scope_items(slot.ref)
     seed_used = value if (kind == "random" and value is not None) else master_seed
     rng = derive_rng(seed_used, key)
+
+    if kind == "off":
+        # Muted from the selection: render nothing, but keep the slot in the
+        # report. Other slots' draws are unaffected (per-slot seed keys).
+        return (
+            ResolvedSlot(
+                id=slot.id,
+                key=key,
+                label=slot.label,
+                ref=slot.ref,
+                section_slug="",
+                item_name=None,
+                text="",
+                negative="",
+                random=False,
+                fixed_first=False,
+                emphasis=slot.emphasis,
+                data=None,
+                tier="",
+                seed_used=seed_used,
+            ),
+            rng,
+            None,
+        )
 
     if kind == "random":
         weights = [item.weight for _, _, item in pool]
@@ -171,14 +200,18 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
     # variant selection
     variant = None
     variant_random = False
+    variant_off = False
     if tpl.variants:
         token_src = selection.get("variant") or tpl.variant_default or tpl.variants[0].name
         kind, value = _parse_token(str(token_src), f"variant={token_src}")
         if mode == "randomize all":
-            kind = "random"
-        elif mode == "all fixed defaults" and kind == "random":
+            if kind != "off":  # a muted variant block survives 'randomize all'
+                kind = "random"
+        elif mode == "all fixed defaults" and kind in ("random", "off"):
             kind, value = "fixed", tpl.variants[0].name
-        if kind == "random":
+        if kind == "off":
+            variant_off = True
+        elif kind == "random":
             rng = derive_rng(value if value is not None else seed, "@variant")
             variant = tpl.variants[weighted_index(rng, [1.0] * len(tpl.variants))]
             variant_random = True
@@ -256,6 +289,7 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
         suffix=suffix,
         slots=tuple(resolved_slots),
         negative=", ".join(negatives),
+        variant_off=variant_off,
     )
 
 
