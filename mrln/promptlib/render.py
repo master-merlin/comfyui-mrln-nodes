@@ -39,6 +39,30 @@ def _string(resolved, cfg):
     return cfg.joiner.join(p for p in parts if p)
 
 
+def lora_tags(resolved):
+    """'<lora:name:sm[:sc]>' for every drawn item carrying data.lora —
+    the A1111-style syntax that tag-parsing loader nodes consume. The
+    name keeps its subfolder, loses its extension, and uses forward
+    slashes."""
+    tags = []
+    for slot in walk_slots(resolved.slots):
+        data = slot.data or {}
+        name = data.get("lora")
+        if not name or slot.item_name is None:
+            continue
+        name = str(name).replace("\\", "/")
+        for ext in (".safetensors", ".ckpt", ".pt"):
+            if name.lower().endswith(ext):
+                name = name[: -len(ext)]
+                break
+        sm = data.get("strength_model", 1.0)
+        sc = data.get("strength_clip", sm)
+        tag = f"<lora:{name}:{sm:g}>" if sc == sm else f"<lora:{name}:{sm:g}:{sc:g}>"
+        if tag not in tags:
+            tags.append(tag)
+    return tags
+
+
 def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
     if conflict_policy not in CONFLICT_POLICIES:
         raise ValueError(
@@ -71,11 +95,28 @@ def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
             obj[slot.id] = slot.text  # no emphasis in JSON formats
         if resolved.suffix:
             obj["suffix"] = resolved.suffix
+        if cfg.lora_tags:
+            tags = lora_tags(resolved)
+            if tags:
+                obj["loras"] = tags
         positive = json.dumps(obj, ensure_ascii=False, indent=2)
     elif fmt == "json_flat":
         positive = json.dumps({"prompt": _string(resolved, cfg)}, ensure_ascii=False, indent=2)
     else:
         raise ValueError(f"unknown format '{fmt}' (formats: {', '.join(FORMATS)})")
+
+    if cfg.lora_tags and fmt in ("string", "string_labeled", "json_flat"):
+        tags = lora_tags(resolved)
+        if tags:
+            joined = " ".join(tags)
+            if fmt == "string_labeled":
+                positive = f"{positive}{cfg.block_joiner}LoRAs: {joined}"
+            elif fmt == "json_flat":
+                obj = json.loads(positive)
+                obj["prompt"] = f"{obj['prompt']} {joined}"
+                positive = json.dumps(obj, ensure_ascii=False, indent=2)
+            else:
+                positive = f"{positive} {joined}"
 
     negative = resolved.negative
     conflicts = []
@@ -131,6 +172,9 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
         if slot.tier == "user":
             line += "  (user)"
         lines.append(line)
+
+    for tag in lora_tags(resolved):
+        lines.append(f"lora: {tag}")
 
     present = set()
     for slot in walk_slots(resolved.slots):

@@ -224,6 +224,11 @@ textarea.mrln-auto {
 .mrln-variant-head { border-style: dashed; }
 .mrln-slot.mrln-broken { border-color: #a55; }
 .mrln-items-table tr.mrln-hidden-item td { opacity: 0.45; text-decoration: line-through; }
+.mrln-items-table tr.mrln-lora-row td {
+  padding-top: 0;
+  border-bottom: 1px solid var(--border-color, #333);
+}
+.mrln-items-table tr.mrln-lora-row .mrln-inline input { min-width: 34px; }
 .mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
 .mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
 .mrln-items-table .mrln-w-origin { width: 24px; }

@@ -17,7 +17,7 @@ from .errors import (
     WildcardSyntaxError,
 )
 from .library import Library, default_roots, open_library, validate_slug
-from .render import CONFLICT_POLICIES, FORMATS, Rendered, render
+from .render import CONFLICT_POLICIES, FORMATS, Rendered, lora_tags, render
 from .resolve import (
     MODES,
     RANDOM_TOKENS,
@@ -73,6 +73,7 @@ __all__ = [
     "default_roots",
     "dump_section",
     "dump_template",
+    "lora_tags",
     "open_library",
     "parse_kv_lines",
     "parse_section",

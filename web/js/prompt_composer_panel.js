@@ -1986,6 +1986,18 @@ export function createComposerPanel(root, ctx) {
     openSectionForm(slug, body);
   }
 
+  let loraListCache = null;
+  async function installedLoras() {
+    if (loraListCache) return loraListCache;
+    try {
+      const info = await ctx.apiJson("/object_info/LoraLoader");
+      loraListCache = info?.LoraLoader?.input?.required?.lora_name?.[0] ?? [];
+    } catch {
+      loraListCache = [];
+    }
+    return loraListCache;
+  }
+
   function openSectionForm(slug, body) {
     // Factory sections COMPOUND: the default save writes only your changes
     // (edited/new items, tombstones for hidden ones) as a thin extend file
@@ -1994,6 +2006,7 @@ export function createComposerPanel(root, ctx) {
     const hasFactory = Boolean(factoryBaseline);
     let saveMode = hasFactory ? (body.replaces ? "replace" : "extend") : "standalone";
 
+    const loraDatalist = el("datalist", { id: "mrln-loras" });
     const slugInput = el("input", { type: "text", value: slug ?? "", placeholder: "folder/name" });
     const labelInput = el("input", { type: "text", value: body.label ?? "" });
     const descInput = el("input", { type: "text", value: body.description ?? "" });
@@ -2064,6 +2077,39 @@ export function createComposerPanel(root, ctx) {
       );
       itemRows.push(row);
       table.append(tr);
+      if (item.data?.lora !== undefined) {
+        // LoRA block: an extra editor line for the loader metadata — the
+        // text above stays the catchword that lands in the prompt.
+        row.lora = el("input", { type: "text", value: item.data.lora ?? "", list: "mrln-loras" });
+        row.sm = el("input", {
+          type: "text",
+          inputmode: "decimal",
+          value: item.data.strength_model ?? 1.0,
+          title: "strength_model",
+        });
+        row.sc = el("input", {
+          type: "text",
+          inputmode: "decimal",
+          value: item.data.strength_clip ?? item.data.strength_model ?? 1.0,
+          title: "strength_clip",
+        });
+        row.lora.addEventListener("change", () => {
+          if (!row.name.value.trim()) {
+            const stem = row.lora.value.split(/[\\/]/).pop().replace(/\.\w+$/, "");
+            row.name.value = stem.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
+          }
+        });
+        table.append(
+          el(
+            "tr",
+            { class: "mrln-lora-row" },
+            el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
+            el("td", { colspan: 2 }, row.lora),
+            el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
+            el("td", { class: "mrln-w-act" })
+          )
+        );
+      }
     }
     for (const item of body.items ?? []) addItemRow(item);
 
@@ -2079,7 +2125,26 @@ export function createComposerPanel(root, ctx) {
       for (const key of ["tags", "excludes", "requires", "slots"]) {
         if (Array.isArray(item[key]) && !item[key].length) delete item[key];
       }
-      if (item.data == null) delete item.data;
+      if (row.lora) {
+        const name = row.lora.value.trim();
+        if (name) {
+          const sm = parseFloat(row.sm.value);
+          const sc = parseFloat(row.sc.value);
+          item.data = {
+            ...(item.data ?? {}),
+            lora: name,
+            strength_model: Number.isNaN(sm) ? 1.0 : sm,
+            strength_clip: Number.isNaN(sc) ? (Number.isNaN(sm) ? 1.0 : sm) : sc,
+          };
+        } else if (item.data) {
+          delete item.data.lora;
+          delete item.data.strength_model;
+          delete item.data.strength_clip;
+        }
+      }
+      if (item.data == null || (typeof item.data === "object" && !Object.keys(item.data).length)) {
+        delete item.data;
+      }
       if (row.hidden) item.hidden = true;
       return item;
     }
@@ -2231,8 +2296,29 @@ export function createComposerPanel(root, ctx) {
         "div",
         { class: "mrln-actions" },
         el("button", { class: "mrln-btn", onclick: () => addItemRow() }, "+ item"),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            title: "Add a LoRA block: catchword text for the prompt plus loader "
+              + "metadata (file + strengths) that render as a <lora:…> tag",
+            onclick: async () => {
+              const loras = await installedLoras();
+              addItemRow({
+                name: "",
+                text: "",
+                data: { lora: loras[0] ?? "", strength_model: 1.0, strength_clip: 1.0 },
+              });
+            },
+          },
+          "+ LoRA block"
+        ),
         ...actions
-      )
+      ),
+      loraDatalist
+    );
+    installedLoras().then((list) =>
+      loraDatalist.replaceChildren(...list.map((name) => el("option", { value: name })))
     );
   }
 

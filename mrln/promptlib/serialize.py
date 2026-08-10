@@ -102,6 +102,8 @@ def dump_render(cfg):
         out["profile"] = cfg.profile
     if cfg.text_length != _DEFAULT_RENDER.text_length:
         out["text_length"] = cfg.text_length
+    if cfg.lora_tags != _DEFAULT_RENDER.lora_tags:
+        out["lora_tags"] = cfg.lora_tags
     return out
 
 

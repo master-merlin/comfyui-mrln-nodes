@@ -358,9 +358,7 @@ def test_every_template_family_has_three_choices(lib):
     for slug in lib.template_slugs():
         groups.setdefault(slug.split("/")[0], []).append(slug)
     for family, members in sorted(groups.items()):
-        assert len(members) >= 3, (
-            f"template family '{family}' has only {len(members)}: {members}"
-        )
+        assert len(members) >= 3, f"template family '{family}' has only {len(members)}: {members}"
 
 
 def test_alias_table_empty_pre_release(lib):

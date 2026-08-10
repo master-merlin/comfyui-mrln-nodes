@@ -83,6 +83,7 @@ class RenderConfig:
     block_joiner: str = "\n"
     profile: str | None = None
     text_length: str = "long"  # which item text renders: text vs text_short
+    lora_tags: bool = True  # emit <lora:name:strength> for items carrying data.lora
 
 
 @dataclass(frozen=True)
@@ -320,6 +321,7 @@ def parse_template(data, slug, source):
         block_joiner=str(raw_render.get("block_joiner", "\n")),
         profile=raw_render.get("profile"),
         text_length=text_length,
+        lora_tags=bool(raw_render.get("lora_tags", True)),
     )
 
     variables = []
