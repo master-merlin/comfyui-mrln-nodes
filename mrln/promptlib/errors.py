@@ -1,6 +1,8 @@
 """Exception hierarchy. Messages are user-facing: they surface verbatim in
 the ComfyUI error toast, so every one includes remediation."""
 
+import difflib
+
 
 def _avail(names, limit=20):
     names = sorted(names)
@@ -53,9 +55,13 @@ class SelectionError(PromptLibError):
 
 class UnknownVariableError(PromptLibError):
     def __init__(self, name, available):
+        available = [str(a) for a in available]
+        close = difflib.get_close_matches(str(name), available, 1, 0.5)
+        did = f" Did you mean '{{{close[0]}}}'?" if close else ""
         super().__init__(
-            f"unknown variable '{{{name}}}' — declare it in the template or add a "
-            f"'{name}=value' line (known: {_avail(available)})"
+            f"unknown placeholder '{{{name}}}' — no template variable, 'name=value' "
+            f"line, or slot id (slot ids weave that draw inline) matches.{did} "
+            f"(known: {_avail(available)})"
         )
         self.name = name
 

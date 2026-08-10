@@ -128,6 +128,14 @@ def lib(tmp_path):
             ],
         },
     )
+    _write(
+        factory,
+        "templates/typo.json",
+        {
+            "prefix": "a {car-lora} shot",
+            "slots": [{"id": "cars", "ref": "car", "default": "gt3"}],
+        },
+    )
     return Library(factory, None)
 
 
@@ -251,6 +259,12 @@ def test_reference_inside_alternation_still_consumes(lib):
         "clean, dusk pit lane",
     )
     assert next(s for s in resolved.slots if s.id == "car").inline is True
+
+
+def test_unknown_placeholder_suggests_close_slot_id(lib):
+    # the UAT case: slot auto-named 'cars' from lora/cars, prefix says {car-lora}
+    with pytest.raises(Exception, match=r"Did you mean '\{cars\}'"):
+        rt(lib, "typo")
 
 
 def test_preview_api_exposes_inline_flag(lib):

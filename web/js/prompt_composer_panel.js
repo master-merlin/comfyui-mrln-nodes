@@ -1329,6 +1329,16 @@ export function createComposerPanel(root, ctx) {
               schedulePreview();
             },
           })
+        ),
+        el(
+          "div",
+          {
+            class: "mrln-note",
+            title: "Put this placeholder into the template prefix/suffix and the "
+              + "drawn text renders inside that sentence — the slot then leaves "
+              + "the block list.",
+          },
+          `Weave inline from prefix/suffix with {${slot.id}}`
         )
       );
     }
