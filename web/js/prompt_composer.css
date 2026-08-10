@@ -129,6 +129,24 @@
 }
 .mrln-slot:hover .mrln-rowbtns { opacity: 1; }
 
+.mrln-ms {
+  display: inline-flex;
+  gap: 1px;
+  margin-right: 5px;
+  flex: 0 0 auto;
+}
+.mrln-ms .mrln-mini {
+  opacity: 0.4;
+  font-weight: bold;
+  font-size: 10px;
+  border-color: var(--border-color, #444);
+}
+.mrln-ms .mrln-mini:hover { opacity: 1; }
+.mrln-mini.mrln-m-on { opacity: 1 !important; color: #e77; border-color: #e77 !important; }
+.mrln-mini.mrln-s-on { opacity: 1 !important; color: #dc5; border-color: #dc5 !important; }
+.mrln-slot.mrln-muted { opacity: 0.45; }
+.mrln-slot.mrln-muted .mrln-ms { opacity: 1; }
+
 .mrln-drag {
   cursor: grab;
   opacity: 0.35;
