@@ -548,6 +548,7 @@ export function createComposerPanel(root, ctx) {
     el(
       "div",
       { class: "mrln-actions" },
+      el("button", { class: "mrln-btn mrln-primary", onclick: () => applyToNode() }, "Apply to node"),
       el(
         "button",
         {
@@ -557,7 +558,6 @@ export function createComposerPanel(root, ctx) {
         },
         "🎲 Randomize"
       ),
-      el("button", { class: "mrln-btn mrln-primary", onclick: () => applyToNode() }, "Apply to node"),
       el("button", { class: "mrln-btn", onclick: () => loadFromNode() }, "Load"),
       el("button", { class: "mrln-btn", title: "Fix every random slot to what the preview just drew", onclick: () => pinLastDraw() }, "Pin draw"),
       el(
