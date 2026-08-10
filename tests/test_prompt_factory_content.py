@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 import pytest
-import support  # noqa: F401
+import support
 
 from mrln.promptlib import FORMATS, Library, render, resolve_template
 from mrln.promptlib.resolve import _parse_token

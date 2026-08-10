@@ -22,7 +22,11 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 
 | Domain | Nodes |
 | ------ | ----- |
-| _none yet_ | — |
+| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON); **Prompt Section** — a single library section as a standalone node for graph-native wiring |
+
+Prompt libraries are plain JSON files: factory content ships with the pack,
+your personal library lives in `<ComfyUI>/user/mrln/prompt/` and survives
+pack updates. A user file with the same name overrides the factory file.
 
 ## Design principles
 
