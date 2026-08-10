@@ -85,9 +85,9 @@ class PromptTemplate:
                 "template": (
                     _template_options(),
                     {
-                        "tooltip": "Template from the prompt library (factory + user merged; a user "
-                        "file with the same slug overrides factory). New files appear "
-                        "after 'Refresh node definitions'.",
+                        "tooltip": "Template from the prompt library (factory + user merged; "
+                        "a user file with the same slug overrides factory). New files "
+                        "appear after 'Refresh node definitions'.",
                     },
                 ),
                 "selection": (
@@ -95,13 +95,13 @@ class PromptTemplate:
                     {
                         "multiline": True,
                         "default": "",
-                        "placeholder": "# one per line, e.g.\n# paint=guards-red\n# location=random\n"
-                        "# lighting=random@1392\n# variant=outdoor",
-                        "tooltip": "Per-slot overrides, one 'slot=item' per line. 'slot=random' rolls "
-                        "the slot with the master seed, 'slot=random@123' with its own "
-                        "seed; 'variant=<name|random>' picks the variant branch. Blank "
-                        "lines and # comments are ignored; unlisted slots use template "
-                        "defaults.",
+                        "placeholder": "# one per line, e.g.\n# paint=guards-red\n"
+                        "# location=random\n# lighting=random@1392\n# variant=outdoor",
+                        "tooltip": "Per-slot overrides, one 'slot=item' per line. 'slot=random' "
+                        "rolls the slot with the master seed, 'slot=random@123' with its "
+                        "own seed; 'variant=<name|random>' picks the variant branch. "
+                        "Blank lines and # comments are ignored; unlisted slots use "
+                        "template defaults.",
                     },
                 ),
                 "selection_mode": (
@@ -119,18 +119,18 @@ class PromptTemplate:
                         "min": 0,
                         "max": 0xFFFFFFFFFFFFFFFF,
                         "control_after_generate": True,
-                        "tooltip": "Master seed for all random slots. Same seed + same library files "
-                        "= identical result; each slot draws independently, so fixed "
-                        "slots stay constant while random ones vary with the seed. "
+                        "tooltip": "Master seed for all random slots. Same seed + same library "
+                        "files = identical result; each slot draws independently, so "
+                        "fixed slots stay constant while random ones vary with the seed. "
                         "Connect the same seed source as your sampler for lockstep.",
                     },
                 ),
                 "format": (
                     FORMAT_OPTIONS,
                     {
-                        "tooltip": "Output format override. 'string' joins everything into one line; "
-                        "'string_labeled' emits 'Label: text' lines; 'json' emits one key "
-                        "per slot; 'json_flat' wraps the string render as "
+                        "tooltip": "Output format override. 'string' joins everything into one "
+                        "line; 'string_labeled' emits 'Label: text' lines; 'json' emits "
+                        "one key per slot; 'json_flat' wraps the string render as "
                         '{"prompt": ...}. Negative output is always a plain string.',
                     },
                 ),
@@ -220,9 +220,9 @@ class PromptSection:
                 "item": (
                     _item_options(),
                     {
-                        "tooltip": "Item to render, listed as 'section-path/item-name' (searchable — "
-                        "type the section name to filter). Must lie inside the chosen "
-                        "section scope. '🎲 random' draws from the scope using the seed.",
+                        "tooltip": "Item to render, listed as 'section-path/item-name' "
+                        "(searchable — type the section name to filter). Must lie inside "
+                        "the chosen scope. '🎲 random' draws from it using the seed.",
                     },
                 ),
                 "seed": (
@@ -240,8 +240,8 @@ class PromptSection:
                     "BOOLEAN",
                     {
                         "default": False,
-                        "tooltip": "When rolling 🎲 random, allow 'nothing' as one weighted outcome "
-                        "(empty text output) — for optional add-on sections.",
+                        "tooltip": "When rolling 🎲 random, allow 'nothing' as one weighted "
+                        "outcome (empty text output) — for optional add-on sections.",
                     },
                 ),
             },
