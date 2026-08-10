@@ -215,7 +215,7 @@ def test_conflict_policy_and_requires_warning(lib):
 def test_graphics_wildcards_expand(lib):
     hit = False
     for seed in range(20):
-        resolved = resolve_section(lib, "car/graphics", "random", seed=seed)
+        resolved = resolve_section(lib, "vehicle/car/graphics", "random", seed=seed)
         assert "{" not in resolved.text and "|" not in resolved.text
         hit = True
     assert hit
@@ -325,14 +325,9 @@ def test_no_artist_names_in_style_sections(lib):
             assert not banned.search(item.text), f"'{slug}/{item.name}' names an artist/studio"
 
 
-def test_retired_slugs_still_resolve(lib):
-    """The exact refs stranded by the 2026-08 restructures keep loading."""
-    for old_ref in ("scenery/day", "scenery/night", "scenery/light-day", "scenery/light-night"):
-        assert lib.scope_items(old_ref), old_ref
-    assert lib.load_section("scenery/light-day").slug == "lighting/day"
-    # vehicle restructure: every old car/* leaf, the folder scope, and the
-    # car/model chain (car/model -> car/design-base -> vehicle/car/design-base)
-    assert lib.load_section("car/wheel").slug == "vehicle/car/wheel"
-    assert lib.load_section("car/model").slug == "vehicle/car/design-base"
-    assert lib.scope_items("car/color")  # aliased subfolder scope
-    assert len(lib.scope_items("car")) == len(lib.scope_items("vehicle/car"))
+def test_alias_table_empty_pre_release(lib):
+    """Nothing has shipped, so pre-release renames were remapped directly
+    and the alias table starts empty. From the first release on, renames
+    add entries here instead (mechanism covered by test_prompt_resilience)."""
+    data = json.loads((FACTORY_ROOT / "aliases.json").read_text(encoding="utf-8"))
+    assert data["sections"] == {} and data["templates"] == {}

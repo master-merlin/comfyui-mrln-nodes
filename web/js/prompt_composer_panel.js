@@ -1795,6 +1795,34 @@ export function createComposerPanel(root, ctx) {
     return nodes;
   }
 
+  function treeBlock(kind, title, entries, itemEl) {
+    // The whole block collapses too — with a multiverse-sized library even
+    // the group list is long. Sections open by default, templates closed.
+    const stateKey = `${kind}:@block`;
+    if (!state.libGroups.has(stateKey) && !state.libGroups.has(`${stateKey}:touched`)) {
+      if (kind === "sections") state.libGroups.add(stateKey); // default open
+    }
+    return el(
+      "details",
+      {
+        class: "mrln-fold mrln-tree-block",
+        open: state.libGroups.has(stateKey) ? "" : null,
+        ontoggle: (e) => {
+          state.libGroups.add(`${stateKey}:touched`);
+          if (e.target.open) state.libGroups.add(stateKey);
+          else state.libGroups.delete(stateKey);
+        },
+      },
+      el(
+        "summary",
+        { class: "mrln-tree-head" },
+        title,
+        el("span", { class: "mrln-slug" }, ` ${entries.length}`)
+      ),
+      ...groupedTree(kind, entries, itemEl)
+    );
+  }
+
   function renderLibraryTab() {
     if (!state.library) return;
     const lib = state.library;
@@ -1805,10 +1833,8 @@ export function createComposerPanel(root, ctx) {
         el("button", { class: "mrln-btn", onclick: () => newSection() }, "New section…"),
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload")
       ),
-      el("div", { class: "mrln-tree-head" }, "Sections"),
-      ...groupedTree("sections", lib.sections, sectionLi),
-      el("div", { class: "mrln-tree-head" }, "Templates"),
-      ...groupedTree("templates", lib.templates, templateLi),
+      treeBlock("sections", "Sections", lib.sections, sectionLi),
+      treeBlock("templates", "Templates", lib.templates, templateLi),
       el("hr", { class: "mrln-sep" }),
       editorBox
     );
@@ -2006,7 +2032,8 @@ export function createComposerPanel(root, ctx) {
           ? "replaces factory entirely"
           : "user library";
       ctx.toast("success", "Section saved", `${targetSlug} (${how})`);
-      state.libGroups.add(`sections:${targetSlug.split("/")[0]}`); // reveal where it landed
+      state.libGroups.add("sections:@block"); // reveal where it landed
+      state.libGroups.add(`sections:${targetSlug.split("/")[0]}`);
       ctx.refreshCombos();
       await loadLibrary();
       openSectionEditor(targetSlug);
@@ -2119,6 +2146,7 @@ export function createComposerPanel(root, ctx) {
       }
       errorLine.textContent = "";
       ctx.toast("success", "Template saved", `${slugInput.value.trim()} (user library)`);
+      state.libGroups.add("templates:@block");
       state.libGroups.add(`templates:${slugInput.value.trim().split("/")[0]}`);
       ctx.refreshCombos();
       await loadLibrary();

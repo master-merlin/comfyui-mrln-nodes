@@ -262,6 +262,9 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 }
 .mrln-tree-group > summary:hover { background: var(--comfy-menu-bg, #2a2a2a); }
 .mrln-tree-group > .mrln-tree { margin-left: 12px; }
+.mrln-tree-block > summary.mrln-tree-head { cursor: pointer; margin: 8px 0 2px; }
+.mrln-tree-block > summary.mrln-tree-head:hover { background: var(--comfy-menu-bg, #2a2a2a); }
+.mrln-tree-block > .mrln-tree-group { margin-left: 8px; }
 .mrln-tree li {
   padding: 3px 4px;
   border-radius: 3px;

@@ -121,7 +121,10 @@ def test_error_surfaces_named(template_node):
 
 def test_section_execute_fixed(section_node):
     text, _negative, choice = section_node.execute(
-        section="car/color/paint", item="car/color/paint/guards-red", seed=0, allow_empty=False
+        section="vehicle/car/color/paint",
+        item="vehicle/car/color/paint/guards-red",
+        seed=0,
+        allow_empty=False,
     )
     assert text == "Guards Red"
     assert choice == "guards-red"
@@ -136,7 +139,9 @@ def test_section_execute_random_deterministic(section_node):
 def test_section_validate_scope(classes):
     node_cls = classes["MRLN_PromptSection"]
     assert node_cls.VALIDATE_INPUTS(section="location", item="🎲 random") is True
-    verdict = node_cls.VALIDATE_INPUTS(section="lighting/day", item="car/color/paint/guards-red")
+    verdict = node_cls.VALIDATE_INPUTS(
+        section="lighting/day", item="vehicle/car/color/paint/guards-red"
+    )
     assert "not inside" in verdict
 
 
