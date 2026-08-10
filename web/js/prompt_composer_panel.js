@@ -124,7 +124,19 @@ export function createComposerPanel(root, ctx) {
 
   // ---- data loading --------------------------------------------------------
 
+  function loadingNote(message) {
+    return el(
+      "div",
+      { class: "mrln-note mrln-loading" },
+      el("span", { class: "mrln-spinner" }),
+      ` ${message}`
+    );
+  }
+
   async function loadLibrary(keepSelection = true) {
+    if (!state.library) {
+      composeTab.replaceChildren(loadingNote("Loading prompt library…"));
+    }
     try {
       state.library = await ctx.apiJson("/mrln/prompt/library");
     } catch (err) {
@@ -142,6 +154,9 @@ export function createComposerPanel(root, ctx) {
 
   async function selectTemplate(slug) {
     state.slug = slug;
+    if (!state.detail) {
+      composeTab.replaceChildren(loadingNote(`Loading '${slug}'…`));
+    }
     try {
       state.detail = await ctx.apiJson(
         `/mrln/prompt/template?slug=${encodeURIComponent(slug)}`

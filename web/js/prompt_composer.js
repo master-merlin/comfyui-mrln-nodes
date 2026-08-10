@@ -77,14 +77,27 @@ app.registerExtension({
       );
       return;
     }
+    // The panel is a SINGLETON detached from the sidebar's render cycle.
+    // The frontend may re-invoke render() (tab switches, and on some
+    // versions during workflow execution) — rebuilding the panel each time
+    // closes every open dropdown, steals focus and discards edits. Instead
+    // the panel DOM is built once and re-attached, keeping all state.
+    let panelRoot = null;
     app.extensionManager.registerSidebarTab({
       id: "mrln-prompt-composer",
       icon: "pi pi-book",
       title: "Prompt Composer",
       tooltip: "MRLN Prompt Composer — browse, compose, preview and edit prompt libraries",
       type: "custom",
-      render: (el) =>
-        createComposerPanel(el, {
+      render: (el) => {
+        if (panelRoot) {
+          if (!el.contains(panelRoot)) el.appendChild(panelRoot);
+          return;
+        }
+        panelRoot = document.createElement("div");
+        panelRoot.style.height = "100%";
+        el.appendChild(panelRoot);
+        createComposerPanel(panelRoot, {
           apiJson,
           toast,
           selectedTemplateNode,
@@ -93,7 +106,8 @@ app.registerExtension({
           markDirty: () => app.graph?.setDirtyCanvas(true, true),
           refreshCombos: () => app.refreshComboInNodes?.(),
           dialog: app.extensionManager?.dialog,
-        }),
+        });
+      },
     });
   },
 });

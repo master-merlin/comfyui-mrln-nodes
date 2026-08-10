@@ -87,6 +87,15 @@ class Library:
     def __init__(self, factory_root, user_root):
         self.factory_root = Path(factory_root)
         self.user_root = Path(user_root) if user_root else None
+        # Per-instance directory-scan memo. Library objects are created per
+        # request / per node execution, so one instance sees one consistent
+        # snapshot; without this, listing endpoints walk the whole tree once
+        # PER SLUG (quadratic — measured ~14s for the composer's first open).
+        self._scan_cache: dict = {}
+
+    def invalidate(self):
+        """Drop the scan memo after any write so this instance sees it."""
+        self._scan_cache.clear()
 
     def ensure_user_dirs(self):
         if self.user_root:
@@ -96,7 +105,11 @@ class Library:
     # -- discovery ---------------------------------------------------------
 
     def _scan(self, kind):
-        """slug -> Entry, user tier overriding factory."""
+        """slug -> Entry, user tier overriding factory. Memoized per
+        instance; writers call invalidate()."""
+        cached = self._scan_cache.get(kind)
+        if cached is not None:
+            return cached
         entries = {}
         for tier, root in (("factory", self.factory_root), ("user", self.user_root)):
             if not root:
@@ -108,6 +121,7 @@ class Library:
                 slug = path.relative_to(kind_dir).with_suffix("").as_posix()
                 stat = path.stat()
                 entries[slug] = Entry(slug, kind, tier, path, stat.st_mtime_ns, stat.st_size)
+        self._scan_cache[kind] = entries
         return entries
 
     def section_slugs(self):
@@ -272,6 +286,7 @@ class Library:
         tmp = target.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         os.replace(tmp, target)
+        self.invalidate()
         return target
 
     def delete_user(self, kind, slug):
@@ -287,12 +302,15 @@ class Library:
             user_slugs = [s for s, e in self._scan(kind).items() if e.tier == "user"]
             raise not_found(slug, user_slugs)
         path.unlink()
+        self.invalidate()
         entry = self._scan(kind).get(slug)
         return entry is not None and entry.tier == "factory"
 
     # -- change detection --------------------------------------------------
 
     def fingerprint(self):
+        # Change detection must always reflect the disk, never the memo.
+        self.invalidate()
         lines = []
         for kind in ("sections", "templates"):
             for entry in self._scan(kind).values():
