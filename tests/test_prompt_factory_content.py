@@ -235,6 +235,96 @@ def test_factory_aliases_valid(lib):
         lib.load_template(source)  # raises if the chain is dead
 
 
+# sections that predate the text_short convention; everything newer must carry it
+_LEGACY_NO_SHORT = (
+    "vehicle/car/action",
+    "vehicle/car/aero-addon",
+    "vehicle/car/caliper",
+    "vehicle/car/color/",
+    "vehicle/car/design-",
+    "vehicle/car/detail",
+    "vehicle/car/finish",
+    "vehicle/car/graphics",
+    "vehicle/car/wheel",
+    "location/urban",
+    "location/nature",
+    "location/studio",
+    "location/luxury",
+    "location/industrial",
+    "location/futuristic",
+    "location/automotive",
+    "lighting/day",
+    "lighting/night",
+    "lighting/quality",
+    "atmosphere/time-of-day",
+    "viewpoint/general",
+    "camera/settings",
+    "style/grade",
+)
+
+
+def test_new_content_short_variant_coverage(lib):
+    """Expansion rule: every post-restructure section keeps >=90% text_short
+    coverage so short mode works across the whole library."""
+    for slug in lib.section_slugs():
+        if any(slug.startswith(prefix) for prefix in _LEGACY_NO_SHORT):
+            continue
+        items = lib.load_section(slug).items
+        covered = sum(1 for item in items if item.text_short)
+        assert covered >= 0.9 * len(items), (
+            f"'{slug}': only {covered}/{len(items)} items carry text_short"
+        )
+
+
+def test_human_pools_adult_only(lib):
+    """Factory policy: adult age brackets only, everywhere in human/."""
+    banned = re.compile(
+        r"\b(teen|teenage|child|children|kid|minor|underage|young girl|young boy)\b", re.I
+    )
+    for slug in lib.section_slugs():
+        if not slug.startswith(("human/", "boudoir/", "pose/", "wardrobe/")):
+            continue
+        for item in lib.load_section(slug).items:
+            assert not banned.search(item.text), f"'{slug}/{item.name}' fails the adult-only lint"
+    ages = lib.load_section("human/age")
+    for item in ages.items:
+        assert re.search(r"(twenties|thirties|forties)", item.text), item.name
+
+
+def test_domain_sections_declare_suits(lib):
+    """Every subject-domain section carries its class suits; dimensions stay universal."""
+    expectations = {
+        "human/": "human",
+        "wardrobe/": "human",
+        "pose/": "human",
+        "animal/": "animal",
+        "nature/": "nature",
+        "architecture/": "architecture",
+        "food/": "food",
+        "vehicle/": "vehicle",
+    }
+    for slug in lib.section_slugs():
+        for prefix, required in expectations.items():
+            if slug.startswith(prefix):
+                assert required in lib.load_section(slug).suits, (
+                    f"'{slug}' must declare suits including '{required}'"
+                )
+    for slug in ("atmosphere/weather", "composition/framing", "camera/film", "style/genre"):
+        assert lib.load_section(slug).suits == (), f"{slug} should stay universal"
+
+
+def test_no_artist_names_in_style_sections(lib):
+    """Policy: characteristics, never artist or studio names."""
+    banned = re.compile(
+        r"\b(ghibli|shinkai|wlop|greg rutkowski|artgerm|leibovitz|lindbergh|mucha|banksy)\b", re.I
+    )
+    for slug in lib.section_slugs():
+        if not slug.startswith("style/"):
+            continue
+        for item in lib.load_section(slug).items:
+            assert not banned.search(item.text), f"'{slug}/{item.name}' names an artist/studio"
+
+
 def test_retired_slugs_still_resolve(lib):
     """The exact refs stranded by the 2026-08 restructures keep loading."""
     for old_ref in ("scenery/day", "scenery/night", "scenery/light-day", "scenery/light-night"):

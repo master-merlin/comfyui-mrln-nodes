@@ -25,14 +25,43 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 | `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON); **Prompt Section** — a single library section as a standalone node for graph-native wiring |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
-Prompt libraries are plain JSON files: factory content ships with the pack
-(including the OverDrive car-photography showcase template
-`overdrive/full-shot` with day/night variants), your personal library lives
-in `<ComfyUI>/user/mrln/prompt/` and survives pack updates. Same-name
-SECTIONS compound: your file *extends* the factory one by default (same item
-name wins, new items append, `"hidden": true` tombstones a factory item,
-`"replaces": true` opts into a full replacement). Same-name templates
-replace the factory file entirely.
+Prompt libraries are plain JSON files: a multiverse of factory content ships
+with the pack, your personal library lives in `<ComfyUI>/user/mrln/prompt/`
+and survives pack updates. Same-name SECTIONS compound: your file *extends*
+the factory one by default (same item name wins, new items append,
+`"hidden": true` tombstones a factory item, `"replaces": true` opts into a
+full replacement). Same-name templates replace the factory file entirely.
+
+### Factory library
+
+~100 sections / ~1000 curated items across dimension folders every template
+shares (`location` incl. anime/sci-fi/fantasy/historical/underwater places,
+`lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
+particles, `viewpoint`, `camera` with 14 film stocks and real lens/format/
+technique pools, `style` with genre/movement/anime/photography/palette/
+quality-boost bundles, `composition`) and subject domains (`vehicle` — car,
+motorcycle, aircraft, ship, train, sci-fi craft; `human` + `wardrobe` +
+`pose`; `animal` + `nature`; `architecture`, `food`, `product`, `creature`).
+Nearly every item carries a detailed long text plus a compact `text_short`
+for tight tokenizers. Genre coupling runs on tags (`anime`, `scifi`,
+`fantasy`, `historical`, `night`…) that templates select with per-slot
+`tags_any` filters.
+
+Showcase templates, one per domain:
+
+| Template | What it composes |
+| --- | --- |
+| `overdrive/full-shot` | the OverDrive concept-car showcase (day/night variants) |
+| `vehicle/aviation-shot`, `vehicle/maritime-shot` | aircraft/vessel × state × weather × long glass |
+| `boudoir/session` | solo / duo / couple via nested model profiles (adults only, tasteful glamour) |
+| `portrait/studio`, `character/concept` | studio portraits and character-design sheets |
+| `anime/keyvisual`, `scifi/vista` | genre scenes over tagged locations |
+| `wildlife/documentary`, `landscape/grand` | subject × behavior × habitat; landform hero shots |
+| `food/editorial`, `product/hero`, `architecture/study` | commercial photography formulas |
+
+The human-domain content is strictly adults-only and kept at a tasteful
+glamour level (lint-enforced); templates carry matching safety negatives by
+default.
 
 Factory updates never strand your saved templates: renamed section slugs
 keep resolving through shipped aliases, and a template whose section
@@ -95,6 +124,19 @@ mrln/
   data/prompt/       # factory prompt library (sections + templates)
 web/js/              # Prompt Composer sidebar panel (progressive enhancement)
 ```
+
+## Acknowledgements
+
+Parts of the factory library's coverage were validated against, and a small
+number of pool themes informed by, these openly licensed collections:
+
+- [Awesome-AI-Image-Prompts](https://github.com/devanshug2307/Awesome-AI-Image-Prompts) (MIT)
+- [nanobanana-trending-prompts](https://github.com/jau123/nanobanana-trending-prompts) (CC BY 4.0)
+- [ComfyUI-Style-Prompts-Collection](https://github.com/vaulthunt3r/ComfyUI-Style-Prompts-Collection)
+  served as a taxonomy reference (all texts in this pack are original)
+
+All factory texts were authored for this pack; no collection content was
+imported verbatim.
 
 ## License
 
