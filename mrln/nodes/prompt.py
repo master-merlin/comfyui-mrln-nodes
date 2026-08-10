@@ -159,6 +159,30 @@ class PromptTemplate:
         }
 
     @classmethod
+    def VALIDATE_INPUTS(cls, template=None, selection=None):
+        # Pre-queue check with execute()-quality messages: catches selection
+        # lines left over from a different template (switching the combo on
+        # the node) before the graph runs. Consuming 'template' replaces the
+        # default combo check; load_template gives the better message anyway.
+        if template in (None, "", EMPTY_SENTINEL) or selection is None:
+            return True
+        try:
+            tpl = pl.open_library().load_template(template)
+            selection_map = pl.parse_kv_lines(selection, what="selection")
+        except pl.PromptLibError as exc:
+            return str(exc)
+        known = {slot.id for slot in tpl.slots}
+        known.update(slot.id for variant in tpl.variants for slot in variant.slots)
+        known.add("variant")
+        unknown = sorted(key for key in selection_map if key not in known)
+        if unknown:
+            return (
+                f"selection references unknown slot(s) {', '.join(unknown)} for template "
+                f"'{template}' — remove those lines or re-apply from the Composer panel"
+            )
+        return True
+
+    @classmethod
     def IS_CHANGED(cls, **kwargs):
         # Library fingerprint only: input values are already part of ComfyUI's
         # cache diff; this re-executes when library JSON files change on disk.

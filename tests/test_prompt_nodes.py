@@ -160,3 +160,20 @@ def test_user_override_wins(template_node, user_tier):
     prompt, _, choices = run_template(template_node)
     assert "USER OVERRIDE paint" in prompt
     assert "(user)" in choices
+
+
+def test_template_validate_selection_mismatch(classes):
+    node_cls = classes["MRLN_PromptTemplate"]
+    assert node_cls.VALIDATE_INPUTS(template="car-shoot", selection="") is True
+    assert node_cls.VALIDATE_INPUTS(template="car-shoot", selection="paint=guards-red") is True
+    verdict = node_cls.VALIDATE_INPUTS(
+        template="car-shoot", selection="scene=random\npaint=guards-red"
+    )
+    assert "scene" in verdict and "car-shoot" in verdict
+    assert "unknown" in verdict
+    # variant slots of any variant are accepted pre-queue (resolve stays strict)
+    assert (
+        node_cls.VALIDATE_INPUTS(template="concept-car-random", selection="location=random") is True
+    )
+    assert "not found" in node_cls.VALIDATE_INPUTS(template="nope", selection="x=y")
+    assert "name=value" in node_cls.VALIDATE_INPUTS(template="car-shoot", selection="garbage")
