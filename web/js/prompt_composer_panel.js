@@ -65,6 +65,7 @@ export function createComposerPanel(root, ctx) {
     mode: "as configured",
     seed: 0,
     format: "template default",
+    conflictPolicy: "negative prevails",
     trigger: "",
     variables: "",
     rows: new Map(), // slot id -> {random, seed, item}
@@ -386,6 +387,7 @@ export function createComposerPanel(root, ctx) {
       variables: state.variables,
       trigger: state.trigger,
       format: state.format,
+      conflict_policy: state.conflictPolicy,
     };
     if (state.modified) body.template_data = buildDraftData();
     let preview;
@@ -642,9 +644,26 @@ export function createComposerPanel(root, ctx) {
       parts.push(el("div", { class: "mrln-note" }, state.rawData.description));
     }
 
+    const policySelect = el("select", {
+      title: "When a negative term also appears in the prompt: keep it or drop it",
+      onchange: (e) => {
+        state.conflictPolicy = e.target.value;
+        schedulePreview();
+      },
+    });
+    for (const policy of ["negative prevails", "positive prevails"]) {
+      policySelect.append(el("option", { value: policy }, policy));
+    }
+    policySelect.value = state.conflictPolicy;
+
     parts.push(
       el("div", { class: "mrln-grid2" }, field("Mode", modeSelect), field("Format", formatSelect)),
-      field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
+      el(
+        "div",
+        { class: "mrln-grid2" },
+        field("Conflicts", policySelect),
+        field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
+      ),
       metaPromptBlock(),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
       addSectionRow()
@@ -723,14 +742,29 @@ export function createComposerPanel(root, ctx) {
         schedulePreview();
       },
     });
+    const typeInput = el("input", {
+      type: "text",
+      value: (state.rawData.type ?? []).join(", "),
+      placeholder: "e.g. object, car — empty = untyped (sees everything)",
+      title: "Template classifiers: filters the section picker and random draw "
+        + "pools to matching + universal sections. Explicit picks are never restricted.",
+      oninput: (e) => {
+        const values = e.target.value.split(",").map((v) => v.trim()).filter(Boolean);
+        if (values.length) state.rawData.type = values;
+        else delete state.rawData.type;
+        markModified();
+        schedulePreview();
+      },
+    });
     const hasText = Boolean(state.rawData.prefix || state.rawData.suffix);
     return el(
       "details",
       { class: "mrln-fold", open: hasText ? "" : null },
-      el("summary", {}, "Template text (prefix / suffix / negative)"),
+      el("summary", {}, "Template text & type (prefix / suffix / negative / classifiers)"),
       field("Prefix", prefixArea),
       field("Suffix", suffixArea),
-      field("Negative", negativeInput)
+      field("Negative", negativeInput),
+      field("Type (classifiers)", typeInput)
     );
   }
 
@@ -967,12 +1001,32 @@ export function createComposerPanel(root, ctx) {
   }
 
   function addSectionRow() {
-    const options = [
-      ...state.library.folders.map((f) => ({ value: f, label: `${f}/ (folder)` })),
-      ...state.library.sections.map((s) => ({ value: s.slug, label: s.slug })),
-    ].sort((a, b) => a.value.localeCompare(b.value));
+    const type = state.rawData.type ?? [];
+    const matches = (suits) =>
+      !type.length || !(suits ?? []).length || suits.some((s) => type.includes(s));
+    const sections = state.library.sections.map((s) => ({
+      value: s.slug,
+      label: s.slug + ((s.suits ?? []).length ? `  [${s.suits.join(",")}]` : ""),
+      match: matches(s.suits),
+    }));
+    const folders = state.library.folders.map((f) => ({
+      value: f,
+      label: `${f}/ (folder)`,
+      match: true, // folder pools self-filter at draw time
+    }));
+    const options = [...folders, ...sections].sort((a, b) => a.value.localeCompare(b.value));
     const refSelect = el("select", {});
-    for (const opt of options) refSelect.append(el("option", { value: opt.value }, opt.label));
+    const primary = options.filter((o) => o.match);
+    const other = options.filter((o) => !o.match);
+    if (other.length) {
+      const groupA = el("optgroup", { label: type.length ? `matches type: ${type.join(", ")}` : "sections" });
+      for (const opt of primary) groupA.append(el("option", { value: opt.value }, opt.label));
+      const groupB = el("optgroup", { label: "other domains (suits elsewhere)" });
+      for (const opt of other) groupB.append(el("option", { value: opt.value }, opt.label));
+      refSelect.append(groupA, groupB);
+    } else {
+      for (const opt of primary) refSelect.append(el("option", { value: opt.value }, opt.label));
+    }
     const addButton = el(
       "button",
       {
@@ -1090,6 +1144,7 @@ export function createComposerPanel(root, ctx) {
     ctx.setWidget(node, "selection_mode", state.mode);
     ctx.setWidget(node, "seed", state.seed);
     ctx.setWidget(node, "format", state.format);
+    ctx.setWidget(node, "conflict_policy", state.conflictPolicy);
     ctx.setWidget(node, "trigger", state.trigger);
     ctx.setWidget(node, "variables", state.variables);
     ctx.markDirty();
@@ -1113,6 +1168,7 @@ export function createComposerPanel(root, ctx) {
     state.mode = ctx.getWidget(node, "selection_mode") ?? state.mode;
     state.seed = Number(ctx.getWidget(node, "seed") ?? state.seed) || 0;
     state.format = ctx.getWidget(node, "format") ?? state.format;
+    state.conflictPolicy = ctx.getWidget(node, "conflict_policy") ?? state.conflictPolicy;
     state.trigger = ctx.getWidget(node, "trigger") ?? "";
     state.variables = ctx.getWidget(node, "variables") ?? "";
     applyKvToRows(parseKvLines(ctx.getWidget(node, "selection") ?? ""));
@@ -1217,6 +1273,13 @@ export function createComposerPanel(root, ctx) {
     const labelInput = el("input", { type: "text", value: body.label ?? "" });
     const descInput = el("input", { type: "text", value: body.description ?? "" });
     const negInput = el("input", { type: "text", value: body.negative ?? "" });
+    const suitsInput = el("input", {
+      type: "text",
+      value: (body.raw?.suits ?? []).join(", "),
+      placeholder: "e.g. object, car — empty = universal (offered to every template)",
+      title: "Which template types this section serves; typed templates filter "
+        + "their pickers and random draws by this. Explicit picks are never restricted.",
+    });
     const itemRows = [];
     const table = el("table", { class: "mrln-items-table" });
     table.append(
@@ -1274,6 +1337,9 @@ export function createComposerPanel(root, ctx) {
       else delete data.description;
       if (negInput.value.trim()) data.negative = negInput.value.trim();
       else delete data.negative;
+      const suits = suitsInput.value.split(",").map((v) => v.trim()).filter(Boolean);
+      if (suits.length) data.suits = suits;
+      else delete data.suits;
       data.items = itemRows.map((row) => {
         const item = { ...row.orig, name: row.name.value.trim(), text: row.text.value };
         if (!item.name) delete item.name;
@@ -1325,6 +1391,7 @@ export function createComposerPanel(root, ctx) {
       field("Label", labelInput),
       field("Description", descInput),
       field("Negative", negInput),
+      field("Suits (template types)", suitsInput),
       el("span", { class: "mrln-field-name" }, "Items"),
       table,
       el(
