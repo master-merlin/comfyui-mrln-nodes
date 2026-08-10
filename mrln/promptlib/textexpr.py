@@ -109,6 +109,23 @@ def expand(text, variables, rng, *, depth=0):
     return _eval_nodes(parse(text), variables, rng, depth)
 
 
+def variable_names(text):
+    """Every {variable} name appearing anywhere in `text`, including inside
+    wildcard alternatives."""
+    names = set()
+
+    def walk(nodes):
+        for node in nodes:
+            if isinstance(node, _Group):
+                for alt in node.alts:
+                    walk(alt)
+            elif isinstance(node, _Var):
+                names.add(node.name)
+
+    walk(parse(text))
+    return names
+
+
 def _eval_nodes(nodes, variables, rng, depth):
     out = []
     for node in nodes:

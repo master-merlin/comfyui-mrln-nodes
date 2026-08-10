@@ -326,6 +326,7 @@ def _resolved_slot_json(s):
         "tier": s.tier,
         "omitted": s.item_name is None,
         "missing": s.missing,
+        "inline": s.inline,
         "children": [_resolved_slot_json(c) for c in s.children],
     }
 

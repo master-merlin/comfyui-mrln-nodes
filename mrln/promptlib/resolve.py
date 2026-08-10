@@ -6,12 +6,13 @@ in its SECTION, so templates stay free of choice). Children resolve under
 dotted ids ('scene.subject-a') with seed keys '{parent-key}.{child-id}',
 and their texts substitute {child-id} placeholders in the parent text."""
 
+import re
 from dataclasses import dataclass, replace
 
 from .errors import ItemNotFoundError, RecursionLimitError, SectionNotFoundError, SelectionError
 from .schema import RANDOM_TOKEN, TEXT_LENGTHS, Slot
 from .seeding import derive_rng, weighted_index
-from .textexpr import expand
+from .textexpr import expand, variable_names
 
 MODES = ("as configured", "randomize all", "all fixed defaults")
 RANDOM_TOKENS = (RANDOM_TOKEN, "🎲 random")
@@ -40,6 +41,7 @@ class ResolvedSlot:
     excludes: tuple = ()  # effective excludes (item + section)
     children: tuple = ()  # nested ResolvedSlots (dotted ids)
     missing: bool = False  # ref points at no section: skipped, ⚠ in choices
+    inline: bool = False  # woven into prefix/suffix via {slot-id}; leaves the body
 
 
 def walk_slots(slots):
@@ -373,8 +375,34 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=
                 f"(nested slots present: {sorted(consumed) if consumed else 'none'})",
             )
 
-    prefix = expand(tpl.prefix, merged_vars, derive_rng(seed, "@prefix")) if tpl.prefix else ""
-    suffix = expand(tpl.suffix, merged_vars, derive_rng(seed, "@suffix")) if tpl.suffix else ""
+    # Inline weaving: prefix/suffix may reference top-level slot ids as
+    # {placeholders} — the drawn text (with its emphasis wrap) renders right
+    # there, inside the author's sentence, and the slot leaves the joined
+    # body. This is how a LoRA catchword gets its trigger IN context:
+    # prefix "a photo of a {car-lora} at dusk". {trigger} stays the node's.
+    slot_vars = {}
+    for rs in resolved_slots:
+        if rs.id == "trigger":  # the node widget keeps its contract
+            continue
+        text = rs.text
+        if text and rs.emphasis and rs.emphasis != 1.0:
+            text = f"({text.rstrip('.')}:{rs.emphasis:g})"
+        slot_vars[rs.id] = text
+    inline_ids = set()
+    for wrapper in (tpl.prefix, tpl.suffix):
+        if wrapper:
+            inline_ids |= variable_names(wrapper) & set(slot_vars)
+    if inline_ids:
+        resolved_slots = [
+            replace(rs, inline=True) if rs.id in inline_ids else rs for rs in resolved_slots
+        ]
+    wrap_vars = {**merged_vars, **slot_vars}  # a slot beats a same-named variable
+    prefix = expand(tpl.prefix, wrap_vars, derive_rng(seed, "@prefix")) if tpl.prefix else ""
+    suffix = expand(tpl.suffix, wrap_vars, derive_rng(seed, "@suffix")) if tpl.suffix else ""
+    if inline_ids:
+        # an empty draw (allow_empty / muted / missing) weaves "" — tidy seams
+        prefix = re.sub(r" {2,}", " ", prefix).strip()
+        suffix = re.sub(r" {2,}", " ", suffix).strip()
 
     negatives = []
     if tpl.negative:

@@ -30,7 +30,7 @@ def _emphasized(slot):
 
 def _string(resolved, cfg):
     parts = [resolved.prefix]
-    parts.extend(_emphasized(s) for s in resolved.slots)
+    parts.extend(_emphasized(s) for s in resolved.slots if not s.inline)
     parts.append(resolved.suffix)
     if cfg.joiner.lstrip().startswith(","):
         # comma-joined fragments must not END in sentence periods (avoids
@@ -99,7 +99,7 @@ def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
         if resolved.prefix:
             lines.append(resolved.prefix)
         for slot in resolved.slots:
-            if slot.item_name is None or not slot.text:
+            if slot.item_name is None or not slot.text or slot.inline:
                 continue
             text = _emphasized(slot)
             lines.append(cfg.labeled_line.replace("{label}", slot.label).replace("{text}", text))
@@ -113,8 +113,8 @@ def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
         if resolved.prefix:
             obj["prefix"] = resolved.prefix
         for slot in resolved.slots:
-            if slot.item_name is None:
-                continue
+            if slot.item_name is None or slot.inline:
+                continue  # inline draws already live in the prefix/suffix text
             obj[slot.id] = slot.text  # no emphasis in JSON formats
         if resolved.suffix:
             obj["suffix"] = resolved.suffix
@@ -194,6 +194,8 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
             line += f"  @{slot.seed_used}"
         if slot.tier == "user":
             line += "  (user)"
+        if slot.inline:
+            line += "  (inline)"
         lines.append(line)
 
     for tag in lora_tags(resolved):

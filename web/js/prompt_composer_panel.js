@@ -941,7 +941,8 @@ export function createComposerPanel(root, ctx) {
   function metaPromptBlock() {
     const prefixArea = autoArea(
       {
-        placeholder: "Text before the first section — {trigger} works here",
+        placeholder: "Text before the first section — {trigger} works here; "
+          + "{slot-id} weaves that slot's draw inline (it leaves the block list)",
         oninput: (e) => {
           state.rawData.prefix = e.target.value;
           markModified();
@@ -952,7 +953,7 @@ export function createComposerPanel(root, ctx) {
     );
     const suffixArea = autoArea(
       {
-        placeholder: "Text after the last section",
+        placeholder: "Text after the last section — {slot-id} weaving works here too",
         oninput: (e) => {
           state.rawData.suffix = e.target.value;
           markModified();
@@ -1205,6 +1206,20 @@ export function createComposerPanel(root, ctx) {
     const chips = [];
     if (isVariantSlot) chips.push(el("span", { class: "mrln-chip" }, state.variant));
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
+    const wrapperText = `${state.rawData?.prefix ?? ""}\n${state.rawData?.suffix ?? ""}`;
+    if (wrapperText.includes(`{${slot.id}}`)) {
+      chips.push(
+        el(
+          "span",
+          {
+            class: "mrln-chip mrln-merged",
+            title: `Prefix/suffix reference {${slot.id}} — the drawn text is woven `
+              + "into that sentence (with its emphasis) instead of joining the block list.",
+          },
+          "inline"
+        )
+      );
+    }
     chips.push(
       el(
         "button",
