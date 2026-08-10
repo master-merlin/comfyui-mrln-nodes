@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Sky / Celestial",
+  "description": "The sky as the hero subject (Civitai 'astronomy' category).",
+  "suits": ["nature"],
+  "items": [
+    { "name": "aurora-curtains", "text": "aurora curtains rippling green and violet over silhouetted peaks", "text_short": "rippling aurora", "tags": ["night"] },
+    { "name": "milky-way-core", "text": "the Milky Way core arching in dense star fields", "text_short": "Milky Way core", "tags": ["night"] },
+    { "name": "supercell", "text": "a rotating supercell storm stacked like an inverted wedding cake", "text_short": "rotating supercell" },
+    { "name": "mammatus", "text": "mammatus clouds hanging in ominous pouches after the storm", "text_short": "mammatus pouches" },
+    { "name": "crepuscular-rays", "text": "crepuscular rays fanning from behind a broken cloud deck", "text_short": "fanning god rays" },
+    { "name": "moonrise-full", "text": "a huge full moon rising through horizon haze", "text_short": "huge rising moon", "tags": ["night"] },
+    { "name": "comet", "text": "a naked-eye comet with a long dust tail over quiet hills", "text_short": "long-tailed comet", "tags": ["night"] },
+    { "name": "lenticular-stack", "text": "a stack of smooth lenticular clouds hovering over a summit", "text_short": "lenticular stack" },
+    { "name": "star-trails", "text": "concentric star trails circling the celestial pole", "text_short": "circling star trails", "tags": ["night"] },
+    { "name": "noctilucent", "text": "electric-blue noctilucent clouds glowing at the edge of space", "text_short": "noctilucent glow", "tags": ["night"] },
+    { "name": "rainbow-full", "text": "a full double rainbow grounded in rain-washed light", "text_short": "double rainbow" },
+    { "name": "eclipse-corona", "text": "a total solar eclipse, corona feathering around the black disc", "text_short": "eclipse corona" }
+  ]
+}

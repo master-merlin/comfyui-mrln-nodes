@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Water",
+  "description": "Waterscapes as hero subjects.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "plunge-falls", "text": "a single plunge waterfall dropping into a mist-filled amphitheater", "text_short": "plunging waterfall" },
+    { "name": "tiered-cascades", "text": "travertine terraces cascading in milky turquoise steps", "text_short": "travertine cascades" },
+    { "name": "glacial-lake", "text": "a wind-still glacial lake doubling the peaks in perfect symmetry", "text_short": "mirror glacial lake" },
+    { "name": "river-bend", "text": "a lazy river bend carving light through a shadowed gorge", "text_short": "carving river bend" },
+    { "name": "wild-coast", "text": "storm surf detonating against black sea stacks", "text_short": "surf on sea stacks" },
+    { "name": "turquoise-cove", "text": "a sheltered turquoise cove ringed by pale cliffs", "text_short": "turquoise cove" },
+    { "name": "braided-river", "text": "a braided river weaving silver channels across grey gravel", "text_short": "braided silver river" },
+    { "name": "hot-spring-terrace", "text": "steaming mineral terraces in banded orange and white", "text_short": "steaming mineral terraces" },
+    { "name": "tidal-flats", "text": "rippled tidal flats holding the sky's colors at low water", "text_short": "rippled tidal flats" },
+    { "name": "bioluminescent-shore", "text": "waves breaking in electric blue bioluminescence along a dark shore", "text_short": "glowing blue surf", "tags": ["night"] },
+    { "name": "mangrove-maze", "text": "a mangrove channel maze threading glassy brackish water", "text_short": "mangrove channels" },
+    { "name": "spring-pool", "text": "a gin-clear spring pool over white sand, light caustics dancing", "text_short": "gin-clear spring pool" }
+  ]
+}

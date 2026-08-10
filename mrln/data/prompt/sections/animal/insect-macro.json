@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Insect / Macro",
+  "description": "Macro-scale subjects — pair with the 100mm macro lens.",
+  "suits": ["animal"],
+  "items": [
+    { "name": "morpho-butterfly", "text": "a blue morpho butterfly wings-open on a dark leaf", "text_short": "blue morpho open" },
+    { "name": "dragonfly", "text": "a dew-jeweled dragonfly on a reed at first light", "text_short": "dew-covered dragonfly" },
+    { "name": "jewel-beetle", "text": "a metallic jewel beetle refracting rainbow structural color", "text_short": "metallic jewel beetle" },
+    { "name": "honeybee", "text": "a pollen-dusted honeybee deep in a poppy", "text_short": "bee in poppy" },
+    { "name": "praying-mantis", "text": "a praying mantis tracking the lens with tilted head", "text_short": "head-tilt mantis" },
+    { "name": "jumping-spider", "text": "a jumping spider's curious headlamp eyes filling the frame", "text_short": "jumping spider eyes" },
+    { "name": "ant-teamwork", "text": "leafcutter ants hauling green sails along a branch highway", "text_short": "leafcutter ant line" },
+    { "name": "snail-glass", "text": "a garden snail crossing glass, underside spiral visible", "text_short": "snail on glass" },
+    { "name": "moth-frost", "text": "a frost-covered moth waiting motionless for the sun", "text_short": "frosted moth" },
+    { "name": "ladybird-takeoff", "text": "a ladybird at the instant of takeoff, wing cases flared", "text_short": "ladybird takeoff" }
+  ]
+}

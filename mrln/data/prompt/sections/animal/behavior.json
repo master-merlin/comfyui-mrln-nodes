@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Behavior",
+  "description": "What the animal is doing — documentary shots are subject x behavior x habitat.",
+  "suits": ["animal"],
+  "items": [
+    { "name": "hunting-stalk", "text": "in a low hunting stalk, every muscle loaded", "text_short": "hunting stalk" },
+    { "name": "chase-sprint", "text": "at full sprint in pursuit, dust kicked behind", "text_short": "full pursuit sprint" },
+    { "name": "feeding-young", "text": "feeding its young in a moment of intimate care", "text_short": "feeding young" },
+    { "name": "grooming", "text": "mid-grooming, absorbed and unhurried", "text_short": "grooming" },
+    { "name": "territorial-display", "text": "in full territorial display, posture maximized", "text_short": "territorial display" },
+    { "name": "courtship-dance", "text": "performing an elaborate courtship display", "text_short": "courtship display" },
+    { "name": "migration", "text": "on migration, one of thousands moving with purpose", "text_short": "migrating en masse" },
+    { "name": "play-fight", "text": "play-fighting with a sibling, all teeth and no harm", "text_short": "sibling play-fight" },
+    { "name": "drinking-waterhole", "text": "drinking warily at the waterhole, reflection doubled", "text_short": "wary waterhole drink" },
+    { "name": "sleeping-curl", "text": "asleep in a tight curl, breath slow", "text_short": "sleeping curl" },
+    { "name": "alert-freeze", "text": "frozen in high alert, ears and eyes locked on something unseen", "text_short": "alert freeze" },
+    { "name": "carrying-prey", "text": "carrying prey with quiet efficiency", "text_short": "carrying prey" },
+    { "name": "dust-bath", "text": "luxuriating in a dust bath, cloud golden in the light", "text_short": "golden dust bath" },
+    { "name": "nest-building", "text": "building a nest with obsessive precision", "text_short": "nest building" }
+  ]
+}

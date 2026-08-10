@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Mythical Creature",
+  "description": "Legendary beasts. Tagged 'fantasy'.",
+  "suits": ["animal"],
+  "tags": ["fantasy"],
+  "items": [
+    { "name": "mountain-dragon", "text": "an ancient mountain dragon, scales like shale, wings half-furled", "text_short": "ancient mountain dragon" },
+    { "name": "phoenix", "text": "a phoenix mid-rebirth, embers spiraling into new plumage", "text_short": "rebirthing phoenix" },
+    { "name": "kitsune", "text": "a nine-tailed kitsune wreathed in pale foxfire", "text_short": "nine-tailed kitsune", "tags": ["anime"] },
+    { "name": "griffin", "text": "a griffin mantling over its cliff eyrie", "text_short": "mantling griffin" },
+    { "name": "unicorn", "text": "a unicorn at a moonlit pool, horn catching starlight", "text_short": "moonlit unicorn", "tags": ["night"] },
+    { "name": "kelpie", "text": "a kelpie rising from a loch, mane becoming water", "text_short": "loch-born kelpie" },
+    { "name": "thunderbird", "text": "a thunderbird spreading storm-dark wings, lightning in its wake", "text_short": "storm thunderbird" },
+    { "name": "forest-spirit-stag", "text": "a great forest-spirit stag with antlers of living branches", "text_short": "spirit stag", "tags": ["anime"] },
+    { "name": "sea-serpent", "text": "a sea serpent's coils breaking a storm swell in ranks", "text_short": "sea serpent coils" },
+    { "name": "baku", "text": "a gentle dream-eating baku, tapir-nosed and ember-eyed", "text_short": "dream-eating baku", "tags": ["anime"] }
+  ]
+}

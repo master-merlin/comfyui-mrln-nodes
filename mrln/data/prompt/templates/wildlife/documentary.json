@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "label": "Wildlife Documentary",
+  "type": ["animal"],
+  "description": "Documentary formula: subject x behavior x habitat through long glass and patient light.",
+  "prefix": "An award-caliber wildlife documentary photograph.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "photoreal-raw"
+    },
+    {
+      "id": "subject",
+      "ref": "animal",
+      "label": "Animal",
+      "emphasis": 1.25,
+      "tags_none": ["fantasy"]
+    },
+    {
+      "id": "behavior",
+      "ref": "animal/behavior",
+      "label": "Behavior",
+      "emphasis": 1.15
+    },
+    {
+      "id": "habitat",
+      "ref": "location/nature",
+      "label": "Habitat"
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Time of day"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "600mm-telephoto"
+    },
+    {
+      "id": "styleline",
+      "ref": "style/photography",
+      "label": "Style",
+      "default": "wildlife-documentary"
+    }
+  ],
+  "suffix": "authentic field conditions, natural unposed subject, feather and fur detail resolved, catchlight in the eye",
+  "negative": "watermark, text, cartoon, anthropomorphic, deformed anatomy",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

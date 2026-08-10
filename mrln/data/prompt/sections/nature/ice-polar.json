@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Ice / Polar",
+  "description": "Frozen landforms as hero subjects.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "glacier-cave", "text": "inside a glacier cave of rippled sapphire ice", "text_short": "sapphire glacier cave" },
+    { "name": "iceberg-arch", "text": "a sculpted iceberg arch drifting in slate-grey water", "text_short": "drifting iceberg arch" },
+    { "name": "pancake-ice", "text": "rafts of pancake ice tiling a freezing sea", "text_short": "pancake ice rafts" },
+    { "name": "frozen-bubbles", "text": "methane bubbles stacked frozen in black lake ice", "text_short": "frozen lake bubbles" },
+    { "name": "blue-crevasse", "text": "a blue crevasse field folding into depth", "text_short": "blue crevasse field" },
+    { "name": "rime-forest", "text": "trees armored entirely in wind-built rime feathers", "text_short": "rime-armored trees" },
+    { "name": "polar-plateau", "text": "the polar plateau, sastrugi carved to the horizon", "text_short": "sastrugi plateau" },
+    { "name": "ice-shelf-edge", "text": "the sheer edge of an ice shelf meeting dark water in a hundred-meter wall", "text_short": "ice shelf wall" }
+  ]
+}

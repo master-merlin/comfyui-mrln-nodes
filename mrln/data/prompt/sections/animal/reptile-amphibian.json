@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Reptile / Amphibian",
+  "description": "Cold-blooded subjects.",
+  "suits": ["animal"],
+  "items": [
+    { "name": "tree-frog", "text": "a vivid green tree frog gripping a rain-beaded branch", "text_short": "tree frog on branch" },
+    { "name": "chameleon", "text": "a panther chameleon mid-color-shift, eyes swiveling independently", "text_short": "shifting chameleon" },
+    { "name": "gecko", "text": "a gecko on glass, toe pads spread in perfect detail", "text_short": "gecko toe pads" },
+    { "name": "sea-iguana", "text": "a marine iguana sneezing salt on black lava rock", "text_short": "marine iguana on lava" },
+    { "name": "python-coil", "text": "a reticulated python coiled in patterned symmetry", "text_short": "coiled python" },
+    { "name": "tortoise", "text": "a giant tortoise crossing volcanic ground, neck extended", "text_short": "giant tortoise" },
+    { "name": "axolotl", "text": "a smiling pink axolotl with feathery gills fanned", "text_short": "smiling axolotl" },
+    { "name": "crocodile-eyes", "text": "crocodile eyes and scutes just breaking still water", "text_short": "crocodile at waterline" }
+  ]
+}

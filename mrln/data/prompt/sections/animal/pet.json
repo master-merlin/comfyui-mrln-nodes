@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Pet",
+  "description": "Companion animals with scenario-strong texts (the trending whimsy cluster).",
+  "suits": ["animal"],
+  "items": [
+    { "name": "black-cat", "text": "a black cat with glowing amber eyes, silhouette soft-edged against the light", "text_short": "amber-eyed black cat" },
+    { "name": "ginger-cat-window", "text": "a ginger cat loafed on a sunny windowsill among plant pots", "text_short": "ginger cat on sill" },
+    { "name": "golden-retriever", "text": "a golden retriever mid-shake, water droplets haloing in backlight", "text_short": "shaking golden retriever" },
+    { "name": "border-collie", "text": "a border collie in a working crouch, eyes locked", "text_short": "crouched border collie" },
+    { "name": "dachshund", "text": "a long-haired dachshund trotting with outsized confidence", "text_short": "trotting dachshund" },
+    { "name": "kitten-mischief", "text": "a kitten tangled in a ball of unraveling yarn", "text_short": "yarn-tangled kitten" },
+    { "name": "husky-snow", "text": "a blue-eyed husky face-first in fresh powder snow", "text_short": "husky in powder" },
+    { "name": "rabbit-clover", "text": "a lop-eared rabbit nose-deep in clover", "text_short": "lop rabbit in clover" },
+    { "name": "parrot-shoulder", "text": "a cheeky parrot leaning into frame from a shoulder", "text_short": "shoulder parrot" },
+    { "name": "pug-blanket", "text": "a pug swaddled in a blanket like a small disgruntled king", "text_short": "blanket-swaddled pug" }
+  ]
+}

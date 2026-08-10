@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "label": "Volcanic",
+  "description": "Volcanic landforms as hero subjects.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "lava-fountain", "text": "a roaring lava fountain feeding incandescent rivers", "text_short": "roaring lava fountain" },
+    { "name": "crater-lake", "text": "an impossibly blue crater lake ringed by ash slopes", "text_short": "blue crater lake" },
+    { "name": "basalt-columns", "text": "hexagonal basalt columns stacked like organ pipes to the sea", "text_short": "hexagonal basalt organ" },
+    { "name": "lava-meets-sea", "text": "molten lava meeting the sea in explosions of steam", "text_short": "lava meeting sea" },
+    { "name": "geothermal-field", "text": "a hissing geothermal field of mudpots and mineral-stained vents", "text_short": "hissing geothermal field" },
+    { "name": "ash-lightning", "text": "an eruption column laced with volcanic lightning", "text_short": "volcanic lightning column" }
+  ]
+}

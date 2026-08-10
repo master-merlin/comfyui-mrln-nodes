@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "label": "Marine Life",
+  "description": "Ocean subjects. Pairs naturally with location/underwater.",
+  "suits": ["animal"],
+  "tags": ["underwater"],
+  "items": [
+    { "name": "humpback-breach", "text": "a humpback whale breaching in an explosion of white water", "text_short": "breaching humpback" },
+    { "name": "orca-pod", "text": "an orca pod surfacing in formation, blows backlit", "text_short": "surfacing orca pod" },
+    { "name": "great-white", "text": "a great white shark cruising the blue with escort fish", "text_short": "cruising great white" },
+    { "name": "octopus", "text": "an octopus mid-color-change flowing over a reef", "text_short": "color-shifting octopus" },
+    { "name": "sea-turtle", "text": "a green sea turtle gliding through cathedral light", "text_short": "gliding sea turtle" },
+    { "name": "manta-ray", "text": "a manta ray somersaulting through a plankton cloud", "text_short": "somersaulting manta" },
+    { "name": "sardine-baitball", "text": "a sardine baitball spiraling under diving predators", "text_short": "spiraling baitball" },
+    { "name": "seahorse", "text": "a seahorse anchored to seagrass, tail coiled", "text_short": "anchored seahorse" },
+    { "name": "jellyfish-bloom", "text": "a moon jellyfish bloom drifting like slow lanterns", "text_short": "jellyfish bloom" },
+    { "name": "seal-play", "text": "a curious harbor seal spiraling around the camera", "text_short": "playful harbor seal" },
+    { "name": "clownfish", "text": "a clownfish peering from anemone tendrils", "text_short": "clownfish in anemone" },
+    { "name": "dolphin-bowride", "text": "dolphins bow-riding in crystalline pressure waves", "text_short": "bow-riding dolphins" }
+  ]
+}

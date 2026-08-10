@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "label": "Mammal",
+  "description": "Mammal subjects for wildlife work.",
+  "suits": ["animal"],
+  "items": [
+    { "name": "lion", "text": "a heavy-maned lion surveying the savanna", "text_short": "maned lion" },
+    { "name": "snow-leopard", "text": "a snow leopard draped over a rocky ledge, tail like a scarf", "text_short": "snow leopard on ledge" },
+    { "name": "tiger", "text": "a Bengal tiger moving through tall grass, stripes dissolving", "text_short": "tiger in tall grass" },
+    { "name": "wolf", "text": "a grey wolf pausing mid-trot in falling snow", "text_short": "wolf in snowfall" },
+    { "name": "brown-bear", "text": "a massive brown bear standing chest-deep at the rapids", "text_short": "bear at the rapids" },
+    { "name": "elephant", "text": "a dust-red elephant matriarch leading the herd", "text_short": "elephant matriarch" },
+    { "name": "red-fox", "text": "a red fox with a snow-dusted muzzle, ears pricked", "text_short": "snow-dusted red fox" },
+    { "name": "mountain-gorilla", "text": "a silverback mountain gorilla in dripping foliage", "text_short": "silverback in foliage" },
+    { "name": "red-deer-stag", "text": "a roaring red deer stag in morning mist", "text_short": "roaring stag in mist" },
+    { "name": "bison", "text": "a frost-caked bison exhaling steam on the winter plain", "text_short": "frosted bison" },
+    { "name": "cheetah", "text": "a cheetah at full stretch, all four feet off the ground", "text_short": "cheetah at full stretch" },
+    { "name": "giraffe", "text": "a giraffe silhouetted against an acacia horizon", "text_short": "giraffe silhouette" },
+    { "name": "orangutan", "text": "an orangutan mother with an infant clinging beneath the canopy", "text_short": "orangutan with infant" },
+    { "name": "arctic-hare", "text": "an arctic hare bolt upright in endless white", "text_short": "arctic hare upright" },
+    { "name": "wild-horse", "text": "wild horses running through shallow surf", "text_short": "horses in surf" },
+    { "name": "hedgehog", "text": "a hedgehog nosing through autumn leaf litter", "text_short": "hedgehog in leaves" }
+  ]
+}

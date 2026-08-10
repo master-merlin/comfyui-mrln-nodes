@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Desert",
+  "description": "Arid landforms as hero subjects.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "star-dunes", "text": "a sea of star dunes, crests knife-sharp between light and shadow", "text_short": "knife-crested star dunes" },
+    { "name": "slot-canyon", "text": "a sandstone slot canyon glowing orange with bounced light", "text_short": "glowing slot canyon" },
+    { "name": "monument-buttes", "text": "monumental red buttes standing in haze-layered ranks", "text_short": "monumental red buttes" },
+    { "name": "salt-flat-mirror", "text": "a flooded salt flat mirroring the sky to a seamless horizon", "text_short": "mirror salt flat" },
+    { "name": "joshua-forest", "text": "a joshua tree forest gesturing across pastel scrubland", "text_short": "joshua tree forest" },
+    { "name": "wave-rock", "text": "wind-polished wave-form rock strata in swirled candy bands", "text_short": "swirled wave rock" },
+    { "name": "desert-arch", "text": "a freestanding sandstone arch framing distant mesas", "text_short": "sandstone arch frame" },
+    { "name": "cracked-playa", "text": "a cracked clay playa tiled to infinity", "text_short": "cracked playa tiles" }
+  ]
+}

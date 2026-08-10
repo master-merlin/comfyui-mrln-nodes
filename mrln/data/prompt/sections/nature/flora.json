@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Flora",
+  "description": "Plant subjects (Civitai 'flower' category).",
+  "suits": ["nature"],
+  "items": [
+    { "name": "sakura-full-bloom", "text": "cherry trees in absolute peak bloom, petals already letting go", "text_short": "peak sakura bloom", "tags": ["anime"] },
+    { "name": "wildflower-meadow", "text": "an alpine meadow drowning in mixed wildflowers", "text_short": "wildflower meadow" },
+    { "name": "lavender-rows", "text": "purple lavender rows converging on a stone farmhouse", "text_short": "lavender rows" },
+    { "name": "ancient-oak", "text": "a solitary ancient oak, crown wider than tall", "text_short": "ancient solitary oak" },
+    { "name": "lotus-pond", "text": "pink lotus blooms standing over still dark water", "text_short": "lotus pond blooms" },
+    { "name": "sunflower-field", "text": "a sunflower field turned in perfect unison", "text_short": "unison sunflowers" },
+    { "name": "moss-world", "text": "a miniature moss world of stars and cushions in macro detail", "text_short": "macro moss world" },
+    { "name": "autumn-maple", "text": "a Japanese maple in impossible crimson against dark cedar", "text_short": "crimson maple", "tags": ["anime"] },
+    { "name": "wisteria-tunnel", "text": "a dripping wisteria tunnel in lilac cascade", "text_short": "wisteria tunnel", "tags": ["anime"] },
+    { "name": "single-rose", "text": "a single garden rose, petals heavy with water droplets", "text_short": "dew-heavy rose" },
+    { "name": "saguaro-sentinels", "text": "saguaro sentinels raising arms against a pastel sky", "text_short": "saguaro sentinels" },
+    { "name": "fern-unfurl", "text": "a fern fiddlehead unfurling in perfect spiral", "text_short": "unfurling fiddlehead" }
+  ]
+}

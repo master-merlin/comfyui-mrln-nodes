@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Bird",
+  "description": "Bird subjects.",
+  "suits": ["animal"],
+  "items": [
+    { "name": "golden-eagle", "text": "a golden eagle banking with primaries spread like fingers", "text_short": "banking golden eagle" },
+    { "name": "snowy-owl", "text": "a snowy owl in silent glide over drifted snow", "text_short": "gliding snowy owl" },
+    { "name": "hummingbird", "text": "a hummingbird frozen at a bloom, wings a blur ring", "text_short": "hovering hummingbird" },
+    { "name": "kingfisher", "text": "a kingfisher piercing the water in a spray crown", "text_short": "diving kingfisher" },
+    { "name": "peacock", "text": "a peacock at full iridescent display", "text_short": "peacock display" },
+    { "name": "flamingo-flock", "text": "a pink flamingo flock mirrored in still shallows", "text_short": "mirrored flamingos" },
+    { "name": "raven", "text": "a glossy raven on a fencepost, head cocked with intent", "text_short": "intent raven" },
+    { "name": "puffin", "text": "a puffin with a beak full of silver sand eels", "text_short": "puffin with eels" },
+    { "name": "murmuration", "text": "a starling murmuration folding across the dusk sky", "text_short": "starling murmuration" },
+    { "name": "heron", "text": "a grey heron statue-still in golden reeds", "text_short": "still heron in reeds" },
+    { "name": "macaw-pair", "text": "a scarlet macaw pair blazing against jungle green", "text_short": "scarlet macaw pair" },
+    { "name": "swan-takeoff", "text": "a mute swan running on water into takeoff", "text_short": "swan taking off" }
+  ]
+}

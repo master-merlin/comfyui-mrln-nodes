@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Mountain",
+  "description": "Mountain landforms as hero subjects.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "matterhorn-pyramid", "text": "a solitary pyramid peak catching first alpenglow above shadowed valleys", "text_short": "alpenglow pyramid peak" },
+    { "name": "knife-ridge", "text": "a knife-edge arete dropping away into cloud on both sides", "text_short": "knife-edge arete" },
+    { "name": "glacier-tongue", "text": "a crevassed glacier tongue pouring between dark buttresses", "text_short": "crevassed glacier tongue" },
+    { "name": "dolomite-towers", "text": "pale dolomite towers rising sheer from green meadow benches", "text_short": "dolomite towers" },
+    { "name": "volcanic-cone", "text": "a perfect snow-striped volcanic cone above a cloud sea", "text_short": "snow-striped cone" },
+    { "name": "karst-pinnacles", "text": "drowned karst pinnacles rising from still jade water", "text_short": "jade karst pinnacles" },
+    { "name": "highland-tors", "text": "weathered granite tors on a heather-red moorland ridge", "text_short": "granite moorland tors" },
+    { "name": "cloud-inversion", "text": "summits islanded above a valley-filling cloud inversion", "text_short": "peaks above cloud sea" },
+    { "name": "basalt-mesa", "text": "a flat-topped basalt mesa banded with strata light", "text_short": "banded basalt mesa" },
+    { "name": "hanging-valley-falls", "text": "a hanging valley spilling a waterfall past cliff-rooted pines", "text_short": "hanging valley falls" }
+  ]
+}
