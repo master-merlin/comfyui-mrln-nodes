@@ -33,3 +33,4 @@ Thumbs.db
 /temp/
 *.log
 /user_data/
+.playwright-mcp/
