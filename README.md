@@ -58,6 +58,12 @@ Showcase templates, one per domain:
 | `anime/keyvisual`, `scifi/vista` | genre scenes over tagged locations |
 | `wildlife/documentary`, `landscape/grand` | subject × behavior × habitat; landform hero shots |
 | `food/editorial`, `product/hero`, `architecture/study` | commercial photography formulas |
+| `vehicle/night-ride`, `vehicle/heritage-classic` | neon-noir motion (parked/rolling variants); classic-car portraiture with your own LoRA trigger |
+| `vehicle/blueprint-sheet`, `vehicle/rider-lifestyle` | any machine as an annotated technical sheet; motorcycle culture with an optional nested rider |
+| `poster/travel`, `whimsy/storybook` | any place as a vintage poster; the trending pet-in-handmade-media formula |
+| `fantasy/epic-encounter`, `noir/night-scene` | archetype vs mythical creature at romanticist scale; one hard light on pushed Delta 3200 |
+| `macro/small-world`, `astro/nightscape` | textures become landscapes; celestial heroes over dark landforms |
+| `street/candid`, `moment/cozy` | decisive-moment street; hygge with the weather kept outside the window |
 
 The human-domain content is strictly adults-only and kept at a tasteful
 glamour level (lint-enforced); templates carry matching safety negatives by

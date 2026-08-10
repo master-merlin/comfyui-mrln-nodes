@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Street Candid",
+  "type": ["human"],
+  "description": "Street photography: a characterful stranger, city geometry, weather doing the mood work.",
+  "prefix": "A candid street photograph, decisive moment.",
+  "slots": [
+    { "id": "passerby", "ref": "human/archetype", "label": "The stranger", "emphasis": 1.15 },
+    { "id": "moment", "ref": "human/gesture", "label": "Caught mid", "allow_empty": true },
+    { "id": "scene", "ref": "location/urban", "label": "City stage", "emphasis": 1.15 },
+    { "id": "weather", "ref": "atmosphere/weather", "label": "Weather", "default": "after-the-rain" },
+    { "id": "film", "ref": "camera/film", "label": "Film", "default": "tri-x-400" },
+    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "35mm-environmental" },
+    { "id": "styleline", "ref": "style/photography", "label": "Style", "default": "street" },
+    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "layered-depth" }
+  ],
+  "suffix": "unposed truth, layered strangers in depth, geometry aligning for one instant",
+  "negative": "posed studio look, watermark, text, child",
+  "render": { "format": "string", "joiner": ", " }
+}

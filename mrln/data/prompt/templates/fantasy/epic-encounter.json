@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Epic Encounter",
+  "description": "Hero meets legend: fantasy archetype, mythical creature, enchanted arena and romanticist scale.",
+  "prefix": "An epic fantasy encounter.",
+  "slots": [
+    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "sdxl-classic" },
+    { "id": "hero", "ref": "human/archetype", "label": "The hero", "tags_any": ["fantasy"], "emphasis": 1.2 },
+    { "id": "prop", "ref": "product/prop", "label": "In hand", "tags_any": ["fantasy"], "allow_empty": true },
+    { "id": "legend", "ref": "animal/mythical", "label": "The legend", "emphasis": 1.3 },
+    { "id": "arena", "ref": "location", "label": "Arena", "tags_any": ["fantasy"], "emphasis": 1.15 },
+    { "id": "light", "ref": "lighting/dramatic", "label": "Light", "default": "volumetric-shafts" },
+    { "id": "genre", "ref": "style/genre", "label": "Genre", "default": "high-fantasy" },
+    { "id": "movement", "ref": "style/movement", "label": "Painterly scale", "default": "romanticism" },
+    { "id": "particles", "ref": "atmosphere/particles", "label": "Air", "default": "embers" }
+  ],
+  "suffix": "staggering sense of scale between hero and legend, painterly grandeur, coherent fantasy worldbuilding",
+  "negative": "modern objects, watermark, text, child",
+  "render": { "format": "string", "joiner": ", " }
+}

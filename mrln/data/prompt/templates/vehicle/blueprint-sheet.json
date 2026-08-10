@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "label": "Blueprint Sheet",
+  "type": ["object", "vehicle"],
+  "description": "The trending infographic treatment aimed at machines: any vehicle rendered as an annotated technical sheet.",
+  "prefix": "A technical presentation sheet.",
+  "slots": [
+    { "id": "subject", "ref": "vehicle", "label": "Machine", "emphasis": 1.25 },
+    { "id": "treatment", "ref": "style/graphic", "label": "Graphic treatment", "default": "blueprint-annotation", "emphasis": 1.3 },
+    { "id": "light", "ref": "lighting/studio", "label": "Light", "default": "white-cyclorama" },
+    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "central-symmetry" },
+    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "f8-deep" }
+  ],
+  "suffix": "precise draftsman linework, labeled callouts, engineering-poster clarity",
+  "negative": "clutter, watermark, illegible scribbles",
+  "render": { "format": "string", "joiner": ", " }
+}

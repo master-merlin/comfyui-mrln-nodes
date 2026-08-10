@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Travel Poster",
+  "description": "Any place in the library becomes a vintage travel poster — location x graphic treatment x palette.",
+  "prefix": "A travel poster design.",
+  "variables": [
+    { "name": "caption", "label": "Poster caption", "default": "VISIT" }
+  ],
+  "slots": [
+    { "id": "destination", "ref": "location", "label": "Destination", "tags_none": ["boudoir"], "emphasis": 1.3 },
+    { "id": "treatment", "ref": "style/graphic", "label": "Treatment", "default": "vintage-travel-poster", "emphasis": 1.25 },
+    { "id": "palette", "ref": "style/palette", "label": "Palette" },
+    { "id": "season", "ref": "atmosphere/season", "label": "Season", "allow_empty": true },
+    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "horizon-low" }
+  ],
+  "suffix": "elegant retro title block reading \"{caption}\", clean silkscreen-flat shapes, gallery-print quality",
+  "negative": "photorealistic rendering, clutter, watermark",
+  "render": { "format": "string", "joiner": ", " }
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Rider Lifestyle",
+  "type": ["object", "vehicle", "motorcycle", "human"],
+  "description": "Motorcycle culture editorial: machine, optional rider (full nested profile), place and golden light.",
+  "prefix": "A motorcycle lifestyle editorial photograph.",
+  "slots": [
+    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "photoreal-raw" },
+    { "id": "bike", "ref": "vehicle/motorcycle/design", "label": "Machine", "emphasis": 1.25 },
+    { "id": "detail", "ref": "vehicle/motorcycle/detail", "label": "Detail accent" },
+    { "id": "rider", "ref": "human/profile", "label": "Beside it", "default": "male-tailored", "allow_empty": true, "emphasis": 1.15 },
+    { "id": "scene", "ref": "location", "label": "Place", "tags_none": ["boudoir", "underwater"] },
+    { "id": "time", "ref": "atmosphere/time-of-day", "label": "Time of day" },
+    { "id": "film", "ref": "camera/film", "label": "Film look", "default": "portra-400" },
+    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "35mm-environmental" }
+  ],
+  "suffix": "lived-in authenticity, mechanical texture, unforced editorial mood",
+  "negative": "showroom sterility, watermark, text, child, underage",
+  "render": { "format": "string", "joiner": ", " }
+}

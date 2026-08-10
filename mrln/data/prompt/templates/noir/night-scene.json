@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "label": "Noir Night Scene",
+  "type": ["human"],
+  "description": "Film noir: a character under one hard light in the night city, on pushed black-and-white stock.",
+  "prefix": "A film-noir scene.",
+  "slots": [
+    { "id": "figure", "ref": "human/archetype", "label": "The figure", "default": "detective", "emphasis": 1.2 },
+    { "id": "expression", "ref": "human/expression", "label": "Expression", "default": "contemplative" },
+    { "id": "scene", "ref": "location", "label": "Night city", "tags_any": ["night"], "emphasis": 1.2 },
+    { "id": "weather", "ref": "atmosphere/weather", "label": "Weather", "default": "after-the-rain" },
+    { "id": "light", "ref": "lighting/dramatic", "label": "One hard light", "default": "single-practical" },
+    { "id": "film", "ref": "camera/film", "label": "Pushed stock", "default": "delta-3200" },
+    { "id": "palette", "ref": "style/palette", "label": "Palette", "default": "black-and-white" },
+    { "id": "genre", "ref": "style/genre", "label": "Genre", "default": "film-noir" },
+    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "frame-in-frame" }
+  ],
+  "suffix": "venetian-blind shadows, cigarette-haze atmosphere, fatal glamour restraint",
+  "negative": "color, cheerful daylight, watermark, child",
+  "render": { "format": "string", "joiner": ", " }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Small World",
+  "type": ["animal", "nature"],
+  "description": "Macro photography where textures become landscapes: tiny subject, dew, stacked focus.",
+  "prefix": "A breathtaking macro photograph.",
+  "slots": [
+    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "maximal-8k" },
+    { "id": "subject", "ref": "animal/insect-macro", "label": "Tiny subject", "emphasis": 1.25 },
+    { "id": "stage", "ref": "nature/flora", "label": "Its world", "allow_empty": true },
+    { "id": "particles", "ref": "atmosphere/particles", "label": "Suspended detail", "default": "frozen-splash" },
+    { "id": "light", "ref": "lighting/organic", "label": "Light", "default": "dappled-leaves" },
+    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "100mm-macro" },
+    { "id": "technique", "ref": "camera/technique", "label": "Technique", "default": "focus-stack" }
+  ],
+  "suffix": "surface textures resolved into landscapes, jewel-like specular highlights",
+  "negative": "watermark, text, motion blur on the subject",
+  "render": { "format": "string", "joiner": ", " }
+}

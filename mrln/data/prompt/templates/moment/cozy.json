@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Cozy Moment",
+  "description": "Hygge distilled: a warm interior, weather kept outside the window, maybe a companion animal.",
+  "prefix": "A deeply cozy interior moment.",
+  "slots": [
+    { "id": "space", "ref": "architecture/interior", "label": "The space", "emphasis": 1.2 },
+    { "id": "companion", "ref": "animal/pet", "label": "Companion", "allow_empty": true, "emphasis": 1.15 },
+    { "id": "outside", "ref": "atmosphere/weather", "label": "Outside the window", "default": "light-rain" },
+    { "id": "light", "ref": "lighting/organic", "label": "Warm light", "default": "fireplace-glow" },
+    { "id": "mood", "ref": "atmosphere/mood", "label": "Mood", "default": "nostalgic" },
+    { "id": "medium", "ref": "style/medium", "label": "Medium", "default": "analog-film" },
+    { "id": "palette", "ref": "style/palette", "label": "Palette", "default": "golden-warmth" }
+  ],
+  "suffix": "steam rising from a mug, soft blankets, the weather safely on the other side of the glass",
+  "negative": "clinical light, watermark, text",
+  "render": { "format": "string", "joiner": ", " }
+}

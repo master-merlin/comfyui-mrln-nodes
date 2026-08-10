@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "label": "Heritage Classic",
+  "type": ["object", "vehicle", "car"],
+  "description": "Timeless classic-car portraiture in car-culture geography — bring your own car via {trigger}, exactly like the mined top prompts.",
+  "prefix": "A highly realistic timeless portrait of a {trigger}.",
+  "variables": [
+    { "name": "trigger", "label": "Car / LoRA trigger", "default": "coachbuilt classic grand tourer" }
+  ],
+  "slots": [
+    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "photoreal-raw" },
+    { "id": "paint", "ref": "vehicle/car/color/paint", "label": "Primary color", "emphasis": 1.15 },
+    { "id": "finish", "ref": "vehicle/car/finish", "label": "Finish" },
+    { "id": "state", "ref": "vehicle/car/state", "label": "State", "default": "engine-off" },
+    { "id": "scene", "ref": "location/automotive", "label": "Heritage place", "emphasis": 1.2 },
+    { "id": "time", "ref": "atmosphere/time-of-day", "label": "Time of day" },
+    { "id": "view", "ref": "viewpoint/general", "label": "Viewpoint", "emphasis": 1.15 },
+    { "id": "film", "ref": "camera/film", "label": "Film look", "default": "kodachrome-64" },
+    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "135mm-compression" }
+  ],
+  "suffix": "period-correct atmosphere, chrome and paint depth rendered honestly, sharp focus on the car",
+  "negative": "modern traffic, watermark, text, logo",
+  "render": { "format": "string", "joiner": ", " }
+}
