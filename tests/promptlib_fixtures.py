@@ -125,6 +125,47 @@ def build_roots(tmp_path: Path):
         },
     )
 
+    _write(
+        factory,
+        "sections/crew.json",
+        {
+            "label": "Crew",
+            "items": [
+                {"name": "solo", "text": "one lone driver", "text_short": "a driver"},
+                {
+                    "name": "pair",
+                    "text": "a pair: {left} paint and {right} paint",
+                    "text_short": "two drivers",
+                    "slots": [
+                        {"id": "left", "ref": "color", "default": "random"},
+                        {"id": "right", "ref": "color", "default": "red"},
+                    ],
+                },
+            ],
+        },
+    )
+    _write(
+        factory,
+        "sections/loop.json",  # recursion guard fixture: item nests its own section
+        {
+            "items": [
+                {
+                    "name": "endless",
+                    "text": "loop {again}",
+                    "slots": [{"id": "again", "ref": "loop"}],
+                },
+            ],
+        },
+    )
+    _write(
+        factory,
+        "templates/nested.json",
+        {
+            "label": "Nested",
+            "slots": [{"id": "crew", "ref": "crew", "default": "pair"}],
+        },
+    )
+
     # user tier: overrides color.json (adds an item), adds one section
     _write(
         user,

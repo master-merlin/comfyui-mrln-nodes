@@ -144,6 +144,15 @@ class PromptTemplate:
                         "Conflicts are always listed in the choices report.",
                     },
                 ),
+                "text_length": (
+                    ["template default", *pl.TEXT_LENGTHS],
+                    {
+                        "tooltip": "Which item texts render: 'long' full descriptions, 'short' "
+                        "compact variants for tight tokenizers (e.g. SDXL). Items without "
+                        "a short text fall back to their long text. Draws are identical "
+                        "either way.",
+                    },
+                ),
             },
             "optional": {
                 "trigger": (
@@ -183,7 +192,9 @@ class PromptTemplate:
         known = {slot.id for slot in tpl.slots}
         known.update(slot.id for variant in tpl.variants for slot in variant.slots)
         known.add("variant")
-        unknown = sorted(key for key in selection_map if key not in known)
+        # nested keys ('scene.subject-a') validate their head here; the rest
+        # depends on drawn items and stays with resolve
+        unknown = sorted(key for key in selection_map if key.split(".", 1)[0] not in known)
         if unknown:
             return (
                 f"selection references unknown slot(s) {', '.join(unknown)} for template "
@@ -205,6 +216,7 @@ class PromptTemplate:
         seed,
         format,
         conflict_policy="negative prevails",
+        text_length="template default",
         trigger="",
         variables="",
     ):
@@ -224,6 +236,7 @@ class PromptTemplate:
             mode=selection_mode,
             selection=selection_map,
             variables=variable_map,
+            text_length=text_length,
         )
         fmt = tpl.render.format if format == "template default" else format
         out = pl.render(resolved, fmt, tpl.render, conflict_policy=conflict_policy)

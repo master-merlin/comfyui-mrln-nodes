@@ -66,6 +66,7 @@ export function createComposerPanel(root, ctx) {
     seed: 0,
     format: "template default",
     conflictPolicy: "negative prevails",
+    textLength: "template default",
     trigger: "",
     variables: "",
     rows: new Map(), // slot id -> {random, seed, item}
@@ -290,6 +291,11 @@ export function createComposerPanel(root, ctx) {
       const token = rowToken(slot);
       if (token !== (slot.default ?? "random")) lines.push(`${slot.id}=${token}`);
     }
+    for (const [key, row] of state.rows) {
+      if (!key.includes(".") || !row.touched) continue; // nested rows, user-set only
+      const token = row.random ? (row.seed ? `random@${row.seed}` : "random") : row.item || "random";
+      lines.push(`${key}=${token}`);
+    }
     return lines.join("\n");
   }
 
@@ -304,6 +310,14 @@ export function createComposerPanel(root, ctx) {
       if (token === undefined) continue;
       if (offRe.test(token.trim())) state.muted.add(slot.id);
       else state.rows.set(slot.id, parseToken(token));
+    }
+    for (const [key, token] of Object.entries(map)) {
+      if (!key.includes(".")) continue; // nested pins from the node
+      const row = offRe.test(token.trim())
+        ? { random: false, seed: "", item: "off" }
+        : parseToken(token);
+      row.touched = true;
+      state.rows.set(key, row);
     }
   }
 
@@ -388,6 +402,7 @@ export function createComposerPanel(root, ctx) {
       trigger: state.trigger,
       format: state.format,
       conflict_policy: state.conflictPolicy,
+      text_length: state.textLength,
     };
     if (state.modified) body.template_data = buildDraftData();
     let preview;
@@ -400,6 +415,107 @@ export function createComposerPanel(root, ctx) {
     if (no !== state.previewNo) return; // a newer request superseded this one
     state.lastPreview = preview;
     renderPreview(preview, null);
+    renderNested();
+  }
+
+  // ---- nested child rows (from the drawn items' child slots) ---------------
+
+  const nestedBox = el("div", { class: "mrln-slot-list" });
+
+  function renderNested() {
+    const rows = [];
+    const seen = new Set();
+    const walk = (slots) => {
+      for (const slot of slots ?? []) {
+        for (const child of slot.children ?? []) {
+          seen.add(child.id);
+          rows.push(childRow(child));
+          walk([child]);
+        }
+      }
+    };
+    walk(state.lastPreview?.slots);
+    for (const key of [...state.rows.keys()]) {
+      if (key.includes(".") && !seen.has(key)) state.rows.delete(key); // stale pins
+    }
+    nestedBox.replaceChildren(
+      ...(rows.length
+        ? [
+            el(
+              "div",
+              { class: "mrln-field-name", title: "Child slots carried by the drawn items — sections define them, the template stays free of choice" },
+              "Nested draws"
+            ),
+            ...rows,
+          ]
+        : [])
+    );
+  }
+
+  function childRow(child) {
+    let row = state.rows.get(child.id);
+    if (!row) {
+      row = {
+        random: child.random,
+        seed: "",
+        item: child.random ? "" : (child.item ?? ""),
+        touched: false,
+      };
+      state.rows.set(child.id, row);
+    }
+    const pool = state.detail.pools[child.ref];
+    if (!pool) ensurePool(child.ref).then(() => renderNested());
+
+    const itemSelect = el("select", {
+      onchange: (e) => {
+        const value = e.target.value;
+        row.touched = true;
+        if (value === "random") {
+          row.random = true;
+          row.item = "";
+        } else {
+          row.random = false;
+          row.item = value;
+          if (value !== "off") row.seed = "";
+        }
+        seedInput.style.display = row.random ? "" : "none";
+        schedulePreview();
+      },
+    });
+    itemSelect.append(el("option", { value: "random" }, "🎲 random"));
+    itemSelect.append(el("option", { value: "off" }, "🔇 off"));
+    for (const item of pool ?? []) {
+      itemSelect.append(el("option", { value: item.name, title: item.text }, item.name));
+    }
+    itemSelect.value = row.random ? "random" : row.item || "random";
+
+    const seedInput = el("input", {
+      class: "mrln-narrow",
+      type: "text",
+      inputmode: "numeric",
+      placeholder: "seed",
+      title: "Optional per-child seed",
+      value: row.seed,
+      style: row.random ? "" : "display:none",
+      oninput: (e) => {
+        row.touched = true;
+        row.seed = e.target.value.replace(/\D/g, "");
+        schedulePreview();
+      },
+    });
+
+    const depth = child.id.split(".").length - 1;
+    return el(
+      "div",
+      { class: "mrln-slot", style: `margin-left:${12 * depth}px` },
+      el(
+        "div",
+        { class: "mrln-slot-label", title: `${child.id} → ${child.ref}` },
+        el("span", {}, child.id),
+        el("span", { class: "mrln-chip" }, child.omitted ? "muted/empty" : child.item)
+      ),
+      el("div", { class: "mrln-inline" }, itemSelect, seedInput)
+    );
   }
 
   // ---- compose tab ---------------------------------------------------------
@@ -656,16 +772,31 @@ export function createComposerPanel(root, ctx) {
     }
     policySelect.value = state.conflictPolicy;
 
+    const lengthSelect = el("select", {
+      title: "Item text verbosity: short = compact text_short variants for tight "
+        + "tokenizers (SDXL); items without one fall back to their long text",
+      onchange: (e) => {
+        state.textLength = e.target.value;
+        schedulePreview();
+      },
+    });
+    for (const length of ["template default", "long", "short"]) {
+      lengthSelect.append(el("option", { value: length }, length));
+    }
+    lengthSelect.value = state.textLength;
+
     parts.push(
       el("div", { class: "mrln-grid2" }, field("Mode", modeSelect), field("Format", formatSelect)),
       el(
         "div",
         { class: "mrln-grid2" },
         field("Conflicts", policySelect),
-        field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
+        field("Text length", lengthSelect)
       ),
+      field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
       metaPromptBlock(),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
+      nestedBox,
       addSectionRow()
     );
 
@@ -1145,6 +1276,7 @@ export function createComposerPanel(root, ctx) {
     ctx.setWidget(node, "seed", state.seed);
     ctx.setWidget(node, "format", state.format);
     ctx.setWidget(node, "conflict_policy", state.conflictPolicy);
+    ctx.setWidget(node, "text_length", state.textLength);
     ctx.setWidget(node, "trigger", state.trigger);
     ctx.setWidget(node, "variables", state.variables);
     ctx.markDirty();
@@ -1169,6 +1301,7 @@ export function createComposerPanel(root, ctx) {
     state.seed = Number(ctx.getWidget(node, "seed") ?? state.seed) || 0;
     state.format = ctx.getWidget(node, "format") ?? state.format;
     state.conflictPolicy = ctx.getWidget(node, "conflict_policy") ?? state.conflictPolicy;
+    state.textLength = ctx.getWidget(node, "text_length") ?? state.textLength;
     state.trigger = ctx.getWidget(node, "trigger") ?? "";
     state.variables = ctx.getWidget(node, "variables") ?? "";
     applyKvToRows(parseKvLines(ctx.getWidget(node, "selection") ?? ""));

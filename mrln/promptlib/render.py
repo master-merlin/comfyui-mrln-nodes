@@ -5,6 +5,8 @@ import json
 import re
 from dataclasses import dataclass
 
+from .resolve import walk_slots
+
 FORMATS = ("string", "string_labeled", "json", "json_flat")
 CONFLICT_POLICIES = ("negative prevails", "positive prevails")
 
@@ -98,7 +100,7 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
         )
     elif getattr(resolved, "variant_off", False):
         lines.append("variant: (off)  [off]")
-    for slot in resolved.slots:
+    for slot in walk_slots(resolved.slots):
         if slot.item_name is None:
             mark = "[random]" if slot.random else "[off]"
             value = "(omitted)" if slot.random else "(muted)"
@@ -110,7 +112,8 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
                 mark = "[random]"
             else:
                 mark = "[fixed]"
-        line = f"{slot.id}: {value}  {mark}"
+        indent = "  " * slot.id.count(".")  # nested children indent under parents
+        line = f"{indent}{slot.id}: {value}  {mark}"
         if slot.random and slot.seed_used != resolved.seed:
             line += f"  @{slot.seed_used}"
         if slot.tier == "user":
@@ -118,9 +121,9 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
         lines.append(line)
 
     present = set()
-    for slot in resolved.slots:
+    for slot in walk_slots(resolved.slots):
         present.update(slot.tags)
-    for slot in resolved.slots:
+    for slot in walk_slots(resolved.slots):
         if slot.item_name is None:
             continue
         others = present - set(slot.tags)

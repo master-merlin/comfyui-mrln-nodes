@@ -27,6 +27,7 @@ from .resolve import (
     resolve_template,
 )
 from .schema import (
+    TEXT_LENGTHS,
     RenderConfig,
     Section,
     SectionItem,
@@ -44,6 +45,7 @@ __all__ = [
     "FORMATS",
     "MODES",
     "RANDOM_TOKENS",
+    "TEXT_LENGTHS",
     "ItemNotFoundError",
     "Library",
     "PromptLibError",

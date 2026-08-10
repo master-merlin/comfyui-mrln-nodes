@@ -1,16 +1,22 @@
 """Selection parsing and slot resolution: (library, template, selection,
-variables, seed, mode) -> ResolvedPrompt. Pure and deterministic."""
+variables, seed, mode) -> ResolvedPrompt. Pure and deterministic.
+
+Nested randomness: a drawn item may carry child slots (defined on the item
+in its SECTION, so templates stay free of choice). Children resolve under
+dotted ids ('scene.subject-a') with seed keys '{parent-key}.{child-id}',
+and their texts substitute {child-id} placeholders in the parent text."""
 
 from dataclasses import dataclass, replace
 
-from .errors import ItemNotFoundError, SelectionError
-from .schema import RANDOM_TOKEN, Slot
+from .errors import ItemNotFoundError, RecursionLimitError, SelectionError
+from .schema import RANDOM_TOKEN, TEXT_LENGTHS, Slot
 from .seeding import derive_rng, weighted_index
 from .textexpr import expand
 
 MODES = ("as configured", "randomize all", "all fixed defaults")
 RANDOM_TOKENS = (RANDOM_TOKEN, "🎲 random")
 OFF_TOKENS = ("off", "🔇 off")  # mute a slot (or the variant block) from the selection
+_MAX_NEST_DEPTH = 3
 
 
 @dataclass(frozen=True)
@@ -32,6 +38,14 @@ class ResolvedSlot:
     tags: tuple = ()  # effective tags of the drawn item (item + section)
     requires: tuple = ()  # effective requires (item + section)
     excludes: tuple = ()  # effective excludes (item + section)
+    children: tuple = ()  # nested ResolvedSlots (dotted ids)
+
+
+def walk_slots(slots):
+    """Yield slots depth-first including nested children."""
+    for slot in slots:
+        yield slot
+        yield from walk_slots(slot.children)
 
 
 @dataclass(frozen=True)
@@ -221,9 +235,15 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
     return resolved, rng, item
 
 
-def resolve_template(lib, tpl, *, seed, mode, selection, variables):
+def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=None):
     if mode not in MODES:
         raise SelectionError(mode, f"unknown selection mode (modes: {', '.join(MODES)})")
+    if text_length in (None, "template default"):
+        text_length = tpl.render.text_length
+    if text_length not in TEXT_LENGTHS:
+        raise SelectionError(
+            text_length, f"unknown text length (lengths: {', '.join(TEXT_LENGTHS)})"
+        )
 
     merged_vars = {v.name: v.default for v in tpl.variables}
     merged_vars.update(variables or {})
@@ -264,12 +284,13 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
     for key in selection:
         if key == "variant":
             continue
-        if key in shared_by_id or key in active_variant_by_id:
+        head = key.split(".", 1)[0]  # nested keys validate their head here,
+        if head in shared_by_id or head in active_variant_by_id:  # rest after resolution
             continue
-        if key in inactive:
+        if head in inactive:
             raise SelectionError(
                 f"{key}=…",
-                f"slot '{key}' belongs to variant '{inactive[key]}'"
+                f"slot '{head}' belongs to variant '{inactive[head]}'"
                 + (f" (active: '{variant.name}')" if variant else ""),
             )
         raise SelectionError(
@@ -279,6 +300,7 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
 
     # resolve in render order
     resolved_slots = []
+    consumed = set()  # dotted child ids that actually materialized
     for entry in tpl.order:
         if entry == "@variant":
             if variant:
@@ -293,13 +315,34 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
                             selection,
                             merged_vars,
                             tpl.type,
+                            text_length,
+                            consumed=consumed,
                         )
                     )
             continue
         slot = shared_by_id[entry]
         resolved_slots.append(
-            _resolve_and_expand(lib, slot, slot.id, seed, mode, selection, merged_vars, tpl.type)
+            _resolve_and_expand(
+                lib,
+                slot,
+                slot.id,
+                seed,
+                mode,
+                selection,
+                merged_vars,
+                tpl.type,
+                text_length,
+                consumed=consumed,
+            )
         )
+
+    for sel_key in selection:
+        if "." in sel_key and sel_key not in consumed:
+            raise SelectionError(
+                f"{sel_key}=…",
+                "no such nested slot in the drawn items "
+                f"(nested slots present: {sorted(consumed) if consumed else 'none'})",
+            )
 
     prefix = expand(tpl.prefix, merged_vars, derive_rng(seed, "@prefix")) if tpl.prefix else ""
     suffix = expand(tpl.suffix, merged_vars, derive_rng(seed, "@suffix")) if tpl.suffix else ""
@@ -307,7 +350,7 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
     negatives = []
     if tpl.negative:
         negatives.append(tpl.negative)
-    for rs in resolved_slots:
+    for rs in walk_slots(resolved_slots):
         for part in rs.negative.split(", "):
             if part and part not in negatives:
                 negatives.append(part)
@@ -326,7 +369,19 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
     )
 
 
-def _resolve_and_expand(lib, slot, key, seed, mode, selection, variables, template_type=()):
+def _resolve_and_expand(
+    lib,
+    slot,
+    key,
+    seed,
+    mode,
+    selection,
+    variables,
+    template_type=(),
+    text_length="long",
+    depth=0,
+    consumed=None,
+):
     resolved, rng, item = _resolve_slot(
         lib,
         slot,
@@ -336,8 +391,37 @@ def _resolve_and_expand(lib, slot, key, seed, mode, selection, variables, templa
         selection=selection,
         template_type=template_type,
     )
-    if item is not None and item.text:
-        text = expand(item.text, variables, rng)
+    if item is not None:
+        child_vars = {}
+        if item.slots:
+            if depth >= _MAX_NEST_DEPTH:
+                raise RecursionLimitError()
+            children = []
+            for child_slot in item.slots:
+                dotted = replace(child_slot, id=f"{slot.id}.{child_slot.id}")
+                if consumed is not None:
+                    consumed.add(dotted.id)
+                child = _resolve_and_expand(
+                    lib,
+                    dotted,
+                    f"{key}.{child_slot.id}",
+                    seed,
+                    mode,
+                    selection,
+                    variables,
+                    template_type=template_type,
+                    text_length=text_length,
+                    depth=depth + 1,
+                    consumed=consumed,
+                )
+                children.append(child)
+                child_text = child.text
+                if child_text and child.emphasis and child.emphasis != 1.0:
+                    child_text = f"({child_text}:{child.emphasis:g})"
+                child_vars[child_slot.id] = child_text
+            resolved = replace(resolved, children=tuple(children))
+        base_text = item.text_short if (text_length == "short" and item.text_short) else item.text
+        text = expand(base_text, {**variables, **child_vars}, rng)
         if text != resolved.text:
             resolved = replace(resolved, text=text)
     if "{" in resolved.label:

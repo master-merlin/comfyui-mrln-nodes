@@ -15,6 +15,8 @@ _DEFAULT_RENDER = RenderConfig()
 
 def dump_item(item):
     out = {"name": item.name, "text": item.text}
+    if item.text_short:
+        out["text_short"] = item.text_short
     if item.negative:
         out["negative"] = item.negative
     if item.weight != 1.0:
@@ -25,6 +27,8 @@ def dump_item(item):
         value = getattr(item, key)
         if value:
             out[key] = list(value)
+    if item.slots:
+        out["slots"] = [dump_slot(slot) for slot in item.slots]
     return out
 
 
@@ -92,6 +96,8 @@ def dump_render(cfg):
         out["block_joiner"] = cfg.block_joiner
     if cfg.profile is not None:
         out["profile"] = cfg.profile
+    if cfg.text_length != _DEFAULT_RENDER.text_length:
+        out["text_length"] = cfg.text_length
     return out
 
 

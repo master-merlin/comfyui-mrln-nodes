@@ -24,6 +24,8 @@ class SectionItem:
     tags: tuple = ()
     excludes: tuple = ()
     requires: tuple = ()
+    text_short: str = ""  # compact variant for short-context tokenizers
+    slots: tuple = ()  # nested child slots; {child-id} placeholders in text
 
 
 @dataclass(frozen=True)
@@ -66,6 +68,9 @@ class Variant:
     label: str = ""
 
 
+TEXT_LENGTHS = ("long", "short")
+
+
 @dataclass(frozen=True)
 class RenderConfig:
     format: str = "string"
@@ -73,6 +78,7 @@ class RenderConfig:
     labeled_line: str = "{label}: {text}"
     block_joiner: str = "\n"
     profile: str | None = None
+    text_length: str = "long"  # which item text renders: text vs text_short
 
 
 @dataclass(frozen=True)
@@ -135,6 +141,13 @@ def _parse_item(raw, index, source):
     data = raw.get("data")
     if data is not None and not isinstance(data, dict):
         raise SchemaError(source, f"items[{index}] ('{name}'): 'data' must be an object")
+    slots = tuple(
+        _parse_slot(raw_slot, f"items[{index}] ('{name}') slots", source)
+        for raw_slot in raw.get("slots", []) or []
+    )
+    child_ids = [slot.id for slot in slots]
+    if len(child_ids) != len(set(child_ids)):
+        raise SchemaError(source, f"items[{index}] ('{name}'): duplicate child slot ids")
     return SectionItem(
         name=name.strip(),
         text=text,
@@ -144,6 +157,8 @@ def _parse_item(raw, index, source):
         tags=_str_tuple(raw.get("tags"), source, "tags"),
         excludes=_str_tuple(raw.get("excludes"), source, "excludes"),
         requires=_str_tuple(raw.get("requires"), source, "requires"),
+        text_short=str(raw.get("text_short", "") or ""),
+        slots=slots,
     )
 
 
@@ -271,12 +286,19 @@ def parse_template(data, slug, source):
     fmt = raw_render.get("format", "string")
     if fmt not in FORMATS:
         raise SchemaError(source, f"unknown render format '{fmt}' (formats: {', '.join(FORMATS)})")
+    text_length = raw_render.get("text_length", "long")
+    if text_length not in TEXT_LENGTHS:
+        raise SchemaError(
+            source,
+            f"unknown text_length '{text_length}' (lengths: {', '.join(TEXT_LENGTHS)})",
+        )
     render = RenderConfig(
         format=fmt,
         joiner=str(raw_render.get("joiner", ", ")),
         labeled_line=str(raw_render.get("labeled_line", "{label}: {text}")),
         block_joiner=str(raw_render.get("block_joiner", "\n")),
         profile=raw_render.get("profile"),
+        text_length=text_length,
     )
 
     variables = []

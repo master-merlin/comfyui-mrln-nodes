@@ -256,7 +256,13 @@ def handle_preview(lib, payload):
             f"unknown conflict_policy '{policy}' (policies: {', '.join(pl.CONFLICT_POLICIES)})"
         )
     resolved = pl.resolve_template(
-        lib, tpl, seed=seed, mode=mode, selection=selection, variables=variables
+        lib,
+        tpl,
+        seed=seed,
+        mode=mode,
+        selection=selection,
+        variables=variables,
+        text_length=payload.get("text_length") or "template default",
     )
     out = pl.render(resolved, fmt, tpl.render, conflict_policy=policy)
     return 200, {
@@ -266,26 +272,28 @@ def handle_preview(lib, payload):
         "format": fmt,
         "variant": resolved.variant,
         "variant_random": resolved.variant_random,
-        "slots": [
-            {
-                "id": s.id,
-                "key": s.key,
-                "label": s.label,
-                "ref": s.ref,
-                "section_slug": s.section_slug,
-                "item": s.item_name,
-                "text": s.text,
-                "negative": s.negative,
-                "random": s.random,
-                "fixed_first": s.fixed_first,
-                "emphasis": s.emphasis,
-                "seed_used": s.seed_used,
-                "tier": s.tier,
-                "omitted": s.item_name is None,
-            }
-            for s in resolved.slots
-        ],
+        "slots": [_resolved_slot_json(s) for s in resolved.slots],
         "fingerprint": lib.fingerprint(),
+    }
+
+
+def _resolved_slot_json(s):
+    return {
+        "id": s.id,
+        "key": s.key,
+        "label": s.label,
+        "ref": s.ref,
+        "section_slug": s.section_slug,
+        "item": s.item_name,
+        "text": s.text,
+        "negative": s.negative,
+        "random": s.random,
+        "fixed_first": s.fixed_first,
+        "emphasis": s.emphasis,
+        "seed_used": s.seed_used,
+        "tier": s.tier,
+        "omitted": s.item_name is None,
+        "children": [_resolved_slot_json(c) for c in s.children],
     }
 
 

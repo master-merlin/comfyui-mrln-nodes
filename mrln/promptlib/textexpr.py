@@ -3,7 +3,7 @@
 Grammar:
     text  := ( literal | "{{" | "}}" | group | var )*
     group := "{" alt ("|" alt)+ "}"     # >= 2 alternatives, may be empty, nest freely
-    var   := "{" NAME "}"               # NAME = [A-Za-z_][A-Za-z0-9_]*
+    var   := "{" NAME "}"               # NAME = [A-Za-z_][A-Za-z0-9_-]*
 
 "{{"/"}}" are literal braces. A braced group WITHOUT "|" must be a known
 variable (silent passthrough would hide typos). SD emphasis "(text:1.2)"
@@ -16,7 +16,7 @@ import re
 from .errors import RecursionLimitError, UnknownVariableError, WildcardSyntaxError
 from .seeding import weighted_index
 
-_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_-]*$")  # hyphens: nested child-slot ids
 _MAX_DEPTH = 10
 
 
