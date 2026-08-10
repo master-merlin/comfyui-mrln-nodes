@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "label": "Nails",
+  "description": "Manicure pool from the source.",
+  "suits": ["human"],
+  "items": [
+    { "name": "glossy-red", "text": "matching glossy red polished nails", "text_short": "glossy red nails" },
+    { "name": "black-stiletto", "text": "sharp jet black stiletto nails", "text_short": "black stiletto nails" },
+    { "name": "french-manicure", "text": "pristine classic French manicure with natural pink base", "text_short": "French manicure" },
+    { "name": "burgundy-gel", "text": "deep burgundy gel nails", "text_short": "burgundy gel nails" },
+    { "name": "chrome-silver", "text": "mirror chrome silver polished nails", "text_short": "chrome silver nails" },
+    { "name": "nude-almond", "text": "nude almond-shaped manicured nails", "text_short": "nude almond nails" },
+    { "name": "plum-coffin", "text": "plum purple coffin-shaped nails", "text_short": "plum coffin nails" }
+  ]
+}

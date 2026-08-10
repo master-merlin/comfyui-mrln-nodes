@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "label": "Session Configuration",
+  "description": "The source's top-level three-way brace: solo / female duo / couple. Each item nests full model profiles plus its own interaction and pose pools.",
+  "suits": ["human", "boudoir"],
+  "tags": ["boudoir"],
+  "items": [
+    {
+      "name": "solo-female",
+      "text": "A high class photo of one epic realistic {model}, ({pose}:1.15)",
+      "text_short": "one model: {model}, {pose}",
+      "slots": [
+        { "id": "model", "ref": "human/profile", "default": "female-lingerie" },
+        { "id": "pose", "ref": "pose/boudoir-solo" }
+      ]
+    },
+    {
+      "name": "female-duo",
+      "text": "A high class photo of (two distinct female models:1.4), the first model is {model-a}, while the second model is {model-b}, their silhouettes complementary, ({interaction}:1.3), ({pose}:1.25)",
+      "text_short": "two models: {model-a} and {model-b}, {interaction}",
+      "slots": [
+        { "id": "model-a", "ref": "human/profile", "default": "female-lingerie-warm" },
+        { "id": "model-b", "ref": "human/profile", "default": "female-lingerie-pale" },
+        { "id": "interaction", "ref": "pose/duo-interaction" },
+        { "id": "pose", "ref": "pose/duo" }
+      ]
+    },
+    {
+      "name": "couple",
+      "text": "A high class photo of an editorial couple (one man and one woman:1.4), the female model is {model-a}, the male model is {model-b}, ({interaction}:1.35), ({pose}:1.25)",
+      "text_short": "a couple: {model-a} with {model-b}, {interaction}",
+      "slots": [
+        { "id": "model-a", "ref": "human/profile", "default": "female-lingerie" },
+        { "id": "model-b", "ref": "human/profile", "default": "male-boudoir" },
+        { "id": "interaction", "ref": "pose/couple-interaction" },
+        { "id": "pose", "ref": "pose/couple" }
+      ]
+    }
+  ]
+}

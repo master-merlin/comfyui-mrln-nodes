@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Skin",
+  "description": "Skin texture and finish — the top-portrait detail staple.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "detailed-natural",
+      "text": "detailed natural skin texture, visible pores, hair highlights catching light",
+      "text_short": "detailed natural skin"
+    },
+    {
+      "name": "sun-kissed",
+      "text": "sun-kissed glowing skin with a warm healthy radiance",
+      "text_short": "sun-kissed glow"
+    },
+    {
+      "name": "dewy-luminous",
+      "text": "dewy luminous skin with soft specular highlights",
+      "text_short": "dewy luminous skin"
+    },
+    {
+      "name": "porcelain-matte",
+      "text": "flawless porcelain-matte complexion",
+      "text_short": "porcelain matte skin"
+    },
+    {
+      "name": "freckled",
+      "text": "natural freckles dusted across the nose and cheeks",
+      "text_short": "natural freckles"
+    },
+    {
+      "name": "deep-luminous",
+      "text": "deep luminous skin with rich warm undertones",
+      "text_short": "deep luminous skin"
+    },
+    {
+      "name": "olive-glow",
+      "text": "warm olive skin with a soft even glow",
+      "text_short": "warm olive glow"
+    },
+    {
+      "name": "shimmer-dusted",
+      "text": "subtle golden shimmer dusted along the shoulders and collarbones",
+      "text_short": "golden shimmer skin"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "label": "Tattoos",
+  "description": "Source-faithful 60/40 clean-to-inked split via weights (five clean at 2.7 vs nine inked at 1.0).",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "clean-pristine",
+      "text": "no tattoos, pristine natural skin",
+      "text_short": "no tattoos",
+      "weight": 2.7
+    },
+    {
+      "name": "clean-unblemished",
+      "text": "completely clean unblemished skin, zero tattoos",
+      "text_short": "clean skin",
+      "weight": 2.7
+    },
+    {
+      "name": "clean-flawless",
+      "text": "flawless smooth natural skin, clean body",
+      "text_short": "flawless clean skin",
+      "weight": 2.7
+    },
+    {
+      "name": "clean-porcelain",
+      "text": "pristine porcelain skin, no tattoos",
+      "text_short": "porcelain clean skin",
+      "weight": 2.7
+    },
+    {
+      "name": "clean-natural",
+      "text": "clean unblemished body, natural skin texture",
+      "text_short": "natural clean skin",
+      "weight": 2.7
+    },
+    {
+      "name": "botanical-sleeve",
+      "text": "delicate fine-line tattoo sleeve featuring delicate botanical peonies and leaves along the forearm",
+      "text_short": "fine-line botanical sleeve"
+    },
+    {
+      "name": "collarbone-script",
+      "text": "subtle cursive script micro-tattoo running along the collarbone",
+      "text_short": "collarbone script tattoo"
+    },
+    {
+      "name": "mandala-back",
+      "text": "intricate geometric mandala tattoo centered on the upper back between the shoulder blades",
+      "text_short": "mandala back tattoo"
+    },
+    {
+      "name": "ivy-hip-vine",
+      "text": "botanical ivy and rose vine tattoo curving gracefully along the hip and outer thigh",
+      "text_short": "ivy vine hip tattoo"
+    },
+    {
+      "name": "irezumi-half-sleeve",
+      "text": "bold traditional Japanese irezumi half-sleeve featuring detailed dragon scales and lotus flowers",
+      "text_short": "irezumi half-sleeve"
+    },
+    {
+      "name": "baroque-spine",
+      "text": "ornate baroque filigree tattoo running vertically down the spine along the vertebrae",
+      "text_short": "baroque spine filigree"
+    },
+    {
+      "name": "lace-ribcage",
+      "text": "delicate lace-inspired ornamental tattoo accenting the ribcage beneath the bust",
+      "text_short": "lace ribcage tattoo"
+    },
+    {
+      "name": "moth-neotrad",
+      "text": "detailed neo-traditional moth tattoo with shaded wings on the lower stomach",
+      "text_short": "neo-trad moth tattoo"
+    },
+    {
+      "name": "constellation-wrist",
+      "text": "fine-line constellation map tattoo on the inner wrist and forearm",
+      "text_short": "constellation wrist tattoo"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "label": "Nationality / Heritage",
+  "description": "The source's twenty-nationality pool — composes as '{ethnicity} woman/man'.",
+  "suits": ["human"],
+  "items": [
+    { "name": "swedish", "text": "Swedish", "text_short": "Swedish" },
+    { "name": "brazilian", "text": "Brazilian", "text_short": "Brazilian" },
+    { "name": "japanese", "text": "Japanese", "text_short": "Japanese" },
+    { "name": "ethiopian", "text": "Ethiopian", "text_short": "Ethiopian" },
+    { "name": "greek", "text": "Greek", "text_short": "Greek" },
+    { "name": "czech", "text": "Czech", "text_short": "Czech" },
+    { "name": "senegalese", "text": "Senegalese", "text_short": "Senegalese" },
+    { "name": "italian", "text": "Italian", "text_short": "Italian" },
+    { "name": "colombian", "text": "Colombian", "text_short": "Colombian" },
+    { "name": "south-korean", "text": "South Korean", "text_short": "South Korean" },
+    { "name": "irish", "text": "Irish", "text_short": "Irish" },
+    { "name": "nigerian", "text": "Nigerian", "text_short": "Nigerian" },
+    { "name": "indian", "text": "Indian", "text_short": "Indian" },
+    { "name": "polish", "text": "Polish", "text_short": "Polish" },
+    { "name": "moroccan", "text": "Moroccan", "text_short": "Moroccan" },
+    { "name": "vietnamese", "text": "Vietnamese", "text_short": "Vietnamese" },
+    { "name": "egyptian", "text": "Egyptian", "text_short": "Egyptian" },
+    { "name": "mexican", "text": "Mexican", "text_short": "Mexican" },
+    { "name": "icelandic", "text": "Icelandic", "text_short": "Icelandic" },
+    { "name": "turkish", "text": "Turkish", "text_short": "Turkish" }
+  ]
+}

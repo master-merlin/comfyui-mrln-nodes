@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Studio Portrait",
+  "type": ["human"],
+  "description": "A controlled studio portrait over the shared human pools — the SFW showcase of the human domain.",
+  "prefix": "A professional studio portrait.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "photoreal-raw"
+    },
+    {
+      "id": "subject",
+      "ref": "human/profile",
+      "label": "Subject",
+      "default": "female-glamour"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "emphasis": 1.15
+    },
+    {
+      "id": "pose",
+      "ref": "pose/standing",
+      "label": "Pose"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Studio light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "backdrop",
+      "ref": "location/studio",
+      "label": "Backdrop"
+    },
+    {
+      "id": "shot",
+      "ref": "viewpoint/portrait",
+      "label": "Framing",
+      "default": "three-quarter-figure"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "85mm-f12"
+    },
+    {
+      "id": "film",
+      "ref": "camera/film",
+      "label": "Film look",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "sharp focus on the eyes, refined editorial retouch",
+  "negative": "child, chibi, underage, deformed, extra fingers, watermark, text",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

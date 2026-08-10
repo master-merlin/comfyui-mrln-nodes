@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "label": "Physique (Female)",
+  "description": "Female silhouettes from the source; contour detail varies via inline wildcard.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "hourglass",
+      "text": "hourglass silhouette with {defined waist|curvy feminine contours}",
+      "text_short": "hourglass silhouette"
+    },
+    {
+      "name": "soft-curvy",
+      "text": "soft curvy silhouette with {natural soft contours|full hips}",
+      "text_short": "soft curvy silhouette"
+    },
+    {
+      "name": "toned-pear",
+      "text": "toned pear-shaped silhouette with {full hips|natural soft contours}",
+      "text_short": "toned pear shape"
+    },
+    {
+      "name": "voluptuous-full",
+      "text": "voluptuous full-figured silhouette with {curvy feminine contours|natural soft contours}",
+      "text_short": "voluptuous full figure"
+    },
+    {
+      "name": "sculpted-athletic",
+      "text": "sculpted athletic silhouette with {sculpted waistline|defined waist}",
+      "text_short": "sculpted athletic build"
+    },
+    {
+      "name": "lean-dancer",
+      "text": "lean dancer silhouette with {sculpted waistline|natural soft contours}",
+      "text_short": "lean dancer build"
+    },
+    {
+      "name": "toned-hourglass",
+      "text": "toned hourglass silhouette with {defined waist|sculpted waistline}",
+      "text_short": "toned hourglass"
+    },
+    {
+      "name": "fit-runner",
+      "text": "fit runner silhouette with {sculpted waistline|defined waist}",
+      "text_short": "fit runner build"
+    },
+    {
+      "name": "sculpted-artistic",
+      "text": "sculpted artistic physique with {defined waist|sculpted waistline}",
+      "text_short": "sculpted artistic physique"
+    },
+    {
+      "name": "sleek-taut",
+      "text": "sleek taut frame with {sculpted waistline|natural soft contours}",
+      "text_short": "sleek taut frame"
+    },
+    {
+      "name": "curvy-voluptuous",
+      "text": "curvy voluptuous silhouette with {full hips|curvy feminine contours}",
+      "text_short": "curvy voluptuous shape"
+    }
+  ]
+}

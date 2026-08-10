@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Glamour Wardrobe",
+  "description": "Evening and event wear for elegant portraits.",
+  "suits": ["human"],
+  "items": [
+    { "name": "silk-column-gown", "text": "a bias-cut silk column gown pooling at the floor", "text_short": "silk column gown" },
+    { "name": "sequin-cocktail", "text": "a fitted sequin cocktail dress catching every light", "text_short": "sequin cocktail dress" },
+    { "name": "velvet-off-shoulder", "text": "an off-shoulder velvet evening dress in deep tones", "text_short": "velvet off-shoulder gown" },
+    { "name": "tulle-ballgown", "text": "a layered tulle ballgown with a structured bodice", "text_short": "layered tulle ballgown" },
+    { "name": "backless-satin", "text": "a backless satin gown with a draped cowl back", "text_short": "backless satin gown" },
+    { "name": "tailored-tuxedo-f", "text": "a sharply tailored tuxedo worn over bare skin with heels", "text_short": "tailored tuxedo look" },
+    { "name": "beaded-flapper", "text": "a beaded fringe flapper dress with drop-waist swing", "text_short": "beaded flapper dress", "tags": ["historical"] },
+    { "name": "high-slit-crepe", "text": "a high-slit crepe evening dress with a sculpted shoulder", "text_short": "high-slit evening dress" },
+    { "name": "corseted-opera", "text": "a corseted opera gown with structured hips and long gloves", "text_short": "corseted opera gown" },
+    { "name": "metallic-lame", "text": "a liquid metallic lamé dress flowing like mercury", "text_short": "liquid lamé dress" }
+  ]
+}

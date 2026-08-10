@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Gaze",
+  "description": "Where and how the eyes hold the camera.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "direct-intense",
+      "text": "direct intense eye contact with the camera",
+      "text_short": "intense eye contact"
+    },
+    {
+      "name": "soft-off-camera",
+      "text": "soft contemplative gaze looking off-camera",
+      "text_short": "soft off-camera gaze"
+    },
+    {
+      "name": "half-lidded",
+      "text": "seductive half-lidded eyes",
+      "text_short": "half-lidded gaze"
+    },
+    {
+      "name": "over-shoulder-glance",
+      "text": "a slow glance back over the shoulder",
+      "text_short": "over-shoulder glance"
+    },
+    {
+      "name": "closed-serene",
+      "text": "eyes closed in serene stillness",
+      "text_short": "eyes closed serene"
+    },
+    {
+      "name": "window-distance",
+      "text": "a faraway gaze out of the window light",
+      "text_short": "faraway window gaze"
+    },
+    {
+      "name": "playful-spark",
+      "text": "a playful spark of amusement meeting the lens",
+      "text_short": "playful sparkling gaze"
+    },
+    {
+      "name": "downcast-lashes",
+      "text": "gaze lowered, lashes catching the light",
+      "text_short": "downcast lashes"
+    }
+  ]
+}

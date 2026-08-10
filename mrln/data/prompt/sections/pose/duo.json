@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Duo Pose",
+  "description": "The source's two-model arrangements.",
+  "suits": ["human"],
+  "tags": ["duo", "boudoir"],
+  "items": [
+    { "name": "dual-editorial", "text": "dual editorial model pose", "text_short": "dual editorial pose" },
+    { "name": "intertwined-recline", "text": "both reclining together on the bed with limbs softly overlapped", "text_short": "intertwined recline" },
+    { "name": "seated-standing", "text": "one seated on a chair while the other leans on the backrest massaging her shoulders", "text_short": "seated and standing duo" },
+    { "name": "back-to-back", "text": "standing back-to-back with shoulders touching", "text_short": "back-to-back stand" },
+    { "name": "mirrored-floor", "text": "both lying side-by-side on the floor facing opposite directions", "text_short": "mirrored floor repose" },
+    { "name": "sofa-lap-recline", "text": "one seated on the sofa while the other reclines across her lap", "text_short": "sofa lap recline" },
+    { "name": "window-silhouette-pair", "text": "both standing near the floor-to-ceiling window light in a gentle embrace", "text_short": "window silhouette pair" },
+    { "name": "staircase-tiers", "text": "positioned on adjacent stair steps creating a vertical height difference", "text_short": "tiered staircase pose" },
+    { "name": "vanity-reflection", "text": "one seated at the dressing mirror while the other stands behind adjusting her hair", "text_short": "vanity mirror pair" },
+    { "name": "lounge-booth", "text": "both seated close in a velvet lounge booth", "text_short": "lounge booth pair" },
+    { "name": "bedside-kneel", "text": "one kneeling on the bed while the other sits on the floor beside it", "text_short": "bedside kneel pair" }
+  ]
+}

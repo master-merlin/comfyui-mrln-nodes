@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Uniform",
+  "description": "Professional uniforms.",
+  "suits": ["human"],
+  "items": [
+    { "name": "pilot-flight-suit", "text": "an olive flight suit with squadron patches and aviators", "text_short": "pilot flight suit" },
+    { "name": "naval-dress", "text": "crisp naval dress whites with gold insignia", "text_short": "naval dress whites" },
+    { "name": "racing-overalls", "text": "sponsor-patched racing overalls tied at the waist", "text_short": "racing overalls" },
+    { "name": "chef-whites", "text": "double-breasted chef whites with a side towel", "text_short": "chef whites" },
+    { "name": "surgeon-scrubs", "text": "teal surgical scrubs with a cap and hanging mask", "text_short": "surgical scrubs" },
+    { "name": "firefighter-turnout", "text": "soot-marked firefighter turnout gear with reflective bands", "text_short": "firefighter turnout gear" },
+    { "name": "airline-crew", "text": "a tailored airline crew uniform with a neck scarf", "text_short": "airline crew uniform" },
+    { "name": "park-ranger", "text": "a park ranger uniform with a wide-brim hat", "text_short": "park ranger uniform" }
+  ]
+}

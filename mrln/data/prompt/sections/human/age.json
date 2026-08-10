@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "label": "Age",
+  "description": "Adult age brackets only — factory policy, lint-enforced.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "early-twenties",
+      "text": "in the early twenties",
+      "text_short": "early twenties"
+    },
+    {
+      "name": "mid-twenties",
+      "text": "in the mid twenties",
+      "text_short": "mid twenties"
+    },
+    {
+      "name": "late-twenties",
+      "text": "in the late twenties",
+      "text_short": "late twenties"
+    },
+    {
+      "name": "early-thirties",
+      "text": "in the early thirties",
+      "text_short": "early thirties"
+    },
+    {
+      "name": "late-thirties",
+      "text": "in the late thirties",
+      "text_short": "late thirties"
+    },
+    {
+      "name": "confident-forties",
+      "text": "in the confident mid forties",
+      "text_short": "mid forties"
+    }
+  ]
+}

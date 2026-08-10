@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "label": "Archetype",
+  "description": "Character-design archetypes — the who of a concept portrait.",
+  "suits": ["human"],
+  "items": [
+    { "name": "astronaut", "text": "a mission astronaut in a worn EVA suit, helmet under one arm", "text_short": "astronaut with helmet" },
+    { "name": "samurai", "text": "a wandering samurai, lacquered armor plates over travel-worn robes", "text_short": "wandering samurai", "tags": ["historical"] },
+    { "name": "detective", "text": "a rain-coat detective, loosened tie and tired sharp eyes", "text_short": "noir detective" },
+    { "name": "chef", "text": "a head chef in whites, sleeves rolled, flour-dusted forearms", "text_short": "head chef in whites" },
+    { "name": "aviator", "text": "a golden-age aviator, leather jacket, silk scarf and goggles pushed up", "text_short": "golden-age aviator", "tags": ["historical"] },
+    { "name": "explorer", "text": "an expedition explorer, weathered canvas gear and a battered map case", "text_short": "expedition explorer" },
+    { "name": "knight", "text": "a knight in field-worn plate armor, helm at the hip", "text_short": "plate-armor knight", "tags": ["fantasy", "historical"] },
+    { "name": "sorceress", "text": "a sorceress with rune-embroidered robes and slow-drifting motes of light", "text_short": "rune-robed sorceress", "tags": ["fantasy"] },
+    { "name": "cyber-runner", "text": "a cyberpunk courier, neon-piped jacket and mirrored optics", "text_short": "cyberpunk courier", "tags": ["scifi", "neon"] },
+    { "name": "mechanic", "text": "a garage mechanic in oil-marked coveralls, wrench in the back pocket", "text_short": "garage mechanic" },
+    { "name": "ballerina", "text": "a principal ballerina, rehearsal leotard and chalk-dusted pointe shoes", "text_short": "principal ballerina" },
+    { "name": "sea-captain", "text": "a weathered sea captain, wool coat, white beard and storm-narrowed eyes", "text_short": "weathered sea captain" },
+    { "name": "monk", "text": "a mountain monk in simple robes with prayer beads", "text_short": "mountain monk" },
+    { "name": "rockstar", "text": "a stage-worn rockstar, leather, rings and smeared eyeliner", "text_short": "stage-worn rockstar" },
+    { "name": "scientist", "text": "a field scientist, sample cases and annotated notebooks in hand", "text_short": "field scientist" },
+    { "name": "gunslinger", "text": "a frontier gunslinger, dust-caked duster and a low-brimmed hat", "text_short": "frontier gunslinger", "tags": ["historical"] }
+  ]
+}

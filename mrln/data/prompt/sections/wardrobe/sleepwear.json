@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Sleepwear",
+  "description": "Cozy-to-elegant nightwear (the SFW neighbor of the lingerie pools).",
+  "suits": ["human"],
+  "items": [
+    { "name": "silk-pajama-set", "text": "a piped silk pajama set in soft sheen", "text_short": "silk pajama set" },
+    { "name": "oversized-shirt", "text": "an oversized button-down shirt worn as sleepwear", "text_short": "oversized sleep shirt" },
+    { "name": "waffle-robe", "text": "a plush waffle-weave spa robe, loosely belted", "text_short": "waffle spa robe" },
+    { "name": "satin-slip", "text": "a knee-length satin slip with lace edging", "text_short": "satin slip" },
+    { "name": "flannel-set", "text": "a soft plaid flannel pajama set", "text_short": "flannel pajamas" },
+    { "name": "knit-lounge", "text": "a ribbed knit lounge set in muted tones", "text_short": "ribbed lounge set" },
+    { "name": "kimono-robe", "text": "a lightweight floral kimono robe over shorts", "text_short": "floral kimono robe" },
+    { "name": "cashmere-set", "text": "a cloud-soft cashmere lounge set", "text_short": "cashmere lounge set" }
+  ]
+}

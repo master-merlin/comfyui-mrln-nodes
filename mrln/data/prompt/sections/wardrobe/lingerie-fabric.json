@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "label": "Lingerie Fabric",
+  "description": "Fabric qualities from the source.",
+  "suits": ["human"],
+  "tags": ["boudoir"],
+  "items": [
+    { "name": "chantilly-lace", "text": "French Chantilly lace", "text_short": "Chantilly lace" },
+    { "name": "sheer-mesh", "text": "see-through sheer mesh", "text_short": "sheer mesh" },
+    { "name": "liquid-satin", "text": "liquid silk satin", "text_short": "liquid satin" },
+    { "name": "silk-tulle", "text": "ultra-sheer silk tulle", "text_short": "silk tulle" },
+    { "name": "scalloped-silk", "text": "scalloped silk", "text_short": "scalloped silk" },
+    { "name": "vintage-satin", "text": "vintage satin", "text_short": "vintage satin" },
+    { "name": "leather-look", "text": "leather-look", "text_short": "leather-look" },
+    { "name": "wet-look-vinyl", "text": "wet-look vinyl", "text_short": "wet-look vinyl" },
+    { "name": "micro-fishnet", "text": "micro fishnet", "text_short": "micro fishnet" },
+    { "name": "metallic-chainmail", "text": "metallic chainmail", "text_short": "chainmail mesh" },
+    { "name": "high-gloss-latex", "text": "high-gloss latex", "text_short": "gloss latex" },
+    { "name": "goth-velvet", "text": "dark goth velvet", "text_short": "goth velvet" },
+    { "name": "underwired", "text": "underwired structured", "text_short": "underwired" },
+    { "name": "unlined-transparent", "text": "unlined transparent", "text_short": "unlined sheer" }
+  ]
+}

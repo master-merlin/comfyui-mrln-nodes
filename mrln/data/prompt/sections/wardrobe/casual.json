@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Casual Wardrobe",
+  "description": "Everyday relaxed looks.",
+  "suits": ["human"],
+  "items": [
+    { "name": "oversized-tee-jeans", "text": "an oversized graphic tee untucked over straight-leg jeans", "text_short": "oversized tee, jeans" },
+    { "name": "linen-summer", "text": "a loose linen shirt with rolled shorts, barefoot ease", "text_short": "loose linen summer look" },
+    { "name": "knit-and-mug", "text": "a chunky knit sweater with sleeves pulled over the hands", "text_short": "chunky knit sweater" },
+    { "name": "denim-jacket", "text": "a broken-in denim jacket over a plain white tee", "text_short": "denim jacket, white tee" },
+    { "name": "hoodie-comfort", "text": "a soft faded hoodie, drawstrings uneven, weekend-comfortable", "text_short": "soft faded hoodie" },
+    { "name": "sundress", "text": "a light floral sundress catching the breeze", "text_short": "light floral sundress" },
+    { "name": "flannel-boots", "text": "an open flannel shirt, worn tee and scuffed boots", "text_short": "flannel and boots" },
+    { "name": "athleisure", "text": "matching athleisure set with clean white sneakers", "text_short": "athleisure set" },
+    { "name": "trench-classic", "text": "a classic beige trench over simple monochrome layers", "text_short": "classic beige trench" },
+    { "name": "faux-fur-street", "text": "a white faux-fur coat thrown over an oversized tee and jeans", "text_short": "faux-fur over tee" }
+  ]
+}

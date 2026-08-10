@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "label": "Grooming (Male)",
+  "description": "Male facial grooming from the source plus rounding entries.",
+  "suits": ["human"],
+  "items": [
+    { "name": "clean-shaven", "text": "clean-shaven jawline", "text_short": "clean-shaven" },
+    { "name": "subtle-stubble", "text": "subtle stubble beard", "text_short": "subtle stubble" },
+    { "name": "chiseled-jaw", "text": "chiseled jawline", "text_short": "chiseled jawline" },
+    { "name": "groomed-full-beard", "text": "neatly groomed full beard", "text_short": "groomed full beard" },
+    { "name": "heavy-shadow", "text": "heavy five-o'clock shadow", "text_short": "heavy shadow" },
+    { "name": "mustache-classic", "text": "classic well-kept mustache", "text_short": "classic mustache" }
+  ]
+}

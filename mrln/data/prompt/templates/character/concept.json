@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "label": "Character Concept",
+  "type": ["human"],
+  "description": "Character-design sheet energy: archetype, wardrobe, prop and action over any backdrop.",
+  "prefix": "Character concept art.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "sdxl-classic"
+    },
+    {
+      "id": "archetype",
+      "ref": "human/archetype",
+      "label": "Archetype",
+      "emphasis": 1.2
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe",
+      "label": "Wardrobe accent",
+      "tags_none": ["boudoir"],
+      "allow_empty": true
+    },
+    {
+      "id": "prop",
+      "ref": "product/prop",
+      "label": "Signature prop",
+      "allow_empty": true
+    },
+    {
+      "id": "stance",
+      "ref": "pose/action",
+      "label": "Action / stance"
+    },
+    {
+      "id": "scene",
+      "ref": "location",
+      "label": "Backdrop",
+      "allow_empty": true
+    },
+    {
+      "id": "medium",
+      "ref": "style/rendering",
+      "label": "Render style"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Dramatic light"
+    }
+  ],
+  "suffix": "full character readability, coherent silhouette, professional concept-art presentation",
+  "negative": "child, chibi, underage, watermark, text, extra limbs",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Couple Interaction",
+  "description": "Romantic couple interactions from the source, factory glamour-tier curation.",
+  "suits": ["human"],
+  "tags": ["couple", "boudoir"],
+  "items": [
+    { "name": "lip-touch-watched", "text": "she touches her own lower lip while he looks on with an intense expression", "text_short": "lip touch, watched" },
+    { "name": "waist-wrap-lean", "text": "his arm wrapped gently around her waist while she rests back against his chest", "text_short": "waist wrap, chest lean" },
+    { "name": "shared-eye-contact", "text": "shared intimate eye contact with parted lips", "text_short": "shared eye contact" },
+    { "name": "hand-on-chest", "text": "her hand lightly resting on his chest while he gazes at the camera", "text_short": "hand on his chest" },
+    { "name": "dual-lens-allure", "text": "both looking directly into the lens with confident allure", "text_short": "both facing lens" },
+    { "name": "neck-kiss", "text": "he gently kisses her neck while holding her close", "text_short": "gentle neck kiss" },
+    { "name": "soft-kiss", "text": "a soft passionate kiss between them", "text_short": "soft kiss" },
+    { "name": "shoulder-massage-lean", "text": "he massages her bare shoulders from behind as she leans into him", "text_short": "shoulders massaged" },
+    { "name": "fingertip-chest-trace", "text": "she traces her fingertips down his chest, catching her lower lip", "text_short": "chest fingertip trace" },
+    { "name": "whispered-ear", "text": "he whispers into her ear while embracing her from behind", "text_short": "whisper from behind" },
+    { "name": "shirt-untie", "text": "she loosens his unbuttoned shirt while holding his gaze", "text_short": "loosening his shirt" },
+    { "name": "headboard-arch", "text": "she leans back against the headboard while he arches over her in a close embrace", "text_short": "headboard close embrace" },
+    { "name": "waist-pull-kiss", "text": "he pulls her close by the waist into a deep kiss", "text_short": "waist-pull kiss" }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "label": "Gesture / Micro-Action",
+  "description": "Small hand and expression actions from the source (glamour-tier curation).",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "fingertips-lip",
+      "text": "fingertips softly pressing against the lower lip",
+      "text_short": "fingertips at lip"
+    },
+    {
+      "name": "collarbone-trace",
+      "text": "lightly tracing a collarbone with delicate fingertips",
+      "text_short": "tracing collarbone"
+    },
+    {
+      "name": "fingers-through-hair",
+      "text": "running fingers softly through loose strands of hair",
+      "text_short": "fingers through hair"
+    },
+    {
+      "name": "adjusting-strap",
+      "text": "delicately adjusting a thin shoulder strap",
+      "text_short": "adjusting strap"
+    },
+    {
+      "name": "hand-on-cheek",
+      "text": "resting a soft hand against the side of the cheek",
+      "text_short": "hand on cheek"
+    },
+    {
+      "name": "jawline-rest",
+      "text": "fingertips gently resting on the edge of the jawline",
+      "text_short": "fingertips at jawline"
+    },
+    {
+      "name": "strand-play",
+      "text": "subtly playing with a strand of hair near the ear",
+      "text_short": "playing with hair strand"
+    },
+    {
+      "name": "parted-lips",
+      "text": "parted lips with a soft intake of breath",
+      "text_short": "softly parted lips"
+    },
+    {
+      "name": "strap-slip",
+      "text": "slowly slipping a thin lace strap off the shoulder",
+      "text_short": "strap off shoulder"
+    },
+    {
+      "name": "lip-bite",
+      "text": "gently biting the lower lip with a heavy-lidded gaze",
+      "text_short": "gentle lip bite"
+    },
+    {
+      "name": "spine-arch",
+      "text": "arching the spine back with hands resting softly on the hips",
+      "text_short": "graceful spine arch"
+    },
+    {
+      "name": "ribbon-tug",
+      "text": "lightly tugging a ribbon lace of the corset with fingertips",
+      "text_short": "tugging corset ribbon"
+    },
+    {
+      "name": "finger-bite-playful",
+      "text": "gently biting an index finger with a playful sultry look",
+      "text_short": "playful finger bite"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Prop",
+  "description": "Character-design props (Civitai weapon/sword/objects categories).",
+  "suits": ["human", "object"],
+  "items": [
+    { "name": "longsword", "text": "an heirloom longsword with a worn leather grip", "text_short": "heirloom longsword", "tags": ["fantasy"] },
+    { "name": "katana", "text": "a lacquer-sheathed katana carried low", "text_short": "sheathed katana", "tags": ["historical"] },
+    { "name": "wizard-staff", "text": "a gnarled staff crowned with a dim glowing crystal", "text_short": "crystal-topped staff", "tags": ["fantasy"] },
+    { "name": "kite-shield", "text": "a dented kite shield with faded heraldry", "text_short": "heraldic kite shield", "tags": ["fantasy"] },
+    { "name": "storm-lantern", "text": "a brass storm lantern casting warm swaying light", "text_short": "brass storm lantern" },
+    { "name": "ancient-tome", "text": "a strap-bound ancient tome with brass clasps", "text_short": "strap-bound tome", "tags": ["fantasy"] },
+    { "name": "energy-blade", "text": "a humming energy blade casting colored light on the hands", "text_short": "humming energy blade", "tags": ["scifi"] },
+    { "name": "recurve-bow", "text": "a carved recurve bow with a full quiver", "text_short": "carved recurve bow", "tags": ["fantasy"] },
+    { "name": "vintage-camera", "text": "a brassed vintage rangefinder camera on a leather strap", "text_short": "vintage rangefinder" },
+    { "name": "umbrella-paper", "text": "an oil-paper umbrella tilted against the light", "text_short": "oil-paper umbrella", "tags": ["anime"] },
+    { "name": "mechanic-wrench", "text": "a heavy well-used wrench resting on the shoulder", "text_short": "heavy wrench" },
+    { "name": "violin-case", "text": "a scuffed violin case carried like a secret", "text_short": "scuffed violin case" }
+  ]
+}

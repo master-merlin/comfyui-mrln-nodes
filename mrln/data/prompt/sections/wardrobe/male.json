@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Male Wardrobe",
+  "description": "The source's male wardrobe range — worn unbuttoned/relaxed.",
+  "suits": ["human"],
+  "items": [
+    { "name": "linen-shirt", "text": "tailored Italian linen shirt", "text_short": "Italian linen shirt" },
+    { "name": "silk-pajama-trousers", "text": "silk pajama trousers", "text_short": "silk pajama trousers" },
+    { "name": "black-dress-shirt", "text": "fitted black dress shirt with unbuttoned collar", "text_short": "black dress shirt" },
+    { "name": "open-silk-robe", "text": "open silk robe", "text_short": "open silk robe" },
+    { "name": "moto-over-silk", "text": "black leather motorcycle jacket over an unbuttoned silk shirt", "text_short": "moto jacket over silk" },
+    { "name": "velvet-tuxedo", "text": "sharp tailored velvet tuxedo jacket with satin lapels", "text_short": "velvet tuxedo jacket" },
+    { "name": "silk-trench", "text": "unstructured silk trench coat", "text_short": "silk trench coat" },
+    { "name": "smoking-jacket", "text": "silk-blend unbuttoned smoking jacket", "text_short": "smoking jacket" },
+    { "name": "waistcoat-linen", "text": "tailored waistcoat over a rolled-sleeve linen shirt", "text_short": "waistcoat and linen" },
+    { "name": "cashmere-vneck", "text": "relaxed cashmere V-neck sweater over an unbuttoned collar", "text_short": "cashmere V-neck" }
+  ]
+}

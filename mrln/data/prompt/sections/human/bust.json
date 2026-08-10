@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "label": "Bust",
+  "description": "Bust range from the source.",
+  "suits": ["human"],
+  "items": [
+    { "name": "petite-a", "text": "petite A-cup bust", "text_short": "petite A-cup" },
+    { "name": "small-b", "text": "small B-cup bust", "text_short": "small B-cup" },
+    { "name": "medium", "text": "proportionate medium bust", "text_short": "medium bust" },
+    { "name": "full-c", "text": "full C-cup bust", "text_short": "full C-cup" },
+    { "name": "ample-d", "text": "ample D-cup bust", "text_short": "ample D-cup" },
+    { "name": "voluptuous-dd", "text": "voluptuous DD-cup bust", "text_short": "voluptuous DD-cup" }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Streetwear",
+  "description": "Street-fashion statements.",
+  "suits": ["human"],
+  "items": [
+    { "name": "techwear", "text": "black techwear layers, straps, buckles and waterproof zips", "text_short": "black techwear" },
+    { "name": "puffer-oversized", "text": "a glossy oversized puffer jacket worn like armor", "text_short": "oversized puffer" },
+    { "name": "cargo-crop", "text": "wide cargo pants with a fitted crop top and chunky sneakers", "text_short": "cargos and crop top" },
+    { "name": "varsity-vintage", "text": "a vintage varsity jacket with chenille patches", "text_short": "vintage varsity jacket" },
+    { "name": "skater-baggy", "text": "baggy skate jeans, worn deck shoes and a beanie", "text_short": "skater baggy fit" },
+    { "name": "grunge-layers", "text": "ripped fishnets under shorts, band tee and stomper boots", "text_short": "grunge layers" },
+    { "name": "track-retro", "text": "a retro track suit with triple side stripes", "text_short": "retro track suit" },
+    { "name": "workwear-chore", "text": "a duck-canvas chore coat over double-knee work pants", "text_short": "workwear chore coat" },
+    { "name": "harajuku-mix", "text": "playful layered Harajuku-mix styling in clashing prints", "text_short": "Harajuku layering", "tags": ["anime"] },
+    { "name": "leather-biker", "text": "a scuffed leather biker jacket over a hoodie", "text_short": "leather biker jacket" }
+  ]
+}

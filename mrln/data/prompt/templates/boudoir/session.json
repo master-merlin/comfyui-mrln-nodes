@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "label": "Boudoir Session",
+  "type": ["human", "boudoir"],
+  "description": "The OverDrive boudoir session: solo, female duo or couple (nested model profiles), shared interiors, organic light and editorial optics. Tasteful glamour tier; all subjects adult.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "photoreal-raw"
+    },
+    {
+      "id": "configuration",
+      "ref": "boudoir/configuration",
+      "label": "Session configuration"
+    },
+    {
+      "id": "setting",
+      "ref": "location/boudoir-interior",
+      "label": "Interior",
+      "emphasis": 1.25
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Organic light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "shot",
+      "ref": "viewpoint/portrait",
+      "label": "Shot type",
+      "emphasis": 1.2
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "85mm-f12"
+    },
+    {
+      "id": "styleline",
+      "ref": "style/photography",
+      "label": "Photography style",
+      "default": "boudoir-artistic"
+    }
+  ],
+  "suffix": "(natural optical depth of field, realistic background bokeh and environmental falloff:1.15), (detailed natural skin texture, skin pores, hair highlights catching light:1.2), (perfect hands, detailed fingers:1.2), high-fashion editorial photography, cinematic lighting, sharp focal subject, (cinematic color grade:1.15)",
+  "negative": "child, chibi, underage, deformed, extra limbs, extra fingers, watermark, text, logo",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "label": "Duo Interaction",
+  "description": "Tender two-model interactions from the source, factory glamour-tier curation.",
+  "suits": ["human"],
+  "tags": ["duo", "boudoir"],
+  "items": [
+    { "name": "hand-on-shoulder", "text": "one gently resting a hand on the other's shoulder", "text_short": "hand on shoulder" },
+    { "name": "intertwined-fingers", "text": "intertwined fingers and subtle closeness", "text_short": "intertwined fingers" },
+    { "name": "lean-and-lip-touch", "text": "one touching her own lower lip while leaning against the other", "text_short": "leaning lip-touch" },
+    { "name": "strap-adjust-watch", "text": "one delicately adjusting her shoulder strap while the other looks on", "text_short": "strap adjust, watching" },
+    { "name": "resting-finger-bite", "text": "one gently biting her index finger while resting against the other", "text_short": "resting playful bite" },
+    { "name": "whispered-secret", "text": "one whispering a secret into the other's ear with a knowing smile", "text_short": "whispered secret" },
+    { "name": "shoulder-massage", "text": "one massaging the other's bare shoulders from behind", "text_short": "shoulder massage" },
+    { "name": "collarbone-kiss", "text": "a soft kiss on the collarbone while the other tilts her head back", "text_short": "soft collarbone kiss" },
+    { "name": "close-embrace", "text": "a close embrace, one hand resting at the other's hip", "text_short": "close hip embrace" },
+    { "name": "hair-braiding", "text": "one slowly braiding the other's hair in the mirror light", "text_short": "braiding her hair" },
+    { "name": "cheek-to-cheek", "text": "cheek to cheek, both meeting the camera with steady eyes", "text_short": "cheek to cheek" },
+    { "name": "silk-sheets-tangle", "text": "relaxed together on silk sheets, limbs loosely tangled", "text_short": "silk-sheet tangle" }
+  ]
+}

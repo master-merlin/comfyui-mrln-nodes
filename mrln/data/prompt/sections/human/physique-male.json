@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Physique (Male)",
+  "description": "Male body types.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "athletic-broad",
+      "text": "athletic physique with broad shoulders and toned chest",
+      "text_short": "athletic broad-shouldered"
+    },
+    {
+      "name": "lean-swimmer",
+      "text": "lean swimmer's build with long defined lines",
+      "text_short": "lean swimmer build"
+    },
+    {
+      "name": "powerful-rugby",
+      "text": "powerful heavyset build with a strong solid frame",
+      "text_short": "powerful heavyset build"
+    },
+    {
+      "name": "wiry-runner",
+      "text": "wiry runner's physique, light and taut",
+      "text_short": "wiry runner build"
+    },
+    {
+      "name": "sculpted-gym",
+      "text": "sculpted gym physique with defined arms and chest",
+      "text_short": "sculpted gym build"
+    },
+    {
+      "name": "distinguished-solid",
+      "text": "distinguished solid build carried with easy confidence",
+      "text_short": "distinguished solid build"
+    },
+    {
+      "name": "tall-rangy",
+      "text": "tall rangy frame with relaxed posture",
+      "text_short": "tall rangy frame"
+    },
+    {
+      "name": "dad-bod-confident",
+      "text": "comfortable natural build worn with unbothered confidence",
+      "text_short": "comfortable natural build"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Historical Wardrobe",
+  "description": "Period costume. Tagged 'historical' for genre coupling.",
+  "suits": ["human"],
+  "tags": ["historical"],
+  "items": [
+    { "name": "victorian-gown", "text": "a high-collared Victorian gown with jet buttons and a bustle", "text_short": "Victorian gown" },
+    { "name": "victorian-gentleman", "text": "a Victorian frock coat, waistcoat, cravat and pocket watch", "text_short": "Victorian frock coat" },
+    { "name": "medieval-kirtle", "text": "a laced medieval kirtle over a linen chemise", "text_short": "medieval kirtle" },
+    { "name": "medieval-doublet", "text": "a padded medieval doublet with a sword belt", "text_short": "medieval doublet" },
+    { "name": "twenties-flapper", "text": "a 1920s beaded flapper dress with a feather headband", "text_short": "1920s flapper look" },
+    { "name": "twenties-suit", "text": "a 1920s three-piece pinstripe suit with a fedora", "text_short": "1920s pinstripe suit" },
+    { "name": "regency-empire", "text": "a Regency empire-waist muslin gown with long gloves", "text_short": "Regency muslin gown" },
+    { "name": "fifties-swing", "text": "a 1950s polka-dot swing dress with a cinched belt", "text_short": "1950s swing dress" },
+    { "name": "pirate-coat", "text": "a weathered age-of-sail captain's coat with brass buttons", "text_short": "age-of-sail coat" },
+    { "name": "edwardian-lace", "text": "an Edwardian high-neck lace blouse with a long walking skirt", "text_short": "Edwardian lace blouse" }
+  ]
+}

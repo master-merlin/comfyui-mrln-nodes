@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "label": "Boudoir Interior",
+  "description": "The sixteen shared session interiors from the OverDrive boudoir source, adapted to schema.",
+  "suits": ["human"],
+  "tags": ["boudoir", "indoor"],
+  "items": [
+    {
+      "name": "parisian-haussmann",
+      "text": "Vintage Parisian Haussmannian apartment featuring ornate gilded boiserie moulding, French doors and aged herringbone parquet.",
+      "text_short": "Haussmann apartment, gilded boiserie"
+    },
+    {
+      "name": "venetian-palace",
+      "text": "Opulent Venetian palace suite decorated with authentic Murano glass chandeliers, damask silk wall coverings and marble balconies.",
+      "text_short": "Venetian palace suite"
+    },
+    {
+      "name": "cliffside-villa",
+      "text": "Modern minimalist cliffside villa with monochromatic concrete textures, low-profile platform seating and floor-to-ceiling ocean-view glass.",
+      "text_short": "minimalist cliffside villa"
+    },
+    {
+      "name": "brick-studio-loft",
+      "text": "Industrial red-brick studio loft featuring weathered masonry, exposed timber beams, warm brass accent fixtures and soft side window lighting.",
+      "text_short": "red-brick studio loft"
+    },
+    {
+      "name": "hotel-penthouse",
+      "text": "Luxury hotel penthouse suite with tufted Italian leather chesterfield sofas, polished walnut panels and city skyline windows.",
+      "text_short": "hotel penthouse suite"
+    },
+    {
+      "name": "corner-atelier",
+      "text": "Sunlit corner atelier studio with floor-to-ceiling glass, sheer flowing linen drapes and warm natural sunlight bounce.",
+      "text_short": "sunlit corner atelier"
+    },
+    {
+      "name": "copper-spa-suite",
+      "text": "Opulent spa suite featuring a freestanding antique copper clawfoot tub, intricate Calacatta marble tilework and brushed gold fixtures.",
+      "text_short": "copper-tub spa suite"
+    },
+    {
+      "name": "speakeasy-parlor",
+      "text": "Private velvet-draped speakeasy parlor with rich oxblood damask wallpapers, carved dark walnut woodwork and brass floor lamps.",
+      "text_short": "velvet speakeasy parlor"
+    },
+    {
+      "name": "mansion-library",
+      "text": "Historic mansion library with floor-to-ceiling dark walnut bookshelves, carved mahogany hearth and warm fireplace glow.",
+      "text_short": "mansion library fireside"
+    },
+    {
+      "name": "plaster-studio",
+      "text": "Daylit Venetian-plaster studio featuring rich textured tonal walls, minimalist sculptural furniture and natural soft light falloff.",
+      "text_short": "Venetian plaster studio"
+    },
+    {
+      "name": "sunroom-conservatory",
+      "text": "Sunroom conservatory with wrought-iron architectural windows, lush exotic tropical palms and diffused sunlight.",
+      "text_short": "wrought-iron conservatory"
+    },
+    {
+      "name": "gallery-studio",
+      "text": "Minimalist art gallery studio with track spotlighting, low-profile seating and clean architectural lines.",
+      "text_short": "minimal gallery studio"
+    },
+    {
+      "name": "dressing-parlor",
+      "text": "High-end dressing parlor featuring a grand Hollywood vanity mirror with warm lightbulbs, velvet stools and silk drapes.",
+      "text_short": "Hollywood dressing parlor"
+    },
+    {
+      "name": "country-estate",
+      "text": "Rustic country estate suite with exposed natural fieldstone walls, heavy timber beams and wrought-iron candelabras.",
+      "text_short": "fieldstone country estate"
+    },
+    {
+      "name": "boho-loft",
+      "text": "Boho-chic studio loft with layered textured woven rugs, soft pampas grass and warm ambient lanterns.",
+      "text_short": "boho loft, woven layers"
+    },
+    {
+      "name": "noir-parlor",
+      "text": "Moody film-noir parlor featuring dark crimson flock wallpaper, heavy velvet drapes and vintage brass fixtures.",
+      "text_short": "film-noir crimson parlor",
+      "tags": ["night"]
+    }
+  ]
+}
