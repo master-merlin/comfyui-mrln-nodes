@@ -48,6 +48,14 @@ The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per
 installation — in `--multi-user` setups all users see the same library.
 
+### Example workflows
+
+The pack ships ready-made graphs in `example_workflows/` — they appear in
+ComfyUI's workflow template browser under this pack's name. Start with
+**mrln-prompting**: a Prompt Template and a Prompt Section wired into Show
+Text nodes, so you can explore the library, seeds and selection lines
+before connecting anything to a sampler.
+
 ## Design principles
 
 - **Compatible by default** — nodes use the stable ComfyUI class API and
