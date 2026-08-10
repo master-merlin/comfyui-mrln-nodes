@@ -183,7 +183,8 @@ def test_save_template(lib):
 
 
 def test_save_rejects_invalid(lib):
-    status, body = promptapi.handle_save_section(lib, {"slug": "bad", "data": {"items": []}})
+    # items must be a LIST ([] is legal: extend files may only retag)
+    status, body = promptapi.handle_save_section(lib, {"slug": "bad", "data": {"items": "x"}})
     assert status == 400 and "items" in body["error"]
     assert "bad" not in lib.section_slugs()
     status, _ = promptapi.handle_save_section(

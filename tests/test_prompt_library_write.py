@@ -46,18 +46,28 @@ def test_save_user_new_template(lib):
     assert lib.load_template("mine/tpl").slots[0].ref == "color"
 
 
-def test_save_user_overrides_factory_and_changes_fingerprint(lib):
+def test_save_user_extends_factory_and_changes_fingerprint(lib):
     before = lib.fingerprint()
     assert lib.tier_of("sections", "lighting") == "factory"
     lib.save_user("sections", "lighting", GOOD_SECTION)
     assert lib.tier_of("sections", "lighting") == "user"
-    assert [item.name for item in lib.load_section("lighting").items] == ["petrol"]
+    # same-slug user section EXTENDS factory: factory items stay, new appended
+    merged = lib.load_section("lighting")
+    assert merged.merged
+    assert [item.name for item in merged.items] == ["daylight", "night", "petrol"]
     assert lib.fingerprint() != before
+
+
+def test_save_user_replaces_factory_on_flag(lib):
+    lib.save_user("sections", "lighting", {**GOOD_SECTION, "replaces": True})
+    replaced = lib.load_section("lighting")
+    assert not replaced.merged
+    assert [item.name for item in replaced.items] == ["petrol"]
 
 
 def test_save_rejects_invalid_content(lib):
     with pytest.raises(SchemaError):
-        lib.save_user("sections", "bad", {"items": []})
+        lib.save_user("sections", "bad", {"items": "not a list"})
     assert "bad" not in lib.section_slugs()  # nothing was written
     with pytest.raises(SchemaError):
         lib.save_user("sections", "alsobad", "not a dict")

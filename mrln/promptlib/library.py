@@ -1,19 +1,27 @@
 """Two-tier library: factory content shipped with the pack + persistent user
-tier. User file with the same slug REPLACES the factory file entirely.
-Slug = file path relative to the kind dir, POSIX separators, no extension.
+tier. Slug = file path relative to the kind dir, POSIX separators, no
+extension. Same-slug SECTIONS compound (the user file extends factory unless
+it sets '"replaces": true'); same-slug templates replace factory entirely.
+
+Renamed slugs never just die: `aliases.json` at each tier root maps old slug
+-> new slug, consulted only when a lookup misses. A factory restructure ships
+aliases for every renamed slug so existing user templates keep loading.
 """
 
 import hashlib
 import json
+import logging
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .errors import SchemaError, SectionNotFoundError, TemplateNotFoundError
-from .schema import SLUG_SEGMENT_RE, parse_section, parse_template
+from .schema import SLUG_SEGMENT_RE, Section, default_label, parse_section, parse_template
 
 KINDS = ("sections", "templates", "profiles", "system_prompts")
 WRITABLE_KINDS = ("sections", "templates")
+
+_log = logging.getLogger(__name__)
 
 
 def validate_slug(slug):
@@ -45,6 +53,34 @@ class Entry:
     path: Path
     mtime_ns: int
     size: int
+
+
+def merge_sections(factory, user):
+    """Combined view of a same-slug section pair: user items merge into
+    factory items by name (user version wins, new names append after),
+    'hidden' tombstones a name out of the pools while staying visible to
+    editors, and empty user fields inherit the factory value. Every item
+    carries its origin tier so UIs can show where elements live."""
+    items = {item.name: replace(item, origin="factory") for item in factory.items}
+    for item in user.items:
+        base = items.get(item.name)
+        if item.hidden and base is not None and not item.text:
+            items[item.name] = replace(base, hidden=True)  # bare tombstone keeps content visible
+        else:
+            items[item.name] = replace(item, origin="user")
+    user_label = user.label if user.label != default_label(user.slug) else ""
+    return Section(
+        slug=factory.slug,
+        label=user_label or factory.label,
+        items=tuple(items.values()),
+        description=user.description or factory.description,
+        negative=user.negative or factory.negative,
+        tags=user.tags or factory.tags,
+        excludes=user.excludes or factory.excludes,
+        requires=user.requires or factory.requires,
+        suits=user.suits or factory.suits,
+        merged=True,
+    )
 
 
 class Library:
@@ -92,29 +128,94 @@ class Library:
         entry = self._scan(kind).get(slug)
         return entry.tier if entry else ""
 
+    # -- aliases -----------------------------------------------------------
+
+    def _aliases(self, kind):
+        """Merged old-slug -> new-slug map from <tier>/aliases.json (user
+        entries override factory). A malformed alias file is skipped with a
+        warning — the compatibility layer must never become a new way to
+        fail. Only read on a lookup MISS, so the extra file I/O is rare."""
+        merged = {}
+        for root in (self.factory_root, self.user_root):
+            if not root:
+                continue
+            path = Path(root) / "aliases.json"
+            if not path.is_file():
+                continue
+            try:
+                table = json.loads(path.read_text(encoding="utf-8")).get(kind) or {}
+                merged.update({str(k): str(v) for k, v in table.items()})
+            except Exception as exc:
+                _log.warning("ignoring malformed %s: %s", path, exc)
+        return merged
+
+    def _alias_target(self, kind, slug, exists):
+        """Follow the alias chain from `slug` until `exists(candidate)` is
+        true. Returns the first existing candidate or None; cycles and dead
+        chains end as None instead of looping."""
+        aliases = self._aliases(kind)
+        current, seen = slug, {slug}
+        while current in aliases:
+            current = aliases[current]
+            if exists(current):
+                return current
+            if current in seen:
+                return None
+            seen.add(current)
+        return None
+
     # -- loading -----------------------------------------------------------
+
+    def _parse_file(self, path, slug, parser):
+        try:
+            stat = path.stat()
+        except OSError as exc:
+            raise SchemaError(str(path), f"cannot read file: {exc}") from exc
+        key = (str(path), stat.st_mtime_ns)
+        if key in _PARSE_CACHE:
+            return _PARSE_CACHE[key]
+        try:
+            with open(path, encoding="utf-8") as fh:
+                data = json.load(fh)
+        except json.JSONDecodeError as exc:
+            raise SchemaError(str(path), f"invalid JSON: {exc}") from exc
+        except OSError as exc:
+            raise SchemaError(str(path), f"cannot read file: {exc}") from exc
+        parsed = parser(data, slug, str(path))
+        _PARSE_CACHE[key] = parsed
+        return parsed
 
     def _load(self, kind, slug, parser, not_found):
         entries = self._scan(kind)
         entry = entries.get(slug)
         if entry is None:
+            target = self._alias_target(kind, slug, lambda s: s in entries)
+            if target is not None:
+                return self._load(kind, target, parser, not_found)
             raise not_found(slug, list(entries))
-        key = (str(entry.path), entry.mtime_ns)
-        if key in _PARSE_CACHE:
-            return _PARSE_CACHE[key]
-        try:
-            with open(entry.path, encoding="utf-8") as fh:
-                data = json.load(fh)
-        except json.JSONDecodeError as exc:
-            raise SchemaError(str(entry.path), f"invalid JSON: {exc}") from exc
-        except OSError as exc:
-            raise SchemaError(str(entry.path), f"cannot read file: {exc}") from exc
-        parsed = parser(data, slug, str(entry.path))
-        _PARSE_CACHE[key] = parsed
-        return parsed
+        return self._parse_file(entry.path, slug, parser)
 
     def load_section(self, slug):
-        return self._load("sections", slug, parse_section, SectionNotFoundError)
+        """Sections COMPOUND across tiers: a user file over a factory slug
+        extends it by default (items merge by name, user wins; 'hidden'
+        tombstones a name; section fields inherit when empty). A user file
+        with '"replaces": true' shadows the factory file entirely —
+        templates always replace, only sections merge."""
+        entries = self._scan("sections")
+        entry = entries.get(slug)
+        if entry is None:
+            target = self._alias_target("sections", slug, lambda s: s in entries)
+            if target is not None:
+                return self.load_section(target)
+            raise SectionNotFoundError(slug, list(entries))
+        section = self._parse_file(entry.path, slug, parse_section)
+        if entry.tier != "user" or section.replaces:
+            return section
+        factory_path = self.factory_root / "sections" / f"{slug}.json"
+        if not factory_path.is_file():
+            return section
+        factory = self._parse_file(factory_path, slug, parse_section)
+        return merge_sections(factory, section)
 
     def load_template(self, slug):
         return self._load("templates", slug, parse_template, TemplateNotFoundError)
@@ -128,15 +229,24 @@ class Library:
         slugs = self._scan("sections")
         if ref in slugs:
             section = self.load_section(ref)
-            return [(item.name, section, item) for item in section.items]
+            return [(item.name, section, item) for item in section.items if not item.hidden]
         matching = sorted(s for s in slugs if s.startswith(ref + "/"))
         if not matching:
+            target = self._alias_target(
+                "sections",
+                ref,
+                lambda s: s in slugs or any(x.startswith(s + "/") for x in slugs),
+            )
+            if target is not None:
+                return self.scope_items(target)
             raise SectionNotFoundError(ref, list(slugs) + self.section_folders())
         result = []
         for slug in matching:
             section = self.load_section(slug)
             sub = slug[len(ref) + 1 :]
-            result.extend((f"{sub}/{item.name}", section, item) for item in section.items)
+            result.extend(
+                (f"{sub}/{item.name}", section, item) for item in section.items if not item.hidden
+            )
         return result
 
     # -- user-tier writes --------------------------------------------------

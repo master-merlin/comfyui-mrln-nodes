@@ -1,0 +1,12 @@
+{
+  "_comment": "Old slug -> new slug, consulted only when a lookup misses. Ships with every factory restructure so existing user templates keep loading. Old folder refs (camera, viewpoint, style, lighting, atmosphere) need no entry: they still resolve as folder scopes.",
+  "sections": {
+    "scenery": "location",
+    "scenery/day": "location",
+    "scenery/night": "location",
+    "scenery/light-day": "lighting/day",
+    "scenery/light-night": "lighting/night",
+    "car/model": "car/design-base"
+  },
+  "templates": {}
+}

@@ -29,7 +29,9 @@ def dump_item(item):
             out[key] = list(value)
     if item.slots:
         out["slots"] = [dump_slot(slot) for slot in item.slots]
-    return out
+    if item.hidden:
+        out["hidden"] = True
+    return out  # origin is runtime provenance, never serialized
 
 
 def dump_section(section):
@@ -44,8 +46,10 @@ def dump_section(section):
         value = getattr(section, key)
         if value:
             out[key] = list(value)
+    if section.replaces:
+        out["replaces"] = True
     out["items"] = [dump_item(item) for item in section.items]
-    return out
+    return out  # merged is runtime state, never serialized
 
 
 def dump_slot(slot):

@@ -101,6 +101,13 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
     elif getattr(resolved, "variant_off", False):
         lines.append("variant: (off)  [off]")
     for slot in walk_slots(resolved.slots):
+        if slot.missing:
+            indent = "  " * slot.id.count(".")
+            lines.append(
+                f"{indent}⚠ {slot.id}: section '{slot.ref}' is missing — remap the slot "
+                "in the Composer or restore the section"
+            )
+            continue
         if slot.item_name is None:
             mark = "[random]" if slot.random else "[off]"
             value = "(omitted)" if slot.random else "(muted)"

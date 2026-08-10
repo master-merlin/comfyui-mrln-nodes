@@ -219,3 +219,24 @@ def test_graphics_wildcards_expand(lib):
         assert "{" not in resolved.text and "|" not in resolved.text
         hit = True
     assert hit
+
+
+def test_factory_aliases_valid(lib):
+    """Released slugs never just die: every alias target must resolve, and
+    no alias source may shadow (collide with) a live slug."""
+    data = json.loads((FACTORY_ROOT / "aliases.json").read_text(encoding="utf-8"))
+    slugs = set(lib.section_slugs())
+    folders = set(lib.section_folders())
+    for source, target in data.get("sections", {}).items():
+        assert source not in slugs | folders, f"alias source '{source}' shadows a live slug"
+        assert lib.scope_items(source), f"alias '{source}' -> '{target}' does not resolve"
+    for source in data.get("templates", {}):
+        assert source not in set(lib.template_slugs()), f"'{source}' shadows a live template"
+        lib.load_template(source)  # raises if the chain is dead
+
+
+def test_retired_scenery_slugs_still_resolve(lib):
+    """The exact refs stranded by the 2026-08 restructure keep loading."""
+    for old_ref in ("scenery/day", "scenery/night", "scenery/light-day", "scenery/light-night"):
+        assert lib.scope_items(old_ref), old_ref
+    assert lib.load_section("scenery/light-day").slug == "lighting/day"

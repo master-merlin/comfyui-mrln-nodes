@@ -756,6 +756,19 @@ export function createComposerPanel(root, ctx) {
     ];
     modifiedNote.style.display = state.modified ? "" : "none";
     parts.push(modifiedNote);
+    const missingRefs = (state.detail.missing_refs ?? []).filter((ref) =>
+      allSlots().some((slot) => slot.ref === ref)
+    );
+    if (missingRefs.length) {
+      parts.push(
+        el(
+          "div",
+          { class: "mrln-error" },
+          `⚠ ${missingRefs.length} section ref(s) point nowhere: ${missingRefs.join(", ")} — ` +
+            "the node skips them with a warning; remap below and Save to repair the template."
+        )
+      );
+    }
     if (state.rawData.description) {
       parts.push(el("div", { class: "mrln-note" }, state.rawData.description));
     }
@@ -990,7 +1003,70 @@ export function createComposerPanel(root, ctx) {
     schedulePreview();
   }
 
+  function missingSlotCard(slot, container, index, isVariantSlot, orderIndex) {
+    // The ref points at no section (factory restructure, deleted user file).
+    // Like ComfyUI's missing-node flow: the template still loads, the slot
+    // renders as a repair card, and remapping + Save fixes the file.
+    const remapSelect = sectionSelect();
+    const remapButton = el(
+      "button",
+      {
+        class: "mrln-btn",
+        onclick: async () => {
+          const ref = remapSelect.value;
+          if (!ref) return;
+          slot.ref = ref;
+          delete slot.default; // the old default named an item of the dead section
+          state.rows.set(slot.id, parseToken("random"));
+          await ensurePool(ref);
+          markModified();
+          renderComposeTab();
+          schedulePreview();
+        },
+      },
+      "Remap"
+    );
+    const handle = dragHandle();
+    const card = el(
+      "div",
+      { class: `mrln-slot mrln-broken${isVariantSlot ? " mrln-indent" : ""}` },
+      el(
+        "div",
+        { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` },
+        handle,
+        el("span", {}, slot.label && slot.label.length <= 60 ? slot.label : slot.id),
+        el("span", { class: "mrln-chip mrln-missing" }, "missing"),
+        el(
+          "span",
+          { class: "mrln-rowbtns" },
+          smallBtn("Remove this slot from the template", "✕", () =>
+            removeSlot(container, index, slot.id, isVariantSlot)
+          )
+        )
+      ),
+      el(
+        "div",
+        { class: "mrln-error" },
+        `Section '${slot.ref}' no longer exists — remap it to a live section:`
+      ),
+      el("div", { class: "mrln-inline" }, remapSelect, remapButton)
+    );
+    if (isVariantSlot) {
+      attachDrag(card, handle, `variant:${state.variant}`, index, (from, to) =>
+        moveInArray(container, from, to)
+      );
+    } else if (orderIndex !== null) {
+      attachDrag(card, handle, "order", orderIndex, (from, to) =>
+        moveInArray(state.orderIds, from, to)
+      );
+    }
+    return card;
+  }
+
   function slotRow(slot, container, index, isVariantSlot, orderIndex = null) {
+    if ((state.detail.missing_refs ?? []).includes(slot.ref)) {
+      return missingSlotCard(slot, container, index, isVariantSlot, orderIndex);
+    }
     const pool = state.detail.pools[slot.ref] ?? [];
     const row = state.rows.get(slot.id) ?? parseToken(slot.default ?? "random");
     state.rows.set(slot.id, row);
@@ -1131,13 +1207,19 @@ export function createComposerPanel(root, ctx) {
     return card;
   }
 
-  function addSectionRow() {
-    const type = state.rawData.type ?? [];
+  function sectionSelect() {
+    // Grouped picker over the live library: type-matching + universal
+    // sections first, other domains behind an optgroup. Shared by the
+    // add-section row and the missing-ref remap card.
+    const type = state.rawData?.type ?? [];
     const matches = (suits) =>
       !type.length || !(suits ?? []).length || suits.some((s) => type.includes(s));
     const sections = state.library.sections.map((s) => ({
       value: s.slug,
-      label: s.slug + ((s.suits ?? []).length ? `  [${s.suits.join(",")}]` : ""),
+      label:
+        s.slug +
+        ((s.suits ?? []).length ? `  [${s.suits.join(",")}]` : "") +
+        (s.merged ? " ⊕" : ""),
       match: matches(s.suits),
     }));
     const folders = state.library.folders.map((f) => ({
@@ -1158,6 +1240,11 @@ export function createComposerPanel(root, ctx) {
     } else {
       for (const opt of primary) refSelect.append(el("option", { value: opt.value }, opt.label));
     }
+    return refSelect;
+  }
+
+  function addSectionRow() {
+    const refSelect = sectionSelect();
     const addButton = el(
       "button",
       {
@@ -1347,7 +1434,17 @@ export function createComposerPanel(root, ctx) {
             { class: "mrln-slug" },
             `${section.slug} · ${section.item_count ?? "?"} items`
           ),
-          tierChip(section.tier)
+          section.merged
+            ? el(
+                "span",
+                {
+                  class: "mrln-chip mrln-merged",
+                  title: "Combined view: your user file extends the factory section — "
+                    + "elements live in both tiers",
+                },
+                "factory+user"
+              )
+            : tierChip(section.tier)
         )
       );
     }
@@ -1386,6 +1483,9 @@ export function createComposerPanel(root, ctx) {
       negative: "",
       items: [{ name: "", text: "" }],
       raw: { items: [] },
+      factory_raw: null,
+      merged: false,
+      replaces: false,
       tier: "",
     });
   }
@@ -1402,13 +1502,20 @@ export function createComposerPanel(root, ctx) {
   }
 
   function openSectionForm(slug, body) {
+    // Factory sections COMPOUND: the default save writes only your changes
+    // (edited/new items, tombstones for hidden ones) as a thin extend file
+    // that survives factory updates. 'Replace' opts into a full frozen copy.
+    const factoryBaseline = body.factory_raw ?? (body.tier === "factory" ? body.raw : null);
+    const hasFactory = Boolean(factoryBaseline);
+    let saveMode = hasFactory ? (body.replaces ? "replace" : "extend") : "standalone";
+
     const slugInput = el("input", { type: "text", value: slug ?? "", placeholder: "folder/name" });
     const labelInput = el("input", { type: "text", value: body.label ?? "" });
     const descInput = el("input", { type: "text", value: body.description ?? "" });
     const negInput = el("input", { type: "text", value: body.negative ?? "" });
     const suitsInput = el("input", {
       type: "text",
-      value: (body.raw?.suits ?? []).join(", "),
+      value: (body.raw?.suits ?? body.factory_raw?.suits ?? []).join(", "),
       placeholder: "e.g. object, car — empty = universal (offered to every template)",
       title: "Which template types this section serves; typed templates filter "
         + "their pickers and random draws by this. Explicit picks are never restricted.",
@@ -1419,69 +1526,133 @@ export function createComposerPanel(root, ctx) {
       el(
         "tr",
         {},
+        el("td", { class: "mrln-w-origin" }),
         el("td", { class: "mrln-w-name mrln-note" }, "name"),
         el("td", { class: "mrln-note" }, "text"),
         el("td", { class: "mrln-w-weight mrln-note" }, "wt"),
-        el("td", { class: "mrln-w-del" })
+        el("td", { class: "mrln-w-act" })
       )
     );
 
     function addItemRow(item = { name: "", text: "" }) {
       const row = {
         orig: item,
+        hidden: Boolean(item.hidden),
         name: el("input", { type: "text", value: item.name ?? "" }),
         text: el("input", { type: "text", value: item.text ?? "", title: item.text ?? "" }),
         weight: el("input", { type: "text", value: item.weight ?? "" }),
       };
+      const fromFactory = item.origin === "factory";
+      const originChip = fromFactory
+        ? el("span", { class: "mrln-chip mrln-factory", title: "Lives in the factory tier" }, "F")
+        : item.origin === "user"
+          ? el("span", { class: "mrln-chip mrln-user", title: "Lives in your user tier" }, "U")
+          : null;
+      const actionButton = el(
+        "button",
+        {
+          class: "mrln-btn",
+          title: fromFactory
+            ? "Hide this factory item from your pools (a tombstone in your user file — restorable)"
+            : "Remove item",
+          onclick: () => {
+            if (fromFactory) {
+              row.hidden = !row.hidden;
+              tr.classList.toggle("mrln-hidden-item", row.hidden);
+              actionButton.textContent = row.hidden ? "↩" : "🚫";
+            } else {
+              itemRows.splice(itemRows.indexOf(row), 1);
+              tr.remove();
+            }
+          },
+        },
+        fromFactory ? (row.hidden ? "↩" : "🚫") : "✕"
+      );
       const tr = el(
         "tr",
-        {},
+        { class: row.hidden ? "mrln-hidden-item" : null },
+        el("td", { class: "mrln-w-origin" }, originChip),
         el("td", { class: "mrln-w-name" }, row.name),
         el("td", {}, row.text),
         el("td", { class: "mrln-w-weight" }, row.weight),
-        el(
-          "td",
-          { class: "mrln-w-del" },
-          el(
-            "button",
-            {
-              class: "mrln-btn",
-              title: "Remove item",
-              onclick: () => {
-                itemRows.splice(itemRows.indexOf(row), 1);
-                tr.remove();
-              },
-            },
-            "✕"
-          )
-        )
+        el("td", { class: "mrln-w-act" }, actionButton)
       );
       itemRows.push(row);
       table.append(tr);
     }
     for (const item of body.items ?? []) addItemRow(item);
 
+    function cleanedItem(row) {
+      const item = { ...row.orig, name: row.name.value.trim(), text: row.text.value };
+      delete item.origin; // runtime provenance, never persisted
+      delete item.hidden;
+      if (!item.name) delete item.name;
+      const weight = parseFloat(row.weight.value);
+      if (!Number.isNaN(weight) && weight !== 1) item.weight = weight;
+      else delete item.weight;
+      for (const key of ["negative", "text_short"]) if (!item[key]) delete item[key];
+      for (const key of ["tags", "excludes", "requires", "slots"]) {
+        if (Array.isArray(item[key]) && !item[key].length) delete item[key];
+      }
+      if (item.data == null) delete item.data;
+      if (row.hidden) item.hidden = true;
+      return item;
+    }
+
+    function rowEdited(row) {
+      return (
+        row.name.value.trim() !== (row.orig.name ?? "") ||
+        row.text.value !== (row.orig.text ?? "") ||
+        (parseFloat(row.weight.value) || 1) !== (row.orig.weight ?? 1)
+      );
+    }
+
+    function fieldValue(input, factoryValue) {
+      // extend mode: equal-to-factory (or empty) inherits — omit from the file
+      const value = input.value.trim();
+      if (saveMode === "extend" && (!value || value === (factoryValue ?? ""))) return null;
+      return value || null;
+    }
+
     async function save() {
       const targetSlug = slugInput.value.trim();
-      const data = { ...body.raw, version: 1 };
-      if (labelInput.value.trim()) data.label = labelInput.value.trim();
-      else delete data.label;
-      if (descInput.value.trim()) data.description = descInput.value.trim();
-      else delete data.description;
-      if (negInput.value.trim()) data.negative = negInput.value.trim();
-      else delete data.negative;
+      const extending = saveMode === "extend" && factoryBaseline;
+      const data = extending ? { version: 1 } : { ...body.raw, version: 1 };
+      delete data.replaces;
+      const fields = [
+        ["label", labelInput, factoryBaseline?.label],
+        ["description", descInput, factoryBaseline?.description],
+        ["negative", negInput, factoryBaseline?.negative],
+      ];
+      for (const [key, input, factoryValue] of fields) {
+        const value = extending ? fieldValue(input, factoryValue) : input.value.trim() || null;
+        if (value) data[key] = value;
+        else delete data[key];
+      }
       const suits = suitsInput.value.split(",").map((v) => v.trim()).filter(Boolean);
-      if (suits.length) data.suits = suits;
+      const factorySuits = factoryBaseline?.suits ?? [];
+      if (extending && JSON.stringify(suits) === JSON.stringify(factorySuits)) delete data.suits;
+      else if (suits.length) data.suits = suits;
       else delete data.suits;
-      data.items = itemRows.map((row) => {
-        const item = { ...row.orig, name: row.name.value.trim(), text: row.text.value };
-        if (!item.name) delete item.name;
-        const weight = parseFloat(row.weight.value);
-        if (!Number.isNaN(weight) && weight !== 1) item.weight = weight;
-        else delete item.weight;
-        if (!item.negative) delete item.negative;
-        return item;
-      });
+      if (extending) {
+        // thin diff: edited/new/user items + bare tombstones for hidden ones
+        data.items = [];
+        for (const row of itemRows) {
+          if (row.orig.origin === "factory") {
+            if (row.hidden) data.items.push({ name: row.orig.name, hidden: true });
+            else if (rowEdited(row)) data.items.push(cleanedItem(row));
+          } else {
+            data.items.push(cleanedItem(row));
+          }
+        }
+      } else {
+        // replace: hidden factory items simply stay out of the copy;
+        // a user's own hidden item persists WITH its flag (soft-disabled)
+        data.items = itemRows
+          .filter((row) => !(row.hidden && row.orig.origin === "factory"))
+          .map(cleanedItem);
+        if (saveMode === "replace") data.replaces = true;
+      }
       try {
         await ctx.apiJson("/mrln/prompt/save-section", {
           method: "POST",
@@ -1491,10 +1662,33 @@ export function createComposerPanel(root, ctx) {
         ctx.toast("error", "Save failed", err.message);
         return;
       }
-      ctx.toast("success", "Section saved", `${targetSlug} (user library)`);
+      const how = extending
+        ? "extends factory — only your changes stored"
+        : saveMode === "replace"
+          ? "replaces factory entirely"
+          : "user library";
+      ctx.toast("success", "Section saved", `${targetSlug} (${how})`);
       ctx.refreshCombos();
       await loadLibrary();
       openSectionEditor(targetSlug);
+    }
+
+    const modeSelect = el("select", {
+      title: "How your user file compounds with the factory section",
+      onchange: (e) => {
+        saveMode = e.target.value;
+      },
+    });
+    if (hasFactory) {
+      modeSelect.append(
+        el(
+          "option",
+          { value: "extend" },
+          "extend factory — save only my changes (survives factory updates)"
+        ),
+        el("option", { value: "replace" }, "replace factory — full frozen copy")
+      );
+      modeSelect.value = saveMode;
     }
 
     const actions = [
@@ -1504,7 +1698,13 @@ export function createComposerPanel(root, ctx) {
       actions.push(
         el(
           "button",
-          { class: "mrln-btn", onclick: () => deleteEntry("sections", slug) },
+          {
+            class: "mrln-btn",
+            title: hasFactory
+              ? "Delete your user file — the slug reverts to pure factory content"
+              : "Delete your user file",
+            onclick: () => deleteEntry("sections", slug),
+          },
           "Delete user file"
         )
       );
@@ -1515,16 +1715,29 @@ export function createComposerPanel(root, ctx) {
         "div",
         { class: "mrln-tree-head" },
         slug ? `Section: ${slug}` : "New section",
-        tierChip(body.tier)
+        body.merged
+          ? el("span", { class: "mrln-chip mrln-merged" }, "factory+user")
+          : tierChip(body.tier)
       ),
-      body.tier === "factory"
-        ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
-        : null,
+      body.merged
+        ? el(
+            "div",
+            { class: "mrln-note" },
+            "Combined view — F/U marks where each item lives. Saving stores only your changes."
+          )
+        : body.tier === "factory"
+          ? el(
+              "div",
+              { class: "mrln-note" },
+              "Factory file — saving creates a user-tier file that extends (or replaces) it."
+            )
+          : null,
       field("Slug", slugInput),
       field("Label", labelInput),
       field("Description", descInput),
       field("Negative", negInput),
       field("Suits (template types)", suitsInput),
+      hasFactory ? field("Save mode", modeSelect) : null,
       el("span", { class: "mrln-field-name" }, "Items"),
       table,
       el(

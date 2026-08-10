@@ -91,6 +91,8 @@
 .mrln-chip.mrln-user { border-color: #4a8; color: #6ca; }
 .mrln-chip.mrln-factory { opacity: 0.6; }
 .mrln-chip.mrln-override { border-color: #a84; color: #ca8; }
+.mrln-chip.mrln-merged { border-color: #58c; color: #8ae; }
+.mrln-chip.mrln-missing { border-color: #e66; color: #e88; }
 
 .mrln-composer button.mrln-btn {
   padding: 5px 10px;
@@ -195,6 +197,11 @@ textarea.mrln-auto {
 .mrln-slot-list { display: flex; flex-direction: column; gap: 4px; }
 .mrln-indent { margin-left: 10px; border-left: 2px solid var(--border-color, #3a3a3a); }
 .mrln-variant-head { border-style: dashed; }
+.mrln-slot.mrln-broken { border-color: #a55; }
+.mrln-items-table tr.mrln-hidden-item td { opacity: 0.45; text-decoration: line-through; }
+.mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
+.mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
+.mrln-items-table .mrln-w-origin { width: 24px; }
 
 .mrln-addrow {
   border: 1px dashed var(--border-color, #444);

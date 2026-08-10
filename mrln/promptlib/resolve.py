@@ -8,7 +8,7 @@ and their texts substitute {child-id} placeholders in the parent text."""
 
 from dataclasses import dataclass, replace
 
-from .errors import ItemNotFoundError, RecursionLimitError, SelectionError
+from .errors import ItemNotFoundError, RecursionLimitError, SectionNotFoundError, SelectionError
 from .schema import RANDOM_TOKEN, TEXT_LENGTHS, Slot
 from .seeding import derive_rng, weighted_index
 from .textexpr import expand
@@ -39,6 +39,7 @@ class ResolvedSlot:
     requires: tuple = ()  # effective requires (item + section)
     excludes: tuple = ()  # effective excludes (item + section)
     children: tuple = ()  # nested ResolvedSlots (dotted ids)
+    missing: bool = False  # ref points at no section: skipped, ⚠ in choices
 
 
 def walk_slots(slots):
@@ -140,10 +141,38 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
             kind, value = "fixed", None  # pin to first pool item
             fixed_first = True
 
-    pool = lib.scope_items(slot.ref)
-    draw_pool = _filtered_pool(pool, slot, template_type)
     seed_used = value if (kind == "random" and value is not None) else master_seed
     rng = derive_rng(seed_used, key)
+
+    try:
+        pool = lib.scope_items(slot.ref)
+    except SectionNotFoundError:
+        # A dead ref (renamed/deleted section without alias, stale user
+        # template) must not kill the whole prompt: the slot resolves as
+        # `missing`, contributes nothing, and the choices report carries a
+        # loud ⚠ pointing at the Composer's remap.
+        return (
+            ResolvedSlot(
+                id=slot.id,
+                key=key,
+                label=slot.label,
+                ref=slot.ref,
+                section_slug="",
+                item_name=None,
+                text="",
+                negative="",
+                random=False,
+                fixed_first=False,
+                emphasis=slot.emphasis,
+                data=None,
+                tier="",
+                seed_used=seed_used,
+                missing=True,
+            ),
+            rng,
+            None,
+        )
+    draw_pool = _filtered_pool(pool, slot, template_type)
 
     if kind == "off":
         # Muted from the selection: render nothing, but keep the slot in the
@@ -226,7 +255,7 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
         fixed_first=fixed_first,
         emphasis=slot.emphasis,
         data=item.data,
-        tier=lib.tier_of("sections", section.slug),
+        tier=item.origin or lib.tier_of("sections", section.slug),
         seed_used=seed_used,
         tags=tuple(sorted(set(item.tags) | set(section.tags))),
         requires=tuple(sorted(set(item.requires) | set(section.requires))),
@@ -443,6 +472,10 @@ def resolve_section(lib, section_ref, item_token, *, seed, allow_empty=False):
     resolved, rng, item = _resolve_slot(
         lib, slot, key, master_seed=seed, mode="as configured", selection=selection
     )
+    if resolved.missing:
+        # The standalone Section node IS its section — there is nothing to
+        # skip to, so a dead ref stays a hard, actionable error here.
+        raise SectionNotFoundError(section_ref, lib.section_slugs() + lib.section_folders())
     if item is not None and item.text:
         text = expand(item.text, {"trigger": ""}, rng)
         if text != resolved.text:

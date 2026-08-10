@@ -26,6 +26,8 @@ class SectionItem:
     requires: tuple = ()
     text_short: str = ""  # compact variant for short-context tokenizers
     slots: tuple = ()  # nested child slots; {child-id} placeholders in text
+    hidden: bool = False  # tombstone: kept visible to editors, absent from draw pools
+    origin: str = field(default="", compare=False)  # runtime tier provenance, never serialized
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,8 @@ class Section:
     excludes: tuple = ()
     requires: tuple = ()
     suits: tuple = ()  # template types this section serves; empty = universal
+    replaces: bool = False  # user tier: shadow the factory section instead of extending it
+    merged: bool = field(default=False, compare=False)  # runtime: factory + user combined view
 
 
 @dataclass(frozen=True)
@@ -103,6 +107,12 @@ def slugify(text, max_len=40):
     return slug[:max_len].rstrip("-") or "item"
 
 
+def default_label(slug):
+    """Auto label from the slug's last segment; tier merging needs this to
+    tell an explicit label apart from a derived one."""
+    return slug.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
+
+
 def _check_version(data, source):
     version = data.get("version", _VERSION)
     if not isinstance(version, int) or version > _VERSION:
@@ -129,10 +139,16 @@ def _parse_item(raw, index, source):
         return SectionItem(name=slugify(raw), text=raw)
     if not isinstance(raw, dict):
         raise SchemaError(source, f"items[{index}] must be an object or string")
+    hidden = bool(raw.get("hidden", False))
     text = raw.get("text")
     if not isinstance(text, str) or not text.strip():
-        raise SchemaError(source, f"items[{index}] is missing a non-empty 'text'")
-    name = raw.get("name") or slugify(text)
+        if not hidden:
+            raise SchemaError(source, f"items[{index}] is missing a non-empty 'text'")
+        text = text if isinstance(text, str) else ""  # bare tombstone: name only
+    name = raw.get("name")
+    if name is None and hidden:
+        raise SchemaError(source, f"items[{index}]: a hidden item needs an explicit 'name'")
+    name = name or slugify(text)
     if not isinstance(name, str) or not name.strip():
         raise SchemaError(source, f"items[{index}] has an invalid 'name'")
     weight = raw.get("weight", 1.0)
@@ -159,6 +175,7 @@ def _parse_item(raw, index, source):
         requires=_str_tuple(raw.get("requires"), source, "requires"),
         text_short=str(raw.get("text_short", "") or ""),
         slots=slots,
+        hidden=hidden,
     )
 
 
@@ -167,15 +184,18 @@ def parse_section(data, slug, source):
         raise SchemaError(source, "root must be a JSON object")
     _check_version(data, source)
     raw_items = data.get("items")
-    if not isinstance(raw_items, list) or not raw_items:
-        raise SchemaError(source, "'items' must be a non-empty list")
+    if not isinstance(raw_items, list):
+        # An empty list is legal: a user-tier extend file may only retag or
+        # relabel its factory section. The key itself stays mandatory so a
+        # typo ("item") can't silently produce an empty section.
+        raise SchemaError(source, "'items' must be a list")
     items = tuple(_parse_item(raw, i, source) for i, raw in enumerate(raw_items))
     seen = set()
     for item in items:
         if item.name in seen:
             raise SchemaError(source, f"duplicate item name '{item.name}'")
         seen.add(item.name)
-    label = data.get("label") or slug.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
+    label = data.get("label") or default_label(slug)
     return Section(
         slug=slug,
         label=str(label),
@@ -186,6 +206,7 @@ def parse_section(data, slug, source):
         excludes=_str_tuple(data.get("excludes"), source, "excludes"),
         requires=_str_tuple(data.get("requires"), source, "requires"),
         suits=_str_tuple(data.get("suits"), source, "suits"),
+        replaces=bool(data.get("replaces", False)),
     )
 
 

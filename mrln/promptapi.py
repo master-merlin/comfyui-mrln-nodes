@@ -59,15 +59,31 @@ def _guarded(handler):
 
 
 def _raw_file(lib, kind, slug):
-    entry = lib._scan(kind).get(slug)
+    entries = lib._scan(kind)
+    entry = entries.get(slug)
     if entry is None:
+        target = lib._alias_target(kind, slug, lambda s: s in entries)
+        if target is not None:
+            return _raw_file(lib, kind, target)
         not_found = pl.SectionNotFoundError if kind == "sections" else pl.TemplateNotFoundError
-        raise not_found(slug, list(lib._scan(kind)))
+        raise not_found(slug, list(entries))
     with open(entry.path, encoding="utf-8") as fh:
         return json.load(fh)
 
 
-def _slot_detail(slot):
+def _factory_raw(lib, kind, slug):
+    """The factory file raw when a user file shadows/extends it, else None —
+    the composer diffs edits against this baseline for extend-mode saves."""
+    if lib._scan(kind).get(slug) is None or lib.tier_of(kind, slug) != "user":
+        return None
+    path = lib.factory_root / kind / f"{slug}.json"
+    if not path.is_file():
+        return None
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def _slot_detail(slot, missing_refs=()):
     return {
         "id": slot.id,
         "ref": slot.ref,
@@ -78,6 +94,7 @@ def _slot_detail(slot):
         "emphasis": slot.emphasis,
         "tags_any": list(slot.tags_any),
         "tags_none": list(slot.tags_none),
+        "missing": slot.ref in missing_refs,
     }
 
 
@@ -89,7 +106,7 @@ def _pool(lib, ref):
             "negative": item.negative,
             "weight": item.weight,
             "section_slug": section.slug,
-            "tier": lib.tier_of("sections", section.slug),
+            "tier": item.origin or lib.tier_of("sections", section.slug),
         }
         for qualified, section, item in lib.scope_items(ref)
     ]
@@ -116,6 +133,7 @@ def handle_library(lib, payload):
                 description=section.description,
                 item_count=len(section.items),
                 suits=list(section.suits),
+                merged=section.merged,
             )
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))
@@ -135,9 +153,14 @@ def handle_template(lib, payload):
     refs = [slot.ref for slot in tpl.slots]
     refs.extend(slot.ref for variant in tpl.variants for slot in variant.slots)
     pools = {}
+    missing_refs = []
     for ref in refs:
-        if ref not in pools:  # twin slots on one section share a pool
+        if ref in pools or ref in missing_refs:  # twin slots on one section share a pool
+            continue
+        try:
             pools[ref] = _pool(lib, ref)
+        except pl.SectionNotFoundError:
+            missing_refs.append(ref)  # dead ref: detail still loads, slot flags missing
     detail = {
         "slug": slug,
         "label": tpl.label,
@@ -151,12 +174,12 @@ def handle_template(lib, payload):
         "variables": [
             {"name": v.name, "label": v.label, "default": v.default} for v in tpl.variables
         ],
-        "slots": [_slot_detail(slot) for slot in tpl.slots],
+        "slots": [_slot_detail(slot, missing_refs) for slot in tpl.slots],
         "variants": [
             {
                 "name": variant.name,
                 "label": variant.label,
-                "slots": [_slot_detail(slot) for slot in variant.slots],
+                "slots": [_slot_detail(slot, missing_refs) for slot in variant.slots],
             }
             for variant in tpl.variants
         ],
@@ -174,6 +197,7 @@ def handle_template(lib, payload):
         "template": detail,
         "raw": _raw_file(lib, "templates", slug),
         "pools": pools,
+        "missing_refs": missing_refs,
         "fingerprint": lib.fingerprint(),
     }
 
@@ -182,9 +206,12 @@ def handle_template(lib, payload):
 def handle_section(lib, payload):
     slug = _require_str(payload, "slug")
     section = lib.load_section(slug)
+    tier = lib.tier_of("sections", slug)
     return 200, {
         "slug": slug,
-        "tier": lib.tier_of("sections", slug),
+        "tier": tier,
+        "merged": section.merged,
+        "replaces": section.replaces,
         "label": section.label,
         "description": section.description,
         "negative": section.negative,
@@ -199,10 +226,13 @@ def handle_section(lib, payload):
                 "tags": list(item.tags),
                 "excludes": list(item.excludes),
                 "requires": list(item.requires),
+                "hidden": item.hidden,
+                "origin": item.origin or tier,
             }
             for item in section.items
         ],
         "raw": _raw_file(lib, "sections", slug),
+        "factory_raw": _factory_raw(lib, "sections", slug),
         "fingerprint": lib.fingerprint(),
     }
 
@@ -293,6 +323,7 @@ def _resolved_slot_json(s):
         "seed_used": s.seed_used,
         "tier": s.tier,
         "omitted": s.item_name is None,
+        "missing": s.missing,
         "children": [_resolved_slot_json(c) for c in s.children],
     }
 

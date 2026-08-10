@@ -42,7 +42,7 @@ def _item_options():
             except pl.PromptLibError as exc:
                 logger.warning("MRLN prompt: skipping unreadable section '%s': %s", slug, exc)
                 continue
-            entries.extend(f"{slug}/{item.name}" for item in section.items)
+            entries.extend(f"{slug}/{item.name}" for item in section.items if not item.hidden)
     except Exception as exc:
         logger.warning("MRLN prompt: item listing failed: %s", exc)
     return entries

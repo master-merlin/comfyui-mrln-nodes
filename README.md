@@ -26,11 +26,18 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: factory content ships with the pack
-(including the OverDrive car-photography showcase: `overdrive/full-shot`,
-plus staged `car-design` / `paintshop` / `scenery` / `action` templates for
-image-edit pipelines), your personal library lives in
-`<ComfyUI>/user/mrln/prompt/` and survives pack updates. A user file with
-the same name overrides the factory file.
+(including the OverDrive car-photography showcase template
+`overdrive/full-shot` with day/night variants), your personal library lives
+in `<ComfyUI>/user/mrln/prompt/` and survives pack updates. Same-name
+SECTIONS compound: your file *extends* the factory one by default (same item
+name wins, new items append, `"hidden": true` tombstones a factory item,
+`"replaces": true` opts into a full replacement). Same-name templates
+replace the factory file entirely.
+
+Factory updates never strand your saved templates: renamed section slugs
+keep resolving through shipped aliases, and a template whose section
+genuinely vanished still loads and runs — the dead slot is skipped with a
+loud ⚠ in the choices output, and the Composer offers a one-click remap.
 
 ### Prompt Composer panel
 
@@ -39,10 +46,12 @@ Composer** sidebar tab: browse the library, pick items per slot from
 dropdowns, watch a live preview (prompt / negative / choices) as you click,
 then *Apply to node* — it writes the plain selection lines into the selected
 Prompt Template node, so workflows stay fully shareable and headless-safe.
-The Library tab edits sections with a form (saves go to your user tier;
-factory files get a copy-on-write override) and templates as validated raw
-JSON. On frontends without the API the panel simply doesn't appear — the
-nodes work identically without it.
+The Library tab edits sections with a form — merged factory+user views mark
+each item's tier (F/U), factory items can be hidden/restored, and saving
+defaults to a thin "extend factory" diff that survives pack updates (full
+replace available per save) — and templates as validated raw JSON. On
+frontends without the API the panel simply doesn't appear — the nodes work
+identically without it.
 
 The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per

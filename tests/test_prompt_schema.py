@@ -63,7 +63,7 @@ def test_version_future_rejected():
     "data,match",
     [
         ([], "object"),
-        (sec(items=[]), "items"),
+        (sec(items="not a list"), "items"),
         (sec(items=[{"text": ""}]), "text"),
         (sec(items=[{"name": "a", "text": "x"}, {"name": "a", "text": "y"}]), "duplicate item"),
         (sec(items=[{"name": "a", "text": "x", "weight": -1}]), "weight"),
