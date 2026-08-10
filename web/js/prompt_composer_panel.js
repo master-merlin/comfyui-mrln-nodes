@@ -2,8 +2,17 @@
 // no top-level side effects (ComfyUI auto-loads every js file in
 // WEB_DIRECTORY; the module cache makes that harmless). All computation
 // happens server-side via /mrln/prompt/*; this file only moves state
-// between DOM, endpoints, and node widgets. The node's selection-lines
-// widget format is the single source of truth the panel reads and writes.
+// between DOM, endpoints, and node widgets.
+//
+// Two layers of state per template:
+//   rawData  — editable working copy of the template FILE (the meta-prompt:
+//              prefix/suffix prose, slots, labels, order, variants). Edits
+//              preview live via POST /preview {template_data} and persist
+//              only on Save (user tier, copy-on-write over factory).
+//   rows     — the current per-slot picks (fixed item or random[@seed]).
+//              Serialized as selection lines (the node's persistence
+//              format) relative to the template's defaults; Save bakes
+//              them in as the new defaults.
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -49,6 +58,9 @@ export function createComposerPanel(root, ctx) {
     library: null, // GET /library body
     slug: null, // selected template slug
     detail: null, // GET /template body: {template, pools, raw, tier}
+    rawData: null, // editable working copy of detail.raw
+    orderIds: [], // combined render order: shared slot ids + "@variant"
+    modified: false, // rawData differs from the file on disk
     variant: null, // active variant name | "random" | null
     mode: "as configured",
     seed: 0,
@@ -56,11 +68,11 @@ export function createComposerPanel(root, ctx) {
     trigger: "",
     variables: "",
     rows: new Map(), // slot id -> {random, seed, item}
+    labelEdit: new Set(), // slot ids with the label editor open
     lastPreview: null,
     previewNo: 0,
     previewTimer: null,
     tab: "compose",
-    editor: null, // {kind, slug} open in the library tab
   };
 
   // ---- skeleton ------------------------------------------------------------
@@ -85,6 +97,19 @@ export function createComposerPanel(root, ctx) {
     if (name === "library") renderLibraryTab();
   }
 
+  // Persistent element so markModified never re-renders (a re-render would
+  // steal focus from the textarea the user is typing in).
+  const modifiedNote = el(
+    "div",
+    { class: "mrln-note mrln-modified", style: "display:none" },
+    "● unsaved template changes — Save writes them to your user library"
+  );
+
+  function markModified() {
+    state.modified = true;
+    modifiedNote.style.display = "";
+  }
+
   // ---- data loading --------------------------------------------------------
 
   async function loadLibrary(keepSelection = true) {
@@ -98,12 +123,12 @@ export function createComposerPanel(root, ctx) {
     }
     const slugs = state.library.templates.map((t) => t.slug);
     if (!keepSelection || !slugs.includes(state.slug)) state.slug = slugs[0] ?? null;
-    if (state.slug) await selectTemplate(state.slug, { keepRows: keepSelection });
+    if (state.slug && !state.detail) await selectTemplate(state.slug);
     else renderComposeTab();
     if (state.tab === "library") renderLibraryTab();
   }
 
-  async function selectTemplate(slug, { keepRows = false } = {}) {
+  async function selectTemplate(slug) {
     state.slug = slug;
     try {
       state.detail = await ctx.apiJson(
@@ -115,66 +140,152 @@ export function createComposerPanel(root, ctx) {
       );
       return;
     }
-    const tpl = state.detail.template;
-    if (!keepRows) {
-      state.rows = new Map();
-      state.variant = tpl.variants.length
-        ? tpl.variant_default || tpl.variants[0].name
-        : null;
-    }
+    state.rawData = structuredClone(state.detail.raw);
+    state.modified = false;
+    state.labelEdit = new Set();
+    const variants = state.rawData.variants ?? [];
+    state.variant = variants.length
+      ? state.rawData.variant_default || variants[0].name
+      : null;
+    state.orderIds = syncOrderIds();
+    state.rows = new Map();
     for (const slot of allSlots()) {
-      if (!state.rows.has(slot.id)) state.rows.set(slot.id, parseToken(slot.default));
+      state.rows.set(slot.id, parseToken(slot.default ?? "random"));
     }
     state.lastPreview = null;
     renderComposeTab();
     schedulePreview();
   }
 
+  function syncOrderIds() {
+    const shared = (state.rawData.slots ?? []).map((s) => s.id);
+    const hasVariants = (state.rawData.variants ?? []).length > 0;
+    let order = Array.isArray(state.rawData.order) ? [...state.rawData.order] : null;
+    if (!order) return hasVariants ? [...shared, "@variant"] : shared;
+    order = order.filter((id) => id === "@variant" || shared.includes(id));
+    for (const id of shared) if (!order.includes(id)) order.push(id);
+    if (hasVariants && !order.includes("@variant")) order.push("@variant");
+    if (!hasVariants) order = order.filter((id) => id !== "@variant");
+    return order;
+  }
+
   function allSlots() {
-    const tpl = state.detail?.template;
-    if (!tpl) return [];
-    return [...tpl.slots, ...tpl.variants.flatMap((v) => v.slots)];
+    if (!state.rawData) return [];
+    return [
+      ...(state.rawData.slots ?? []),
+      ...(state.rawData.variants ?? []).flatMap((v) => v.slots ?? []),
+    ];
   }
 
   function activeSlots() {
-    const tpl = state.detail?.template;
-    if (!tpl) return [];
-    const active = [...tpl.slots];
+    if (!state.rawData) return [];
+    const active = [...(state.rawData.slots ?? [])];
     if (state.variant && state.variant !== "random") {
-      const variant = tpl.variants.find((v) => v.name === state.variant);
-      if (variant) active.push(...variant.slots);
+      const variant = (state.rawData.variants ?? []).find((v) => v.name === state.variant);
+      if (variant) active.push(...(variant.slots ?? []));
     }
     return active;
   }
 
-  // ---- selection lines (the persistence format) ----------------------------
+  async function ensurePool(ref) {
+    if (state.detail.pools[ref]) return;
+    try {
+      const body = await ctx.apiJson(`/mrln/prompt/items?ref=${encodeURIComponent(ref)}`);
+      state.detail.pools[ref] = body.items;
+    } catch (err) {
+      state.detail.pools[ref] = [];
+      ctx.toast("error", `Cannot load items for '${ref}'`, err.message);
+    }
+  }
+
+  // ---- selection lines (the node persistence format) -----------------------
 
   function rowToken(slot) {
-    const row = state.rows.get(slot.id) ?? parseToken(slot.default);
+    const row = state.rows.get(slot.id) ?? parseToken(slot.default ?? "random");
     if (row.random) return row.seed ? `random@${row.seed}` : "random";
-    return row.item;
+    return row.item || "random";
   }
 
   function buildSelectionLines() {
-    const tpl = state.detail.template;
     const lines = [];
-    if (tpl.variants.length) {
-      const fallback = tpl.variant_default || tpl.variants[0].name;
+    const variants = state.rawData.variants ?? [];
+    if (variants.length) {
+      const fallback = state.rawData.variant_default || variants[0].name;
       if (state.variant !== fallback) lines.push(`variant=${state.variant}`);
     }
     for (const slot of activeSlots()) {
       const token = rowToken(slot);
-      if (token && token !== slot.default) lines.push(`${slot.id}=${token}`);
+      if (token !== (slot.default ?? "random")) lines.push(`${slot.id}=${token}`);
     }
     return lines.join("\n");
   }
 
   function applyKvToRows(map) {
-    const tpl = state.detail.template;
-    if (map.variant && tpl.variants.length) state.variant = map.variant;
+    if (map.variant && (state.rawData.variants ?? []).length) state.variant = map.variant;
     for (const slot of allSlots()) {
       if (map[slot.id] !== undefined) state.rows.set(slot.id, parseToken(map[slot.id]));
     }
+  }
+
+  // ---- draft / save payloads ----------------------------------------------
+
+  function buildDraftData() {
+    // Structure as edited, defaults untouched — current picks travel as
+    // selection lines, exactly like the node executes them.
+    const draft = structuredClone(state.rawData);
+    if (state.orderIds.length) draft.order = [...state.orderIds];
+    return draft;
+  }
+
+  function buildSaveData() {
+    const draft = structuredClone(state.rawData);
+    const bake = (slots) => {
+      for (const slot of slots ?? []) {
+        if (!state.rows.has(slot.id)) continue;
+        const token = rowToken(slot);
+        if (token === "random") delete slot.default;
+        else slot.default = token;
+        if (!slot.label) delete slot.label;
+      }
+    };
+    bake(draft.slots);
+    for (const variant of draft.variants ?? []) bake(variant.slots);
+    if ((draft.variants ?? []).length && state.variant) {
+      draft.variant_default = state.variant;
+    }
+    const sharedIds = (draft.slots ?? []).map((s) => s.id);
+    const synthesized = (draft.variants ?? []).length
+      ? [...sharedIds, "@variant"]
+      : sharedIds;
+    if (JSON.stringify(state.orderIds) === JSON.stringify(synthesized)) delete draft.order;
+    else draft.order = [...state.orderIds];
+    for (const key of ["prefix", "suffix", "negative", "description"]) {
+      if (!draft[key]) delete draft[key];
+    }
+    draft.version = 1;
+    return draft;
+  }
+
+  async function saveTemplate(slug) {
+    try {
+      await ctx.apiJson("/mrln/prompt/save-template", {
+        method: "POST",
+        body: { slug, data: buildSaveData() },
+      });
+    } catch (err) {
+      ctx.toast("error", "Save failed", err.message);
+      return false;
+    }
+    ctx.toast("success", "Template saved", `${slug} (user library)`);
+    ctx.refreshCombos();
+    await loadLibrary();
+    await selectTemplate(slug);
+    return true;
+  }
+
+  async function askString(title, message, defaultValue = "") {
+    if (ctx.dialog?.prompt) return await ctx.dialog.prompt({ title, message, defaultValue });
+    return window.prompt(`${title}\n${message}`, defaultValue);
   }
 
   // ---- preview -------------------------------------------------------------
@@ -185,7 +296,7 @@ export function createComposerPanel(root, ctx) {
   }
 
   async function doPreview() {
-    if (!state.slug || !state.detail) return;
+    if (!state.slug || !state.rawData) return;
     const no = ++state.previewNo;
     const body = {
       template: state.slug,
@@ -196,6 +307,7 @@ export function createComposerPanel(root, ctx) {
       trigger: state.trigger,
       format: state.format,
     };
+    if (state.modified) body.template_data = buildDraftData();
     let preview;
     try {
       preview = await ctx.apiJson("/mrln/prompt/preview", { method: "POST", body });
@@ -208,19 +320,35 @@ export function createComposerPanel(root, ctx) {
     renderPreview(preview, null);
   }
 
-  // ---- compose tab rendering ----------------------------------------------
+  // ---- compose tab ---------------------------------------------------------
 
   const previewBox = el("div");
 
   function field(name, control) {
-    return el("label", { class: "mrln-field" }, el("span", { class: "mrln-field-name" }, name), control);
+    return el(
+      "label",
+      { class: "mrln-field" },
+      el("span", { class: "mrln-field-name" }, name),
+      control
+    );
+  }
+
+  function smallBtn(title, text, onclick, disabled = false) {
+    return el(
+      "button",
+      { class: "mrln-btn mrln-mini", title, onclick, disabled: disabled ? "" : null },
+      text
+    );
   }
 
   function renderComposeTab() {
-    const tpl = state.detail?.template;
-    if (!tpl) {
+    if (!state.rawData) {
       composeTab.replaceChildren(
-        el("div", { class: "mrln-note" }, "No templates in the library yet — create one in the Library tab.")
+        el(
+          "div",
+          { class: "mrln-note" },
+          "No templates in the library yet — create one in the Library tab."
+        )
       );
       return;
     }
@@ -281,52 +409,37 @@ export function createComposerPanel(root, ctx) {
     formatSelect.value = state.format;
 
     const parts = [
-      field("Template", el("div", { class: "mrln-inline" }, templateSelect, tierChip(state.detail.tier))),
+      field(
+        "Template",
+        el("div", { class: "mrln-inline" }, templateSelect, tierChip(state.detail.tier))
+      ),
     ];
-    if (tpl.description) parts.push(el("div", { class: "mrln-note" }, tpl.description));
-
-    if (tpl.variants.length) {
-      const variantSelect = el("select", {
-        onchange: (e) => {
-          state.variant = e.target.value;
-          renderComposeTab();
-          schedulePreview();
-        },
-      });
-      variantSelect.append(el("option", { value: "random" }, "🎲 random"));
-      for (const v of tpl.variants) {
-        variantSelect.append(el("option", { value: v.name }, v.label || v.name));
-      }
-      variantSelect.value = state.variant;
-      parts.push(field("Variant", variantSelect));
-      if (state.variant === "random") {
-        parts.push(
-          el(
-            "div",
-            { class: "mrln-note" },
-            "Variant is drawn from the seed — pick a variant to control its slots."
-          )
-        );
-      }
+    modifiedNote.style.display = state.modified ? "" : "none";
+    parts.push(modifiedNote);
+    if (state.rawData.description) {
+      parts.push(el("div", { class: "mrln-note" }, state.rawData.description));
     }
 
     parts.push(
       field("Mode", modeSelect),
       field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
       field("Format", formatSelect),
+      metaPromptBlock(),
       el("hr", { class: "mrln-sep" }),
-      el("div", {}, activeSlots().map((slot) => slotRow(slot))),
+      el("div", {}, orderedRows()),
+      addSectionRow(),
       el("hr", { class: "mrln-sep" })
     );
 
-    const hasTriggerVar = tpl.variables.some((v) => v.name === "trigger");
+    const variables = state.rawData.variables ?? [];
+    const triggerVar = variables.find((v) => v.name === "trigger");
     parts.push(
       field(
-        hasTriggerVar ? "Trigger ({trigger})" : "Trigger",
+        "Trigger ({trigger} — usable in template text, labels and items)",
         el("input", {
           type: "text",
           value: state.trigger,
-          placeholder: tpl.variables.find((v) => v.name === "trigger")?.default ?? "",
+          placeholder: triggerVar?.default ?? "",
           oninput: (e) => {
             state.trigger = e.target.value;
             schedulePreview();
@@ -334,22 +447,24 @@ export function createComposerPanel(root, ctx) {
         })
       )
     );
-    const extraVars = tpl.variables.filter((v) => v.name !== "trigger");
-    if (extraVars.length || state.variables) {
-      parts.push(
-        field(
-          `Variables (${extraVars.map((v) => v.name).join(", ") || "name=value"})`,
-          el("textarea", {
+    const extraVars = variables.filter((v) => v.name !== "trigger");
+    parts.push(
+      field(
+        `Variables (${extraVars.map((v) => v.name).join(", ") || "name=value"})`,
+        el(
+          "textarea",
+          {
             rows: 2,
-            placeholder: extraVars.map((v) => `${v.name}=${v.default}`).join("\n"),
+            placeholder: extraVars.map((v) => `${v.name}=${v.default ?? ""}`).join("\n"),
             oninput: (e) => {
               state.variables = e.target.value;
               schedulePreview();
             },
-          }, state.variables)
+          },
+          state.variables
         )
-      );
-    }
+      )
+    );
 
     parts.push(
       el(
@@ -358,7 +473,30 @@ export function createComposerPanel(root, ctx) {
         el("button", { class: "mrln-btn mrln-primary", onclick: applyToNode }, "Apply to node"),
         el("button", { class: "mrln-btn", onclick: loadFromNode }, "Load from node"),
         el("button", { class: "mrln-btn", onclick: pinLastDraw }, "Pin last draw"),
-        el("button", { class: "mrln-btn", onclick: saveAsTemplate }, "Save as template…")
+        el(
+          "button",
+          {
+            class: `mrln-btn ${state.modified ? "mrln-primary" : ""}`,
+            title: "Save this template (current picks become its defaults) to your user library",
+            onclick: () => saveTemplate(state.slug),
+          },
+          "Save"
+        ),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            onclick: async () => {
+              const slug = await askString(
+                "Save as template",
+                "Template slug (lowercase, '/' for folders):",
+                `${state.slug}-mine`
+              );
+              if (slug) await saveTemplate(slug.trim());
+            },
+          },
+          "Save as…"
+        )
       ),
       previewBox
     );
@@ -367,9 +505,140 @@ export function createComposerPanel(root, ctx) {
     renderPreview(state.lastPreview, null);
   }
 
-  function slotRow(slot) {
+  function metaPromptBlock() {
+    const prefixArea = el(
+      "textarea",
+      {
+        rows: 3,
+        placeholder: "Text before the first section — {trigger} works here",
+        oninput: (e) => {
+          state.rawData.prefix = e.target.value;
+          markModified();
+          schedulePreview();
+        },
+      },
+      state.rawData.prefix ?? ""
+    );
+    const suffixArea = el(
+      "textarea",
+      {
+        rows: 3,
+        placeholder: "Text after the last section",
+        oninput: (e) => {
+          state.rawData.suffix = e.target.value;
+          markModified();
+          schedulePreview();
+        },
+      },
+      state.rawData.suffix ?? ""
+    );
+    const negativeInput = el("input", {
+      type: "text",
+      value: state.rawData.negative ?? "",
+      placeholder: "template-level negative terms",
+      oninput: (e) => {
+        state.rawData.negative = e.target.value;
+        markModified();
+        schedulePreview();
+      },
+    });
+    const hasText = Boolean(state.rawData.prefix || state.rawData.suffix);
+    return el(
+      "details",
+      { class: "mrln-fold", open: hasText ? "" : null },
+      el("summary", {}, "Template text (prefix / suffix / negative)"),
+      field("Prefix", prefixArea),
+      field("Suffix", suffixArea),
+      field("Negative", negativeInput)
+    );
+  }
+
+  function orderedRows() {
+    const nodes = [];
+    const variants = state.rawData.variants ?? [];
+    for (let i = 0; i < state.orderIds.length; i++) {
+      const id = state.orderIds[i];
+      if (id === "@variant") {
+        nodes.push(variantHeaderRow(i));
+        const active = variants.find((v) => v.name === state.variant);
+        if (active) {
+          for (let vi = 0; vi < (active.slots ?? []).length; vi++) {
+            nodes.push(slotRow(active.slots[vi], active.slots, vi, true));
+          }
+        } else if (variants.length) {
+          nodes.push(
+            el(
+              "div",
+              { class: "mrln-note mrln-indent" },
+              "Variant is drawn from the seed — pick one to control its slots."
+            )
+          );
+        }
+        continue;
+      }
+      const shared = state.rawData.slots ?? [];
+      const index = shared.findIndex((s) => s.id === id);
+      if (index >= 0) nodes.push(slotRow(shared[index], shared, index, false, i));
+    }
+    return nodes;
+  }
+
+  function moveOrder(orderIndex, delta) {
+    const target = orderIndex + delta;
+    if (target < 0 || target >= state.orderIds.length) return;
+    const order = state.orderIds;
+    [order[orderIndex], order[target]] = [order[target], order[orderIndex]];
+    markModified();
+    renderComposeTab();
+    schedulePreview();
+  }
+
+  function variantHeaderRow(orderIndex) {
+    const variants = state.rawData.variants ?? [];
+    const variantSelect = el("select", {
+      onchange: (e) => {
+        state.variant = e.target.value;
+        renderComposeTab();
+        schedulePreview();
+      },
+    });
+    variantSelect.append(el("option", { value: "random" }, "🎲 random"));
+    for (const v of variants) {
+      variantSelect.append(el("option", { value: v.name }, v.label || v.name));
+    }
+    variantSelect.value = state.variant;
+    return el(
+      "div",
+      { class: "mrln-slot" },
+      el(
+        "div",
+        { class: "mrln-slot-label" },
+        "Variant block",
+        el("span", { class: "mrln-chip" }, "@variant"),
+        el(
+          "span",
+          { class: "mrln-rowbtns" },
+          smallBtn("Move variant block up", "↑", () => moveOrder(orderIndex, -1)),
+          smallBtn("Move variant block down", "↓", () => moveOrder(orderIndex, 1))
+        )
+      ),
+      variantSelect
+    );
+  }
+
+  function removeSlot(container, index, id, isVariantSlot) {
+    container.splice(index, 1);
+    if (!isVariantSlot) state.orderIds = state.orderIds.filter((oid) => oid !== id);
+    state.rows.delete(id);
+    state.labelEdit.delete(id);
+    markModified();
+    renderComposeTab();
+    schedulePreview();
+  }
+
+  function slotRow(slot, container, index, isVariantSlot, orderIndex = null) {
     const pool = state.detail.pools[slot.ref] ?? [];
-    const row = state.rows.get(slot.id) ?? parseToken(slot.default);
+    const row = state.rows.get(slot.id) ?? parseToken(slot.default ?? "random");
     state.rows.set(slot.id, row);
 
     const itemSelect = el("select", {
@@ -388,15 +657,17 @@ export function createComposerPanel(root, ctx) {
       },
     });
     itemSelect.append(el("option", { value: "random" }, "🎲 random"));
+    const defaultItem = parseToken(slot.default ?? "random").item;
     for (const item of pool) {
-      const marks = [
-        item.name === parseToken(slot.default).item ? "•" : "",
-        item.tier === "user" ? "(user)" : "",
-      ]
+      const marks = [item.name === defaultItem ? "•" : "", item.tier === "user" ? "(user)" : ""]
         .filter(Boolean)
         .join(" ");
       itemSelect.append(
-        el("option", { value: item.name, title: item.text }, marks ? `${item.name} ${marks}` : item.name)
+        el(
+          "option",
+          { value: item.name, title: item.text },
+          marks ? `${item.name} ${marks}` : item.name
+        )
       );
     }
     itemSelect.value = row.random ? "random" : row.item;
@@ -417,23 +688,125 @@ export function createComposerPanel(root, ctx) {
     });
 
     const chips = [];
+    if (isVariantSlot) chips.push(el("span", { class: "mrln-chip" }, state.variant));
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
     if (slot.emphasis && slot.emphasis !== 1) {
       chips.push(el("span", { class: "mrln-chip" }, `×${slot.emphasis}`));
     }
+
+    const buttons = el(
+      "span",
+      { class: "mrln-rowbtns" },
+      smallBtn("Edit the lead-in text rendered before this section", "✎", () => {
+        if (state.labelEdit.has(slot.id)) state.labelEdit.delete(slot.id);
+        else state.labelEdit.add(slot.id);
+        renderComposeTab();
+      }),
+      isVariantSlot
+        ? [
+            smallBtn("Move up within the variant", "↑", () => {
+              if (index > 0) {
+                [container[index - 1], container[index]] = [container[index], container[index - 1]];
+                markModified();
+                renderComposeTab();
+                schedulePreview();
+              }
+            }),
+            smallBtn("Move down within the variant", "↓", () => {
+              if (index < container.length - 1) {
+                [container[index + 1], container[index]] = [container[index], container[index + 1]];
+                markModified();
+                renderComposeTab();
+                schedulePreview();
+              }
+            }),
+          ]
+        : [
+            smallBtn("Move up", "↑", () => moveOrder(orderIndex, -1)),
+            smallBtn("Move down", "↓", () => moveOrder(orderIndex, 1)),
+          ],
+      smallBtn("Remove this section from the template", "✕", () =>
+        removeSlot(container, index, slot.id, isVariantSlot)
+      )
+    );
+
     const labelText = slot.label && slot.label.length <= 60 ? slot.label : slot.id;
+    const parts = [
+      el(
+        "div",
+        { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` },
+        labelText,
+        chips,
+        buttons
+      ),
+      el("div", { class: "mrln-inline" }, itemSelect, seedInput),
+    ];
+    if (state.labelEdit.has(slot.id)) {
+      parts.push(
+        el(
+          "textarea",
+          {
+            rows: 2,
+            placeholder: "Lead-in text rendered before this section ({trigger} works here; empty = section label)",
+            oninput: (e) => {
+              slot.label = e.target.value;
+              markModified();
+              schedulePreview();
+            },
+          },
+          slot.label ?? ""
+        )
+      );
+    }
+    return el("div", { class: `mrln-slot${isVariantSlot ? " mrln-indent" : ""}` }, parts);
+  }
+
+  function addSectionRow() {
+    const options = [
+      ...state.library.folders.map((f) => ({ value: f, label: `${f}/ (folder)` })),
+      ...state.library.sections.map((s) => ({ value: s.slug, label: s.slug })),
+    ].sort((a, b) => a.value.localeCompare(b.value));
+    const refSelect = el("select", {});
+    for (const opt of options) refSelect.append(el("option", { value: opt.value }, opt.label));
+    const addButton = el(
+      "button",
+      {
+        class: "mrln-btn",
+        onclick: async () => {
+          const ref = refSelect.value;
+          if (!ref) return;
+          const existing = new Set(allSlots().map((s) => s.id));
+          let id = ref.split("/").pop();
+          for (let n = 2; existing.has(id); n++) id = `${ref.split("/").pop()}-${n}`;
+          state.rawData.slots = state.rawData.slots ?? [];
+          state.rawData.slots.push({ id, ref });
+          state.orderIds.push(id);
+          state.rows.set(id, parseToken("random"));
+          await ensurePool(ref);
+          markModified();
+          renderComposeTab();
+          schedulePreview();
+        },
+      },
+      "+ Add"
+    );
     return el(
       "div",
-      { class: "mrln-slot" },
-      el("div", { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` }, labelText, chips),
-      el("div", { class: "mrln-inline" }, itemSelect, seedInput)
+      { class: "mrln-inline" },
+      refSelect,
+      addButton
     );
   }
 
   function renderPreview(preview, err) {
     if (err) {
       previewBox.replaceChildren(
-        el("div", { class: "mrln-error" }, err.message, err.remediation ? `\n${err.remediation}` : "")
+        el(
+          "div",
+          { class: "mrln-error" },
+          err.message,
+          err.remediation ? `\n${err.remediation}` : ""
+        )
       );
       return;
     }
@@ -467,6 +840,14 @@ export function createComposerPanel(root, ctx) {
   // ---- node interop --------------------------------------------------------
 
   function applyToNode() {
+    if (state.modified) {
+      ctx.toast(
+        "warn",
+        "Unsaved template changes",
+        "Save first — the node reads the template from the library."
+      );
+      return;
+    }
     const node = ctx.selectedTemplateNode();
     if (!node) {
       ctx.toast("warn", "No node selected", "Select a Prompt Template (MRLN) node first.");
@@ -489,9 +870,9 @@ export function createComposerPanel(root, ctx) {
       ctx.toast("warn", "No node selected", "Select a Prompt Template (MRLN) node first.");
       return;
     }
-    const slug = ctx.getWidget(node, "template");
-    if (slug && slug !== state.slug) await selectTemplate(slug);
-    if (!state.detail) return;
+    const slug = ctx.getWidget(node, "template") || state.slug;
+    await selectTemplate(slug); // fresh from disk — discards structural edits
+    if (!state.rawData) return;
     state.mode = ctx.getWidget(node, "selection_mode") ?? state.mode;
     state.seed = Number(ctx.getWidget(node, "seed") ?? state.seed) || 0;
     state.format = ctx.getWidget(node, "format") ?? state.format;
@@ -521,42 +902,6 @@ export function createComposerPanel(root, ctx) {
     ctx.toast("success", "Pinned last draw", `${pinned} slot(s) fixed`);
   }
 
-  async function askString(title, message, defaultValue = "") {
-    if (ctx.dialog?.prompt) return await ctx.dialog.prompt({ title, message, defaultValue });
-    return window.prompt(`${title}\n${message}`, defaultValue);
-  }
-
-  async function saveAsTemplate() {
-    const slug = await askString(
-      "Save as template",
-      "Template slug (lowercase, '/' for folders):",
-      `${state.slug}-mine`
-    );
-    if (!slug) return;
-    const data = structuredClone(state.detail.raw);
-    const setDefaults = (slots) => {
-      for (const slot of slots ?? []) {
-        if (state.rows.has(slot.id)) {
-          slot.default = rowToken({ id: slot.id, default: slot.default ?? "random" });
-        }
-      }
-    };
-    setDefaults(data.slots);
-    for (const variant of data.variants ?? []) {
-      if (state.variant === variant.name) setDefaults(variant.slots);
-    }
-    if ((data.variants ?? []).length && state.variant) data.variant_default = state.variant;
-    try {
-      await ctx.apiJson("/mrln/prompt/save-template", { method: "POST", body: { slug, data } });
-    } catch (err) {
-      ctx.toast("error", "Save failed", err.message);
-      return;
-    }
-    ctx.toast("success", "Template saved", `${slug} (user library)`);
-    ctx.refreshCombos();
-    await loadLibrary();
-  }
-
   // ---- library tab ---------------------------------------------------------
 
   const editorBox = el("div");
@@ -571,7 +916,11 @@ export function createComposerPanel(root, ctx) {
           "li",
           { onclick: () => openSectionEditor(section.slug) },
           section.error ? `⚠ ${section.slug}` : section.label,
-          el("span", { class: "mrln-slug" }, `${section.slug} · ${section.item_count ?? "?"} items`),
+          el(
+            "span",
+            { class: "mrln-slug" },
+            `${section.slug} · ${section.item_count ?? "?"} items`
+          ),
           tierChip(section.tier)
         )
       );
@@ -712,7 +1061,9 @@ export function createComposerPanel(root, ctx) {
       openSectionEditor(targetSlug);
     }
 
-    const actions = [el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library")];
+    const actions = [
+      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library"),
+    ];
     if (body.tier === "user") {
       actions.push(
         el(
@@ -724,7 +1075,12 @@ export function createComposerPanel(root, ctx) {
     }
 
     editorBox.replaceChildren(
-      el("div", { class: "mrln-tree-head" }, slug ? `Section: ${slug}` : "New section", tierChip(body.tier)),
+      el(
+        "div",
+        { class: "mrln-tree-head" },
+        slug ? `Section: ${slug}` : "New section",
+        tierChip(body.tier)
+      ),
       body.tier === "factory"
         ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
         : null,
@@ -778,7 +1134,9 @@ export function createComposerPanel(root, ctx) {
       await loadLibrary();
     }
 
-    const actions = [el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library")];
+    const actions = [
+      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library"),
+    ];
     if (body.tier === "user") {
       actions.push(
         el(

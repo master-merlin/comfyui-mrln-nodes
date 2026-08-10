@@ -216,3 +216,29 @@ def test_route_table_sane():
         assert path.startswith("/mrln/prompt/")
         assert callable(handler)
         assert isinstance(reads_body, bool)
+
+
+def test_preview_inline_template_data_matches_slug(lib):
+    raw = promptapi._raw_file(lib, "templates", "basic")
+    by_slug = ok(promptapi.handle_preview(lib, {"template": "basic", "seed": 5}))
+    by_data = ok(
+        promptapi.handle_preview(lib, {"template": "basic", "template_data": raw, "seed": 5})
+    )
+    for key in ("positive", "negative", "choices"):
+        assert by_slug[key] == by_data[key]
+
+
+def test_preview_inline_template_data_reflects_edits(lib):
+    raw = promptapi._raw_file(lib, "templates", "basic")
+    raw["prefix"] = "EDITED {trigger} skeleton"
+    body = ok(promptapi.handle_preview(lib, {"template": "basic", "template_data": raw, "seed": 5}))
+    assert body["positive"].startswith("EDITED sports car skeleton")
+
+
+def test_preview_inline_template_data_invalid(lib):
+    status, body = promptapi.handle_preview(
+        lib, {"template": "basic", "template_data": {"slots": [{"id": "x"}]}}
+    )
+    assert status == 400 and "ref" in body["error"]
+    status, _ = promptapi.handle_preview(lib, {"template_data": "not a dict"})
+    assert status == 400

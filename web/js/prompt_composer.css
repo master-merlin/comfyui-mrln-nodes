@@ -122,3 +122,19 @@
 
 details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 4px 0; }
 .mrln-sep { border: none; border-top: 1px solid var(--border-color, #333); margin: 4px 0; }
+
+.mrln-composer button.mrln-mini {
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 16px;
+  border: 1px solid var(--border-color, #444);
+  background: transparent;
+  color: inherit;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.55;
+}
+.mrln-composer button.mrln-mini:hover { opacity: 1; background: var(--comfy-menu-bg, #333); }
+.mrln-rowbtns { float: right; display: inline-flex; gap: 2px; }
+.mrln-indent { margin-left: 14px; }
+.mrln-modified { color: #ca8; }

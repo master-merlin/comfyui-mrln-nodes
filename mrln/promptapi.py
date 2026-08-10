@@ -220,8 +220,17 @@ def _kv_map(payload, key):
 
 @_guarded
 def handle_preview(lib, payload):
-    slug = _require_str(payload, "template")
-    tpl = lib.load_template(slug)
+    draft = payload.get("template_data")
+    if draft is not None:
+        # Unsaved composer draft: parse in memory so the panel can preview
+        # structural edits (prefix/suffix/labels/order/slots) before saving.
+        if not isinstance(draft, dict):
+            raise ApiError("'template_data' must be a JSON object")
+        slug = str(payload.get("template") or "(composer draft)")
+        tpl = pl.parse_template(draft, slug, "composer draft")
+    else:
+        slug = _require_str(payload, "template")
+        tpl = lib.load_template(slug)
     try:
         seed = int(payload.get("seed", 0))
     except (TypeError, ValueError):
