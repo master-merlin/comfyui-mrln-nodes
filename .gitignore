@@ -1,0 +1,33 @@
+# --- Development harness (internal, never shared) ---
+/_harness/
+/CLAUDE.md
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.python-version
+
+# --- Tooling caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# --- Local experiment output ---
+/output/
+/temp/
+*.log

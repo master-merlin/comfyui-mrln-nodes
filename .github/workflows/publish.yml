@@ -1,0 +1,25 @@
+name: Publish to Comfy Registry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["pyproject.toml"]
+
+permissions:
+  issues: write
+
+jobs:
+  publish-node:
+    name: Publish Custom Node to Registry
+    runs-on: ubuntu-latest
+    # TODO: replace with the real GitHub owner once the origin exists; the
+    # guard both arms the workflow and prevents forks from publishing.
+    if: ${{ github.repository_owner == 'CHANGE-ME' }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Publish Custom Node
+        uses: Comfy-Org/publish-node-action@v1
+        with:
+          personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}

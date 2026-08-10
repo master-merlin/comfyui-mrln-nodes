@@ -1,0 +1,5 @@
+# Runtime dependencies installed by ComfyUI Manager on user machines.
+# Deliberately empty: ComfyUI already ships torch/numpy/pillow, and a pack
+# with zero extra dependencies cannot break anyone's environment. Add a line
+# here only when a node truly needs a library, and prefer importing heavy
+# optional libraries inside execute() so the pack still loads without them.

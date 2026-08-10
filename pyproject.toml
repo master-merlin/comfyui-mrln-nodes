@@ -1,0 +1,29 @@
+# Comfy Registry packaging (https://docs.comfy.org/registry/specifications).
+# Bumping [project].version on the default branch is the release trigger once
+# publishing is wired up (see .github/workflows/publish.yml).
+
+[project]
+name = "comfyui-mrln-nodes"
+description = "MRLN Nodes - a multi-domain collection of custom nodes for ComfyUI."
+version = "0.1.0"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+classifiers = ["Operating System :: OS Independent"]
+# TODO before first registry publish: choose a license, add LICENSE file, then:
+# license = { file = "LICENSE" }
+
+[tool.setuptools.dynamic]
+# Single source of truth for dependencies is requirements.txt (what ComfyUI
+# Manager installs); the registry reads it through this dynamic mapping.
+dependencies = { file = ["requirements.txt"] }
+
+[project.urls]
+# TODO once the GitHub origin exists:
+# Repository = "https://github.com/<owner>/ComfyUI-MRLN-Nodes"
+
+[tool.comfy]
+DisplayName = "MRLN Nodes"
+requires-comfyui = ">=0.3.0"
+# TODO before first registry publish: create a publisher at registry.comfy.org
+# (the id is immutable) and set it here:
+# PublisherId = "<publisher-id>"
