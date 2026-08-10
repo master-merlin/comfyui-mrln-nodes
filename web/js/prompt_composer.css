@@ -196,6 +196,31 @@ textarea.mrln-auto {
 }
 .mrln-slot-list { display: flex; flex-direction: column; gap: 4px; }
 .mrln-indent { margin-left: 10px; border-left: 2px solid var(--border-color, #3a3a3a); }
+
+/* nested draws: tree guides binding children to their parent card */
+.mrln-nest {
+  margin: 2px 0 2px 10px;
+  padding-left: 8px;
+  border-left: 2px solid #4a8;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mrln-nest > .mrln-field-name { margin: 0; color: #6ca; opacity: 0.9; }
+.mrln-slot.mrln-nest-row {
+  padding: 3px 5px;
+  background: var(--comfy-menu-bg, #202020);
+  border-style: dotted;
+}
+.mrln-nest-branch > summary {
+  cursor: pointer;
+  font-size: 11px;
+  opacity: 0.8;
+  padding: 2px 4px;
+  color: #6ca;
+}
+.mrln-nest-branch > summary:hover { background: var(--comfy-menu-bg, #2a2a2a); }
+.mrln-nest-branch > .mrln-nest { margin-top: 2px; }
 .mrln-variant-head { border-style: dashed; }
 .mrln-slot.mrln-broken { border-color: #a55; }
 .mrln-items-table tr.mrln-hidden-item td { opacity: 0.45; text-decoration: line-through; }

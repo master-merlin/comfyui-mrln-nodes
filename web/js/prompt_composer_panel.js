@@ -81,6 +81,7 @@ export function createComposerPanel(root, ctx) {
     tab: "compose",
     decompose: { text: "", type: "", report: null, plans: [] }, // De-compose tab state
     libGroups: new Set(), // Library tab: expanded top-level slug groups
+    nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed
   };
 
   // ---- skeleton ------------------------------------------------------------
@@ -440,37 +441,84 @@ export function createComposerPanel(root, ctx) {
   }
 
   // ---- nested child rows (from the drawn items' child slots) ---------------
+  // Children mount INSIDE their parent slot's card so the hierarchy is
+  // spatially obvious: slot card → drawn item → its child draws → deeper
+  // branches as collapsible sub-trees. Only these mounts re-render per
+  // preview, so open dropdowns elsewhere stay untouched.
 
-  const nestedBox = el("div", { class: "mrln-slot-list" });
+  function nestedBranch(resolvedSlot) {
+    const rows = [];
+    for (const child of resolvedSlot.children ?? []) {
+      rows.push(childRow(child));
+      if ((child.children ?? []).length) {
+        const grand = child.children.length;
+        const openKey = `open:${child.id}`;
+        const closedKey = `closed:${child.id}`;
+        const isOpen = state.nestOpen.has(openKey)
+          ? true
+          : state.nestOpen.has(closedKey)
+            ? false
+            : grand <= 6;
+        rows.push(
+          el(
+            "details",
+            {
+              class: "mrln-nest-branch",
+              open: isOpen ? "" : null,
+              ontoggle: (e) => {
+                state.nestOpen[e.target.open ? "add" : "delete"](openKey);
+                state.nestOpen[e.target.open ? "delete" : "add"](closedKey);
+              },
+            },
+            el(
+              "summary",
+              { title: `${child.id} → nested draws of the drawn item` },
+              `${child.id.split(".").pop()} · ${grand} nested draws`
+            ),
+            el("div", { class: "mrln-nest" }, nestedBranch(child))
+          )
+        );
+      }
+    }
+    return rows;
+  }
 
   function renderNested() {
-    const rows = [];
     const seen = new Set();
-    const walk = (slots) => {
+    const collect = (slots) => {
       for (const slot of slots ?? []) {
         for (const child of slot.children ?? []) {
           seen.add(child.id);
-          rows.push(childRow(child));
-          walk([child]);
+          collect([child]);
         }
       }
     };
-    walk(state.lastPreview?.slots);
+    collect(state.lastPreview?.slots);
     for (const key of [...state.rows.keys()]) {
       if (key.includes(".") && !seen.has(key)) state.rows.delete(key); // stale pins
     }
-    nestedBox.replaceChildren(
-      ...(rows.length
-        ? [
-            el(
-              "div",
-              { class: "mrln-field-name", title: "Child slots carried by the drawn items — sections define them, the template stays free of choice" },
-              "Nested draws"
-            ),
-            ...rows,
-          ]
-        : [])
-    );
+    for (const mount of composeTab.querySelectorAll("[data-mrln-nested]")) {
+      const resolved = (state.lastPreview?.slots ?? []).find(
+        (s) => s.id === mount.dataset.mrlnNested
+      );
+      if (resolved && (resolved.children ?? []).length) {
+        mount.replaceChildren(
+          el(
+            "div",
+            {
+              class: "mrln-field-name",
+              title: "Child slots carried by the drawn item — sections define them, the template stays free of choice",
+            },
+            `↳ nested draws of '${resolved.item ?? ""}'`
+          ),
+          ...nestedBranch(resolved)
+        );
+        mount.style.display = "";
+      } else {
+        mount.replaceChildren();
+        mount.style.display = "none";
+      }
+    }
   }
 
   function childRow(child) {
@@ -525,14 +573,13 @@ export function createComposerPanel(root, ctx) {
       },
     });
 
-    const depth = child.id.split(".").length - 1;
     return el(
       "div",
-      { class: "mrln-slot", style: `margin-left:${12 * depth}px` },
+      { class: "mrln-slot mrln-nest-row" },
       el(
         "div",
         { class: "mrln-slot-label", title: `${child.id} → ${child.ref}` },
-        el("span", {}, child.id),
+        el("span", {}, child.id.split(".").pop()),
         el("span", { class: "mrln-chip" }, child.omitted ? "muted/empty" : child.item)
       ),
       el("div", { class: "mrln-inline" }, itemSelect, seedInput)
@@ -847,7 +894,6 @@ export function createComposerPanel(root, ctx) {
       field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
       metaPromptBlock(),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
-      nestedBox,
       addSectionRow()
     );
 
@@ -889,6 +935,7 @@ export function createComposerPanel(root, ctx) {
 
     composeTab.replaceChildren(...parts);
     renderPreview(state.lastPreview, null);
+    renderNested(); // fresh mounts need refilling from the last preview
   }
 
   function metaPromptBlock() {
@@ -1228,6 +1275,14 @@ export function createComposerPanel(root, ctx) {
         )
       );
     }
+    // persistent mount for this slot's nested draws — filled by renderNested()
+    parts.push(
+      el("div", {
+        class: "mrln-nest",
+        "data-mrln-nested": slot.id,
+        style: "display:none",
+      })
+    );
     const card = el(
       "div",
       { class: `mrln-slot${isVariantSlot ? " mrln-indent" : ""}${dimmed ? " mrln-muted" : ""}` },
