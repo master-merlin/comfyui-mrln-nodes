@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "label": "Accent Color",
+  "description": "Contrast / highlight materials and colors.",
+  "items": [
+    {
+      "name": "neon-green",
+      "text": "vibrant neon green"
+    },
+    {
+      "name": "electric-pulse-blue",
+      "text": "electric pulse blue"
+    },
+    {
+      "name": "hyper-chrome",
+      "text": "reflective hyper chrome"
+    },
+    {
+      "name": "woven-carbon",
+      "text": "woven carbon fiber"
+    },
+    {
+      "name": "polished-gold",
+      "text": "polished glossy gold"
+    }
+  ]
+}

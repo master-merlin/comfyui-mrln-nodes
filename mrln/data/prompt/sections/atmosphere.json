@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "Time of Day / Atmosphere",
+  "items": [
+    {
+      "name": "summer-sundown",
+      "text": "early sundown during summer with long shadows and warm light",
+      "tags": [
+        "sundown"
+      ]
+    },
+    {
+      "name": "midday-clear",
+      "text": "bright midday under a clear blue sky",
+      "tags": [
+        "daylight"
+      ]
+    },
+    {
+      "name": "night-clear",
+      "text": "clear night",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "golden-hour",
+      "text": "golden hour with warm low sun",
+      "tags": [
+        "daylight",
+        "golden-hour"
+      ]
+    },
+    {
+      "name": "morning-mist",
+      "text": "early morning with delicate mist rising",
+      "tags": [
+        "morning"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Style & Color Scheme",
+  "description": "Overall photographic style direction.",
+  "items": [
+    {
+      "name": "vibrant-high-class",
+      "text": "vibrant high class car photography, advertisement style"
+    },
+    {
+      "name": "moody-cinematic",
+      "text": "moody, cinematic, high-contrast, luxurious"
+    },
+    {
+      "name": "clean-advertisement",
+      "text": "clean commercial advertisement look, crisp and polished"
+    }
+  ]
+}

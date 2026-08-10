@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "label": "Paint Finish",
+  "items": [
+    {
+      "name": "matte",
+      "text": "matte finish"
+    },
+    {
+      "name": "glossy-high-reflectance",
+      "text": "glossy high-reflectance finish"
+    },
+    {
+      "name": "satin-sheen",
+      "text": "satin sheen finish"
+    },
+    {
+      "name": "pearlescent",
+      "text": "pearlescent finish"
+    },
+    {
+      "name": "chameleon-flip",
+      "text": "chameleon color-flip paint"
+    }
+  ]
+}

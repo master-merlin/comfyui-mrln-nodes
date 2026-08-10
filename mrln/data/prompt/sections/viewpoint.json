@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "label": "Viewing Angle & Composition",
+  "items": [
+    {
+      "name": "front-three-quarter",
+      "text": "medium-shot, eye-level, front-three-quarter view, reflections on the paint"
+    },
+    {
+      "name": "low-angle-front",
+      "text": "dramatic low angle front view"
+    },
+    {
+      "name": "side-profile",
+      "text": "clean side profile view"
+    },
+    {
+      "name": "rear-three-quarter",
+      "text": "rear three-quarter view"
+    },
+    {
+      "name": "top-down",
+      "text": "steep top-down view"
+    },
+    {
+      "name": "dutch-angle",
+      "text": "dramatic Dutch angle tilt"
+    }
+  ]
+}

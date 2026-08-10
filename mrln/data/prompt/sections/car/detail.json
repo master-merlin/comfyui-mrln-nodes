@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "label": "Detail",
+  "items": [
+    {
+      "name": "overdrive-plate",
+      "text": "sleek 'Overdrive' license plate clearly visible"
+    },
+    {
+      "name": "tow-hook",
+      "text": "functional-looking tow hook subtly visible near front"
+    }
+  ]
+}

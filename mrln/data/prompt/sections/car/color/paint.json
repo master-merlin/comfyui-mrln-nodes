@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "Primary Car Color",
+  "description": "Body paint colors.",
+  "items": [
+    {
+      "name": "carbon-grey-matte",
+      "text": "carbon grey matte"
+    },
+    {
+      "name": "guards-red",
+      "text": "Guards Red",
+      "data": {
+        "hex": [
+          "#D2232A"
+        ]
+      }
+    },
+    {
+      "name": "miami-blue",
+      "text": "Miami Blue",
+      "data": {
+        "hex": [
+          "#00B3E3"
+        ]
+      }
+    },
+    {
+      "name": "nardo-gray",
+      "text": "Nardo Gray"
+    },
+    {
+      "name": "midnight-purple",
+      "text": "Midnight Purple",
+      "weight": 0.5
+    },
+    {
+      "name": "british-racing-green",
+      "text": "British Racing Green"
+    }
+  ]
+}

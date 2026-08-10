@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "label": "Studio Location",
+  "items": [
+    {
+      "name": "white-cyclorama",
+      "text": "infinite white cyclorama studio",
+      "tags": [
+        "studio"
+      ]
+    },
+    {
+      "name": "light-tent",
+      "text": "inside a large photography light tent",
+      "tags": [
+        "studio"
+      ]
+    },
+    {
+      "name": "brutalist-concrete",
+      "text": "striking brutalist concrete architecture backdrop"
+    }
+  ]
+}

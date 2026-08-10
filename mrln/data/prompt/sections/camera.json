@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "label": "Photographic Settings",
+  "items": [
+    {
+      "name": "tele-150mm-action",
+      "text": "Lens Type: Tele 150mm\nAperture: f/5.6\nShutter Speed: 1/1000s\nISO: 100\nBokeh: Noticeable hexagonal\nWhite Balance: Daylight\nExposure Compensation: 0 EV\nFocus: Sharp focus on the main body.",
+      "data": {
+        "lens": "Tele 150mm",
+        "aperture": "f/5.6",
+        "shutter": "1/1000s",
+        "iso": 100,
+        "bokeh": "noticeable hexagonal",
+        "white_balance": "daylight",
+        "ev": 0,
+        "focus": "sharp focus on the main body"
+      }
+    },
+    {
+      "name": "85mm-f14-portrait",
+      "text": "85mm prime, f/1.4, shallow depth of field, creamy bokeh, sharp focus on the car",
+      "data": {
+        "lens": "85mm",
+        "aperture": "f/1.4"
+      }
+    },
+    {
+      "name": "wide-24mm-environment",
+      "text": "24mm wide-angle, f/8, deep focus placing the car in its environment",
+      "data": {
+        "lens": "24mm",
+        "aperture": "f/8"
+      }
+    }
+  ]
+}

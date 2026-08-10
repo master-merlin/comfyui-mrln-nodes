@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "label": "Lighting Conditions",
+  "items": [
+    {
+      "name": "hdr-cinematic",
+      "text": "HDR, cinematic lighting, volumetric light, strong contrasts between light and shadow"
+    },
+    {
+      "name": "soft-diffused",
+      "text": "soft diffused light, gentle falloff"
+    },
+    {
+      "name": "studio-softbox",
+      "text": "perfect studio lighting with large softboxes",
+      "tags": [
+        "studio"
+      ]
+    },
+    {
+      "name": "chiaroscuro",
+      "text": "dramatic chiaroscuro lighting with hard-edged shadows"
+    },
+    {
+      "name": "neon-signage",
+      "text": "multiple vibrant neon signs casting colourful reflections",
+      "tags": [
+        "neon"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "volumetric-god-rays",
+      "text": "hazy volumetric god rays"
+    }
+  ]
+}

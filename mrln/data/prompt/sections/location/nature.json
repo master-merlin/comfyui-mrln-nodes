@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Nature Location",
+  "items": [
+    {
+      "name": "alpine-pass",
+      "text": "sun-drenched alpine mountain pass road, dry asphalt"
+    },
+    {
+      "name": "desert-highway",
+      "text": "endless desert highway, red-orange dunes on the horizon"
+    },
+    {
+      "name": "coastal-cliff-road",
+      "text": "coastal road on a rocky peninsula"
+    },
+    {
+      "name": "autumn-forest",
+      "text": "forest road lined with colorful autumn leaves"
+    }
+  ]
+}

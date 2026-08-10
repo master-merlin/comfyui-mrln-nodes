@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "label": "Car Model",
+  "description": "Base car model / design DNA.",
+  "items": [
+    {
+      "name": "skyline-gtr-r34",
+      "text": "Nissan Skyline GT-R R34 V-Spec"
+    },
+    {
+      "name": "terzo-millennio",
+      "text": "Lamborghini Terzo Millennio"
+    },
+    {
+      "name": "porsche-mission-x",
+      "text": "Porsche Mission X"
+    },
+    {
+      "name": "mazda-furai",
+      "text": "Mazda Furai"
+    },
+    {
+      "name": "bmw-gina",
+      "text": "BMW GINA"
+    },
+    {
+      "name": "pagani-huayra",
+      "text": "Pagani Huayra"
+    }
+  ]
+}

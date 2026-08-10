@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "label": "Aero Add-on",
+  "description": "Optional aero features; use allow_empty on the slot.",
+  "items": [
+    {
+      "name": "vented-hood",
+      "text": "vented performance hood"
+    },
+    {
+      "name": "roof-scoop",
+      "text": "functional roof scoop"
+    },
+    {
+      "name": "swan-neck-wing",
+      "text": "massive rear wing with swan neck mounts"
+    },
+    {
+      "name": "active-aero",
+      "text": "active aerodynamic wing elements"
+    }
+  ]
+}

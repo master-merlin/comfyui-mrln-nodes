@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "label": "Urban Location",
+  "items": [
+    {
+      "name": "shibuya-crossing",
+      "text": "Shibuya Crossing, Tokyo",
+      "tags": [
+        "city"
+      ]
+    },
+    {
+      "name": "financial-district",
+      "text": "modern downtown financial district street",
+      "tags": [
+        "city"
+      ]
+    },
+    {
+      "name": "rooftop-garage",
+      "text": "parking garage rooftop with city view",
+      "tags": [
+        "city"
+      ]
+    },
+    {
+      "name": "neon-highway",
+      "text": "neon-lit highway through a cyberpunk metropolis, wet asphalt",
+      "tags": [
+        "city",
+        "neon"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    }
+  ]
+}
