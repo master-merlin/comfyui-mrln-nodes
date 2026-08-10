@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Motorcycle Design",
+  "description": "Motorcycle archetypes.",
+  "suits": ["object", "vehicle", "motorcycle"],
+  "items": [
+    { "name": "cafe-racer", "text": "a stripped-down café racer with clip-on bars, a humped solo seat and a polished tank", "text_short": "café racer" },
+    { "name": "superbike", "text": "a razor-edged modern superbike in full fairing with winglets", "text_short": "modern superbike" },
+    { "name": "bobber", "text": "a low hardtail bobber, fat rear tire and chopped fenders", "text_short": "hardtail bobber" },
+    { "name": "scrambler", "text": "a scrambler with high-mounted exhaust and knobby dual-sport tires", "text_short": "scrambler" },
+    { "name": "cruiser", "text": "a long low cruiser with deep fenders and swept-back bars", "text_short": "low cruiser" },
+    { "name": "adventure-tourer", "text": "a rally-ready adventure tourer with panniers and a tall windscreen", "text_short": "adventure tourer" },
+    { "name": "vintage-boardtracker", "text": "a 1920s board-track racer, rigid frame and exposed engine", "text_short": "board-track racer", "tags": ["historical"] },
+    { "name": "chopper", "text": "a raked-out chopper with an extended springer front end", "text_short": "raked chopper" },
+    { "name": "naked-streetfighter", "text": "an aggressive naked streetfighter, exposed trellis frame and stubby tail", "text_short": "naked streetfighter" },
+    { "name": "grand-tourer", "text": "a fully-faired luxury grand tourer built for continents", "text_short": "luxury grand tourer" },
+    { "name": "flat-tracker", "text": "a sideways-ready flat tracker with number plates and wide bars", "text_short": "flat tracker" },
+    { "name": "electric-concept", "text": "a sculptural electric concept bike with a monocoque hull and hubless wheel", "text_short": "electric concept bike", "tags": ["scifi"] }
+  ]
+}

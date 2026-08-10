@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Motorcycle Detail",
+  "description": "Detail accents for motorcycle shots.",
+  "suits": ["object", "vehicle", "motorcycle"],
+  "items": [
+    { "name": "brushed-tank", "text": "a hand-brushed aluminum tank with visible grain", "text_short": "brushed alloy tank" },
+    { "name": "leather-saddle", "text": "a hand-stitched diamond-pattern leather saddle", "text_short": "stitched leather saddle" },
+    { "name": "exposed-engine", "text": "polished cooling fins on an exposed air-cooled engine", "text_short": "exposed engine fins" },
+    { "name": "chain-glint", "text": "a freshly oiled chain glinting over the rear sprocket", "text_short": "glinting chain" },
+    { "name": "wire-spokes", "text": "laced wire-spoke wheels catching thin highlights", "text_short": "wire-spoke wheels" },
+    { "name": "carbon-fairing", "text": "raw carbon-weave fairing panels under clear coat", "text_short": "carbon fairing weave" },
+    { "name": "worn-grips", "text": "worn grips and scuffed pegs telling honest miles", "text_short": "worn grips and pegs" },
+    { "name": "pinstripes", "text": "hand-painted pinstripes tracing the tank edges", "text_short": "hand-painted pinstripes" }
+  ]
+}

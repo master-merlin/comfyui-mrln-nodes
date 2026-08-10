@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Ship State",
+  "description": "Sea state and what the vessel is doing in it.",
+  "suits": ["object", "vehicle", "ship"],
+  "items": [
+    { "name": "heavy-seas", "text": "plunging through heavy seas, spray exploding over the bow", "text_short": "plunging heavy seas" },
+    { "name": "harbor-calm", "text": "at rest in mirror-calm harbor water, rigging lines doubled in reflection", "text_short": "mirror-calm harbor" },
+    { "name": "bow-wave", "text": "at speed with a crisp curling bow wave and long wake", "text_short": "crisp bow wave" },
+    { "name": "dry-dock", "text": "propped in dry dock, hull towering over scaffolding", "text_short": "towering in dry dock" },
+    { "name": "fog-ghost", "text": "emerging half-seen from a fog bank", "text_short": "ghosting from fog" },
+    { "name": "storm-run", "text": "running before a storm under a bruised sky", "text_short": "running before storm" },
+    { "name": "golden-anchorage", "text": "swinging at anchor in a warm-lit anchorage", "text_short": "warm-lit anchorage" },
+    { "name": "ice-passage", "text": "threading a narrow passage between ice floes", "text_short": "threading ice floes" }
+  ]
+}

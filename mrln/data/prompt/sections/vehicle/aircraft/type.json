@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Aircraft Type",
+  "description": "Aircraft archetypes.",
+  "suits": ["object", "vehicle", "aircraft"],
+  "items": [
+    { "name": "ww2-warbird", "text": "a piston-engine warbird with invasion stripes and a bubble canopy", "text_short": "WW2 warbird", "tags": ["historical"] },
+    { "name": "biplane", "text": "a fabric-winged biplane with open cockpit and flying wires", "text_short": "open-cockpit biplane", "tags": ["historical"] },
+    { "name": "modern-fighter", "text": "a modern multirole fighter jet bristling with sensors", "text_short": "multirole fighter jet" },
+    { "name": "stealth-wing", "text": "a faceted stealth flying wing, ghost-grey and shadowless", "text_short": "stealth flying wing" },
+    { "name": "airliner", "text": "a wide-body airliner with raked wingtips", "text_short": "wide-body airliner" },
+    { "name": "bush-plane", "text": "a tundra-tired bush plane built for gravel bars", "text_short": "tundra-tire bush plane" },
+    { "name": "seaplane", "text": "a float-equipped seaplane resting on glassy water", "text_short": "floatplane on water" },
+    { "name": "glider", "text": "a slender high-aspect glider riding silent lift", "text_short": "slender glider" },
+    { "name": "helicopter", "text": "a sleek helicopter, rotor disc shimmering", "text_short": "sleek helicopter" },
+    { "name": "aerobatic-monoplane", "text": "a smoke-ready aerobatic monoplane in sponsor livery", "text_short": "aerobatic monoplane" },
+    { "name": "cargo-lifter", "text": "a four-engine heavy cargo lifter with an open ramp", "text_short": "heavy cargo lifter" },
+    { "name": "supersonic-concept", "text": "a needle-nosed supersonic concept jet in polished titanium", "text_short": "supersonic concept jet", "tags": ["scifi"] },
+    { "name": "airship", "text": "a stately airship moored to its tower", "text_short": "moored airship", "tags": ["historical"] },
+    { "name": "ultralight-trike", "text": "an ultralight trike hanging under a bright wing", "text_short": "ultralight trike" }
+  ]
+}

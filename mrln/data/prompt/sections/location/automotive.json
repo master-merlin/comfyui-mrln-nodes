@@ -33,6 +33,46 @@
       "tags": [
         "night"
       ]
+    },
+    {
+      "name": "modena-road",
+      "text": "A sun-warmed road outside Modena, cypress rows and terracotta farmhouses lining the route of legends.",
+      "text_short": "road outside Modena"
+    },
+    {
+      "name": "roman-piazza",
+      "text": "A cobbled Roman piazza, baroque facades and fountain glow framing the parked machine.",
+      "text_short": "cobbled Roman piazza"
+    },
+    {
+      "name": "munich-street",
+      "text": "A clean Munich boulevard, Wilhelminian facades and linden trees flanking wide lanes.",
+      "text_short": "Munich boulevard"
+    },
+    {
+      "name": "black-forest-road",
+      "text": "A sweeping Black Forest B-road, dense firs breaking for a valley view at the apex.",
+      "text_short": "Black Forest B-road"
+    },
+    {
+      "name": "monaco-tunnel",
+      "text": "The famous curved harbor tunnel of Monaco, sodium light rolling over the fairing walls.",
+      "text_short": "Monaco harbor tunnel"
+    },
+    {
+      "name": "goodwood-paddock",
+      "text": "A festival hillclimb paddock, hay bales, white tents and privileged machinery in casual rows.",
+      "text_short": "hillclimb festival paddock"
+    },
+    {
+      "name": "alpine-pass-hairpins",
+      "text": "A high alpine pass road stacked with hairpins, stone guard walls and thin bright air.",
+      "text_short": "alpine hairpin pass"
+    },
+    {
+      "name": "amalfi-corniche",
+      "text": "A cliff-hugging Amalfi corniche, pastel villages tumbling to a glittering sea below the guardrail.",
+      "text_short": "Amalfi cliff corniche"
     }
   ]
 }

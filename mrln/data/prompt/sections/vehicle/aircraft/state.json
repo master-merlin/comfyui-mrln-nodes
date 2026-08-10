@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Aircraft State",
+  "description": "What the aircraft is doing.",
+  "suits": ["object", "vehicle", "aircraft"],
+  "items": [
+    { "name": "takeoff-rotation", "text": "rotating off the runway, gear just breaking contact", "text_short": "takeoff rotation" },
+    { "name": "short-final",  "text": "on short final with full flaps, runway numbers ahead", "text_short": "short final approach" },
+    { "name": "formation-break", "text": "breaking hard out of formation, wingtips streaming vapor", "text_short": "formation break" },
+    { "name": "contrails-cruise", "text": "in high cruise, twin contrails scoring the deep blue", "text_short": "contrail cruise" },
+    { "name": "hangar-rest", "text": "at rest in the hangar under work lights, panels open", "text_short": "hangar rest" },
+    { "name": "low-pass", "text": "in a thundering low pass along the display line", "text_short": "thundering low pass" },
+    { "name": "water-touchdown", "text": "kissing the water on landing, twin spray fans trailing", "text_short": "water touchdown" },
+    { "name": "banked-turn", "text": "carving a steep banked turn, wing pointed at the ground", "text_short": "steep banked turn" }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "label": "Maritime Shot",
+  "type": ["object", "vehicle", "ship"],
+  "description": "Maritime photography: vessel and sea state, weather doing half the work.",
+  "prefix": "A highly realistic maritime photograph.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "photoreal-raw"
+    },
+    {
+      "id": "vessel",
+      "ref": "vehicle/ship/type",
+      "label": "Vessel",
+      "emphasis": 1.2
+    },
+    {
+      "id": "state",
+      "ref": "vehicle/ship/state",
+      "label": "Sea state",
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather"
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Time of day"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/day",
+      "label": "Light"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "135mm-compression"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "believable water physics, spray and foam detail, hull textures honest with wear, sharp focus on the vessel",
+  "negative": "watermark, text, logo, deformed geometry",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

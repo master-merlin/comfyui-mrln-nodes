@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Car State",
+  "description": "Micro-states every top-ranked car prompt carries — top, headlights, wheels, engine.",
+  "suits": ["object", "vehicle", "car"],
+  "items": [
+    { "name": "wheels-straight", "text": "front wheels straight aligned", "text_short": "wheels straight" },
+    { "name": "wheels-turned", "text": "front wheels turned at a photogenic angle", "text_short": "wheels turned" },
+    { "name": "top-open", "text": "convertible top open", "text_short": "top open" },
+    { "name": "top-closed", "text": "closed soft-top roof", "text_short": "soft-top closed" },
+    { "name": "popups-up", "text": "pop-up headlights raised", "text_short": "pop-ups raised" },
+    { "name": "lights-on", "text": "headlights and taillights glowing", "text_short": "lights glowing", "tags": ["night"] },
+    { "name": "engine-off", "text": "engine off, stationary and settled", "text_short": "stationary, engine off" },
+    { "name": "idling", "text": "engine idling, faint heat shimmer at the exhaust", "text_short": "idling, heat shimmer" },
+    { "name": "doors-up", "text": "scissor doors raised", "text_short": "scissor doors up" },
+    { "name": "fresh-rain-beads", "text": "fresh rain beading on the paintwork", "text_short": "rain-beaded paint" }
+  ]
+}

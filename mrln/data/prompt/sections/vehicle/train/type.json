@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Train Type",
+  "description": "Rail archetypes.",
+  "suits": ["object", "vehicle", "train"],
+  "items": [
+    { "name": "steam-locomotive", "text": "a black steam locomotive trailing a full plume", "text_short": "steaming locomotive", "tags": ["historical"] },
+    { "name": "maglev", "text": "a bullet-nosed maglev floating over its guideway", "text_short": "floating maglev", "tags": ["scifi"] },
+    { "name": "orient-express", "text": "a polished luxury sleeper train with brass and marquetry", "text_short": "luxury sleeper train", "tags": ["historical"] },
+    { "name": "city-tram", "text": "a cheerful city tram rounding a cobbled corner", "text_short": "city tram" },
+    { "name": "freight-consist", "text": "a mile-long freight consist doubling through desert curves", "text_short": "mile-long freight" },
+    { "name": "alpine-cog", "text": "a red alpine cog railway climbing an impossible grade", "text_short": "alpine cog railway" },
+    { "name": "shinkansen", "text": "a long-nosed high-speed express at speed", "text_short": "high-speed express" },
+    { "name": "narrow-gauge", "text": "a narrow-gauge heritage train winding through forest", "text_short": "narrow-gauge heritage" },
+    { "name": "metro-ghost", "text": "an empty late-night metro car, fluorescent and humming", "text_short": "empty metro car", "tags": ["night"] },
+    { "name": "armored-scifi", "text": "an armored sci-fi land train spanning the horizon", "text_short": "armored land train", "tags": ["scifi"] }
+  ]
+}
