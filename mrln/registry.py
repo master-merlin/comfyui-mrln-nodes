@@ -43,8 +43,23 @@ def _register(domain: str) -> None:
     NODE_DISPLAY_NAME_MAPPINGS.update(module.NODE_DISPLAY_NAME_MAPPINGS)
 
 
+def _register_api() -> None:
+    """Attach HTTP endpoints when running inside ComfyUI. Doubly guarded:
+    this module must never raise, and register_routes() itself soft-fails
+    outside a server."""
+    try:
+        from . import promptapi
+
+        if promptapi.register_routes():
+            logger.info("MRLN Nodes: prompt API endpoints registered.")
+    except Exception:
+        logger.warning("MRLN Nodes: prompt API unavailable:\n%s", traceback.format_exc())
+
+
 for _domain in DOMAINS:
     _register(_domain)
+
+_register_api()
 
 if not DOMAINS:
     logger.info("MRLN Nodes: no domains activated yet (harness only).")
