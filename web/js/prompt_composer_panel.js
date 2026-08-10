@@ -238,8 +238,13 @@ export function createComposerPanel(root, ctx) {
   }
 
   function toggleAudition(set, id) {
-    if (set.has(id)) set.delete(id);
-    else set.add(id);
+    const other = set === state.muted ? state.soloed : state.muted;
+    if (set.has(id)) {
+      set.delete(id);
+    } else {
+      set.add(id);
+      other.delete(id); // M/S are exclusive — a section is muted OR soloed
+    }
     renderComposeTab();
     schedulePreview();
   }
