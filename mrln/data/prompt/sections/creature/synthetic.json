@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Synthetic Being",
+  "description": "Robots, androids and non-biological beings (Civitai robot/alien categories).",
+  "suits": ["creature", "object"],
+  "items": [
+    { "name": "android-elegant", "text": "an elegant android with porcelain panel skin and visible joint seams", "text_short": "porcelain android", "tags": ["scifi"] },
+    { "name": "battle-mech-character", "text": "a battle-scarred mech with personality in its posture, kneeling dormant", "text_short": "dormant scarred mech", "tags": ["scifi"] },
+    { "name": "utility-drone", "text": "a hovering utility drone with a single expressive lens eye", "text_short": "one-eyed hover drone", "tags": ["scifi"] },
+    { "name": "clockwork-automaton", "text": "a brass clockwork automaton, exposed gears turning behind glass", "text_short": "brass automaton", "tags": ["historical"] },
+    { "name": "alien-emissary", "text": "a tall graceful alien emissary in bioluminescent robes", "text_short": "bioluminescent alien", "tags": ["scifi"] },
+    { "name": "stone-golem", "text": "a moss-grown stone golem waking from centuries of stillness", "text_short": "waking stone golem", "tags": ["fantasy"] },
+    { "name": "forest-spirit", "text": "a small glowing forest spirit, half-transparent in the dusk light", "text_short": "glowing forest spirit", "tags": ["fantasy", "anime"] },
+    { "name": "tiger-beastman", "text": "a muscular tiger beastman monk in tattered prayer robes", "text_short": "tiger beastman monk", "tags": ["fantasy"] },
+    { "name": "cyborg-fusion", "text": "a human-machine fusion, skin yielding to precision alloy midway", "text_short": "human-machine fusion", "tags": ["scifi"] },
+    { "name": "living-armor", "text": "an empty suit of living armor animated by faint inner light", "text_short": "living empty armor", "tags": ["fantasy"] }
+  ]
+}

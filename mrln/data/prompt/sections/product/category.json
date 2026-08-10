@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Product",
+  "description": "Hero products for commercial photography.",
+  "suits": ["product", "object"],
+  "items": [
+    { "name": "chronograph-watch", "text": "a mechanical chronograph, guilloché dial and brushed lugs in razor detail", "text_short": "mechanical chronograph" },
+    { "name": "sneaker-drop", "text": "a limited-edition sneaker, texture contrast between suede, mesh and gum sole", "text_short": "limited sneaker" },
+    { "name": "perfume-flacon", "text": "a faceted perfume flacon splitting light into amber refractions", "text_short": "faceted perfume flacon" },
+    { "name": "lipstick-bullet", "text": "a sculpted lipstick bullet rising from a magnetic case", "text_short": "sculpted lipstick" },
+    { "name": "headphones", "text": "flagship over-ear headphones, anodized metal and protein leather", "text_short": "flagship headphones" },
+    { "name": "smartphone", "text": "a flagship smartphone catching a single wraparound highlight", "text_short": "flagship smartphone" },
+    { "name": "fountain-pen", "text": "a lacquered fountain pen with a gold nib in macro", "text_short": "gold-nib fountain pen" },
+    { "name": "whisky-bottle", "text": "an embossed whisky bottle glowing amber against dark oak", "text_short": "amber whisky bottle" },
+    { "name": "skincare-jar", "text": "a frosted skincare jar on wet stone with water droplets", "text_short": "frosted skincare jar" },
+    { "name": "camera-body", "text": "a classic camera body, knurled dials and worn brass edges", "text_short": "classic camera body" },
+    { "name": "protein-shaker", "text": "a matte protein drink bottle mid-splash with swirling liquid", "text_short": "splash protein bottle" },
+    { "name": "sunglasses", "text": "acetate sunglasses with gradient lenses reflecting a sunset", "text_short": "gradient sunglasses" },
+    { "name": "handbag", "text": "a structured leather handbag, saddle stitching in raking light", "text_short": "structured leather bag" },
+    { "name": "espresso-machine", "text": "a chrome lever espresso machine, gauges and heat shimmer", "text_short": "chrome lever machine" }
+  ]
+}

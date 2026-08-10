@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "Sci-Fi Vista",
+  "description": "Cinematic science-fiction establishing shot: scifi-tagged places, optional craft, dramatic light.",
+  "prefix": "A cinematic science-fiction establishing shot.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "maximal-8k"
+    },
+    {
+      "id": "genre",
+      "ref": "style/genre",
+      "label": "Genre flavor",
+      "default": "science-fiction",
+      "tags_any": ["scifi"]
+    },
+    {
+      "id": "vista",
+      "ref": "location",
+      "label": "Vista",
+      "tags_any": ["scifi"],
+      "emphasis": 1.25
+    },
+    {
+      "id": "craft",
+      "ref": "vehicle/scifi-craft",
+      "label": "Craft",
+      "allow_empty": true,
+      "emphasis": 1.15
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Dramatic light"
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Atmosphere",
+      "allow_empty": true
+    },
+    {
+      "id": "medium",
+      "ref": "style/rendering",
+      "label": "Render look",
+      "default": "cinematic-engine"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "epic sense of scale, coherent worldbuilding detail, atmospheric depth haze",
+  "negative": "watermark, text, blurry, low detail",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

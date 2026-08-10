@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Interior",
+  "description": "Interiors as hero subjects.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "grand-library", "text": "a grand two-tier library hall, ladders on brass rails and green reading lamps", "text_short": "grand library hall" },
+    { "name": "industrial-loft", "text": "a raw industrial loft, steel trusses, brick and oversize factory windows", "text_short": "raw industrial loft" },
+    { "name": "cloister-walk", "text": "a vaulted cloister walk wrapped around a garden garth", "text_short": "vaulted cloister", "tags": ["historical"] },
+    { "name": "capsule-hotel", "text": "a glowing capsule-hotel corridor of stacked pods", "text_short": "capsule pod corridor", "tags": ["scifi"] },
+    { "name": "orangerie", "text": "a light-flooded orangerie of white iron and citrus trees", "text_short": "white iron orangerie" },
+    { "name": "wine-cellar", "text": "a candlelit vaulted wine cellar, bottles sleeping in stone bays", "text_short": "vaulted wine cellar" },
+    { "name": "japanese-tearoom", "text": "a spare tatami tearoom with a single scroll and flower", "text_short": "spare tatami tearoom", "tags": ["anime"] },
+    { "name": "grand-staircase", "text": "a sweeping marble double staircase under a chandelier", "text_short": "marble double staircase" },
+    { "name": "artist-atelier", "text": "a paint-spattered artist atelier under north-light windows", "text_short": "north-light atelier" },
+    { "name": "observatory-dome", "text": "inside an observatory dome, the great telescope aimed through the slit", "text_short": "observatory dome interior" },
+    { "name": "mid-century-lounge", "text": "a sunken mid-century lounge, teak, stone fireplace and conversation pit", "text_short": "mid-century pit lounge" },
+    { "name": "server-hall", "text": "a humming server hall, status LEDs receding in disciplined rows", "text_short": "humming server hall", "tags": ["scifi"] }
+  ]
+}

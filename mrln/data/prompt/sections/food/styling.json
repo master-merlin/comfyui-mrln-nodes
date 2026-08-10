@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Food Styling",
+  "description": "How the food scene is styled and propped.",
+  "suits": ["food", "object"],
+  "items": [
+    { "name": "rustic-board", "text": "styled on a scarred wooden board with scattered flour and herb sprigs", "text_short": "rustic board styling" },
+    { "name": "fine-dining-void", "text": "centered on an oversize plate in a dark void, single spotlight", "text_short": "dark fine-dining void" },
+    { "name": "overhead-spread", "text": "a full overhead table spread, hands reaching in from the edges", "text_short": "overhead table spread" },
+    { "name": "marble-minimal", "text": "on veined marble with one linen napkin and vintage cutlery", "text_short": "marble minimal styling" },
+    { "name": "steam-backlit", "text": "backlit so every wisp of steam glows against shadow", "text_short": "backlit steam" },
+    { "name": "ingredient-scatter", "text": "surrounded by an artful scatter of its raw ingredients", "text_short": "ingredient scatter" },
+    { "name": "market-context", "text": "styled amid a bustling market stall context, produce crates behind", "text_short": "market stall context" },
+    { "name": "picnic-blanket", "text": "laid out on a checked blanket in dappled orchard light", "text_short": "orchard picnic styling" },
+    { "name": "neon-diner", "text": "on a chrome diner counter washed in neon signage glow", "text_short": "neon diner counter", "tags": ["neon", "night"] },
+    { "name": "action-crumbs", "text": "caught in action, crumbs and drips suspended mid-fall", "text_short": "suspended crumbs action" }
+  ]
+}

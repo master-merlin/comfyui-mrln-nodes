@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Product Staging",
+  "description": "How the product is staged — the trending commercial vocabulary.",
+  "suits": ["product", "object"],
+  "items": [
+    { "name": "floating-hero", "text": "floating weightless as a hero shot, soft shadow anchoring it below", "text_short": "floating hero" },
+    { "name": "splash-freeze", "text": "in a frozen liquid splash, droplets suspended razor-sharp", "text_short": "frozen splash" },
+    { "name": "podium-arch", "text": "on a matte podium against a sculpted arch backdrop", "text_short": "podium and arch" },
+    { "name": "fabric-drape", "text": "emerging from flowing silk fabric caught mid-billow", "text_short": "silk drape reveal" },
+    { "name": "exploded-parts", "text": "exploded into its floating component parts in ordered rows", "text_short": "exploded components" },
+    { "name": "monolith-shadow", "text": "beside a monolith casting one long graphic shadow", "text_short": "graphic monolith shadow" },
+    { "name": "water-surface", "text": "standing in shallow reflective water rippling to the edges", "text_short": "reflective water stage" },
+    { "name": "levitating-ingredients", "text": "orbited by levitating ingredients and material samples", "text_short": "orbiting ingredients" },
+    { "name": "color-block-set", "text": "in a color-blocked set built from oversized geometric shapes", "text_short": "color-block set" },
+    { "name": "spotlight-smoke", "text": "in a single spotlight beam through thin smoke", "text_short": "spotlight through smoke" },
+    { "name": "mirror-infinity", "text": "on a mirror floor multiplying into infinity", "text_short": "mirror infinity floor" },
+    { "name": "paper-gradient", "text": "on a seamless paper sweep with a soft two-tone gradient", "text_short": "seamless gradient sweep" }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "Architecture Study",
+  "type": ["architecture", "object"],
+  "description": "Architectural photography: building, interior or structure under patient light.",
+  "prefix": "An architectural photography study.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "maximal-8k"
+    },
+    {
+      "id": "subject",
+      "ref": "architecture",
+      "label": "Subject",
+      "emphasis": 1.25
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Time of day"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "24mm-wide"
+    },
+    {
+      "id": "styleline",
+      "ref": "style/photography",
+      "label": "Style",
+      "default": "architectural"
+    }
+  ],
+  "suffix": "corrected verticals, material honesty, patient considered light",
+  "negative": "watermark, text, people crowding the frame, distortion",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Drink",
+  "description": "Hero drinks and pour moments.",
+  "suits": ["food", "object"],
+  "items": [
+    { "name": "espresso-crema", "text": "espresso pulling into a cup, tiger-striped crema swirling", "text_short": "tiger-crema espresso" },
+    { "name": "latte-art", "text": "a rosetta poured in silky latte microfoam", "text_short": "rosetta latte art" },
+    { "name": "old-fashioned", "text": "an old fashioned over one clear king cube, orange oils misting", "text_short": "old fashioned, king cube" },
+    { "name": "red-wine-pour", "text": "red wine arcing into a glass, legs streaking the bowl", "text_short": "red wine pour" },
+    { "name": "matcha-whisk", "text": "matcha mid-whisk, jade foam forming in a raku bowl", "text_short": "whisked jade matcha", "tags": ["anime"] },
+    { "name": "citrus-splash", "text": "sparkling citrus drink with a frozen splash crown and suspended fruit", "text_short": "citrus splash crown" },
+    { "name": "beer-pint", "text": "a condensation-beaded pint with a perfect two-finger head", "text_short": "beaded pint pour" },
+    { "name": "smoothie-swirl", "text": "a berry smoothie swirl layered in gradient purples", "text_short": "gradient berry swirl" },
+    { "name": "pour-over", "text": "a gooseneck pour-over blooming fresh grounds in slow spirals", "text_short": "blooming pour-over" },
+    { "name": "champagne-tower", "text": "champagne cascading down a coupe tower in golden threads", "text_short": "champagne coupe tower" }
+  ]
+}

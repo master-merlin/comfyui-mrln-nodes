@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Food Editorial",
+  "type": ["food"],
+  "description": "Editorial food photography: hero dish or drink, styling and appetizing light.",
+  "prefix": "An editorial food photograph.",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "photoreal-raw"
+    },
+    {
+      "id": "hero",
+      "ref": "food",
+      "label": "Hero dish/drink",
+      "emphasis": 1.25
+    },
+    {
+      "id": "styling",
+      "ref": "food/styling",
+      "label": "Styling",
+      "emphasis": 1.15
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Light",
+      "default": "window-flag-negative"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Lens",
+      "default": "100mm-macro"
+    },
+    {
+      "id": "styleline",
+      "ref": "style/photography",
+      "label": "Style",
+      "default": "food-editorial"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Detail layer",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "appetizing texture rendering, honest color, tactile surface detail",
+  "negative": "watermark, text, plastic-looking food, artificial gloss",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

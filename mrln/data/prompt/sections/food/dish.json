@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Dish",
+  "description": "Hero dishes for food photography.",
+  "suits": ["food", "object"],
+  "items": [
+    { "name": "ramen-bowl", "text": "a steaming tonkotsu ramen bowl, chashu fanned, soft egg halved, nori standing", "text_short": "steaming ramen bowl", "tags": ["anime"] },
+    { "name": "neapolitan-pizza", "text": "a blistered wood-fired Neapolitan pizza, mozzarella still bubbling", "text_short": "blistered wood-fired pizza" },
+    { "name": "sushi-selection", "text": "an omakase sushi selection on a hinoki board, glistening and precise", "text_short": "omakase sushi board" },
+    { "name": "seared-steak", "text": "a crusted ribeye sliced to a rosy center, butter melting over", "text_short": "sliced rosy ribeye" },
+    { "name": "layer-cake", "text": "a towering layer cake, one slice pulled to show perfect strata", "text_short": "towering layer cake" },
+    { "name": "croissants", "text": "shattering-crisp croissants, one torn open to honeycomb lamination", "text_short": "laminated croissants" },
+    { "name": "paella-pan", "text": "a saffron paella pan crowded with shellfish, socarrat crackling at the edge", "text_short": "saffron paella pan" },
+    { "name": "pho", "text": "a fragrant pho bowl, herbs stacked high, steam curling", "text_short": "fragrant pho bowl" },
+    { "name": "cheeseburger-stack", "text": "a tall smashburger stack, cheese cascading past the patty edge", "text_short": "cheese-cascade burger" },
+    { "name": "tasting-plate", "text": "a fine-dining tasting plate, three precise elements and a sauce swipe", "text_short": "fine-dining plate" },
+    { "name": "dumpling-basket", "text": "a bamboo steamer of pleated dumplings breathing steam", "text_short": "steaming dumpling basket" },
+    { "name": "pancake-stack", "text": "a pancake stack with syrup caught mid-pour and a butter slide", "text_short": "syrup-pour pancakes" },
+    { "name": "chocolate-fondant", "text": "a chocolate fondant broken open, molten center escaping", "text_short": "molten fondant break" },
+    { "name": "mezze-spread", "text": "a generous mezze spread in handmade ceramics from overhead", "text_short": "overhead mezze spread" }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Anime Key Visual",
+  "description": "Poster-grade anime scenery: anime-tagged places, season and style — subject supplied via {trigger} or left scenic.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Subject line (optional)",
+      "default": ""
+    }
+  ],
+  "prefix": "{trigger}",
+  "slots": [
+    {
+      "id": "quality",
+      "ref": "style/quality",
+      "label": "Quality boost",
+      "default": "illustrious-anime"
+    },
+    {
+      "id": "medium",
+      "ref": "style/medium",
+      "label": "Medium",
+      "default": "anime"
+    },
+    {
+      "id": "style",
+      "ref": "style/anime",
+      "label": "Anime style",
+      "emphasis": 1.2
+    },
+    {
+      "id": "scene",
+      "ref": "location",
+      "label": "Scene",
+      "tags_any": ["anime"],
+      "emphasis": 1.25
+    },
+    {
+      "id": "season",
+      "ref": "atmosphere/season",
+      "label": "Season"
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Time of day"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Floating detail",
+      "allow_empty": true
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "dramatic detailed sky, luminous color, poster-grade key visual composition",
+  "negative": "photorealistic, 3d render, watermark, text, signature, chibi, child",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

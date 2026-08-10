@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Structure",
+  "description": "Engineering structures as hero subjects.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "suspension-span", "text": "a great suspension bridge span dissolving into sea fog", "text_short": "suspension span in fog" },
+    { "name": "roman-aqueduct", "text": "a tiered Roman aqueduct striding a river valley", "text_short": "tiered aqueduct", "tags": ["historical"] },
+    { "name": "railway-viaduct", "text": "a curved stone railway viaduct crossing moorland", "text_short": "curved stone viaduct" },
+    { "name": "radio-telescope", "text": "a giant radio telescope dish tilted at the sky", "text_short": "giant telescope dish" },
+    { "name": "wind-farm-offshore", "text": "an offshore wind farm marching to the horizon", "text_short": "offshore wind farm" },
+    { "name": "dam-curve", "text": "a colossal arch dam curved into its gorge", "text_short": "colossal arch dam" },
+    { "name": "ruined-abbey", "text": "a roofless ruined abbey, arches framing racing clouds", "text_short": "roofless abbey ruin", "tags": ["historical"] },
+    { "name": "torii-corridor", "text": "a corridor of a thousand vermilion torii winding uphill", "text_short": "thousand torii corridor", "tags": ["anime"] }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Building",
+  "description": "Buildings as hero subjects.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "gothic-cathedral", "text": "a gothic cathedral facade, flying buttresses and rose window in carved stone lace", "text_short": "gothic cathedral facade", "tags": ["historical"] },
+    { "name": "brutalist-tower", "text": "a monolithic brutalist tower, raw board-marked concrete against flat sky", "text_short": "brutalist concrete tower" },
+    { "name": "japanese-temple", "text": "a cypress-wood temple hall with sweeping tiled eaves and bronze fittings", "text_short": "sweeping temple hall", "tags": ["anime"] },
+    { "name": "art-deco-skyscraper", "text": "an art-deco skyscraper crown, stepped setbacks and gilded zigzag details", "text_short": "art-deco crown", "tags": ["historical"] },
+    { "name": "glass-parametric", "text": "a flowing parametric glass building, panels twisting like caught fabric", "text_short": "parametric glass curves" },
+    { "name": "half-timbered-row", "text": "a leaning row of half-timbered medieval townhouses", "text_short": "half-timbered row", "tags": ["historical"] },
+    { "name": "desert-adobe", "text": "sculpted adobe architecture, rounded walls and cool deep-set openings", "text_short": "sculpted adobe walls" },
+    { "name": "stave-church", "text": "a black-tarred stave church with dragon-carved gables", "text_short": "black stave church", "tags": ["historical"] },
+    { "name": "stilt-village", "text": "a stilt village walking over calm water on timber legs", "text_short": "stilt village" },
+    { "name": "opera-shells", "text": "a sail-shelled opera house catching harbor light", "text_short": "sail-shell opera house" },
+    { "name": "moorish-courtyard", "text": "a Moorish courtyard of horseshoe arches, zellige tiles and a still fountain", "text_short": "Moorish arched courtyard", "tags": ["historical"] },
+    { "name": "arcology-megastructure", "text": "a terraced arcology megastructure dissolving into cloud", "text_short": "terraced arcology", "tags": ["scifi"] },
+    { "name": "alpine-chalet", "text": "a stone-based alpine chalet under deep snow eaves", "text_short": "snowed alpine chalet" },
+    { "name": "lighthouse-headland", "text": "a striped lighthouse braced on a storm-worn headland", "text_short": "headland lighthouse" }
+  ]
+}
