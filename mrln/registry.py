@@ -35,7 +35,7 @@ def _register(domain: str) -> None:
     for key in module.NODE_CLASS_MAPPINGS:
         if key in NODE_CLASS_MAPPINGS:
             logger.warning(
-                "MRLN Nodes: duplicate node ID '%s' (domain '%s') overrides an earlier registration.",
+                "MRLN Nodes: duplicate node ID '%s' (domain '%s') overrides earlier one.",
                 key,
                 domain,
             )

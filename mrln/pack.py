@@ -8,7 +8,7 @@ own pack — is a change in exactly one place.
 import logging
 import re
 
-PACK_ID = "MRLN"  # node-ID prefix; node IDs are workflow-file API and must never change after release
+PACK_ID = "MRLN"  # node-ID prefix; IDs are workflow-file API — frozen once released
 PACK_MARKER = "(MRLN)"  # display-name suffix so users can tell our nodes apart in search
 CATEGORY_ROOT = "MRLN"  # Add-Node menu root
 

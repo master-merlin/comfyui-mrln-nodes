@@ -2,7 +2,10 @@
 # (untracked files are excluded automatically; this is belt-and-suspenders).
 _harness/
 CLAUDE.md
+.claude/
 .github/
+tests/
+requirements-dev.txt
 .gitignore
 .gitattributes
 .comfyignore

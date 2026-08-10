@@ -1,6 +1,6 @@
 # Comfy Registry packaging (https://docs.comfy.org/registry/specifications).
-# Bumping [project].version on main is the release trigger: publish.yml runs
-# on pyproject.toml pushes once the repo has the REGISTRY_ACCESS_TOKEN secret.
+# Releases: publish.yml runs on v* tag pushes; the /bump-version procedure
+# bumps [project].version, tags, and pushes. Never hand-roll a release.
 
 [project]
 name = "comfyui-mrln-nodes"
@@ -24,3 +24,32 @@ Repository = "https://github.com/master-merlin/comfyui-mrln-nodes"
 PublisherId = "master-merlin"
 DisplayName = "MRLN Nodes"
 requires-comfyui = ">=0.3.0"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E", "W",   # pycodestyle
+    "F",        # pyflakes
+    "I",        # isort
+    "N",        # pep8-naming
+    "UP",       # pyupgrade
+    "B",        # bugbear
+    "C4",       # comprehensions
+    "SIM",      # simplify
+    "RUF",      # ruff-specific
+]
+# N802: ComfyUI's node API mandates UPPER_CASE method names (INPUT_TYPES,
+#       IS_CHANGED, VALIDATE_INPUTS).
+# N999: the repo/module dir is hyphenated (ComfyUI-MRLN-Nodes) per ComfyUI
+#       custom-node convention; ComfyUI's loader handles it fine.
+ignore = ["N802", "N999"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # re-export shims
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q -ra"
