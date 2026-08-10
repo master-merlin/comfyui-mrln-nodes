@@ -115,9 +115,7 @@ def test_overdrive_group_weights_uniform(lib):
 
 def test_overdrive_label_expansion_end_to_end(lib):
     tpl = lib.load_template("overdrive/car-design")
-    resolved = resolve_template(
-        lib, tpl, seed=1, mode="as configured", selection={}, variables={}
-    )
+    resolved = resolve_template(lib, tpl, seed=1, mode="as configured", selection={}, variables={})
     out = render(resolved, tpl.render.format, tpl.render)
     assert "(HycadeBodykit style aggressive wide body kit:1.1)" in out.positive
     assert "(sleek 'Overdrive' license plate:1.2)" in out.positive
