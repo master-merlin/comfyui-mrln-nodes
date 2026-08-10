@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "label": "Lifestyle Scene",
+  "type": ["product", "object"],
+  "description": "The product living in a real place — context marketing with film warmth.",
+  "prefix": "An aspirational lifestyle product photograph — the product at home in a beautiful real moment, belonging there so naturally the advertisement disappears.",
+  "slots": [
+    {
+      "id": "product",
+      "ref": "product/category",
+      "label": "The Product",
+      "emphasis": 1.25
+    },
+    {
+      "id": "setting",
+      "ref": "location",
+      "label": "Living In",
+      "tags_none": ["boudoir", "scifi"],
+      "emphasis": 1.15
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting Conditions"
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Hour"
+    },
+    {
+      "id": "film",
+      "ref": "camera/film",
+      "label": "Film Character",
+      "default": "portra-400"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "50mm-f14"
+    }
+  ],
+  "suffix": "Lifestyle Rendering: (the product tack-sharp while the scene breathes softly around it:1.2), lived-in styling with human traces just out of frame, warmth that sells a feeling before a feature.",
+  "negative": "sterile studio look, watermark, text, catalog stiffness",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

@@ -1360,7 +1360,11 @@ export function createComposerPanel(root, ctx) {
     }
     const node = ctx.selectedTemplateNode();
     if (!node) {
-      ctx.toast("warn", "No node selected", "Select a Prompt Template (MRLN) node first.");
+      ctx.toast(
+        "warn",
+        "No target node",
+        "Add a Prompt Template (MRLN) node — with several in the graph, select the target first."
+      );
       return;
     }
     ctx.setWidget(node, "template", state.slug);
@@ -1384,7 +1388,11 @@ export function createComposerPanel(root, ctx) {
   async function loadFromNode() {
     const node = ctx.selectedTemplateNode();
     if (!node) {
-      ctx.toast("warn", "No node selected", "Select a Prompt Template (MRLN) node first.");
+      ctx.toast(
+        "warn",
+        "No target node",
+        "Add a Prompt Template (MRLN) node — with several in the graph, select the target first."
+      );
       return;
     }
     const slug = ctx.getWidget(node, "template") || state.slug;

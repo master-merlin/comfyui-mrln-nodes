@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "label": "Pour Shot",
+  "type": ["food"],
+  "description": "High-speed liquid commercial: a drink frozen mid-pour at 1/4000s.",
+  "prefix": "A high-speed commercial liquid photograph — the pour frozen at its most beautiful millisecond, physics turned into sculpture.",
+  "slots": [
+    {
+      "id": "hero",
+      "ref": "food/drink",
+      "label": "The Pour",
+      "emphasis": 1.3
+    },
+    {
+      "id": "staging",
+      "ref": "product/staging",
+      "label": "Staged",
+      "default": "splash-freeze"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Lighting Conditions",
+      "default": "rim-kicker"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Suspended",
+      "default": "frozen-splash"
+    },
+    {
+      "id": "settings",
+      "ref": "camera/settings",
+      "label": "Camera",
+      "default": "sports-freeze"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "Liquid Rendering: (every droplet a tiny lens holding the scene:1.25), the crown splash geometrically perfect, condensation beading real, backlight turning the liquid to stained glass.",
+  "negative": "motion blur on the liquid, watermark, text, murky color",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

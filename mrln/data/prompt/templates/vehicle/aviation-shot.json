@@ -3,14 +3,8 @@
   "label": "Aviation Shot",
   "type": ["object", "vehicle", "aircraft"],
   "description": "Aviation photography: aircraft type and state under big skies with long glass.",
-  "prefix": "A highly realistic aviation photograph.",
+  "prefix": "A breathtaking aviation photograph worthy of an airshow poster — one aircraft owning an enormous sky, the sense of speed, altitude and air pressure almost physical.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "aircraft",
       "ref": "vehicle/aircraft/type",
@@ -20,7 +14,7 @@
     {
       "id": "state",
       "ref": "vehicle/aircraft/state",
-      "label": "Flight state",
+      "label": "Caught",
       "emphasis": 1.15
     },
     {
@@ -31,18 +25,18 @@
     {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Time of day"
+      "label": "Hour"
     },
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "600mm-telephoto"
     },
     {
       "id": "film",
       "ref": "camera/film",
-      "label": "Film look",
+      "label": "Film Character",
       "allow_empty": true
     },
     {
@@ -52,10 +46,11 @@
       "allow_empty": true
     }
   ],
-  "suffix": "crisp panel lines and rivet detail, rotor and propeller motion handled naturally, sharp focus on the aircraft",
-  "negative": "watermark, text, logo, deformed geometry",
+  "suffix": "Aviation Rendering: (crisp panel lines, rivet detail and stenciling resolved:1.2), propeller and rotor motion handled naturally with authentic blur, heat distortion behind the exhausts, (tack-sharp focus on the airframe:1.2) while the sky breathes around it.",
+  "negative": "watermark, text, logo, deformed geometry, bent wings",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

@@ -3,14 +3,8 @@
   "label": "Maritime Shot",
   "type": ["object", "vehicle", "ship"],
   "description": "Maritime photography: vessel and sea state, weather doing half the work.",
-  "prefix": "A highly realistic maritime photograph.",
+  "prefix": "A powerful maritime photograph — vessel and ocean locked in the old conversation, the sea state as much the subject as the ship riding it.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "vessel",
       "ref": "vehicle/ship/type",
@@ -20,7 +14,7 @@
     {
       "id": "state",
       "ref": "vehicle/ship/state",
-      "label": "Sea state",
+      "label": "Sea State",
       "emphasis": 1.15
     },
     {
@@ -31,17 +25,17 @@
     {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Time of day"
+      "label": "Hour"
     },
     {
       "id": "light",
-      "ref": "lighting/day",
+      "ref": "lighting/quality",
       "label": "Light"
     },
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "135mm-compression"
     },
     {
@@ -51,10 +45,11 @@
       "allow_empty": true
     }
   ],
-  "suffix": "believable water physics, spray and foam detail, hull textures honest with wear, sharp focus on the vessel",
-  "negative": "watermark, text, logo, deformed geometry",
+  "suffix": "Marine Rendering: (believable water physics, spray and foam resolved droplet by droplet:1.2), hull textures honest with rust streaks and wear, rigging and deck detail sharp, the horizon holding true.",
+  "negative": "watermark, text, logo, deformed geometry, impossible waves",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "label": "Slice of Life",
+  "description": "The quiet anime moment: an everyday Japanese place, a season doing its work, watercolor softness.",
+  "prefix": "A gentle slice-of-life anime scene — the kind of quiet everyday moment the great pastoral films linger on, where nothing happens and everything matters.",
+  "slots": [
+    {
+      "id": "scene",
+      "ref": "location/japan",
+      "label": "The Place",
+      "emphasis": 1.25
+    },
+    {
+      "id": "season",
+      "ref": "atmosphere/season",
+      "label": "Season",
+      "emphasis": 1.15
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Hour"
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "style",
+      "ref": "style/anime",
+      "label": "Style",
+      "default": "watercolor-soft"
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood",
+      "default": "nostalgic"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Drifting",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "Scene Rendering: hand-painted background warmth, small human traces — a parked bicycle, drying laundry, a forgotten umbrella — light that makes the ordinary sacred.",
+  "negative": "photorealistic, 3d render, watermark, text, dark horror tones",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

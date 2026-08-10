@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Android Portrait",
+  "description": "An intimate portrait of a synthetic being — humanity questioned at 85mm.",
+  "prefix": "An intimate cinematic portrait of a synthetic being — photographed with the same tenderness as a human face, so the almost-humanity becomes the whole story.",
+  "slots": [
+    {
+      "id": "being",
+      "ref": "creature/synthetic",
+      "label": "The Being",
+      "emphasis": 1.3
+    },
+    {
+      "id": "detail",
+      "ref": "human/skin",
+      "label": "Surface Detail",
+      "default": "detailed-natural"
+    },
+    {
+      "id": "setting",
+      "ref": "location",
+      "label": "Setting",
+      "tags_any": ["scifi"],
+      "emphasis": 1.1
+    },
+    {
+      "id": "light",
+      "ref": "lighting",
+      "label": "Lighting Conditions",
+      "default": "studio/gelled-duotone"
+    },
+    {
+      "id": "genre",
+      "ref": "style/genre",
+      "label": "Design Language",
+      "default": "cyberpunk"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "85mm-f12"
+    },
+    {
+      "id": "framing",
+      "ref": "viewpoint/portrait",
+      "label": "Framing",
+      "default": "close-up-face"
+    }
+  ],
+  "suffix": "Synthetic Rendering: (the boundary between engineered surface and living warmth rendered in loving macro detail:1.25), a single point of light in the eyes that might be a soul or a sensor, panel seams like scars.",
+  "negative": "watermark, text, cartoon, low detail, generic robot",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

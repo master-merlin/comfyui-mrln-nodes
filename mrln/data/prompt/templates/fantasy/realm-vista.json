@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Realm Vista",
+  "description": "A fantasy world establishing shot: enchanted land, its creature, romanticist scale.",
+  "prefix": "The establishing vista of a fantasy realm — a land where magic is geology, painted at romanticist scale with a lone wonder moving through it.",
+  "slots": [
+    {
+      "id": "realm",
+      "ref": "location",
+      "label": "The Realm",
+      "tags_any": ["fantasy"],
+      "emphasis": 1.3
+    },
+    {
+      "id": "denizen",
+      "ref": "animal/mythical",
+      "label": "Its Denizen",
+      "allow_empty": true,
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Sky"
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Hour"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Light",
+      "default": "volumetric-shafts"
+    },
+    {
+      "id": "movement",
+      "ref": "style/movement",
+      "label": "Painted As",
+      "default": "romanticism"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "layered-depth"
+    }
+  ],
+  "suffix": "Realm Rendering: (sublime scale dwarfing every living thing:1.25), atmospheric perspective stacking blue distances, light treated as a divine event, detail rewarding a long slow look.",
+  "negative": "modern objects, watermark, text, flat video-game skybox",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

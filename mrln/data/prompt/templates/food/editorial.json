@@ -3,55 +3,50 @@
   "label": "Food Editorial",
   "type": ["food"],
   "description": "Editorial food photography: hero dish or drink, styling and appetizing light.",
-  "prefix": "An editorial food photograph.",
+  "prefix": "A cover-worthy editorial food photograph — the dish so present you can smell it, every texture begging to be touched, styled with restraint that lets the food do the talking.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "hero",
       "ref": "food",
-      "label": "Hero dish/drink",
+      "label": "The Hero",
       "emphasis": 1.25
     },
     {
       "id": "styling",
       "ref": "food/styling",
-      "label": "Styling",
+      "label": "Styled",
       "emphasis": 1.15
     },
     {
       "id": "light",
       "ref": "lighting/studio",
-      "label": "Light",
+      "label": "Lighting Conditions",
       "default": "window-flag-negative"
     },
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "100mm-macro"
     },
     {
       "id": "styleline",
       "ref": "style/photography",
-      "label": "Style",
+      "label": "Discipline",
       "default": "food-editorial"
     },
     {
       "id": "particles",
       "ref": "atmosphere/particles",
-      "label": "Detail layer",
+      "label": "In the Air",
       "allow_empty": true
     }
   ],
-  "suffix": "appetizing texture rendering, honest color, tactile surface detail",
-  "negative": "watermark, text, plastic-looking food, artificial gloss",
+  "suffix": "Appetite Rendering: (glistening surface moisture and crumb texture resolved:1.2), steam behaving physically, honest saturated-but-real color, tactile depth that triggers hunger on sight.",
+  "negative": "watermark, text, plastic-looking food, artificial gloss, grey unappetizing tones",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

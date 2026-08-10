@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "label": "Golden Interior",
+  "type": ["architecture", "object"],
+  "description": "Interior editorial: a beautiful room at its most flattering hour.",
+  "prefix": "An interior-design editorial photograph — a beautiful room caught at the exact hour its architect imagined, atmosphere thick enough to step into.",
+  "slots": [
+    {
+      "id": "space",
+      "ref": "architecture/interior",
+      "label": "The Space",
+      "emphasis": 1.25
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting Conditions",
+      "default": "golden-hour-window"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "In the Air",
+      "default": "dust-motes"
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood",
+      "default": "serene"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "24mm-wide"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "frame-in-frame"
+    }
+  ],
+  "suffix": "Interior Rendering: (material warmth in every surface — wood grain, textile weave, stone cool:1.2), verticals held true, light pooling exactly where the eye should rest, a space that smells of itself.",
+  "negative": "watermark, text, clutter, flat lighting, fisheye distortion",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

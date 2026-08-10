@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "label": "Dark Mood Food",
+  "type": ["food"],
+  "description": "Chiaroscuro food photography: one dish glowing out of Rembrandt darkness.",
+  "prefix": "A dramatic dark-mood food photograph in the chiaroscuro tradition — a single dish emerging from deep shadow like a Dutch still-life, indulgent and a little dangerous.",
+  "slots": [
+    {
+      "id": "hero",
+      "ref": "food",
+      "label": "The Hero",
+      "emphasis": 1.25
+    },
+    {
+      "id": "styling",
+      "ref": "food/styling",
+      "label": "Styled",
+      "default": "rustic-board"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Lighting Conditions",
+      "default": "chiaroscuro"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "In the Air",
+      "default": "dust-motes"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "100mm-macro"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "default": "jewel-tones"
+    }
+  ],
+  "suffix": "Still-Life Rendering: (highlights carved out of blackness:1.25), texture luminous where the light grazes, backgrounds swallowed whole, the plate holding court alone.",
+  "negative": "flat bright lighting, watermark, text, clinical white background",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "label": "Anime Character",
+  "type": ["human"],
+  "description": "Illustrious-style character art over the human pools — renders in SHORT text mode so the profile surfaces as clean tag flow.",
+  "prefix": "masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, solo",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/profile",
+      "label": "Character",
+      "default": "female-glamour",
+      "emphasis": 1.1
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "style",
+      "ref": "style/anime",
+      "label": "Style",
+      "emphasis": 1.2
+    },
+    {
+      "id": "scene",
+      "ref": "location",
+      "label": "Scene",
+      "tags_any": ["anime"]
+    },
+    {
+      "id": "time",
+      "ref": "atmosphere/time-of-day",
+      "label": "Hour"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Air",
+      "default": "petals"
+    }
+  ],
+  "suffix": "detailed expressive eyes, clean confident linework, dynamic composition, depth of field",
+  "negative": "worst quality, bad quality, lowres, jpeg artifacts, bad anatomy, interlocked fingers, extra fingers, watermark, signature, photorealistic, 3d, chibi, child, underage",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "text_length": "short"
+  }
+}

@@ -2,39 +2,33 @@
   "version": 1,
   "label": "Sci-Fi Vista",
   "description": "Cinematic science-fiction establishing shot: scifi-tagged places, optional craft, dramatic light.",
-  "prefix": "A cinematic science-fiction establishing shot.",
+  "prefix": "The opening establishing shot of a prestige science-fiction film — a world revealed in one held breath, production design coherent down to the smallest light source, scale beyond anything built.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "maximal-8k"
-    },
-    {
-      "id": "genre",
-      "ref": "style/genre",
-      "label": "Genre flavor",
-      "default": "science-fiction",
-      "tags_any": ["scifi"]
-    },
     {
       "id": "vista",
       "ref": "location",
-      "label": "Vista",
+      "label": "The World",
       "tags_any": ["scifi"],
       "emphasis": 1.25
     },
     {
       "id": "craft",
       "ref": "vehicle/scifi-craft",
-      "label": "Craft",
+      "label": "In Frame",
       "allow_empty": true,
       "emphasis": 1.15
     },
     {
+      "id": "genre",
+      "ref": "style/genre",
+      "label": "Design Language",
+      "default": "science-fiction",
+      "tags_any": ["scifi"]
+    },
+    {
       "id": "light",
       "ref": "lighting/dramatic",
-      "label": "Dramatic light"
+      "label": "Lighting Conditions"
     },
     {
       "id": "weather",
@@ -45,7 +39,7 @@
     {
       "id": "medium",
       "ref": "style/rendering",
-      "label": "Render look",
+      "label": "Render Pipeline",
       "default": "cinematic-engine"
     },
     {
@@ -55,10 +49,11 @@
       "allow_empty": true
     }
   ],
-  "suffix": "epic sense of scale, coherent worldbuilding detail, atmospheric depth haze",
-  "negative": "watermark, text, blurry, low detail",
+  "suffix": "World Rendering: (staggering sense of scale with tiny figures or craft for reference:1.2), atmospheric depth haze layering the distance, coherent worldbuilding in every detail, filmic tonemapping with disciplined highlights.",
+  "negative": "watermark, text, blurry, low detail, generic game screenshot",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

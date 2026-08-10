@@ -39,6 +39,16 @@ function toast(severity, summary, detail = "") {
 }
 
 function selectedTemplateNode() {
+  const isTemplate = (n) => (n.comfyClass ?? n.type) === "MRLN_PromptTemplate";
+  // Convenience rule: with exactly ONE Prompt Template node in the graph
+  // there is nothing to choose — Apply/Load target it automatically. Only
+  // with several nodes does an explicit selection become necessary.
+  const all = (app.graph?._nodes ?? app.graph?.nodes ?? []).filter(isTemplate);
+  if (all.length === 1) return all[0];
+  return explicitlySelectedTemplateNode();
+}
+
+function explicitlySelectedTemplateNode() {
   const items = app.canvas?.selectedItems
     ? [...app.canvas.selectedItems] // new frontend: Set of nodes/groups
     : Object.values(app.canvas?.selected_nodes ?? {}); // legacy fallback

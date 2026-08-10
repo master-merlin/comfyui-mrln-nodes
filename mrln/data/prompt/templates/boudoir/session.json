@@ -10,53 +10,55 @@
       "default": ""
     }
   ],
+  "prefix": "A high-class editorial boudoir photograph of exceptional artistic quality — sensual, elegant and tasteful, in the language of a premium fashion magazine. {trigger}",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "configuration",
       "ref": "boudoir/configuration",
-      "label": "Session configuration"
+      "label": "Scene"
     },
     {
       "id": "setting",
       "ref": "location/boudoir-interior",
-      "label": "Interior",
+      "label": "Setting",
       "emphasis": 1.25
     },
     {
       "id": "light",
       "ref": "lighting/organic",
-      "label": "Organic light",
+      "label": "Lighting Conditions",
       "emphasis": 1.2
     },
     {
       "id": "shot",
       "ref": "viewpoint/portrait",
-      "label": "Shot type",
+      "label": "Shot Type",
       "emphasis": 1.2
     },
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "85mm-f12"
     },
     {
       "id": "styleline",
       "ref": "style/photography",
-      "label": "Photography style",
+      "label": "Photographic Style",
       "default": "boudoir-artistic"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "golden-luxury"
     }
   ],
-  "suffix": "(natural optical depth of field, realistic background bokeh and environmental falloff:1.15), (detailed natural skin texture, skin pores, hair highlights catching light:1.2), (perfect hands, detailed fingers:1.2), high-fashion editorial photography, cinematic lighting, sharp focal subject, (cinematic color grade:1.15)",
+  "suffix": "Rendering Constants: (natural optical depth of field, realistic background bokeh and environmental falloff:1.15), (detailed natural skin texture, skin pores, hair highlights catching light:1.2), (perfect hands, detailed fingers:1.2), high-fashion editorial photography, cinematic lighting, sharp focal subject, (cinematic color grade:1.15).",
   "negative": "child, chibi, underage, deformed, extra limbs, extra fingers, watermark, text, logo",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

@@ -3,30 +3,24 @@
   "label": "Architecture Study",
   "type": ["architecture", "object"],
   "description": "Architectural photography: building, interior or structure under patient light.",
-  "prefix": "An architectural photography study.",
+  "prefix": "A masterful architectural photography study — built form treated as sculpture, geometry and material given the patience they were designed for, light arriving at exactly the right hour.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "maximal-8k"
-    },
     {
       "id": "subject",
       "ref": "architecture",
-      "label": "Subject",
+      "label": "The Structure",
       "emphasis": 1.25
     },
     {
       "id": "weather",
       "ref": "atmosphere/weather",
-      "label": "Weather",
+      "label": "Conditions",
       "allow_empty": true
     },
     {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Time of day"
+      "label": "Hour"
     },
     {
       "id": "framing",
@@ -36,20 +30,21 @@
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "24mm-wide"
     },
     {
       "id": "styleline",
       "ref": "style/photography",
-      "label": "Style",
+      "label": "Discipline",
       "default": "architectural"
     }
   ],
-  "suffix": "corrected verticals, material honesty, patient considered light",
-  "negative": "watermark, text, people crowding the frame, distortion",
+  "suffix": "Architectural Standard: (perfectly corrected verticals:1.2), material honesty in every surface — concrete pores, stone grain, glass truth — shadow edges tracking the geometry, human scale implied rather than shown.",
+  "negative": "watermark, text, crowds, distortion, leaning verticals",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

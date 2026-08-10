@@ -3,25 +3,19 @@
   "label": "Wildlife Documentary",
   "type": ["animal"],
   "description": "Documentary formula: subject x behavior x habitat through long glass and patient light.",
-  "prefix": "An award-caliber wildlife documentary photograph.",
+  "prefix": "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "subject",
       "ref": "animal",
-      "label": "Animal",
+      "label": "Subject",
       "emphasis": 1.25,
       "tags_none": ["fantasy"]
     },
     {
       "id": "behavior",
       "ref": "animal/behavior",
-      "label": "Behavior",
+      "label": "Caught",
       "emphasis": 1.15
     },
     {
@@ -32,31 +26,32 @@
     {
       "id": "weather",
       "ref": "atmosphere/weather",
-      "label": "Weather",
+      "label": "Conditions",
       "allow_empty": true
     },
     {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Time of day"
+      "label": "Hour"
     },
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "600mm-telephoto"
     },
     {
       "id": "styleline",
       "ref": "style/photography",
-      "label": "Style",
+      "label": "Discipline",
       "default": "wildlife-documentary"
     }
   ],
-  "suffix": "authentic field conditions, natural unposed subject, feather and fur detail resolved, catchlight in the eye",
-  "negative": "watermark, text, cartoon, anthropomorphic, deformed anatomy",
+  "suffix": "Field Rendering: authentic unstaged conditions, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), background compressed into a painterly wash, the animal's full attention on its world — never on us.",
+  "negative": "watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

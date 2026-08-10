@@ -2,31 +2,25 @@
   "version": 1,
   "label": "Product Hero",
   "type": ["product", "object"],
-  "description": "Commercial hero shot: product, staging and studio light — the MIT-repo genre distilled.",
-  "prefix": "A premium commercial product photograph.",
+  "description": "Commercial hero shot: product, staging and studio light — advertising-grade.",
+  "prefix": "A premium advertising hero photograph — the product presented like an object of desire, staged with the confidence of a global campaign, every reflection placed on purpose.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "maximal-8k"
-    },
     {
       "id": "product",
       "ref": "product/category",
-      "label": "Product",
+      "label": "The Product",
       "emphasis": 1.3
     },
     {
       "id": "staging",
       "ref": "product/staging",
-      "label": "Staging",
+      "label": "Staged",
       "emphasis": 1.2
     },
     {
       "id": "light",
       "ref": "lighting/studio",
-      "label": "Studio light"
+      "label": "Lighting Conditions"
     },
     {
       "id": "palette",
@@ -35,23 +29,23 @@
       "allow_empty": true
     },
     {
-      "id": "graphic",
-      "ref": "style/graphic",
-      "label": "Graphic treatment",
-      "allow_empty": true,
-      "empty_weight": 3.0
-    },
-    {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "100mm-macro"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "clean-advertisement"
     }
   ],
-  "suffix": "flawless surface control, deliberate reflections, advertising-grade finish",
-  "negative": "watermark, text, fingerprints, dust, scratches",
+  "suffix": "Commercial Finish: (flawless surface control with deliberate gradient reflections:1.25), micro-texture readable at billboard scale, edge highlights carving the silhouette, art-directed negative space for the headline.",
+  "negative": "watermark, text, fingerprints, dust, scratches, cluttered background",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

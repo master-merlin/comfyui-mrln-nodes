@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Teardown Sheet",
+  "type": ["product", "object"],
+  "description": "The viral museum-teardown treatment: a product exploded into annotated floating components.",
+  "prefix": "A museum-quality technical teardown presentation — the product dismantled into a floating constellation of its own components, each part hovering in exact assembly order, annotated like a precious specimen.",
+  "slots": [
+    {
+      "id": "product",
+      "ref": "product/category",
+      "label": "The Specimen",
+      "emphasis": 1.3
+    },
+    {
+      "id": "treatment",
+      "ref": "style/graphic",
+      "label": "Treatment",
+      "default": "exploded-teardown",
+      "emphasis": 1.25
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Lighting Conditions",
+      "default": "white-cyclorama"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "central-symmetry"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "Technical Finish: (every screw, gasket and board rendered with catalog precision:1.25), fine leader lines to elegant labels, consistent soft shadows anchoring each floating part, engineering beauty as the message.",
+  "negative": "clutter, watermark, chaotic arrangement, missing parts",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

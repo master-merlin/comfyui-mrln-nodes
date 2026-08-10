@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Intimate Landscape",
+  "type": ["nature"],
+  "description": "The quiet landscape genre: a small scene, mist, long lens, melancholy.",
+  "prefix": "An intimate landscape photograph — not the grand vista but the quiet scene within it, isolated by a long lens and weather, closer to poetry than geography.",
+  "slots": [
+    {
+      "id": "scene",
+      "ref": "nature",
+      "label": "The Scene",
+      "emphasis": 1.25
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "default": "dense-mist"
+    },
+    {
+      "id": "season",
+      "ref": "atmosphere/season",
+      "label": "Season"
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood",
+      "default": "melancholic"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "135mm-compression"
+    },
+    {
+      "id": "film",
+      "ref": "camera/film",
+      "label": "Emulsion",
+      "default": "pro-400h"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "negative-space"
+    }
+  ],
+  "suffix": "Quiet Rendering: (layers dissolving into weather:1.2), muted tonal restraint, one element allowed to matter, the frame holding its breath.",
+  "negative": "watermark, text, oversaturation, busy composition, people",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

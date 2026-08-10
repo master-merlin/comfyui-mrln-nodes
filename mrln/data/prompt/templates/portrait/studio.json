@@ -3,18 +3,12 @@
   "label": "Studio Portrait",
   "type": ["human"],
   "description": "A controlled studio portrait over the shared human pools — the SFW showcase of the human domain.",
-  "prefix": "A professional studio portrait.",
+  "prefix": "An exceptional professional studio portrait, magazine-cover caliber. One subject commands the frame; every element of light and styling exists to serve their presence.\n\nSubject:",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "photoreal-raw"
-    },
     {
       "id": "subject",
       "ref": "human/profile",
-      "label": "Subject",
+      "label": "The subject is",
       "default": "female-glamour"
     },
     {
@@ -31,13 +25,13 @@
     {
       "id": "light",
       "ref": "lighting/studio",
-      "label": "Studio light",
+      "label": "Lighting Setup",
       "emphasis": 1.2
     },
     {
       "id": "backdrop",
       "ref": "location/studio",
-      "label": "Backdrop"
+      "label": "Studio"
     },
     {
       "id": "shot",
@@ -48,20 +42,27 @@
     {
       "id": "lens",
       "ref": "camera/lens",
-      "label": "Lens",
+      "label": "Optics",
       "default": "85mm-f12"
     },
     {
       "id": "film",
       "ref": "camera/film",
-      "label": "Film look",
+      "label": "Film Character",
       "allow_empty": true
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "punchy-editorial"
     }
   ],
-  "suffix": "sharp focus on the eyes, refined editorial retouch",
-  "negative": "child, chibi, underage, deformed, extra fingers, watermark, text",
+  "suffix": "Finishing: (RAW photo realism, detailed natural skin texture with visible pores:1.2), individual hair strands catching the key light, (sharp focus locked on the eyes:1.25), refined editorial retouch that keeps the person real.",
+  "negative": "child, chibi, underage, deformed, extra fingers, watermark, text, plastic skin, oversmoothed",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

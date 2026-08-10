@@ -3,18 +3,12 @@
   "label": "Character Concept",
   "type": ["human"],
   "description": "Character-design sheet energy: archetype, wardrobe, prop and action over any backdrop.",
-  "prefix": "Character concept art.",
+  "prefix": "Professional character concept art for a AAA production — a single fully-realized character whose silhouette, costume and attitude tell their whole story at a glance.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "sdxl-classic"
-    },
     {
       "id": "archetype",
       "ref": "human/archetype",
-      "label": "Archetype",
+      "label": "Character",
       "emphasis": 1.2
     },
     {
@@ -25,20 +19,21 @@
     {
       "id": "outfit",
       "ref": "wardrobe",
-      "label": "Wardrobe accent",
+      "label": "Costume Accent",
       "tags_none": ["boudoir"],
       "allow_empty": true
     },
     {
       "id": "prop",
       "ref": "product/prop",
-      "label": "Signature prop",
+      "label": "Signature Prop",
       "allow_empty": true
     },
     {
       "id": "stance",
       "ref": "pose/action",
-      "label": "Action / stance"
+      "label": "Stance",
+      "emphasis": 1.15
     },
     {
       "id": "scene",
@@ -49,18 +44,19 @@
     {
       "id": "medium",
       "ref": "style/rendering",
-      "label": "Render style"
+      "label": "Render Style"
     },
     {
       "id": "light",
       "ref": "lighting/dramatic",
-      "label": "Dramatic light"
+      "label": "Key Light"
     }
   ],
-  "suffix": "full character readability, coherent silhouette, professional concept-art presentation",
-  "negative": "child, chibi, underage, watermark, text, extra limbs",
+  "suffix": "Presentation: (readable iconic silhouette:1.2), coherent material logic across the costume, story told through wear and detail, professional concept-art finish worthy of an art book spread.",
+  "negative": "child, chibi, underage, watermark, text, extra limbs, incoherent design",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

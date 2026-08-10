@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Enchanted Portrait",
+  "type": ["human"],
+  "description": "A painterly fantasy portrait: archetype, enchanted wardrobe and drifting light.",
+  "prefix": "A luminous painterly fantasy portrait — a character rendered with the reverence of a museum masterwork, magic present as light rather than spectacle.",
+  "slots": [
+    {
+      "id": "figure",
+      "ref": "human/archetype",
+      "label": "The Figure",
+      "tags_any": ["fantasy"],
+      "default": "sorceress",
+      "emphasis": 1.25
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "serene-neutral"
+    },
+    {
+      "id": "attire",
+      "ref": "wardrobe/armor",
+      "label": "Attire",
+      "allow_empty": true
+    },
+    {
+      "id": "setting",
+      "ref": "location",
+      "label": "Setting",
+      "tags_any": ["fantasy"],
+      "emphasis": 1.1
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting Conditions",
+      "default": "candlelight"
+    },
+    {
+      "id": "particles",
+      "ref": "atmosphere/particles",
+      "label": "Drifting",
+      "default": "pollen-glow"
+    },
+    {
+      "id": "movement",
+      "ref": "style/movement",
+      "label": "Painted As",
+      "default": "art-nouveau"
+    },
+    {
+      "id": "framing",
+      "ref": "viewpoint/portrait",
+      "label": "Framing",
+      "default": "bust-portrait"
+    }
+  ],
+  "suffix": "Painterly Rendering: (brushwork visible in the shadows, detail concentrated at the face and hands:1.2), ornamental framing elements growing from the composition edges, magic glowing softly under the skin of the scene.",
+  "negative": "photobash artifacts, watermark, text, child, harsh digital sharpness",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}
