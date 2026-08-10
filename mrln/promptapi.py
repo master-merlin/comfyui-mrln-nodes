@@ -353,6 +353,24 @@ def handle_delete(lib, payload):
     return 200, {"ok": True, "slug": slug, "reverted_to_factory": reverted}
 
 
+@_guarded
+def handle_decompose(lib, payload):
+    prompt_text = _require_str(payload, "prompt")
+    raw_type = payload.get("type") or []
+    if isinstance(raw_type, str):
+        raw_type = [t.strip() for t in raw_type.split(",") if t.strip()]
+    if not isinstance(raw_type, list):
+        raise ApiError("'type' must be a list or comma-separated string")
+    report = pl.decompose(
+        lib,
+        prompt_text,
+        template_type=tuple(str(t) for t in raw_type),
+        engine=str(payload.get("engine") or "heuristic"),
+    )
+    report["fingerprint"] = lib.fingerprint()
+    return 200, report
+
+
 ROUTES = (
     ("get", "/mrln/prompt/library", handle_library, False),
     ("get", "/mrln/prompt/template", handle_template, False),
@@ -362,6 +380,7 @@ ROUTES = (
     ("post", "/mrln/prompt/save-section", handle_save_section, True),
     ("post", "/mrln/prompt/save-template", handle_save_template, True),
     ("post", "/mrln/prompt/delete", handle_delete, True),
+    ("post", "/mrln/prompt/decompose", handle_decompose, True),
 )
 
 

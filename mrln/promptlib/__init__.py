@@ -3,6 +3,7 @@ selection, and format-aware rendering. Pure Python, zero dependencies,
 fully importable without ComfyUI.
 """
 
+from .decompose import ENGINES, decompose
 from .errors import (
     ItemNotFoundError,
     PromptLibError,
@@ -42,6 +43,7 @@ from .serialize import dump_section, dump_template
 
 __all__ = [
     "CONFLICT_POLICIES",
+    "ENGINES",
     "FORMATS",
     "MODES",
     "RANDOM_TOKENS",
@@ -67,6 +69,7 @@ __all__ = [
     "Variable",
     "Variant",
     "WildcardSyntaxError",
+    "decompose",
     "default_roots",
     "dump_section",
     "dump_template",

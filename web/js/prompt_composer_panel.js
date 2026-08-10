@@ -79,28 +79,33 @@ export function createComposerPanel(root, ctx) {
     choicesOpen: false,
     negativeOpen: false,
     tab: "compose",
+    decompose: { text: "", type: "", report: null, plans: [] }, // De-compose tab state
   };
 
   // ---- skeleton ------------------------------------------------------------
 
   const composeTab = el("div", { class: "mrln-tab-body" });
+  const decomposeTab = el("div", { class: "mrln-tab-body", style: "display:none" });
   const libraryTab = el("div", { class: "mrln-tab-body", style: "display:none" });
+  const tabNames = ["compose", "decompose", "library"];
+  const tabBodies = { compose: composeTab, decompose: decomposeTab, library: libraryTab };
   const tabButtons = el(
     "div",
     { class: "mrln-tabs" },
     el("button", { class: "mrln-active", onclick: () => switchTab("compose") }, "Compose"),
+    el("button", { onclick: () => switchTab("decompose") }, "De-compose"),
     el("button", { onclick: () => switchTab("library") }, "Library")
   );
-  root.replaceChildren(tabButtons, composeTab, libraryTab);
+  root.replaceChildren(tabButtons, composeTab, decomposeTab, libraryTab);
 
   function switchTab(name) {
     state.tab = name;
-    composeTab.style.display = name === "compose" ? "" : "none";
-    libraryTab.style.display = name === "library" ? "" : "none";
+    for (const tab of tabNames) tabBodies[tab].style.display = tab === name ? "" : "none";
     tabButtons.querySelectorAll("button").forEach((button, i) => {
-      button.classList.toggle("mrln-active", (i === 0) === (name === "compose"));
+      button.classList.toggle("mrln-active", tabNames[i] === name);
     });
     if (name === "library") renderLibraryTab();
+    if (name === "decompose") renderDecomposeTab();
   }
 
   // Persistent element so markModified never re-renders (a re-render would
@@ -1413,6 +1418,299 @@ export function createComposerPanel(root, ctx) {
     renderComposeTab();
     schedulePreview();
     ctx.toast("success", "Pinned last draw", `${pinned} slot(s) fixed`);
+  }
+
+  // ---- de-compose tab ------------------------------------------------------
+  // Paste a finished prompt, map every fragment against the library
+  // (heuristic engine server-side; an Ollama/LLM engine plugs into the same
+  // endpoint later), resolve the residue, store the result as a template.
+
+  function jsSlugify(text, maxLen = 40) {
+    const slug = (text ?? "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, maxLen)
+      .replace(/-+$/g, "");
+    return slug || "item";
+  }
+
+  function defaultPlan(fragment, index, fragments) {
+    if (fragment.match) return { action: "slot", include: true };
+    const firstMatch = fragments.findIndex((f) => f.match);
+    const lastMatch = fragments.length - 1 - [...fragments].reverse().findIndex((f) => f.match);
+    if ((fragment.suggestion?.score ?? 0) >= 0.3) {
+      return { action: "new-item", section: fragment.suggestion.section, include: true };
+    }
+    if (firstMatch === -1 || index < firstMatch) return { action: "prefix", include: true };
+    if (index > lastMatch) return { action: "suffix", include: true };
+    return { action: "skip", include: false };
+  }
+
+  async function runDecompose() {
+    const d = state.decompose;
+    if (!d.text.trim()) {
+      ctx.toast("warn", "Nothing to decompose", "Paste a prompt first.");
+      return;
+    }
+    try {
+      d.report = await ctx.apiJson("/mrln/prompt/decompose", {
+        method: "POST",
+        body: { prompt: d.text, type: d.type, engine: "heuristic" },
+      });
+    } catch (err) {
+      ctx.toast("error", "Decompose failed", err.message);
+      return;
+    }
+    d.plans = d.report.fragments.map((f, i) => defaultPlan(f, i, d.report.fragments));
+    renderDecomposeTab();
+  }
+
+  function decomposeFragmentCard(fragment, plan, index) {
+    const controls = [];
+    if (fragment.match) {
+      controls.push(
+        el(
+          "span",
+          { class: "mrln-chip mrln-user" },
+          `${fragment.match.section} / ${fragment.match.item} · ${Math.round(fragment.match.score * 100)}%`
+        ),
+        el(
+          "label",
+          { class: "mrln-note" },
+          el("input", {
+            type: "checkbox",
+            checked: plan.include ? "" : null,
+            onchange: (e) => {
+              plan.include = e.target.checked;
+            },
+          }),
+          " include as slot"
+        )
+      );
+    } else {
+      const sectionPicker = sectionSelect();
+      if (plan.section) sectionPicker.value = plan.section;
+      sectionPicker.addEventListener("change", () => {
+        plan.section = sectionPicker.value;
+      });
+      plan.section = plan.section ?? sectionPicker.value;
+      const newSectionInput = el("input", {
+        type: "text",
+        placeholder: "new-folder/new-section",
+        value: plan.newSection ?? "",
+        oninput: (e) => {
+          plan.newSection = e.target.value.trim();
+        },
+      });
+      const conditional = el("div", { class: "mrln-inline" });
+      const syncConditional = () => {
+        conditional.replaceChildren(
+          plan.action === "new-item" ? sectionPicker : null,
+          plan.action === "new-section" ? newSectionInput : null
+        );
+      };
+      const actionSelect = el("select", {
+        onchange: (e) => {
+          plan.action = e.target.value;
+          plan.include = plan.action !== "skip";
+          syncConditional();
+        },
+      });
+      for (const [value, label] of [
+        ["new-item", "add as new item in existing section…"],
+        ["new-section", "add as first item of a NEW section…"],
+        ["prefix", "keep as template prefix prose"],
+        ["suffix", "keep as template suffix prose"],
+        ["skip", "drop this fragment"],
+      ]) {
+        actionSelect.append(el("option", { value }, label));
+      }
+      actionSelect.value = plan.action;
+      syncConditional();
+      controls.push(
+        fragment.suggestion
+          ? el(
+              "span",
+              { class: "mrln-chip" },
+              `nearest: ${fragment.suggestion.section} · ${Math.round(fragment.suggestion.score * 100)}%`
+            )
+          : null,
+        actionSelect,
+        conditional
+      );
+    }
+    return el(
+      "div",
+      { class: `mrln-slot${fragment.match ? "" : " mrln-broken"}` },
+      el("div", { class: "mrln-slot-label", title: `fragment ${index + 1}` },
+        el("span", {}, fragment.text)),
+      ...controls
+    );
+  }
+
+  async function saveDecomposedTemplate() {
+    const d = state.decompose;
+    if (!d.report) return;
+    const slug = await askString(
+      "Create template from decomposition",
+      "Template slug (lowercase, '/' for folders):",
+      "decomposed/my-prompt"
+    );
+    if (!slug) return;
+    const type = d.type.split(",").map((t) => t.trim()).filter(Boolean);
+    const prefixParts = [];
+    const suffixParts = [];
+    const slots = [];
+    const newItemsBySection = new Map(); // section slug -> [{name, text}]
+    const usedIds = new Set();
+    const slotId = (base) => {
+      let id = base;
+      for (let n = 2; usedIds.has(id); n++) id = `${base}-${n}`;
+      usedIds.add(id);
+      return id;
+    };
+    d.report.fragments.forEach((fragment, i) => {
+      const plan = d.plans[i] ?? { action: "skip" };
+      if (fragment.match && plan.include) {
+        slots.push({
+          id: slotId(fragment.match.section.split("/").pop()),
+          ref: fragment.match.section,
+          default: fragment.match.item,
+        });
+        return;
+      }
+      if (fragment.match) return; // matched but excluded
+      if (plan.action === "prefix") prefixParts.push(fragment.text);
+      else if (plan.action === "suffix") suffixParts.push(fragment.text);
+      else if (plan.action === "new-item" || plan.action === "new-section") {
+        const section = plan.action === "new-item" ? plan.section : plan.newSection;
+        if (!section) return;
+        const items = newItemsBySection.get(section) ?? [];
+        const base = jsSlugify(fragment.text);
+        let name = base;
+        for (let n = 2; items.some((item) => item.name === name); n++) name = `${base}-${n}`;
+        items.push({ name, text: fragment.text });
+        newItemsBySection.set(section, items);
+        slots.push({ id: slotId(section.split("/").pop()), ref: section, default: name });
+      }
+    });
+    if (!slots.length) {
+      ctx.toast("warn", "No slots", "Nothing is mapped to a section — template would be empty.");
+      return;
+    }
+    // 1) new items land first (extend files for factory sections, appends
+    //    for user sections, fresh files for new slugs)
+    for (const [section, items] of newItemsBySection) {
+      let data = { version: 1, items };
+      try {
+        const existing = state.library.sections.find((s) => s.slug === section);
+        if (existing) {
+          const body = await ctx.apiJson(
+            `/mrln/prompt/section?slug=${encodeURIComponent(section)}`
+          );
+          if (body.tier === "user") {
+            data = { ...body.raw, items: [...(body.raw.items ?? []), ...items] };
+          }
+        } else if (type.length) {
+          data.suits = type; // brand-new section inherits the template type
+        }
+        await ctx.apiJson("/mrln/prompt/save-section", {
+          method: "POST",
+          body: { slug: section, data },
+        });
+      } catch (err) {
+        ctx.toast("error", `Cannot save items into '${section}'`, err.message);
+        return;
+      }
+    }
+    // 2) then the template that wires them together
+    const data = { version: 1, slots };
+    if (type.length) data.type = type;
+    if (prefixParts.length) data.prefix = prefixParts.join("\n");
+    if (suffixParts.length) data.suffix = suffixParts.join("\n");
+    try {
+      await ctx.apiJson("/mrln/prompt/save-template", {
+        method: "POST",
+        body: { slug: slug.trim(), data },
+      });
+    } catch (err) {
+      ctx.toast("error", "Template save failed", err.message);
+      return;
+    }
+    ctx.toast("success", "Template created", `${slug.trim()} — opening in Compose`);
+    ctx.refreshCombos();
+    await loadLibrary();
+    await selectTemplate(slug.trim());
+    switchTab("compose");
+  }
+
+  function renderDecomposeTab() {
+    if (!state.library) return;
+    const d = state.decompose;
+    const promptArea = autoArea(
+      {
+        placeholder: "Paste a full prompt here — each fragment is matched against your library…",
+        oninput: (e) => {
+          d.text = e.target.value;
+        },
+      },
+      d.text
+    );
+    const typeInput = el("input", {
+      type: "text",
+      value: d.type,
+      placeholder: "optional type filter, e.g. object, car",
+      title: "Restricts matching to sections suiting these classifiers (plus universal ones)",
+      oninput: (e) => {
+        d.type = e.target.value;
+      },
+    });
+    const parts = [
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Programmatic decomposition (heuristic matcher). An Ollama/LLM engine can plug "
+          + "into the same endpoint later."
+      ),
+      field("Prompt to decompose", promptArea),
+      field("Template type (classifiers)", typeInput),
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el("button", { class: "mrln-btn mrln-primary", onclick: () => runDecompose() }, "Decompose")
+      ),
+    ];
+    if (d.report) {
+      parts.push(
+        el(
+          "div",
+          { class: "mrln-field-name" },
+          `Fragments — ${d.report.matched} matched, ${d.report.unmatched} unmatched`
+        ),
+        el(
+          "div",
+          { class: "mrln-slot-list" },
+          d.report.fragments.map((fragment, i) =>
+            decomposeFragmentCard(fragment, d.plans[i], i)
+          )
+        ),
+        el(
+          "div",
+          { class: "mrln-actions" },
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-primary",
+              title: "Save new items/sections, then store the mapping as a template",
+              onclick: () => saveDecomposedTemplate(),
+            },
+            "Create template…"
+          )
+        )
+      );
+    }
+    decomposeTab.replaceChildren(...parts);
   }
 
   // ---- library tab ---------------------------------------------------------

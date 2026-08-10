@@ -49,9 +49,14 @@ Prompt Template node, so workflows stay fully shareable and headless-safe.
 The Library tab edits sections with a form — merged factory+user views mark
 each item's tier (F/U), factory items can be hidden/restored, and saving
 defaults to a thin "extend factory" diff that survives pack updates (full
-replace available per save) — and templates as validated raw JSON. On
-frontends without the API the panel simply doesn't appear — the nodes work
-identically without it.
+replace available per save) — and templates as validated raw JSON. The
+De-compose tab works the other way around: paste a finished prompt and it
+is programmatically decomposed against your library — matched fragments
+become slots pinned to their items, the residue becomes new items, new
+sections, or prefix/suffix prose, and one click stores the whole mapping
+as a template (the endpoint takes an `engine` parameter, so an Ollama/LLM
+decomposer can plug in later). On frontends without the API the panel
+simply doesn't appear — the nodes work identically without it.
 
 The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per
