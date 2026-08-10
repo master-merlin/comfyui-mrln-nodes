@@ -13,9 +13,8 @@ jobs:
   publish-node:
     name: Publish Custom Node to Registry
     runs-on: ubuntu-latest
-    # TODO: replace with the real GitHub owner once the origin exists; the
-    # guard both arms the workflow and prevents forks from publishing.
-    if: ${{ github.repository_owner == 'CHANGE-ME' }}
+    # Guard prevents forks from publishing.
+    if: ${{ github.repository_owner == 'master-merlin' }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4

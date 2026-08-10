@@ -46,3 +46,7 @@ mrln/
   nodes/             # one module per domain (image.py, mask.py, ...)
 web/js/              # frontend extensions (kept empty unless truly needed)
 ```
+
+## License
+
+[MIT](LICENSE)

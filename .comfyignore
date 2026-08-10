@@ -1,0 +1,8 @@
+# Excluded from the archive published to the Comfy Registry
+# (untracked files are excluded automatically; this is belt-and-suspenders).
+_harness/
+CLAUDE.md
+.github/
+.gitignore
+.gitattributes
+.comfyignore
