@@ -169,6 +169,7 @@ export function createComposerPanel(root, ctx) {
       return;
     }
     state.rawData = structuredClone(state.detail.raw);
+    state.loadedLabel = state.rawData.label ?? null;
     state.modified = false;
     state.labelEdit = new Set();
     state.muted = new Set();
@@ -383,11 +384,18 @@ export function createComposerPanel(root, ctx) {
     return draft;
   }
 
-  async function saveTemplate(slug) {
+  async function saveTemplate(slug, { asNew = false } = {}) {
+    const data = buildSaveData();
+    if (asNew && slug !== state.slug && data.label && data.label === state.loadedLabel) {
+      // Save-as under a new slug: an inherited label would masquerade as the
+      // source template in every picker — drop it so the display name derives
+      // from the new slug. A label the author typed themselves is kept.
+      delete data.label;
+    }
     try {
       await ctx.apiJson("/mrln/prompt/save-template", {
         method: "POST",
-        body: { slug, data: buildSaveData() },
+        body: { slug, data },
       });
     } catch (err) {
       ctx.toast("error", "Save failed", err.message);
@@ -626,7 +634,7 @@ export function createComposerPanel(root, ctx) {
               "Template slug (lowercase, '/' for folders):",
               `${state.slug}-mine`
             );
-            if (slug) await saveTemplate(slug.trim());
+            if (slug) await saveTemplate(slug.trim(), { asNew: true });
           },
         },
         "Save as…"
@@ -939,6 +947,19 @@ export function createComposerPanel(root, ctx) {
   }
 
   function metaPromptBlock() {
+    const labelInput = el("input", {
+      type: "text",
+      value: state.rawData.label ?? "",
+      placeholder: "Display name in pickers — empty = derived from the slug",
+      title: "How this template is listed in the Composer (the node always "
+        + "shows the slug). Leave empty to derive it from the slug.",
+      oninput: (e) => {
+        const value = e.target.value.trim();
+        if (value) state.rawData.label = value;
+        else delete state.rawData.label;
+        markModified();
+      },
+    });
     const prefixArea = autoArea(
       {
         placeholder: "Text before the first section — {trigger} works here; "
@@ -990,7 +1011,8 @@ export function createComposerPanel(root, ctx) {
     return el(
       "details",
       { class: "mrln-fold", open: hasText ? "" : null },
-      el("summary", {}, "Template text & type (prefix / suffix / negative / classifiers)"),
+      el("summary", {}, "Template text & type (label / prefix / suffix / negative / classifiers)"),
+      field("Label (display name)", labelInput),
       field("Prefix", prefixArea),
       field("Suffix", suffixArea),
       field("Negative", negativeInput),
