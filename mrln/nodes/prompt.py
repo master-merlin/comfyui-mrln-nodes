@@ -135,6 +135,15 @@ class PromptTemplate:
                         '{"prompt": ...}. Negative output is always a plain string.',
                     },
                 ),
+                "conflict_policy": (
+                    list(pl.CONFLICT_POLICIES),
+                    {
+                        "tooltip": "When a negative term also appears in the rendered prompt: "
+                        "'negative prevails' keeps it in the negative output, 'positive "
+                        "prevails' drops it (a drawn section explicitly wants the term). "
+                        "Conflicts are always listed in the choices report.",
+                    },
+                ),
             },
             "optional": {
                 "trigger": (
@@ -188,7 +197,17 @@ class PromptTemplate:
         # cache diff; this re-executes when library JSON files change on disk.
         return _fingerprint_or_nan()
 
-    def execute(self, template, selection, selection_mode, seed, format, trigger="", variables=""):
+    def execute(
+        self,
+        template,
+        selection,
+        selection_mode,
+        seed,
+        format,
+        conflict_policy="negative prevails",
+        trigger="",
+        variables="",
+    ):
         if template == EMPTY_SENTINEL:
             raise pl.TemplateNotFoundError(template, [])
         lib = pl.open_library()
@@ -207,7 +226,7 @@ class PromptTemplate:
             variables=variable_map,
         )
         fmt = tpl.render.format if format == "template default" else format
-        out = pl.render(resolved, fmt, tpl.render)
+        out = pl.render(resolved, fmt, tpl.render, conflict_policy=conflict_policy)
         return (out.positive, out.negative, out.choices)
 
 

@@ -123,5 +123,9 @@
         "classic"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

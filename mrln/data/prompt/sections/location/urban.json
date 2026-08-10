@@ -1,26 +1,86 @@
 {
   "version": 1,
   "label": "Urban Location",
+  "description": "City streets and architecture. Items tagged 'night' bake in night ambience and declare requires where explicit.",
   "items": [
     {
-      "name": "shibuya-crossing",
-      "text": "Shibuya Crossing, Tokyo",
-      "tags": [
-        "city"
-      ]
-    },
-    {
       "name": "financial-district",
-      "text": "modern downtown financial district street",
+      "text": "A wide, clean street in a modern financial district, surrounded by towering, contemporary skyscrapers made of reflective glass and steel."
+    },
+    {
+      "name": "downtown-street",
+      "text": "A typical, clean downtown city street, flanked by a mix of modern and older office buildings."
+    },
+    {
+      "name": "brooklyn-brownstones",
+      "text": "A residential street lined with classic Brooklyn brownstone buildings and iron railings."
+    },
+    {
+      "name": "gardens-by-the-bay",
+      "text": "Amidst the futuristic \"Supertrees\" of Gardens by the Bay in Singapore, with elevated walkways visible."
+    },
+    {
+      "name": "brutalist-concrete",
+      "text": "Against a backdrop of striking, monolithic brutalist concrete architecture, showing the stark geometry and textured board-formed concrete."
+    },
+    {
+      "name": "central-park-path",
+      "text": "A quiet path in a meticulously landscaped urban park like Central Park, with benches and ornate lampposts."
+    },
+    {
+      "name": "shibuya-crossing",
+      "text": "The center of Shibuya Crossing in Tokyo, surrounded by colossal, intensely bright, animated video screens.",
       "tags": [
-        "city"
+        "night"
       ]
     },
     {
-      "name": "rooftop-garage",
-      "text": "parking garage rooftop with city view",
+      "name": "rain-slicked-street",
+      "text": "A generic, rain-slicked (but not actively raining) urban street, with streetlights reflecting off the dark pavement.",
       "tags": [
-        "city"
+        "night"
+      ]
+    },
+    {
+      "name": "cobblestone-street",
+      "text": "A quiet, empty European cobblestone street, with the ancient stones reflecting the warm glow from window lights.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "empty-boulevard",
+      "text": "A wide, empty boulevard in a major city, lined with closed shops and glowing traffic lights.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "rooftop-parking-deck",
+      "text": "The exposed rooftop level of a concrete open-air parking deck, offering an unobstructed, panoramic view of a dense, glittering city skyline.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "suspension-bridge-leds",
+      "text": "A sleek, modern suspension bridge, with the elegant geometry of the massive suspension cables and towers lit by programmed architectural LEDs against the dark sky.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "parking-garage-fluorescent",
+      "text": "An empty, multi-level concrete parking garage with stark, repeating fluorescent lighting.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "railway-station-forecourt",
+      "text": "The grand, empty forecourt of a historic railway station like St. Pancras International, its intricate ironwork ceiling visible.",
+      "tags": [
+        "night"
       ]
     },
     {

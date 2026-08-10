@@ -122,5 +122,9 @@
         "color-metallic"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "label": "Industrial Location",
+  "items": [
+    {
+      "name": "airplane-hangar",
+      "text": "The interior of a massive, empty airplane hangar with a high, curved steel-truss ceiling and a polished, sealed concrete floor."
+    },
+    {
+      "name": "abandoned-runway",
+      "text": "An abandoned airport runway with cracked asphalt, faded yellow markings, and a derelict, glassless control tower."
+    },
+    {
+      "name": "industrial-park",
+      "text": "An anonymous industrial park with simple, functional warehouses and loading bays."
+    },
+    {
+      "name": "shipping-dock-cranes",
+      "text": "An industrial shipping dock, the scene dominated by the artificial lights of towering container cranes and immense, orderly stacks of cargo containers.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "industrial-back-alley",
+      "text": "A dimly lit back alley behind industrial buildings, with dumpsters and external pipes.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "cooling-towers",
+      "text": "A decommissioned nuclear power plant, with the two massive, concrete cooling towers silhouetted against the night sky and lit by stark, orange-toned security lights at their base.",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "flickering-industrial-street",
+      "text": "An old industrial street with flickering streetlights, rusted metal fences, and graffiti-scarred walls.",
+      "tags": [
+        "night"
+      ]
+    }
+  ]
+}

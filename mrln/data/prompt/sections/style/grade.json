@@ -1,7 +1,6 @@
 {
   "version": 1,
-  "label": "Style & Color Scheme",
-  "description": "Overall photographic style direction.",
+  "label": "Style & Grade",
   "items": [
     {
       "name": "vibrant-high-class",

@@ -76,6 +76,8 @@ def _slot_detail(slot):
         "allow_empty": slot.allow_empty,
         "empty_weight": slot.empty_weight,
         "emphasis": slot.emphasis,
+        "tags_any": list(slot.tags_any),
+        "tags_none": list(slot.tags_none),
     }
 
 
@@ -113,6 +115,7 @@ def handle_library(lib, payload):
                 label=section.label,
                 description=section.description,
                 item_count=len(section.items),
+                suits=list(section.suits),
             )
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))
@@ -138,6 +141,7 @@ def handle_template(lib, payload):
     detail = {
         "slug": slug,
         "label": tpl.label,
+        "type": list(tpl.type),
         "description": tpl.description,
         "prefix": tpl.prefix,
         "suffix": tpl.suffix,
@@ -246,10 +250,15 @@ def handle_preview(lib, payload):
         fmt = tpl.render.format
     if fmt not in pl.FORMATS:
         raise ApiError(f"unknown format '{fmt}' (formats: {', '.join(pl.FORMATS)})")
+    policy = payload.get("conflict_policy") or "negative prevails"
+    if policy not in pl.CONFLICT_POLICIES:
+        raise ApiError(
+            f"unknown conflict_policy '{policy}' (policies: {', '.join(pl.CONFLICT_POLICIES)})"
+        )
     resolved = pl.resolve_template(
         lib, tpl, seed=seed, mode=mode, selection=selection, variables=variables
     )
-    out = pl.render(resolved, fmt, tpl.render)
+    out = pl.render(resolved, fmt, tpl.render, conflict_policy=policy)
     return 200, {
         "positive": out.positive,
         "negative": out.negative,

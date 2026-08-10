@@ -91,5 +91,9 @@
         "high-impact"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

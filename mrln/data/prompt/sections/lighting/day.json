@@ -1,7 +1,6 @@
 {
   "version": 1,
   "label": "Day Lighting",
-  "description": "Lighting conditions matching the day sceneries.",
   "tags": [
     "day"
   ],

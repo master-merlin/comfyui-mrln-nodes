@@ -139,5 +139,9 @@
         "service-showcase"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

@@ -36,6 +36,7 @@ class Section:
     tags: tuple = ()
     excludes: tuple = ()
     requires: tuple = ()
+    suits: tuple = ()  # template types this section serves; empty = universal
 
 
 @dataclass(frozen=True)
@@ -54,6 +55,8 @@ class Slot:
     allow_empty: bool = False
     empty_weight: float = 1.0
     emphasis: float | None = None
+    tags_any: tuple = ()  # random pool: keep items carrying at least one
+    tags_none: tuple = ()  # random pool: drop items carrying any of these
 
 
 @dataclass(frozen=True)
@@ -76,6 +79,7 @@ class RenderConfig:
 class Template:
     slug: str
     label: str
+    type: tuple = ()  # template classifiers; empty = untyped (no filtering)
     slots: tuple = ()
     variants: tuple = ()
     variant_default: str = ""  # "" -> first variant; may be "random"
@@ -166,6 +170,7 @@ def parse_section(data, slug, source):
         tags=_str_tuple(data.get("tags"), source, "tags"),
         excludes=_str_tuple(data.get("excludes"), source, "excludes"),
         requires=_str_tuple(data.get("requires"), source, "requires"),
+        suits=_str_tuple(data.get("suits"), source, "suits"),
     )
 
 
@@ -199,6 +204,8 @@ def _parse_slot(raw, where, source):
         allow_empty=bool(raw.get("allow_empty", False)),
         empty_weight=float(empty_weight),
         emphasis=emphasis,
+        tags_any=_str_tuple(raw.get("tags_any"), source, "tags_any"),
+        tags_none=_str_tuple(raw.get("tags_none"), source, "tags_none"),
     )
 
 
@@ -288,6 +295,7 @@ def parse_template(data, slug, source):
     return Template(
         slug=slug,
         label=str(label),
+        type=_str_tuple(data.get("type"), source, "type"),
         slots=slots,
         variants=variants,
         variant_default=variant_default,

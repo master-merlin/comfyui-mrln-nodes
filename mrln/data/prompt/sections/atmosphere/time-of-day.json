@@ -6,14 +6,14 @@
       "name": "summer-sundown",
       "text": "early sundown during summer with long shadows and warm light",
       "tags": [
-        "sundown"
+        "day"
       ]
     },
     {
       "name": "midday-clear",
       "text": "bright midday under a clear blue sky",
       "tags": [
-        "daylight"
+        "day"
       ]
     },
     {
@@ -27,15 +27,14 @@
       "name": "golden-hour",
       "text": "golden hour with warm low sun",
       "tags": [
-        "daylight",
-        "golden-hour"
+        "day"
       ]
     },
     {
       "name": "morning-mist",
       "text": "early morning with delicate mist rising",
       "tags": [
-        "morning"
+        "day"
       ]
     }
   ]

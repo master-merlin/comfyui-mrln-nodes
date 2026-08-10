@@ -23,5 +23,9 @@
       "name": "graphic-wrap",
       "text": "Wrap option: unique graphic wrap {angular geometric|digital camo|circuitry motifs}."
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

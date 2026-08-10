@@ -1,24 +1,19 @@
 {
   "version": 1,
   "label": "Studio Location",
+  "description": "Controlled photography spaces — any subject.",
   "items": [
     {
-      "name": "white-cyclorama",
-      "text": "infinite white cyclorama studio",
-      "tags": [
-        "studio"
-      ]
+      "name": "white-infinity-cove",
+      "text": "A clean white photography studio with a large, seamless infinity cove background."
+    },
+    {
+      "name": "dark-concrete-studio",
+      "text": "A minimalist photo studio with polished, dark concrete floors and raw, unpainted concrete walls."
     },
     {
       "name": "light-tent",
-      "text": "inside a large photography light tent",
-      "tags": [
-        "studio"
-      ]
-    },
-    {
-      "name": "brutalist-concrete",
-      "text": "striking brutalist concrete architecture backdrop"
+      "text": "Inside a large, enclosed photography light tent, providing perfectly diffused, even illumination."
     }
   ]
 }

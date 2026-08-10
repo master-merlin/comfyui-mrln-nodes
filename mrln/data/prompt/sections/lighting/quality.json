@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Light Quality",
+  "description": "Time-neutral lighting character.",
+  "items": [
+    {
+      "name": "hdr-cinematic",
+      "text": "HDR, cinematic lighting, volumetric light, strong contrasts between light and shadow"
+    },
+    {
+      "name": "soft-diffused",
+      "text": "soft diffused light, gentle falloff"
+    },
+    {
+      "name": "studio-softbox",
+      "text": "perfect studio lighting with large softboxes"
+    }
+  ]
+}

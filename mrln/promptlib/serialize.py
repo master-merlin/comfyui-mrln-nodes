@@ -34,6 +34,8 @@ def dump_section(section):
         out["description"] = section.description
     if section.negative:
         out["negative"] = section.negative
+    if section.suits:
+        out["suits"] = list(section.suits)
     for key in ("tags", "excludes", "requires"):
         value = getattr(section, key)
         if value:
@@ -54,6 +56,10 @@ def dump_slot(slot):
         out["empty_weight"] = slot.empty_weight
     if slot.emphasis is not None:
         out["emphasis"] = slot.emphasis
+    if slot.tags_any:
+        out["tags_any"] = list(slot.tags_any)
+    if slot.tags_none:
+        out["tags_none"] = list(slot.tags_none)
     return out
 
 
@@ -96,6 +102,8 @@ def _default_order(tpl):
 
 def dump_template(tpl):
     out = {"version": 1, "label": tpl.label}
+    if tpl.type:
+        out["type"] = list(tpl.type)
     if tpl.description:
         out["description"] = tpl.description
     if tpl.prefix:

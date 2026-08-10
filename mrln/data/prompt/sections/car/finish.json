@@ -82,5 +82,9 @@
         "special"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

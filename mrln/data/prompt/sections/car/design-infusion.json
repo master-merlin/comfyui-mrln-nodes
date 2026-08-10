@@ -291,5 +291,9 @@
         "motorsport-concepts"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

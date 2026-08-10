@@ -1,22 +1,81 @@
 {
   "version": 1,
   "label": "Nature Location",
+  "description": "Landscapes, coastal and mountain roads.",
   "items": [
     {
-      "name": "alpine-pass",
-      "text": "sun-drenched alpine mountain pass road, dry asphalt"
+      "name": "coastal-cliff-highway",
+      "text": "A pristine, dark asphalt coastal highway carved into a sheer, granite cliffside, with the vast, open ocean on one side and rugged, salt-sprayed rocky outcrops on the other."
+    },
+    {
+      "name": "winding-coastal-road",
+      "text": "A simple, winding coastal road with the sea on one side and grassy bluffs on the other."
+    },
+    {
+      "name": "great-ocean-road",
+      "text": "The Great Ocean Road in Australia, with the iconic Twelve Apostles limestone sea stacks visible from the winding, guard-railed clifftop road."
+    },
+    {
+      "name": "white-sand-beach",
+      "text": "A road on a pristine white sand beach, with crystal turquoise water lapping just feet from the compacted sand path."
+    },
+    {
+      "name": "mirror-mountain-lake",
+      "text": "A remote mountain lake with perfectly still, mirror-like water reflecting surrounding snowy peaks."
+    },
+    {
+      "name": "florida-keys-causeway",
+      "text": "A raised causeway road connecting islands in the Florida Keys, with the shimmering, shallow turquoise water of the gulf stretching for miles on both sides."
+    },
+    {
+      "name": "stelvio-pass",
+      "text": "The serpentine Stelvio Pass in the Italian Alps, an intricate ribbon of worn asphalt with dozens of tight, numbered hairpin turns stacked closely together on a steep, scree-covered mountainside."
+    },
+    {
+      "name": "winding-mountain-road",
+      "text": "A generic winding mountain road with steep, rocky inclines and scattered pine trees."
+    },
+    {
+      "name": "black-forest-canopy",
+      "text": "A road through the dense, dark Schwarzwald (Black Forest) in Germany, where towering fir trees create a dramatic, tunnel-like canopy over the asphalt."
+    },
+    {
+      "name": "gravel-rally-stage",
+      "text": "A rough, dusty gravel rally stage winding through a dense pine forest."
+    },
+    {
+      "name": "autumn-foliage-road",
+      "text": "A road covered in colorful, fallen leaves during peak autumn foliage in a deciduous forest."
+    },
+    {
+      "name": "wooden-ravine-bridge",
+      "text": "A lonely, weathered wooden bridge spanning a deep, forested ravine with a clear river flowing below."
+    },
+    {
+      "name": "endless-prairie-highway",
+      "text": "An endless, straight highway stretching through a vast, open prairie or grassland landscape."
+    },
+    {
+      "name": "salt-flat",
+      "text": "A vast, perfectly flat salt flat like the Salar de Uyuni, with a surface of dry, hexagonal cracked salt patterns stretching to an endless, clean horizon."
     },
     {
       "name": "desert-highway",
-      "text": "endless desert highway, red-orange dunes on the horizon"
+      "text": "A long, straight highway stretching to the horizon through an arid desert landscape."
     },
     {
-      "name": "coastal-cliff-road",
-      "text": "coastal road on a rocky peninsula"
+      "name": "lunar-landscape",
+      "text": "A stark, desolate landscape of craters and fine gray dust, resembling a lunar surface."
     },
     {
-      "name": "autumn-forest",
-      "text": "forest road lined with colorful autumn leaves"
+      "name": "fjord-aurora-dock",
+      "text": "On a quiet wooden dock on a Norwegian fjord, with the shimmering green and purple curtains of the aurora borealis reflecting in the still, dark water.",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
     }
   ]
 }

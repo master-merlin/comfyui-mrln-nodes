@@ -1,14 +1,22 @@
 """Content lint for the shipped factory library: everything parses, every
-template reference resolves, slugs follow the naming rules, and the
-orthogonality principle holds (location items carry no time-of-day words)."""
+template reference resolves, slugs follow the naming rules, orthogonality
+holds (time-of-day words in location items require a day/night declaration),
+and the classifier/conflict machinery works against the real content."""
 
+import json
 import re
 from pathlib import Path
 
 import pytest
 import support
 
-from mrln.promptlib import FORMATS, Library, render, resolve_template
+from mrln.promptlib import (
+    FORMATS,
+    Library,
+    render,
+    resolve_section,
+    resolve_template,
+)
 from mrln.promptlib.resolve import _parse_token
 from mrln.promptlib.schema import SLUG_SEGMENT_RE
 
@@ -24,13 +32,27 @@ def lib():
     return Library(FACTORY_ROOT, None)
 
 
+def rt(lib, seed=0, selection=None, variables=None, mode="as configured"):
+    tpl = lib.load_template("overdrive/full-shot")
+    return tpl, resolve_template(
+        lib, tpl, seed=seed, mode=mode, selection=selection or {}, variables=variables or {}
+    )
+
+
 def test_factory_root_exists():
     assert FACTORY_ROOT.is_dir()
 
 
+def test_no_top_level_leaf_sections():
+    """Taxonomy rule: every dimension is a folder — a top-level leaf would
+    block nesting under its name forever."""
+    for path in (FACTORY_ROOT / "sections").glob("*.json"):
+        raise AssertionError(f"top-level leaf section '{path.name}' — move it into a folder")
+
+
 def test_all_sections_parse_and_slugs_valid(lib):
     slugs = lib.section_slugs()
-    assert len(slugs) >= 14
+    assert len(slugs) >= 20
     for slug in slugs:
         for segment in slug.split("/"):
             assert SLUG_SEGMENT_RE.match(segment), f"bad slug segment in '{slug}'"
@@ -64,17 +86,19 @@ def test_every_template_renders_all_formats(lib):
             assert out.positive.strip(), f"{tpl_slug}/{fmt} rendered empty"
 
 
-def test_location_items_are_orthogonal(lib):
-    """Locations model PLACE only; time-of-day belongs to 'atmosphere'."""
+def test_location_items_are_orthogonal_or_declared(lib):
+    """Location models PLACE; an item whose text bakes in time-of-day must
+    declare it via requires (feeds the ⚠ report and the It3 validator)."""
     for slug in lib.section_slugs():
         if not slug.startswith("location/"):
             continue
         for item in lib.load_section(slug).items:
             match = TIME_OF_DAY_WORDS.search(item.text)
-            assert not match, (
-                f"'{slug}/{item.name}' text contains time-of-day word "
-                f"'{match.group()}' — move it to the atmosphere section"
-            )
+            if match and not ({"day", "night"} & set(item.requires)):
+                raise AssertionError(
+                    f"'{slug}/{item.name}' bakes in '{match.group()}' without "
+                    "declaring requires: ['day'|'night']"
+                )
 
 
 def test_constraint_demo_present(lib):
@@ -85,25 +109,25 @@ def test_constraint_demo_present(lib):
     assert neon.negative == "daylight"
 
 
-# -- OverDrive conversion ----------------------------------------------------
-
-OVERDRIVE_TEMPLATES = (
-    "overdrive/action",
-    "overdrive/car-design",
-    "overdrive/full-shot",
-    "overdrive/paintshop",
-    "overdrive/scenery",
-)
+# -- OverDrive / classifier machinery ----------------------------------------
 
 
-def test_overdrive_templates_present(lib):
-    assert set(OVERDRIVE_TEMPLATES) <= set(lib.template_slugs())
+def test_only_full_shot_template_ships(lib):
+    assert lib.template_slugs() == ["overdrive/full-shot"]
+    assert lib.load_template("overdrive/full-shot").type == ("object", "car")
 
 
-def test_overdrive_group_weights_uniform(lib):
-    """Weights preserve the original nested-brace draw: every tag group in a
-    converted section carries the same total weight."""
-    for slug in ("car/color/paint", "car/design-base", "scenery/day"):
+def test_car_sections_declare_suits(lib):
+    for slug in lib.section_slugs():
+        if slug.startswith("car/") or slug == "location/automotive":
+            assert lib.load_section(slug).suits == ("object", "car"), slug
+        if slug.startswith(("lighting/", "camera/", "style/", "viewpoint/")):
+            assert lib.load_section(slug).suits == (), f"{slug} should stay universal"
+
+
+def test_group_weights_uniform(lib):
+    """Weights preserve the original nested-brace draw in the car pools."""
+    for slug in ("car/color/paint", "car/design-base"):
         section = lib.load_section(slug)
         totals = {}
         for item in section.items:
@@ -113,57 +137,85 @@ def test_overdrive_group_weights_uniform(lib):
         assert max(values) - min(values) < 0.01, (slug, totals)
 
 
-def test_overdrive_label_expansion_end_to_end(lib):
-    tpl = lib.load_template("overdrive/car-design")
-    resolved = resolve_template(lib, tpl, seed=1, mode="as configured", selection={}, variables={})
+def test_full_shot_suffix_variables(lib):
+    tpl, resolved = rt(lib, seed=1)
     out = render(resolved, tpl.render.format, tpl.render)
     assert "(HycadeBodykit style aggressive wide body kit:1.1)" in out.positive
     assert "(sleek 'Overdrive' license plate:1.2)" in out.positive
-    custom = resolve_template(
-        lib,
-        tpl,
-        seed=1,
-        mode="as configured",
-        selection={},
-        variables={"trigger": "MyKit", "plate": "MRLN"},
-    )
-    custom_out = render(custom, tpl.render.format, tpl.render)
-    assert "MyKit style" in custom_out.positive
-    assert "'MRLN' license plate" in custom_out.positive
+    tpl, resolved = rt(lib, seed=1, variables={"trigger": "MyKit", "plate": "MRLN"})
+    out = render(resolved, tpl.render.format, tpl.render)
+    assert "MyKit style" in out.positive and "'MRLN' license plate" in out.positive
 
 
-def test_overdrive_scenery_variants_couple_day_night(lib):
-    tpl = lib.load_template("overdrive/scenery")
+def test_variant_tag_coupling(lib):
+    """Day variant never draws night-tagged scenes; night variant only."""
     seen = set()
-    for seed in range(20):
-        resolved = resolve_template(
-            lib, tpl, seed=seed, mode="as configured", selection={}, variables={}
-        )
+    for seed in range(24):
+        _, resolved = rt(lib, seed=seed)
         seen.add(resolved.variant)
-        expected = (
-            ("scenery/night", "scenery/light-night")
-            if resolved.variant == "night"
-            else ("scenery/day", "scenery/light-day")
-        )
-        for s in resolved.slots:
-            assert s.section_slug in expected, (resolved.variant, s.section_slug)
+        scene = next(s for s in resolved.slots if s.id == "scene")
+        light = next(s for s in resolved.slots if s.id == "light")
+        if resolved.variant == "night":
+            assert "night" in scene.tags, (seed, scene.item_name)
+            assert light.section_slug == "lighting/night"
+        else:
+            assert "night" not in scene.tags, (seed, scene.item_name)
+            assert light.section_slug == "lighting/day"
     assert seen == {"day", "night"}
 
 
-def test_overdrive_graphics_wildcards_expand(lib):
-    tpl = lib.load_template("overdrive/paintshop")
+def test_fixed_pick_bypasses_tag_filters(lib):
+    """Tagging never restricts an explicit choice: a day scene resolves in
+    the night variant when named directly."""
+    _, resolved = rt(lib, selection={"variant": "night", "scene": "nature/stelvio-pass"})
+    scene = next(s for s in resolved.slots if s.id == "scene")
+    assert scene.item_name == "nature/stelvio-pass"
+
+
+def test_suits_exclude_random_draws_but_not_fixed(lib, tmp_path):
+    user = tmp_path / "user"
+    (user / "sections" / "location").mkdir(parents=True)
+    (user / "sections" / "location" / "boudoir.json").write_text(
+        json.dumps(
+            {
+                "suits": ["human", "boudoir"],
+                "items": [{"name": "silk-bedroom", "text": "a silk-draped boudoir bedroom"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    two_tier = Library(FACTORY_ROOT, user)
+    for seed in range(30):  # typed car template never draws the human-suited section
+        _tpl, resolved = rt(two_tier, seed=seed)
+        scene = next(s for s in resolved.slots if s.id == "scene")
+        assert scene.section_slug != "location/boudoir", seed
+    _, resolved = rt(two_tier, selection={"variant": "day", "scene": "boudoir/silk-bedroom"})
+    scene = next(s for s in resolved.slots if s.id == "scene")
+    assert scene.item_name == "boudoir/silk-bedroom"  # explicit pick still works
+
+
+def test_conflict_policy_and_requires_warning(lib):
+    tpl, resolved = rt(
+        lib,
+        selection={
+            "variant": "day",
+            "scene": "urban/neon-highway",
+            "light": "volumetric-god-rays",
+        },
+    )
+    kept = render(resolved, "string", tpl.render)  # default: negative prevails
+    assert "daylight" in kept.negative
+    assert "conflict: 'daylight'" in kept.choices and "kept in negative" in kept.choices
+    assert "⚠ scene: requires 'night'" in kept.choices  # day lighting drawn, no night tag
+    dropped = render(resolved, "string", tpl.render, conflict_policy="positive prevails")
+    assert "daylight" not in dropped.negative
+    assert "dropped from negative" in dropped.choices
+
+
+def test_graphics_wildcards_expand(lib):
     hit = False
-    for seed in range(30):
-        resolved = resolve_template(
-            lib,
-            tpl,
-            seed=seed,
-            mode="as configured",
-            selection={"graphics": "random"},
-            variables={},
-        )
-        graphics = next(s for s in resolved.slots if s.id == "graphics")
-        if graphics.item_name is not None:
-            assert "{" not in graphics.text and "|" not in graphics.text
-            hit = True
+    for seed in range(20):
+        resolved = resolve_section(lib, "car/graphics", "random", seed=seed)
+        assert "{" not in resolved.text and "|" not in resolved.text
+        hit = True
     assert hit

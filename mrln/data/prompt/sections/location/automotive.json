@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "label": "Automotive Venue",
+  "description": "Car-specific places: showrooms, garages, test facilities.",
+  "suits": [
+    "object",
+    "car"
+  ],
+  "items": [
+    {
+      "name": "dealership-showroom",
+      "text": "Inside a bright, empty, and modern car dealership showroom with polished tile floors."
+    },
+    {
+      "name": "wind-tunnel",
+      "text": "Inside a high-tech wind tunnel, with visible, non-staining streamlines of smoke flowing gracefully over the car's static body."
+    },
+    {
+      "name": "robotic-integration-bay",
+      "text": "A sterile, high-tech vehicle integration bay with polished floors and poised robotic arms in the background."
+    },
+    {
+      "name": "underground-hypercar-garage",
+      "text": "An exclusive minimalist underground hypercar garage, with walls of obsidian-like polished stone and concrete, lit by sharp architectural light strips in the floor and ceiling.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "deserted-racetrack",
+      "text": "A deserted racetrack, with the empty grandstands and pit lane creating a lonely, silent atmosphere under stark floodlights.",
+      "tags": [
+        "night"
+      ]
+    }
+  ]
+}

@@ -19,5 +19,9 @@
       "name": "active-aero",
       "text": "active aerodynamic wing elements"
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

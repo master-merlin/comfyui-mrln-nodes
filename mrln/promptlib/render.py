@@ -1,10 +1,12 @@
 """Rendering: ResolvedPrompt -> positive (4 formats) + negative (always a
-plain string) + choices report."""
+plain string) + choices report (incl. conflicts and constraint warnings)."""
 
 import json
+import re
 from dataclasses import dataclass
 
 FORMATS = ("string", "string_labeled", "json", "json_flat")
+CONFLICT_POLICIES = ("negative prevails", "positive prevails")
 
 
 @dataclass(frozen=True)
@@ -30,7 +32,12 @@ def _string(resolved, cfg):
     return cfg.joiner.join(p for p in parts if p)
 
 
-def render(resolved, fmt, cfg):
+def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
+    if conflict_policy not in CONFLICT_POLICIES:
+        raise ValueError(
+            f"unknown conflict policy '{conflict_policy}' "
+            f"(policies: {', '.join(CONFLICT_POLICIES)})"
+        )
     if fmt == "string":
         positive = _string(resolved, cfg)
     elif fmt == "string_labeled":
@@ -63,10 +70,24 @@ def render(resolved, fmt, cfg):
     else:
         raise ValueError(f"unknown format '{fmt}' (formats: {', '.join(FORMATS)})")
 
-    return Rendered(positive=positive, negative=resolved.negative, choices=_choices(resolved, fmt))
+    negative = resolved.negative
+    conflicts = []
+    if negative:
+        terms = [t for t in negative.split(", ") if t]
+        conflicts = [
+            t for t in terms if re.search(re.escape(t), positive, re.IGNORECASE) is not None
+        ]
+        if conflict_policy == "positive prevails" and conflicts:
+            negative = ", ".join(t for t in terms if t not in conflicts)
+
+    return Rendered(
+        positive=positive,
+        negative=negative,
+        choices=_choices(resolved, fmt, conflicts, conflict_policy),
+    )
 
 
-def _choices(resolved, fmt):
+def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
     lines = [
         f"template: {resolved.template_slug}   seed: {resolved.seed}   "
         f"mode: {resolved.mode}   format: {fmt}"
@@ -95,4 +116,23 @@ def _choices(resolved, fmt):
         if slot.tier == "user":
             line += "  (user)"
         lines.append(line)
+
+    present = set()
+    for slot in resolved.slots:
+        present.update(slot.tags)
+    for slot in resolved.slots:
+        if slot.item_name is None:
+            continue
+        others = present - set(slot.tags)
+        for req in slot.requires:
+            if req not in present:
+                lines.append(f"⚠ {slot.id}: requires '{req}' — nothing drawn carries that tag")
+        for exc in slot.excludes:
+            if exc in others:
+                lines.append(f"⚠ {slot.id}: excludes '{exc}' — but another drawn item carries it")
+    for term in conflicts:
+        if conflict_policy == "positive prevails":
+            lines.append(f"conflict: '{term}' is in the prompt — dropped from negative")
+        else:
+            lines.append(f"conflict: '{term}' is in the prompt — kept in negative (prevails)")
     return "\n".join(lines)

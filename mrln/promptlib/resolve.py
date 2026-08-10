@@ -29,6 +29,9 @@ class ResolvedSlot:
     data: dict | None
     tier: str
     seed_used: int
+    tags: tuple = ()  # effective tags of the drawn item (item + section)
+    requires: tuple = ()  # effective requires (item + section)
+    excludes: tuple = ()  # effective excludes (item + section)
 
 
 @dataclass(frozen=True)
@@ -90,7 +93,24 @@ def _find_item(pool, ref, token):
     raise ItemNotFoundError(ref, token, [q for q, _, _ in pool])
 
 
-def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
+def _filtered_pool(pool, slot, template_type):
+    """Random-draw pool after suits/type and slot tag filters. Fixed picks
+    always search the FULL pool — tagging never restricts an explicit
+    choice."""
+    result = []
+    for qualified, section, item in pool:
+        if template_type and section.suits and not (set(section.suits) & set(template_type)):
+            continue
+        effective = set(item.tags) | set(section.tags)
+        if slot.tags_any and not (effective & set(slot.tags_any)):
+            continue
+        if slot.tags_none and (effective & set(slot.tags_none)):
+            continue
+        result.append((qualified, section, item))
+    return result
+
+
+def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type=()):
     token_src = selection.get(slot.id, slot.default or RANDOM_TOKEN)
     kind, value = _parse_token(str(token_src), f"{slot.id}={token_src}")
     fixed_first = False
@@ -107,6 +127,7 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
             fixed_first = True
 
     pool = lib.scope_items(slot.ref)
+    draw_pool = _filtered_pool(pool, slot, template_type)
     seed_used = value if (kind == "random" and value is not None) else master_seed
     rng = derive_rng(seed_used, key)
 
@@ -135,11 +156,18 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
         )
 
     if kind == "random":
-        weights = [item.weight for _, _, item in pool]
+        if not draw_pool:
+            raise SelectionError(
+                slot.id,
+                f"no items left in '{slot.ref}' after suits/tag filters — loosen the "
+                "slot's tags_any/tags_none or the template type, or pick an item "
+                "explicitly",
+            )
+        weights = [item.weight for _, _, item in draw_pool]
         if slot.allow_empty:
             weights.append(slot.empty_weight)
         idx = weighted_index(rng, weights)
-        if slot.allow_empty and idx == len(pool):
+        if slot.allow_empty and idx == len(draw_pool):
             return (
                 ResolvedSlot(
                     id=slot.id,
@@ -160,11 +188,12 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
                 rng,
                 None,
             )
-        qualified, section, item = pool[idx]
+        qualified, section, item = draw_pool[idx]
         is_random = True
     else:
         if fixed_first:
-            qualified, section, item = pool[0]
+            first_pool = draw_pool or pool
+            qualified, section, item = first_pool[0]
         else:
             qualified, section, item = _find_item(pool, slot.ref, value)
         is_random = False
@@ -185,6 +214,9 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection):
         data=item.data,
         tier=lib.tier_of("sections", section.slug),
         seed_used=seed_used,
+        tags=tuple(sorted(set(item.tags) | set(section.tags))),
+        requires=tuple(sorted(set(item.requires) | set(section.requires))),
+        excludes=tuple(sorted(set(item.excludes) | set(section.excludes))),
     )
     return resolved, rng, item
 
@@ -260,12 +292,13 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
                             mode,
                             selection,
                             merged_vars,
+                            tpl.type,
                         )
                     )
             continue
         slot = shared_by_id[entry]
         resolved_slots.append(
-            _resolve_and_expand(lib, slot, slot.id, seed, mode, selection, merged_vars)
+            _resolve_and_expand(lib, slot, slot.id, seed, mode, selection, merged_vars, tpl.type)
         )
 
     prefix = expand(tpl.prefix, merged_vars, derive_rng(seed, "@prefix")) if tpl.prefix else ""
@@ -293,9 +326,15 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables):
     )
 
 
-def _resolve_and_expand(lib, slot, key, seed, mode, selection, variables):
+def _resolve_and_expand(lib, slot, key, seed, mode, selection, variables, template_type=()):
     resolved, rng, item = _resolve_slot(
-        lib, slot, key, master_seed=seed, mode=mode, selection=selection
+        lib,
+        slot,
+        key,
+        master_seed=seed,
+        mode=mode,
+        selection=selection,
+        template_type=template_type,
     )
     if item is not None and item.text:
         text = expand(item.text, variables, rng)

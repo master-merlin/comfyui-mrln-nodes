@@ -445,5 +445,9 @@
         "metallic-earth"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

@@ -16,7 +16,7 @@ from .errors import (
     WildcardSyntaxError,
 )
 from .library import Library, default_roots, open_library, validate_slug
-from .render import FORMATS, Rendered, render
+from .render import CONFLICT_POLICIES, FORMATS, Rendered, render
 from .resolve import (
     MODES,
     RANDOM_TOKENS,
@@ -40,6 +40,7 @@ from .schema import (
 from .serialize import dump_section, dump_template
 
 __all__ = [
+    "CONFLICT_POLICIES",
     "FORMATS",
     "MODES",
     "RANDOM_TOKENS",

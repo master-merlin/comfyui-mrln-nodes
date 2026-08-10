@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "label": "Medium / Render Style",
+  "description": "What kind of image this is — every prompt describes one.",
+  "items": [
+    {
+      "name": "photorealistic",
+      "text": "hyper-realistic photograph, natural skin and material detail"
+    },
+    {
+      "name": "cinematic-still",
+      "text": "cinematic film still, anamorphic framing, subtle grain"
+    },
+    {
+      "name": "analog-film",
+      "text": "analog film photograph, Kodak Portra palette, soft halation"
+    },
+    {
+      "name": "anime",
+      "text": "high-quality anime illustration, clean line art, cel shading"
+    },
+    {
+      "name": "oil-painting",
+      "text": "classical oil painting, visible brushwork, rich impasto"
+    },
+    {
+      "name": "watercolor",
+      "text": "delicate watercolor painting, soft washes, paper texture"
+    },
+    {
+      "name": "3d-render",
+      "text": "polished 3D render, physically-based materials, global illumination"
+    },
+    {
+      "name": "comic-ink",
+      "text": "bold comic ink illustration, dramatic hatching, halftone shading"
+    }
+  ]
+}

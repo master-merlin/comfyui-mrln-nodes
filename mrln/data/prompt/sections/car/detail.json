@@ -10,5 +10,9 @@
       "name": "tow-hook",
       "text": "functional-looking tow hook subtly visible near front"
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

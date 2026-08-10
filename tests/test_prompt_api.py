@@ -134,7 +134,7 @@ def test_preview_matches_node_execute(tmp_path, monkeypatch):
     pack = support.load_pack()
     node = pack.NODE_CLASS_MAPPINGS["MRLN_PromptTemplate"]()
     prompt, negative, choices = node.execute(
-        template="car-shoot",
+        template="overdrive/full-shot",
         selection="paint=guards-red",
         selection_mode="as configured",
         seed=11,
@@ -147,7 +147,7 @@ def test_preview_matches_node_execute(tmp_path, monkeypatch):
         promptapi.handle_preview(
             open_library(),
             {
-                "template": "car-shoot",
+                "template": "overdrive/full-shot",
                 "selection": "paint=guards-red",
                 "seed": 11,
                 "trigger": "SkylineGTR34Vspec",

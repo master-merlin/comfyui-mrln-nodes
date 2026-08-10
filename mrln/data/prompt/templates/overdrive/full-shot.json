@@ -1,6 +1,10 @@
 {
   "version": 1,
   "label": "OverDrive Full Shot",
+  "type": [
+    "object",
+    "car"
+  ],
   "description": "Single-stage showcase: the complete OverDrive look (fusion + livery + scenery + state) as one prompt for plain text-to-image workflows.",
   "prefix": "High-resolution photo, advertisement style, unique futuristic concept car, featuring cinematic lighting, HDR quality, volumetric atmosphere.\n\nSole subject: one unique concept car, an advanced blend of three automotive personalities. The final result should be a cohesive, innovative design.",
   "variables": [
@@ -74,7 +78,7 @@
     },
     {
       "id": "view",
-      "ref": "viewpoint",
+      "ref": "viewpoint/general",
       "label": "Image viewpoint",
       "emphasis": 1.2
     }
@@ -86,12 +90,15 @@
       "slots": [
         {
           "id": "scene",
-          "ref": "scenery/day",
-          "label": "Scenery"
+          "ref": "location",
+          "label": "Scenery",
+          "tags_none": [
+            "night"
+          ]
         },
         {
           "id": "light",
-          "ref": "scenery/light-day",
+          "ref": "lighting/day",
           "label": "Lighting"
         }
       ]
@@ -102,12 +109,15 @@
       "slots": [
         {
           "id": "scene",
-          "ref": "scenery/night",
-          "label": "Scenery"
+          "ref": "location",
+          "label": "Scenery",
+          "tags_any": [
+            "night"
+          ]
         },
         {
           "id": "light",
-          "ref": "scenery/light-night",
+          "ref": "lighting/night",
           "label": "Lighting"
         }
       ]

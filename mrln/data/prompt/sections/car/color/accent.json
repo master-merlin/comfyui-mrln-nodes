@@ -131,5 +131,9 @@
         "metallic"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

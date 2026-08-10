@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "label": "Luxury Estate",
+  "items": [
+    {
+      "name": "tuscan-villa-driveway",
+      "text": "The grand, cypress-lined gravel driveway leading to a classic Tuscan villa made of warm, weathered stone, set within a landscape of rolling hills and orderly rows of grapevines."
+    },
+    {
+      "name": "modern-mansion-driveway",
+      "text": "The driveway of a large, generic modern mansion with a manicured lawn and high privacy hedges."
+    },
+    {
+      "name": "hollywood-hills-mansion",
+      "text": "The perfectly manicured driveway of a modern, minimalist glass-and-steel mansion in the Hollywood Hills overlooking the sprawling Los Angeles basin."
+    },
+    {
+      "name": "castle-forecourt",
+      "text": "The grand forecourt of a historic castle estate like Neuschwanstein, framed by tall stone walls and dramatic, forested alpine topography."
+    },
+    {
+      "name": "yacht-harbor-dock",
+      "text": "A clean wooden dock in an exclusive yacht harbor, lined with mooring posts and coiled ropes."
+    }
+  ]
+}

@@ -267,5 +267,9 @@
         "boutique-exotic"
       ]
     }
+  ],
+  "suits": [
+    "object",
+    "car"
   ]
 }

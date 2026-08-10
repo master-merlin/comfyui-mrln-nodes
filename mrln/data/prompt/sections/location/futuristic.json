@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "label": "Futuristic Location",
+  "items": [
+    {
+      "name": "blade-runner-district",
+      "text": "A wide, multi-lane street in a futuristic financial district like 'Blade Runner', where monolithic skyscrapers are adorned with massive, animated holographic advertisements.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "high-tech-street",
+      "text": "A generic high-tech city street, with glowing architectural elements and clean, minimalist lines.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "space-station-hangar",
+      "text": "Inside a futuristic space station hangar bay with a large viewport showing a view of Earth or a nebula.",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "underwater-tunnel",
+      "text": "A transparent, acrylic underwater tunnel, surrounded by the dark water and deep-sea marine life of a massive aquarium.",
+      "tags": [
+        "night"
+      ]
+    }
+  ]
+}
