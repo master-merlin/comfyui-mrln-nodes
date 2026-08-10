@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "label": "Swimwear",
+  "description": "Beach and pool wardrobe — the summer glamour staple between lingerie and casual.",
+  "suits": ["human"],
+  "items": [
+    { "name": "classic-one-piece", "text": "a sculpting classic one-piece swimsuit", "text_short": "classic one-piece" },
+    { "name": "high-waist-bikini", "text": "a retro high-waist bikini", "text_short": "high-waist bikini" },
+    { "name": "sporty-two-piece", "text": "a sporty athletic two-piece", "text_short": "sporty two-piece" },
+    { "name": "polka-halter", "text": "a fifties polka-dot halter swimsuit", "text_short": "polka-dot halter suit", "tags": ["historical"] },
+    { "name": "crochet-set", "text": "a boho crochet bikini set", "text_short": "crochet bikini" },
+    { "name": "plunge-one-piece", "text": "a deep-plunge glamour one-piece", "text_short": "plunge one-piece" },
+    { "name": "sarong-wrap", "text": "a bikini with a sheer sarong wrap at the hips", "text_short": "bikini with sarong" },
+    { "name": "boardshorts", "text": "boardshorts with a rash guard", "text_short": "boardshorts, rash guard", "tags": ["male"] },
+    { "name": "classic-trunks", "text": "tailored classic swim trunks", "text_short": "classic swim trunks", "tags": ["male"] }
+  ]
+}

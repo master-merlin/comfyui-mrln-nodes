@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "label": "Eye Color",
+  "description": "Eye color — specified in virtually every top-ranked portrait and anime prompt.",
+  "suits": [
+    "human"
+  ],
+  "items": [
+    {
+      "name": "deep-brown",
+      "text": "deep warm brown",
+      "text_short": "brown"
+    },
+    {
+      "name": "hazel",
+      "text": "hazel with golden flecks",
+      "text_short": "hazel"
+    },
+    {
+      "name": "amber",
+      "text": "striking amber",
+      "text_short": "amber"
+    },
+    {
+      "name": "forest-green",
+      "text": "deep forest green",
+      "text_short": "green"
+    },
+    {
+      "name": "emerald",
+      "text": "vivid emerald green",
+      "text_short": "emerald"
+    },
+    {
+      "name": "steel-blue",
+      "text": "cool steel blue",
+      "text_short": "steel-blue"
+    },
+    {
+      "name": "ice-blue",
+      "text": "pale ice blue",
+      "text_short": "ice-blue"
+    },
+    {
+      "name": "ocean-blue",
+      "text": "saturated ocean blue",
+      "text_short": "blue"
+    },
+    {
+      "name": "storm-grey",
+      "text": "storm grey",
+      "text_short": "grey"
+    },
+    {
+      "name": "near-black",
+      "text": "near-black espresso",
+      "text_short": "dark"
+    },
+    {
+      "name": "violet",
+      "text": "rare violet",
+      "text_short": "violet",
+      "tags": [
+        "fantasy",
+        "anime"
+      ]
+    },
+    {
+      "name": "heterochromia",
+      "text": "heterochromatic, one blue and one amber",
+      "text_short": "heterochromia",
+      "tags": [
+        "anime"
+      ]
+    }
+  ]
+}

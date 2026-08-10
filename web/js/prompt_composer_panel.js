@@ -725,10 +725,27 @@ export function createComposerPanel(root, ctx) {
     const templateSelect = el("select", {
       onchange: (e) => selectTemplate(e.target.value),
     });
+    // grouped by top-level folder — 38+ templates need structure in a combo
+    const templateGroups = new Map();
     for (const t of state.library.templates) {
-      templateSelect.append(
-        el("option", { value: t.slug }, t.tier === "user" ? `${t.slug} (user)` : t.slug)
-      );
+      const key = t.slug.includes("/") ? t.slug.split("/")[0] : "(root)";
+      if (!templateGroups.has(key)) templateGroups.set(key, []);
+      templateGroups.get(key).push(t);
+    }
+    for (const [key, members] of [...templateGroups.entries()].sort((a, b) =>
+      a[0].localeCompare(b[0])
+    )) {
+      const group = el("optgroup", { label: key });
+      for (const t of members) {
+        group.append(
+          el(
+            "option",
+            { value: t.slug },
+            (t.label || t.slug) + (t.tier === "user" ? " (user)" : "")
+          )
+        );
+      }
+      templateSelect.append(group);
     }
     templateSelect.value = state.slug;
 
@@ -1778,7 +1795,16 @@ export function createComposerPanel(root, ctx) {
   function groupedTree(kind, entries, itemEl) {
     // Collapsible group per top-level slug segment — the flat list would
     // overspill as soon as more domains land. Expansion state survives
-    // re-renders within the session.
+    // re-renders within the session. An active filter narrows entries and
+    // forces matching groups open.
+    const filter = (state.libFilter ?? "").trim().toLowerCase();
+    if (filter) {
+      entries = entries.filter(
+        (entry) =>
+          entry.slug.toLowerCase().includes(filter) ||
+          (entry.label ?? "").toLowerCase().includes(filter)
+      );
+    }
     const groups = new Map();
     for (const entry of entries) {
       const key = entry.slug.split("/")[0];
@@ -1795,7 +1821,7 @@ export function createComposerPanel(root, ctx) {
           "details",
           {
             class: "mrln-fold mrln-tree-group",
-            open: state.libGroups.has(stateKey) ? "" : null,
+            open: filter || state.libGroups.has(stateKey) ? "" : null,
             ontoggle: (e) => {
               if (e.target.open) state.libGroups.add(stateKey);
               else state.libGroups.delete(stateKey);
@@ -1829,7 +1855,7 @@ export function createComposerPanel(root, ctx) {
       "details",
       {
         class: "mrln-fold mrln-tree-block",
-        open: state.libGroups.has(stateKey) ? "" : null,
+        open: (state.libFilter ?? "").trim() || state.libGroups.has(stateKey) ? "" : null,
         ontoggle: (e) => {
           state.libGroups.add(`${stateKey}:touched`);
           if (e.target.open) state.libGroups.add(stateKey);
@@ -1849,6 +1875,22 @@ export function createComposerPanel(root, ctx) {
   function renderLibraryTab() {
     if (!state.library) return;
     const lib = state.library;
+    const filterInput = el("input", {
+      type: "text",
+      class: "mrln-lib-filter",
+      placeholder: "Filter sections & templates…",
+      value: state.libFilter ?? "",
+      oninput: (e) => {
+        state.libFilter = e.target.value;
+        renderLibraryTab();
+        // re-render replaces the input — restore typing focus at the end
+        const fresh = libraryTab.querySelector(".mrln-lib-filter");
+        if (fresh) {
+          fresh.focus();
+          fresh.setSelectionRange(fresh.value.length, fresh.value.length);
+        }
+      },
+    });
     libraryTab.replaceChildren(
       el(
         "div",
@@ -1856,6 +1898,7 @@ export function createComposerPanel(root, ctx) {
         el("button", { class: "mrln-btn", onclick: () => newSection() }, "New section…"),
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload")
       ),
+      filterInput,
       treeBlock("sections", "Sections", lib.sections, sectionLi),
       treeBlock("templates", "Templates", lib.templates, templateLi),
       el("hr", { class: "mrln-sep" }),

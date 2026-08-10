@@ -34,7 +34,7 @@ full replacement). Same-name templates replace the factory file entirely.
 
 ### Factory library
 
-~100 sections / ~1000 curated items across dimension folders every template
+135 sections / ~1600 curated items across dimension folders every template
 shares (`location` incl. anime/sci-fi/fantasy/historical/underwater places,
 `lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
 particles, `viewpoint`, `camera` with 14 film stocks and real lens/format/

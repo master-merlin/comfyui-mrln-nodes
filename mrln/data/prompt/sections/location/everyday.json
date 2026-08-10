@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "label": "Everyday Location",
+  "description": "Ordinary places rendered lovingly — the slice-of-life and lifestyle staple.",
+  "items": [
+    {
+      "name": "corner-cafe",
+      "text": "A small corner café, steam on the espresso machine, mismatched wooden chairs and handwritten menu boards.",
+      "text_short": "cozy corner café"
+    },
+    {
+      "name": "sunlit-kitchen",
+      "text": "A lived-in kitchen in warm light, copper pans hanging, herbs on the windowsill and flour still on the counter.",
+      "text_short": "sunlit lived-in kitchen",
+      "tags": ["day"],
+      "requires": ["day"]
+    },
+    {
+      "name": "secondhand-bookshop",
+      "text": "A cramped secondhand bookshop, shelves sagging, paper smell almost visible, a ladder leaning into the stacks.",
+      "text_short": "cramped old bookshop"
+    },
+    {
+      "name": "glass-greenhouse",
+      "text": "A domestic glass greenhouse crowded with seedlings, terracotta pots and a watering can on the gravel path.",
+      "text_short": "crowded glass greenhouse"
+    },
+    {
+      "name": "night-laundromat",
+      "text": "An empty laundromat, fluorescent hum, one machine spinning, the street dark beyond the glass.",
+      "text_short": "empty laundromat",
+      "tags": ["night"]
+    },
+    {
+      "name": "rooftop-garden",
+      "text": "A city rooftop garden of raised beds and string lights, skyline soft in the background.",
+      "text_short": "rooftop garden, string lights"
+    },
+    {
+      "name": "farmers-market",
+      "text": "A weekend farmers market, striped awnings, crates of produce and paper bags changing hands.",
+      "text_short": "farmers market stalls"
+    },
+    {
+      "name": "window-reading-nook",
+      "text": "A bay-window reading nook with a worn armchair, a folded blanket and a tea tray on the sill.",
+      "text_short": "bay-window reading nook"
+    },
+    {
+      "name": "record-store",
+      "text": "A vinyl record store, crates alphabetized by hand, gig posters layered on every wall.",
+      "text_short": "vinyl record store"
+    },
+    {
+      "name": "tram-interior",
+      "text": "The interior of an old city tram, worn wooden seats, hand straps swaying, the city sliding past outside.",
+      "text_short": "old tram interior"
+    }
+  ]
+}
