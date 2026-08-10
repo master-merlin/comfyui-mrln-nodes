@@ -351,26 +351,16 @@ def test_human_templates_carry_safety_negatives(lib):
             )
 
 
-def test_top_level_elements_have_template_depth(lib):
-    """Every major domain offers at least 3 templates to choose from."""
+def test_every_template_family_has_three_choices(lib):
+    """The rule the UI presents: every template FOLDER (the family the
+    composer and node group by) offers at least 3 templates."""
     groups = {}
     for slug in lib.template_slugs():
         groups.setdefault(slug.split("/")[0], []).append(slug)
-    coverage = {
-        "vehicle": ["vehicle", "overdrive"],
-        "human": ["portrait", "boudoir", "character", "noir", "street"],
-        "anime": ["anime"],
-        "scifi": ["scifi"],
-        "fantasy": ["fantasy"],
-        "landscape": ["landscape", "astro"],
-        "animal": ["wildlife", "whimsy", "macro"],
-        "food": ["food"],
-        "product": ["product"],
-        "architecture": ["architecture"],
-    }
-    for element, folders in coverage.items():
-        count = sum(len(groups.get(folder, [])) for folder in folders)
-        assert count >= 3, f"element '{element}' has only {count} templates"
+    for family, members in sorted(groups.items()):
+        assert len(members) >= 3, (
+            f"template family '{family}' has only {len(members)}: {members}"
+        )
 
 
 def test_alias_table_empty_pre_release(lib):

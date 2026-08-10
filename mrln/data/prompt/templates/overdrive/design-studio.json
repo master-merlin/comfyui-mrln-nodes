@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "label": "OverDrive Design Studio",
+  "type": ["object", "vehicle", "car"],
+  "description": "The OverDrive fusion under studio discipline — the design-reveal stage of the original pipeline, reborn.",
+  "prefix": "A pristine studio design reveal of one unique concept car — an advanced blend of three automotive personalities presented like a sculpture at its unveiling, every surface decision legible.\n\nSole subject: the finished OverDrive fusion.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Body-kit LoRA trigger",
+      "default": "HycadeBodykit"
+    }
+  ],
+  "slots": [
+    { "id": "base", "ref": "vehicle/car/design-base", "label": "Primary Design Influence" },
+    { "id": "infusion", "ref": "vehicle/car/design-infusion", "label": "Engineering Infusion" },
+    { "id": "accent", "ref": "vehicle/car/design-accent", "label": "Styling Refinement" },
+    { "id": "paint", "ref": "vehicle/car/color/paint", "label": "Primary Color", "emphasis": 1.15 },
+    { "id": "finish", "ref": "vehicle/car/finish", "label": "Finish" },
+    { "id": "wheels", "ref": "vehicle/car/wheel", "label": "Rims" },
+    { "id": "stage", "ref": "location/studio", "label": "Stage", "default": "mirror-floor-stage" },
+    { "id": "light", "ref": "lighting/studio", "label": "Lighting Setup", "default": "light-painting-sweep" },
+    { "id": "view", "ref": "viewpoint/general", "label": "Viewing Angle", "emphasis": 1.15 }
+  ],
+  "suffix": "Studio Standard: ({trigger} style aggressive wide body kit:1.1) flawlessly integrated, reflections placed with intent along every character line, hyperrealistic material rendering of paint depth, carbon weave and polished alloy, (tack-sharp focus on the car:1.2) in absolute studio silence.",
+  "negative": "background clutter, outdoor elements, watermark, text, deformed wheels",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

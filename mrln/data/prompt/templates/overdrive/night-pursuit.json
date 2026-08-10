@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "label": "OverDrive Night Pursuit",
+  "type": ["object", "vehicle", "car"],
+  "description": "The OverDrive fusion in violent night motion — the action stage of the original pipeline at cinema shutter.",
+  "prefix": "A cinematic night-action frame of one unique concept car — an advanced blend of three automotive personalities caught at full commitment, the city smearing past while the machine stays carved and sharp.\n\nSole subject: the OverDrive fusion in motion.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Body-kit LoRA trigger",
+      "default": "HycadeBodykit"
+    }
+  ],
+  "slots": [
+    { "id": "base", "ref": "vehicle/car/design-base", "label": "Primary Design Influence" },
+    { "id": "infusion", "ref": "vehicle/car/design-infusion", "label": "Engineering Infusion" },
+    { "id": "paint", "ref": "vehicle/car/color/paint", "label": "Primary Color", "emphasis": 1.15 },
+    { "id": "action", "ref": "vehicle/car/action", "label": "Caught", "emphasis": 1.2 },
+    { "id": "scene", "ref": "location", "label": "Night Stage", "tags_any": ["night"], "emphasis": 1.2 },
+    { "id": "light", "ref": "lighting/dramatic", "label": "Light", "default": "neon-rim" },
+    { "id": "detail", "ref": "vehicle/car/detail", "label": "Detail", "default": "brake-glow" },
+    { "id": "settings", "ref": "camera/settings", "label": "Camera", "default": "cinema-anamorphic" },
+    { "id": "film", "ref": "camera/film", "label": "Film Character", "default": "cinestill-800t" }
+  ],
+  "suffix": "Pursuit Rendering: ({trigger} style aggressive wide body kit:1.1) flawlessly integrated, wet asphalt doubling every light source, motion blur only where physics demands it, (razor focus locked on the car:1.2) while the night streaks.",
+  "negative": "daylight, static parked feel, watermark, text, deformed wheels",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

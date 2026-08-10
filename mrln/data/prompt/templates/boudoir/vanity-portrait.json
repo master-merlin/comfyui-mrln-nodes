@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "label": "Vanity Portrait",
+  "type": ["human", "boudoir"],
+  "description": "Old-Hollywood glamour at the dressing mirror: warm bulbs, makeup ritual, doubled composition.",
+  "prefix": "An old-Hollywood vanity portrait — the model at her dressing mirror in the bulb-warm glow, the composition doubled by the reflection, glamour caught in its private ritual moment.",
+  "slots": [
+    {
+      "id": "model",
+      "ref": "human/profile",
+      "label": "The Model",
+      "default": "female-lingerie",
+      "emphasis": 1.15
+    },
+    {
+      "id": "pose",
+      "ref": "pose/boudoir-solo",
+      "label": "Held In",
+      "default": "mirrored-beauty",
+      "emphasis": 1.2
+    },
+    {
+      "id": "setting",
+      "ref": "location/boudoir-interior",
+      "label": "Setting",
+      "default": "dressing-parlor",
+      "emphasis": 1.2
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting Conditions",
+      "default": "bedside-lamp"
+    },
+    {
+      "id": "framing",
+      "ref": "viewpoint/portrait",
+      "label": "Framing",
+      "default": "mirror-shot",
+      "emphasis": 1.15
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "50mm-f14"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "golden-luxury"
+    }
+  ],
+  "suffix": "Vanity Rendering: (warm bulb glow modeling the face from both sides:1.2), makeup and jewelry detail crisp in the mirror, (detailed natural skin texture:1.15), perfume bottles and pearls softly out of focus — glamour as a private ceremony.",
+  "negative": "child, chibi, underage, deformed reflection, extra fingers, watermark, text",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

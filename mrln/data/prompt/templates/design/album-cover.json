@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Album Cover",
+  "description": "A square-format record cover: subject via {trigger}, carried entirely by aesthetic, palette and print treatment.",
+  "prefix": "An iconic album cover design, square format — the kind of image that defines a record's whole identity. Central concept: {trigger}.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Cover concept / subject",
+      "default": "a lone figure walking into blinding light"
+    }
+  ],
+  "slots": [
+    {
+      "id": "aesthetic",
+      "ref": "style/aesthetic",
+      "label": "Aesthetic",
+      "emphasis": 1.25
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "emphasis": 1.2
+    },
+    {
+      "id": "medium",
+      "ref": "style/medium",
+      "label": "Medium"
+    },
+    {
+      "id": "print",
+      "ref": "style/print",
+      "label": "Print Treatment",
+      "allow_empty": true
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood",
+      "emphasis": 1.15
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "central-symmetry"
+    }
+  ],
+  "suffix": "Cover Standard: instantly iconic at thumbnail size and rich at full bleed, deliberate negative space for the artist name, no lettering rendered — the image alone carries the record.",
+  "negative": "text, lettering, typography, watermark, cluttered composition",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

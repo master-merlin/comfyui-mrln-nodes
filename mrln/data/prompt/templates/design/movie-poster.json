@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Movie Poster",
+  "type": ["human"],
+  "description": "A cinematic one-sheet: hero, world and genre composed for the theater lobby.",
+  "prefix": "A theatrical one-sheet movie poster — the entire film promised in a single vertical composition, hero anchored against the world that will test them, painted with blockbuster confidence.",
+  "slots": [
+    {
+      "id": "hero",
+      "ref": "human/archetype",
+      "label": "The Lead",
+      "emphasis": 1.25
+    },
+    {
+      "id": "world",
+      "ref": "location",
+      "label": "The World",
+      "tags_none": ["boudoir"],
+      "emphasis": 1.2
+    },
+    {
+      "id": "genre",
+      "ref": "style/genre",
+      "label": "Genre",
+      "emphasis": 1.2
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Key Light",
+      "default": "silhouette-backlight"
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "default": "teal-orange"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "layered-depth"
+    }
+  ],
+  "suffix": "One-Sheet Standard: (hero large in the lower third, the world towering behind:1.2), painterly montage depth, clean sky space reserved for the title block, no lettering rendered — pure key art.",
+  "negative": "text, title lettering, credits block, watermark, child, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}
