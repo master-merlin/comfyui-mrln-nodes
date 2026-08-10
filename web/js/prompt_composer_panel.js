@@ -1205,9 +1205,22 @@ export function createComposerPanel(root, ctx) {
     const chips = [];
     if (isVariantSlot) chips.push(el("span", { class: "mrln-chip" }, state.variant));
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
-    if (slot.emphasis && slot.emphasis !== 1) {
-      chips.push(el("span", { class: "mrln-chip" }, `×${slot.emphasis}`));
-    }
+    chips.push(
+      el(
+        "button",
+        {
+          class: `mrln-chip mrln-chip-btn${slot.emphasis && slot.emphasis !== 1 ? " mrln-override" : ""}`,
+          title: "Prompt emphasis — the drawn text renders as (text:weight). "
+            + "Click to edit this template's value.",
+          onclick: () => {
+            if (state.labelEdit.has(slot.id)) state.labelEdit.delete(slot.id);
+            else state.labelEdit.add(slot.id);
+            renderComposeTab();
+          },
+        },
+        slot.emphasis && slot.emphasis !== 1 ? `×${slot.emphasis}` : "×1"
+      )
+    );
 
     const buttons = el(
       "span",
@@ -1272,6 +1285,35 @@ export function createComposerPanel(root, ctx) {
             },
           },
           slot.label ?? ""
+        ),
+        el(
+          "div",
+          { class: "mrln-inline" },
+          el(
+            "span",
+            {
+              class: "mrln-field-name",
+              title: "Wraps the drawn text as (text:weight) in the prompt — this "
+                + "template's value, independent of any weights inside item texts",
+            },
+            "Emphasis"
+          ),
+          el("input", {
+            class: "mrln-narrow",
+            type: "number",
+            step: "0.05",
+            min: "0.1",
+            max: "3",
+            placeholder: "1",
+            value: slot.emphasis ?? "",
+            oninput: (e) => {
+              const value = parseFloat(e.target.value);
+              if (Number.isNaN(value) || value === 1) delete slot.emphasis;
+              else slot.emphasis = value;
+              markModified();
+              schedulePreview();
+            },
+          })
         )
       );
     }

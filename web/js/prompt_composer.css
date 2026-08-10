@@ -93,6 +93,8 @@
 .mrln-chip.mrln-override { border-color: #a84; color: #ca8; }
 .mrln-chip.mrln-merged { border-color: #58c; color: #8ae; }
 .mrln-chip.mrln-missing { border-color: #e66; color: #e88; }
+button.mrln-chip-btn { cursor: pointer; font: inherit; font-size: 10px; }
+button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; }
 
 .mrln-composer button.mrln-btn {
   padding: 5px 10px;
