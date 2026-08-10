@@ -17,8 +17,8 @@ classifiers = ["Operating System :: OS Independent"]
 dependencies = { file = ["requirements.txt"] }
 
 [project.urls]
-Repository = "https://github.com/master-merlin/ComfyUI-MRLN-Nodes"
-"Bug Tracker" = "https://github.com/master-merlin/ComfyUI-MRLN-Nodes/issues"
+Repository = "https://github.com/master-merlin/comfyui-mrln-nodes"
+"Bug Tracker" = "https://github.com/master-merlin/comfyui-mrln-nodes/issues"
 
 [tool.comfy]
 PublisherId = "master-merlin"
