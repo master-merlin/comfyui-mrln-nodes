@@ -1,6 +1,7 @@
 # --- Development harness (internal, never shared) ---
 /_harness/
 /CLAUDE.md
+/.claude/
 
 # --- Python ---
 __pycache__/
