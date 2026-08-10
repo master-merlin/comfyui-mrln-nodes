@@ -3,6 +3,7 @@
   "label": "OverDrive Full Shot",
   "type": [
     "object",
+    "vehicle",
     "car"
   ],
   "description": "Single-stage showcase: the complete OverDrive look (fusion + livery + scenery + state) as one prompt for plain text-to-image workflows.",
@@ -22,58 +23,58 @@
   "slots": [
     {
       "id": "base",
-      "ref": "car/design-base",
+      "ref": "vehicle/car/design-base",
       "label": "Primary design influence"
     },
     {
       "id": "infusion",
-      "ref": "car/design-infusion",
+      "ref": "vehicle/car/design-infusion",
       "label": "Performance engineering infusion"
     },
     {
       "id": "accent",
-      "ref": "car/design-accent",
+      "ref": "vehicle/car/design-accent",
       "label": "Styling and tech refinement"
     },
     {
       "id": "paint",
-      "ref": "car/color/paint",
+      "ref": "vehicle/car/color/paint",
       "label": "Car primary color"
     },
     {
       "id": "finish",
-      "ref": "car/finish",
+      "ref": "vehicle/car/finish",
       "label": "Primary color finish"
     },
     {
       "id": "contrast",
-      "ref": "car/color/accent",
+      "ref": "vehicle/car/color/accent",
       "label": "Contrasting part colors"
     },
     {
       "id": "highlight",
-      "ref": "car/color/highlight",
+      "ref": "vehicle/car/color/highlight",
       "label": "Accent highlights"
     },
     {
       "id": "wheels",
-      "ref": "car/wheel",
+      "ref": "vehicle/car/wheel",
       "label": "Rims"
     },
     {
       "id": "calipers",
-      "ref": "car/caliper",
+      "ref": "vehicle/car/caliper",
       "label": "Brake calipers"
     },
     {
       "id": "aero",
-      "ref": "car/aero-addon",
+      "ref": "vehicle/car/aero-addon",
       "label": "Aero add-on",
       "allow_empty": true
     },
     {
       "id": "state",
-      "ref": "car/action",
+      "ref": "vehicle/car/action",
       "label": "Depicted state"
     },
     {

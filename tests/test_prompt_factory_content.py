@@ -112,22 +112,22 @@ def test_constraint_demo_present(lib):
 # -- OverDrive / classifier machinery ----------------------------------------
 
 
-def test_only_full_shot_template_ships(lib):
-    assert lib.template_slugs() == ["overdrive/full-shot"]
-    assert lib.load_template("overdrive/full-shot").type == ("object", "car")
+def test_full_shot_template_ships(lib):
+    assert "overdrive/full-shot" in lib.template_slugs()
+    assert lib.load_template("overdrive/full-shot").type == ("object", "vehicle", "car")
 
 
 def test_car_sections_declare_suits(lib):
     for slug in lib.section_slugs():
-        if slug.startswith("car/") or slug == "location/automotive":
-            assert lib.load_section(slug).suits == ("object", "car"), slug
+        if slug.startswith("vehicle/car/") or slug == "location/automotive":
+            assert lib.load_section(slug).suits == ("object", "vehicle", "car"), slug
         if slug.startswith(("lighting/", "camera/", "style/", "viewpoint/")):
             assert lib.load_section(slug).suits == (), f"{slug} should stay universal"
 
 
 def test_group_weights_uniform(lib):
     """Weights preserve the original nested-brace draw in the car pools."""
-    for slug in ("car/color/paint", "car/design-base"):
+    for slug in ("vehicle/car/color/paint", "vehicle/car/design-base"):
         section = lib.load_section(slug)
         totals = {}
         for item in section.items:
@@ -235,8 +235,14 @@ def test_factory_aliases_valid(lib):
         lib.load_template(source)  # raises if the chain is dead
 
 
-def test_retired_scenery_slugs_still_resolve(lib):
-    """The exact refs stranded by the 2026-08 restructure keep loading."""
+def test_retired_slugs_still_resolve(lib):
+    """The exact refs stranded by the 2026-08 restructures keep loading."""
     for old_ref in ("scenery/day", "scenery/night", "scenery/light-day", "scenery/light-night"):
         assert lib.scope_items(old_ref), old_ref
     assert lib.load_section("scenery/light-day").slug == "lighting/day"
+    # vehicle restructure: every old car/* leaf, the folder scope, and the
+    # car/model chain (car/model -> car/design-base -> vehicle/car/design-base)
+    assert lib.load_section("car/wheel").slug == "vehicle/car/wheel"
+    assert lib.load_section("car/model").slug == "vehicle/car/design-base"
+    assert lib.scope_items("car/color")  # aliased subfolder scope
+    assert len(lib.scope_items("car")) == len(lib.scope_items("vehicle/car"))

@@ -4,6 +4,7 @@
   "description": "Car-specific places: showrooms, garages, test facilities.",
   "suits": [
     "object",
+    "vehicle",
     "car"
   ],
   "items": [

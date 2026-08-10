@@ -85,6 +85,7 @@
   ],
   "suits": [
     "object",
+    "vehicle",
     "car"
   ]
 }

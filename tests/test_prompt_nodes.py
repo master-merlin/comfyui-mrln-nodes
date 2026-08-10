@@ -55,11 +55,11 @@ def test_combos_list_factory_content(classes):
     section_inputs = classes["MRLN_PromptSection"].INPUT_TYPES()
     section_options = section_inputs["required"]["section"][0]
     assert "location" in section_options  # folder scope
-    assert "car/color/paint" in section_options  # leaf
+    assert "vehicle/car/color/paint" in section_options  # leaf
     assert "location/automotive" in section_options  # suits-tagged section
     item_options = section_inputs["required"]["item"][0]
     assert item_options[0] == "🎲 random"
-    assert "car/color/paint/guards-red" in item_options
+    assert "vehicle/car/color/paint/guards-red" in item_options
 
 
 def test_every_widget_has_tooltip(classes):
@@ -165,9 +165,11 @@ def test_is_changed_reacts_to_user_files(classes, user_tier):
     assert isinstance(after, str) and after != before
 
 
-def test_user_override_wins(template_node, user_tier):
-    (user_tier / "sections" / "car" / "color").mkdir(parents=True, exist_ok=True)
-    (user_tier / "sections" / "car" / "color" / "paint.json").write_text(
+def test_user_extension_wins(template_node, user_tier):
+    # same-slug user section EXTENDS factory: the new item joins the pool
+    paint_dir = user_tier / "sections" / "vehicle" / "car" / "color"
+    paint_dir.mkdir(parents=True, exist_ok=True)
+    (paint_dir / "paint.json").write_text(
         json.dumps({"items": [{"name": "carbon-grey-matte", "text": "USER OVERRIDE paint"}]}),
         encoding="utf-8",
     )

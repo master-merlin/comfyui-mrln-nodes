@@ -1,11 +1,26 @@
 {
-  "_comment": "Old slug -> new slug, consulted only when a lookup misses. Ships with every factory restructure so existing user templates keep loading. Old folder refs (camera, viewpoint, style, lighting, atmosphere) need no entry: they still resolve as folder scopes.",
+  "_comment": "Old slug -> new slug, consulted only when a lookup misses. Ships with every factory restructure so existing user templates keep loading. Old folder refs that still exist as folders (camera, viewpoint, style, lighting, atmosphere) need no entry. Chains are allowed (car/model -> car/design-base -> vehicle/car/design-base).",
   "sections": {
     "scenery": "location",
     "scenery/day": "location",
     "scenery/night": "location",
     "scenery/light-day": "lighting/day",
     "scenery/light-night": "lighting/night",
+    "car": "vehicle/car",
+    "car/action": "vehicle/car/action",
+    "car/aero-addon": "vehicle/car/aero-addon",
+    "car/caliper": "vehicle/car/caliper",
+    "car/color": "vehicle/car/color",
+    "car/color/paint": "vehicle/car/color/paint",
+    "car/color/accent": "vehicle/car/color/accent",
+    "car/color/highlight": "vehicle/car/color/highlight",
+    "car/design-base": "vehicle/car/design-base",
+    "car/design-infusion": "vehicle/car/design-infusion",
+    "car/design-accent": "vehicle/car/design-accent",
+    "car/detail": "vehicle/car/detail",
+    "car/finish": "vehicle/car/finish",
+    "car/graphics": "vehicle/car/graphics",
+    "car/wheel": "vehicle/car/wheel",
     "car/model": "car/design-base"
   },
   "templates": {}
