@@ -254,6 +254,14 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 .mrln-modified { color: #ca8; }
 
 .mrln-tree { margin: 0; padding: 0; list-style: none; }
+.mrln-tree-group > summary {
+  font-weight: bold;
+  opacity: 0.8;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.mrln-tree-group > summary:hover { background: var(--comfy-menu-bg, #2a2a2a); }
+.mrln-tree-group > .mrln-tree { margin-left: 12px; }
 .mrln-tree li {
   padding: 3px 4px;
   border-radius: 3px;

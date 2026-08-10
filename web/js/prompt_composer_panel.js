@@ -80,6 +80,7 @@ export function createComposerPanel(root, ctx) {
     negativeOpen: false,
     tab: "compose",
     decompose: { text: "", type: "", report: null, plans: [] }, // De-compose tab state
+    libGroups: new Set(), // Library tab: expanded top-level slug groups
   };
 
   // ---- skeleton ------------------------------------------------------------
@@ -1717,47 +1718,86 @@ export function createComposerPanel(root, ctx) {
 
   const editorBox = el("div");
 
+  function sectionLi(section) {
+    return el(
+      "li",
+      { onclick: () => openSectionEditor(section.slug) },
+      section.error ? `⚠ ${section.slug}` : section.label,
+      el(
+        "span",
+        { class: "mrln-slug" },
+        `${section.slug} · ${section.item_count ?? "?"} items`
+      ),
+      section.merged
+        ? el(
+            "span",
+            {
+              class: "mrln-chip mrln-merged",
+              title: "Combined view: your user file extends the factory section — "
+                + "elements live in both tiers",
+            },
+            "factory+user"
+          )
+        : tierChip(section.tier)
+    );
+  }
+
+  function templateLi(template) {
+    return el(
+      "li",
+      { onclick: () => openTemplateEditor(template.slug) },
+      template.error ? `⚠ ${template.slug}` : template.label,
+      el("span", { class: "mrln-slug" }, template.slug),
+      tierChip(template.tier)
+    );
+  }
+
+  function groupedTree(kind, entries, itemEl) {
+    // Collapsible group per top-level slug segment — the flat list would
+    // overspill as soon as more domains land. Expansion state survives
+    // re-renders within the session.
+    const groups = new Map();
+    for (const entry of entries) {
+      const key = entry.slug.split("/")[0];
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(entry);
+    }
+    const nodes = [];
+    for (const [key, members] of [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+      const stateKey = `${kind}:${key}`;
+      const isFolder = members.length > 1 || members[0].slug !== key;
+      const userCount = members.filter((m) => m.tier === "user" || m.merged).length;
+      nodes.push(
+        el(
+          "details",
+          {
+            class: "mrln-fold mrln-tree-group",
+            open: state.libGroups.has(stateKey) ? "" : null,
+            ontoggle: (e) => {
+              if (e.target.open) state.libGroups.add(stateKey);
+              else state.libGroups.delete(stateKey);
+            },
+          },
+          el(
+            "summary",
+            {},
+            isFolder ? `${key}/` : key,
+            el(
+              "span",
+              { class: "mrln-slug" },
+              ` ${members.length}${userCount ? ` · ${userCount} yours` : ""}`
+            )
+          ),
+          el("ul", { class: "mrln-tree" }, members.map(itemEl))
+        )
+      );
+    }
+    return nodes;
+  }
+
   function renderLibraryTab() {
     if (!state.library) return;
     const lib = state.library;
-    const sectionList = el("ul", { class: "mrln-tree" });
-    for (const section of lib.sections) {
-      sectionList.append(
-        el(
-          "li",
-          { onclick: () => openSectionEditor(section.slug) },
-          section.error ? `⚠ ${section.slug}` : section.label,
-          el(
-            "span",
-            { class: "mrln-slug" },
-            `${section.slug} · ${section.item_count ?? "?"} items`
-          ),
-          section.merged
-            ? el(
-                "span",
-                {
-                  class: "mrln-chip mrln-merged",
-                  title: "Combined view: your user file extends the factory section — "
-                    + "elements live in both tiers",
-                },
-                "factory+user"
-              )
-            : tierChip(section.tier)
-        )
-      );
-    }
-    const templateList = el("ul", { class: "mrln-tree" });
-    for (const template of lib.templates) {
-      templateList.append(
-        el(
-          "li",
-          { onclick: () => openTemplateEditor(template.slug) },
-          template.error ? `⚠ ${template.slug}` : template.label,
-          el("span", { class: "mrln-slug" }, template.slug),
-          tierChip(template.tier)
-        )
-      );
-    }
     libraryTab.replaceChildren(
       el(
         "div",
@@ -1766,9 +1806,9 @@ export function createComposerPanel(root, ctx) {
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload")
       ),
       el("div", { class: "mrln-tree-head" }, "Sections"),
-      sectionList,
+      ...groupedTree("sections", lib.sections, sectionLi),
       el("div", { class: "mrln-tree-head" }, "Templates"),
-      templateList,
+      ...groupedTree("templates", lib.templates, templateLi),
       el("hr", { class: "mrln-sep" }),
       editorBox
     );
@@ -1966,6 +2006,7 @@ export function createComposerPanel(root, ctx) {
           ? "replaces factory entirely"
           : "user library";
       ctx.toast("success", "Section saved", `${targetSlug} (${how})`);
+      state.libGroups.add(`sections:${targetSlug.split("/")[0]}`); // reveal where it landed
       ctx.refreshCombos();
       await loadLibrary();
       openSectionEditor(targetSlug);
@@ -2078,6 +2119,7 @@ export function createComposerPanel(root, ctx) {
       }
       errorLine.textContent = "";
       ctx.toast("success", "Template saved", `${slugInput.value.trim()} (user library)`);
+      state.libGroups.add(`templates:${slugInput.value.trim().split("/")[0]}`);
       ctx.refreshCombos();
       await loadLibrary();
     }
