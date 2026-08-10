@@ -1,0 +1,7 @@
+# Normalize line endings: LF in the repo, native in working copies.
+* text=auto
+*.py text eol=lf
+*.js text eol=lf
+*.md text
+*.toml text
+*.yml text
