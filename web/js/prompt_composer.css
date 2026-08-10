@@ -129,6 +129,24 @@
 }
 .mrln-slot:hover .mrln-rowbtns { opacity: 1; }
 
+.mrln-drag {
+  cursor: grab;
+  opacity: 0.35;
+  margin-right: 5px;
+  user-select: none;
+  flex: 0 0 auto;
+}
+.mrln-slot:hover .mrln-drag { opacity: 0.8; }
+.mrln-dragging { opacity: 0.45; }
+.mrln-drop-before { box-shadow: 0 -2px 0 0 #4a8; }
+.mrln-drop-after { box-shadow: 0 2px 0 0 #4a8; }
+
+textarea.mrln-auto {
+  overflow-y: auto;
+  resize: none;
+  min-height: 46px;
+}
+
 /* one card per section */
 .mrln-slot {
   background: var(--comfy-input-bg, #1b1b1b);

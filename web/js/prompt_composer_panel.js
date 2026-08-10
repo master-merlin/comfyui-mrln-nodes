@@ -371,6 +371,80 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
+  // Auto-growing textarea: height follows content, capped at ~35% viewport.
+  function autoSize(area) {
+    const cap = Math.floor(window.innerHeight * 0.35);
+    area.style.height = "auto";
+    area.style.height = `${Math.min(area.scrollHeight + 2, cap)}px`;
+  }
+
+  function autoArea(attrs, text) {
+    const area = el("textarea", attrs, text);
+    area.classList.add("mrln-auto");
+    area.addEventListener("input", () => autoSize(area));
+    requestAnimationFrame(() => autoSize(area)); // after it is in the DOM
+    return area;
+  }
+
+  // ---- drag & drop reordering ----------------------------------------------
+
+  let dragSrc = null; // {scope, index}
+
+  function clearDropMarks() {
+    for (const marked of composeTab.querySelectorAll(".mrln-drop-before, .mrln-drop-after")) {
+      marked.classList.remove("mrln-drop-before", "mrln-drop-after");
+    }
+  }
+
+  function moveInArray(arr, from, to) {
+    const [moved] = arr.splice(from, 1);
+    arr.splice(to, 0, moved);
+  }
+
+  function attachDrag(card, handle, scope, index, mover) {
+    handle.addEventListener("mousedown", () => (card.draggable = true));
+    card.addEventListener("dragstart", (e) => {
+      dragSrc = { scope, index };
+      card.classList.add("mrln-dragging");
+      e.dataTransfer?.setData("text/plain", "");
+      if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
+    });
+    card.addEventListener("dragend", () => {
+      card.draggable = false;
+      card.classList.remove("mrln-dragging");
+      clearDropMarks();
+      dragSrc = null;
+    });
+    card.addEventListener("dragover", (e) => {
+      if (!dragSrc || dragSrc.scope !== scope) return;
+      e.preventDefault();
+      const rect = card.getBoundingClientRect();
+      const after = e.clientY > rect.top + rect.height / 2;
+      card.classList.toggle("mrln-drop-after", after);
+      card.classList.toggle("mrln-drop-before", !after);
+    });
+    card.addEventListener("dragleave", () =>
+      card.classList.remove("mrln-drop-after", "mrln-drop-before")
+    );
+    card.addEventListener("drop", (e) => {
+      if (!dragSrc || dragSrc.scope !== scope) return;
+      e.preventDefault();
+      const rect = card.getBoundingClientRect();
+      let pos = index + (e.clientY > rect.top + rect.height / 2 ? 1 : 0);
+      if (dragSrc.index < pos) pos -= 1;
+      if (pos !== dragSrc.index) {
+        mover(dragSrc.index, pos);
+        markModified();
+        renderComposeTab();
+        schedulePreview();
+      }
+    });
+  }
+
+  function dragHandle() {
+    return el("span", { class: "mrln-drag", title: "Drag to reorder" }, "⠿");
+  }
+
   function smallBtn(title, text, onclick, disabled = false) {
     return el(
       "button",
@@ -487,10 +561,8 @@ export function createComposerPanel(root, ctx) {
     parts.push(
       field(
         `Variables (${extraVars.map((v) => v.name).join(", ") || "name=value"})`,
-        el(
-          "textarea",
+        autoArea(
           {
-            rows: 2,
             placeholder: extraVars.map((v) => `${v.name}=${v.default ?? ""}`).join("\n"),
             oninput: (e) => {
               state.variables = e.target.value;
@@ -509,10 +581,8 @@ export function createComposerPanel(root, ctx) {
   }
 
   function metaPromptBlock() {
-    const prefixArea = el(
-      "textarea",
+    const prefixArea = autoArea(
       {
-        rows: 3,
         placeholder: "Text before the first section — {trigger} works here",
         oninput: (e) => {
           state.rawData.prefix = e.target.value;
@@ -522,10 +592,8 @@ export function createComposerPanel(root, ctx) {
       },
       state.rawData.prefix ?? ""
     );
-    const suffixArea = el(
-      "textarea",
+    const suffixArea = autoArea(
       {
-        rows: 3,
         placeholder: "Text after the last section",
         oninput: (e) => {
           state.rawData.suffix = e.target.value;
@@ -610,12 +678,14 @@ export function createComposerPanel(root, ctx) {
       variantSelect.append(el("option", { value: v.name }, v.label || v.name));
     }
     variantSelect.value = state.variant;
-    return el(
+    const handle = dragHandle();
+    const card = el(
       "div",
       { class: "mrln-slot mrln-variant-head" },
       el(
         "div",
         { class: "mrln-slot-label" },
+        handle,
         el("span", {}, "Variant block"),
         el("span", { class: "mrln-chip" }, "@variant"),
         el(
@@ -627,6 +697,10 @@ export function createComposerPanel(root, ctx) {
       ),
       variantSelect
     );
+    attachDrag(card, handle, "order", orderIndex, (from, to) =>
+      moveInArray(state.orderIds, from, to)
+    );
+    return card;
   }
 
   function removeSlot(container, index, id, isVariantSlot) {
@@ -734,10 +808,12 @@ export function createComposerPanel(root, ctx) {
     );
 
     const labelText = slot.label && slot.label.length <= 60 ? slot.label : slot.id;
+    const handle = dragHandle();
     const parts = [
       el(
         "div",
         { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` },
+        handle,
         el("span", {}, labelText),
         chips,
         buttons
@@ -746,10 +822,8 @@ export function createComposerPanel(root, ctx) {
     ];
     if (state.labelEdit.has(slot.id)) {
       parts.push(
-        el(
-          "textarea",
+        autoArea(
           {
-            rows: 2,
             placeholder: "Lead-in text rendered before this section ({trigger} works here; empty = section label)",
             oninput: (e) => {
               slot.label = e.target.value;
@@ -761,7 +835,17 @@ export function createComposerPanel(root, ctx) {
         )
       );
     }
-    return el("div", { class: `mrln-slot${isVariantSlot ? " mrln-indent" : ""}` }, parts);
+    const card = el("div", { class: `mrln-slot${isVariantSlot ? " mrln-indent" : ""}` }, parts);
+    if (isVariantSlot) {
+      attachDrag(card, handle, `variant:${state.variant}`, index, (from, to) =>
+        moveInArray(container, from, to)
+      );
+    } else {
+      attachDrag(card, handle, "order", orderIndex, (from, to) =>
+        moveInArray(state.orderIds, from, to)
+      );
+    }
+    return card;
   }
 
   function addSectionRow() {
