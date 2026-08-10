@@ -38,12 +38,60 @@ def run_template(node, **kw):
         "format": "template default",
     }
     args.update(kw)
-    return node.execute(**args)
+    return node.execute(**args)[:3]  # (prompt, negative, choices); loras tested separately
 
 
 def test_domain_registered(classes):
     assert "MRLN_PromptTemplate" in classes
     assert "MRLN_PromptSection" in classes
+    assert "MRLN_LoraApply" in classes
+
+
+def test_loras_output_json(classes, template_node, user_tier):
+    import json as _json
+
+    (user_tier / "sections" / "lora").mkdir(parents=True, exist_ok=True)
+    (user_tier / "sections" / "lora" / "kits.json").write_text(
+        _json.dumps(
+            {
+                "items": [
+                    {
+                        "name": "bodykit",
+                        "text": "HycadeBodykit",
+                        "data": {"lora": "kits\\hycade.safetensors", "strength_model": 0.87},
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    (user_tier / "templates").mkdir(parents=True, exist_ok=True)
+    (user_tier / "templates" / "lora-tpl.json").write_text(
+        _json.dumps({"slots": [{"id": "kit", "ref": "lora/kits", "default": "bodykit"}]}),
+        encoding="utf-8",
+    )
+    out = template_node.execute(
+        template="lora-tpl",
+        selection="",
+        selection_mode="as configured",
+        seed=0,
+        format="template default",
+    )
+    assert out[0].endswith("<lora:kits/hycade:0.87>")
+    assert _json.loads(out[3]) == [
+        {"lora": "kits\\hycade.safetensors", "strength_model": 0.87, "strength_clip": 0.87}
+    ]
+    # empty stack renders as an empty JSON list, and LoraApply validates it
+    plain = template_node.execute(
+        template="overdrive/full-shot",
+        selection="",
+        selection_mode="as configured",
+        seed=0,
+        format="template default",
+    )
+    assert _json.loads(plain[3]) == []
+    assert classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras=plain[3]) is True
+    assert "not valid JSON" in classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras="{nope")
 
 
 def test_combos_list_factory_content(classes):

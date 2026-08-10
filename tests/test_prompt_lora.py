@@ -128,3 +128,33 @@ def test_muted_and_plain_items_emit_nothing(lib):
     assert lora_tags(resolved) == []
     _tpl, resolved = rt(lib, "with-lora", selection={"kit": "plain"})
     assert lora_tags(resolved) == []
+
+
+def test_lora_entries_keep_authored_names(lib):
+    from mrln.promptlib import lora_entries
+
+    _tpl, resolved = rt(lib, "with-lora")
+    assert lora_entries(resolved) == [
+        {
+            "lora": "mastermerlin\\bmw_m4_cs.safetensors",
+            "strength_model": 0.35,
+            "strength_clip": 1.0,
+        }
+    ]
+
+
+def test_parse_loras_json_roundtrip_and_errors():
+    from mrln.nodes.prompt import parse_loras_json
+
+    assert parse_loras_json("") == []
+    assert parse_loras_json("[]") == []
+    entries = parse_loras_json(
+        '[{"lora": "a.safetensors", "strength_model": 0.5}, {"lora": "b", "strength_clip": 0.7}]'
+    )
+    assert entries == [("a.safetensors", 0.5, 0.5), ("b", 1.0, 0.7)]
+    with pytest.raises(ValueError, match="not valid JSON"):
+        parse_loras_json("{broken")
+    with pytest.raises(ValueError, match="missing the 'lora'"):
+        parse_loras_json('[{"strength_model": 1}]')
+    with pytest.raises(ValueError, match="JSON list"):
+        parse_loras_json('{"lora": "x"}')

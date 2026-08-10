@@ -39,24 +39,47 @@ def _string(resolved, cfg):
     return cfg.joiner.join(p for p in parts if p)
 
 
+def lora_entries(resolved):
+    """[{'lora': name-as-authored, 'strength_model': x, 'strength_clip': y}]
+    for every drawn item carrying data.lora — the machine-readable stack
+    the MRLN LoRA Apply node consumes (file names stay exactly as
+    authored so the loader can resolve them)."""
+    entries = []
+    seen = set()
+    for slot in walk_slots(resolved.slots):
+        data = slot.data or {}
+        name = data.get("lora")
+        if not name or slot.item_name is None:
+            continue
+        name = str(name)
+        if name in seen:
+            continue
+        seen.add(name)
+        sm = float(data.get("strength_model", 1.0))
+        entries.append(
+            {
+                "lora": name,
+                "strength_model": sm,
+                "strength_clip": float(data.get("strength_clip", sm)),
+            }
+        )
+    return entries
+
+
 def lora_tags(resolved):
     """'<lora:name:sm[:sc]>' for every drawn item carrying data.lora —
     the A1111-style syntax that tag-parsing loader nodes consume. The
     name keeps its subfolder, loses its extension, and uses forward
     slashes."""
     tags = []
-    for slot in walk_slots(resolved.slots):
-        data = slot.data or {}
-        name = data.get("lora")
-        if not name or slot.item_name is None:
-            continue
-        name = str(name).replace("\\", "/")
+    for entry in lora_entries(resolved):
+        name = entry["lora"].replace("\\", "/")
         for ext in (".safetensors", ".ckpt", ".pt"):
             if name.lower().endswith(ext):
                 name = name[: -len(ext)]
                 break
-        sm = data.get("strength_model", 1.0)
-        sc = data.get("strength_clip", sm)
+        sm = entry["strength_model"]
+        sc = entry["strength_clip"]
         tag = f"<lora:{name}:{sm:g}>" if sc == sm else f"<lora:{name}:{sm:g}:{sc:g}>"
         if tag not in tags:
             tags.append(tag)

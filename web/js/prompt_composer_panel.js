@@ -1988,13 +1988,31 @@ export function createComposerPanel(root, ctx) {
 
   let loraListCache = null;
   async function installedLoras() {
-    if (loraListCache) return loraListCache;
+    if (loraListCache?.length) return loraListCache;
+    let names = [];
+    // primary: the dedicated models endpoint (full list incl. subfolders —
+    // modern frontends load combos lazily, so object_info may be incomplete)
     try {
-      const info = await ctx.apiJson("/object_info/LoraLoader");
-      loraListCache = info?.LoraLoader?.input?.required?.lora_name?.[0] ?? [];
+      const viaModels = await ctx.apiJson("/models/loras");
+      if (Array.isArray(viaModels)) {
+        names = viaModels.map((entry) => (typeof entry === "string" ? entry : entry?.name)).filter(Boolean);
+      }
     } catch {
-      loraListCache = [];
+      /* older server without /models */
     }
+    if (!names.length) {
+      try {
+        const info = await ctx.apiJson("/object_info/LoraLoader");
+        const spec = info?.LoraLoader?.input?.required?.lora_name;
+        if (Array.isArray(spec)) {
+          if (Array.isArray(spec[0])) names = spec[0];
+          else if (Array.isArray(spec[1]?.options)) names = spec[1].options;
+        }
+      } catch {
+        /* endpoint unavailable */
+      }
+    }
+    loraListCache = [...new Set(names)].sort((a, b) => a.localeCompare(b));
     return loraListCache;
   }
 

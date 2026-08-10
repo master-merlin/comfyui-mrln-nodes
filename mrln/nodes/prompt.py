@@ -3,6 +3,7 @@ JSON library (see mrln/promptlib). Nodes are thin runtime anchors — all
 logic lives in the engine; combos are rebuilt on every INPUT_TYPES call so
 'Refresh node definitions' picks up new library files."""
 
+import json
 from inspect import cleandoc
 
 from .. import promptlib as pl
@@ -69,13 +70,15 @@ class PromptTemplate:
     CATEGORY = category("prompt")
     DESCRIPTION = cleandoc(__doc__)
     FUNCTION = "execute"
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "negative", "choices")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("prompt", "negative", "choices", "loras")
     OUTPUT_TOOLTIPS = (
         "The rendered positive prompt in the chosen format.",
         "The joined negative prompt (template + section + item negatives), always a plain string.",
         "Report of the variant/items chosen per slot with seed and tier — wire to a text "
         "preview to see what was drawn.",
+        "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
+        "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
     )
 
     @classmethod
@@ -246,7 +249,8 @@ class PromptTemplate:
         )
         fmt = tpl.render.format if format == "template default" else format
         out = pl.render(resolved, fmt, tpl.render, conflict_policy=conflict_policy)
-        return (out.positive, out.negative, out.choices)
+        loras = json.dumps(pl.lora_entries(resolved), ensure_ascii=False)
+        return (out.positive, out.negative, out.choices, loras)
 
 
 class PromptSection:
@@ -343,9 +347,111 @@ class PromptSection:
         return (resolved.text, resolved.negative, resolved.item_name or "")
 
 
+def parse_loras_json(loras):
+    """'loras' JSON -> validated [(name, strength_model, strength_clip)].
+    Pure so pytest covers it; raises ValueError with remediation text."""
+    if not isinstance(loras, str) or not loras.strip():
+        return []
+    try:
+        entries = json.loads(loras)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"'loras' is not valid JSON ({exc}) — wire it from the Prompt Template "
+            "node's loras output"
+        ) from None
+    if not isinstance(entries, list):
+        raise ValueError("'loras' must be a JSON list of {lora, strength_model, strength_clip}")
+    result = []
+    for entry in entries:
+        if not isinstance(entry, dict) or not entry.get("lora"):
+            raise ValueError(f"lora entry {entry!r} is missing the 'lora' file name")
+        sm = float(entry.get("strength_model", 1.0))
+        sc = float(entry.get("strength_clip", sm))
+        result.append((str(entry["lora"]), sm, sc))
+    return result
+
+
+class LoraApply:
+    """Apply the LoRA blocks a Prompt Template drew onto MODEL and CLIP.
+
+    Wire the Prompt Template's 'loras' output into this node between your
+    model/clip loaders and the sampler: every drawn LoRA block (a section
+    item carrying lora + strength metadata) is loaded with its authored
+    strengths — the deterministic draw decides the LoRA stack, no
+    tag-parsing loader needed. With no LoRA blocks drawn, model and clip
+    pass through unchanged.
+    """
+
+    CATEGORY = category("prompt")
+    DESCRIPTION = cleandoc(__doc__)
+    FUNCTION = "execute"
+    RETURN_TYPES = ("MODEL", "CLIP")
+    RETURN_NAMES = ("model", "clip")
+    OUTPUT_TOOLTIPS = (
+        "The model with every drawn LoRA applied at its authored strength.",
+        "The CLIP with every drawn LoRA applied at its authored strength.",
+    )
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model": ("MODEL", {"tooltip": "Model to apply the drawn LoRA stack to."}),
+                "clip": ("CLIP", {"tooltip": "CLIP to apply the drawn LoRA stack to."}),
+                "loras": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "The 'loras' output of a Prompt Template (MRLN) node — "
+                        "a JSON list of the drawn LoRA blocks.",
+                    },
+                ),
+            },
+        }
+
+    @classmethod
+    def VALIDATE_INPUTS(cls, loras=None):
+        if loras is None:
+            return True
+        try:
+            parse_loras_json(loras)
+        except ValueError as exc:
+            return str(exc)
+        return True
+
+    def execute(self, model, clip, loras):
+        entries = parse_loras_json(loras)
+        if not entries:
+            return (model, clip)
+        import comfy.sd  # ComfyUI runtime only — keeps the pack importable anywhere
+        import comfy.utils
+        import folder_paths
+
+        available = folder_paths.get_filename_list("loras")
+        normalized = {name.replace("\\", "/").lower(): name for name in available}
+        for name, strength_model, strength_clip in entries:
+            real = name if name in available else normalized.get(name.replace("\\", "/").lower())
+            if real is None:
+                raise FileNotFoundError(
+                    f"LoRA '{name}' not found in your loras folder — fix the LoRA "
+                    "block in the Composer (Library tab) or install the file "
+                    f"(available: {len(available)} files)"
+                )
+            path = folder_paths.get_full_path("loras", real)
+            lora_sd = comfy.utils.load_torch_file(path, safe_load=True)
+            model, clip = comfy.sd.load_lora_for_models(
+                model, clip, lora_sd, strength_model, strength_clip
+            )
+            logger.info(
+                "MRLN LoRA Apply: %s (model %.2f / clip %.2f)", real, strength_model, strength_clip
+            )
+        return (model, clip)
+
+
 NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = build_mappings(
     {
         "PromptTemplate": PromptTemplate,
         "PromptSection": PromptSection,
+        "LoraApply": LoraApply,
     }
 )

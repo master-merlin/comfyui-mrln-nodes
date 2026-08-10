@@ -133,7 +133,7 @@ def test_preview_matches_node_execute(tmp_path, monkeypatch):
     monkeypatch.setenv("MRLN_PROMPT_DIR", str(tmp_path / "user"))
     pack = support.load_pack()
     node = pack.NODE_CLASS_MAPPINGS["MRLN_PromptTemplate"]()
-    prompt, negative, choices = node.execute(
+    prompt, negative, choices, _loras = node.execute(
         template="overdrive/full-shot",
         selection="paint=guards-red",
         selection_mode="as configured",
