@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "label": "Japan Location",
+  "description": "Japanese places beloved as anime key-visual settings — real locations, usable photorealistically or stylized. Tagged 'anime' for genre-filtered templates.",
+  "tags": ["anime"],
+  "items": [
+    {
+      "name": "shrine-steps",
+      "text": "A long stone stairway climbing to a hilltop Shinto shrine, flanked by weathered vermilion torii gates and stone lanterns under overhanging maples.",
+      "text_short": "stone steps to a torii shrine"
+    },
+    {
+      "name": "school-rooftop",
+      "text": "A high-school rooftop behind wire safety fencing, water tank and ventilation units casting long shadows, the town spreading out far below.",
+      "text_short": "school rooftop behind wire fence"
+    },
+    {
+      "name": "rural-train-crossing",
+      "text": "A single-track railway crossing in the countryside, striped barrier arms raised, rice paddies stretching to distant blue mountains.",
+      "text_short": "rural railway crossing, rice paddies"
+    },
+    {
+      "name": "konbini-glow",
+      "text": "A small convenience store spilling bright fluorescent light onto the pavement of a sleepy suburban street, vending machines humming beside the entrance.",
+      "text_short": "glowing convenience store at night",
+      "tags": ["night"]
+    },
+    {
+      "name": "shotengai-arcade",
+      "text": "A covered shopping arcade lined with small family shops, paper lanterns and hand-painted signs hanging beneath the arched glass roof.",
+      "text_short": "covered shotengai shopping arcade"
+    },
+    {
+      "name": "hydrangea-alley",
+      "text": "A narrow residential alley in the rainy season, blooming blue hydrangeas crowding the walls, wet flagstones mirroring the sky.",
+      "text_short": "hydrangea-lined wet alley"
+    },
+    {
+      "name": "seaside-station",
+      "text": "A tiny unmanned railway platform right beside the sea, a single bench facing the sparkling water across a low fence.",
+      "text_short": "seaside railway platform"
+    },
+    {
+      "name": "bamboo-grove-path",
+      "text": "A walking path through a towering bamboo grove, green stalks converging overhead into filtered emerald light.",
+      "text_short": "path through bamboo grove"
+    },
+    {
+      "name": "onsen-town-lane",
+      "text": "A lantern-lit lane of a mountain onsen town, steam drifting from bathhouse vents past wooden ryokan facades.",
+      "text_short": "steamy onsen town lane",
+      "tags": ["night"]
+    },
+    {
+      "name": "tokyo-backstreet",
+      "text": "A cluttered Tokyo backstreet of stacked signage, air-conditioner units, potted plants and tangled power lines overhead.",
+      "text_short": "cluttered Tokyo backstreet"
+    },
+    {
+      "name": "torii-over-water",
+      "text": "A great vermilion torii gate standing in shallow tidal water, mirrored perfectly on the wet flats.",
+      "text_short": "torii gate standing in water"
+    },
+    {
+      "name": "castle-and-sakura",
+      "text": "A white-walled Japanese castle keep rising above a moat, framed by clouds of cherry blossom in full bloom.",
+      "text_short": "castle keep framed by sakura"
+    }
+  ]
+}

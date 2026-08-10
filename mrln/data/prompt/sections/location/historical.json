@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Historical Location",
+  "description": "Period settings from medieval to mid-century. Tagged 'historical' for genre-filtered templates.",
+  "tags": ["historical"],
+  "items": [
+    {
+      "name": "medieval-market",
+      "text": "A bustling medieval market square, timber-framed houses leaning over stalls of cloth, produce and ironwork.",
+      "text_short": "medieval market square"
+    },
+    {
+      "name": "castle-great-hall",
+      "text": "A stone castle great hall with banners hanging between torch sconces, long oak tables and a raised dais.",
+      "text_short": "castle great hall"
+    },
+    {
+      "name": "victorian-street",
+      "text": "A fog-touched Victorian street of soot-darkened brick, gas lamps and hand-painted shopfront signs.",
+      "text_short": "gaslit Victorian street"
+    },
+    {
+      "name": "speakeasy",
+      "text": "A hidden 1920s speakeasy behind an unmarked door, velvet booths, a brass-railed bar and a small jazz stage.",
+      "text_short": "1920s speakeasy bar"
+    },
+    {
+      "name": "roman-forum",
+      "text": "The colonnaded forum of a Roman city at its height, marble temples and bronze statues under a Mediterranean sky.",
+      "text_short": "Roman forum, marble colonnades"
+    },
+    {
+      "name": "age-of-sail-harbor",
+      "text": "A crowded age-of-sail harbor, tall ships at anchor, rope and cargo crates stacked along wooden quays.",
+      "text_short": "tall-ship harbor quay"
+    },
+    {
+      "name": "edo-street",
+      "text": "An Edo-period street of wooden machiya townhouses, noren curtains and paper lanterns above a packed-earth road.",
+      "text_short": "Edo-period wooden street"
+    },
+    {
+      "name": "wild-west-mainstreet",
+      "text": "A dusty frontier main street with a saloon, hitching posts and a water tower against open prairie.",
+      "text_short": "wild-west main street"
+    },
+    {
+      "name": "belle-epoque-cafe",
+      "text": "A Belle Époque Parisian café terrace, wicker chairs, marble tables and art-nouveau ironwork under an awning.",
+      "text_short": "Belle Époque café terrace"
+    },
+    {
+      "name": "fifties-diner",
+      "text": "A chrome-and-neon 1950s American diner, checkerboard floor, red vinyl booths and a long counter with stools.",
+      "text_short": "1950s chrome diner"
+    }
+  ]
+}

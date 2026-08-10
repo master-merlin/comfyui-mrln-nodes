@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "label": "Film Stock",
+  "description": "Film emulsion looks — each item commits to one stock's palette and grain.",
+  "items": [
+    {
+      "name": "portra-400",
+      "text": "Kodak Portra 400 look, warm forgiving skin tones, gentle pastel saturation and fine grain",
+      "text_short": "Kodak Portra 400 look"
+    },
+    {
+      "name": "ektar-100",
+      "text": "Kodak Ektar 100 look, punchy ultra-vivid color and razor-fine grain",
+      "text_short": "Kodak Ektar vivid look"
+    },
+    {
+      "name": "kodachrome-64",
+      "text": "Kodachrome 64 look, deep reds, archival mid-century saturation and crisp contrast",
+      "text_short": "Kodachrome 64 look"
+    },
+    {
+      "name": "kodak-gold-200",
+      "text": "Kodak Gold 200 look, honeyed consumer-film warmth, nostalgic summer cast",
+      "text_short": "Kodak Gold warmth"
+    },
+    {
+      "name": "tri-x-400",
+      "text": "Kodak Tri-X 400 black and white, gritty classic reportage grain and strong midtones",
+      "text_short": "Tri-X black and white"
+    },
+    {
+      "name": "ilford-hp5",
+      "text": "Ilford HP5 black and white, soft forgiving contrast and smoky greys",
+      "text_short": "Ilford HP5 greys"
+    },
+    {
+      "name": "delta-3200",
+      "text": "Ilford Delta 3200 look, coarse expressive low-light grain, deep blacks",
+      "text_short": "Delta 3200 grain",
+      "tags": ["night"]
+    },
+    {
+      "name": "velvia-50",
+      "text": "Fuji Velvia 50 slide-film look, supersaturated greens and blues, landscape-postcard punch",
+      "text_short": "Velvia slide punch"
+    },
+    {
+      "name": "provia-100f",
+      "text": "Fuji Provia 100F look, neutral clean slide color with quiet precision",
+      "text_short": "Provia neutral slide"
+    },
+    {
+      "name": "pro-400h",
+      "text": "Fuji Pro 400H look, airy minty pastels and luminous highlights",
+      "text_short": "Pro 400H pastels"
+    },
+    {
+      "name": "cinestill-800t",
+      "text": "CineStill 800T tungsten look, teal shadows and red halation blooming around lights",
+      "text_short": "CineStill 800T halation",
+      "tags": ["night"]
+    },
+    {
+      "name": "polaroid-600",
+      "text": "Polaroid 600 instant look, soft focus, milky shadows and the white instant frame feel",
+      "text_short": "Polaroid instant look"
+    },
+    {
+      "name": "aerochrome-ir",
+      "text": "Kodak Aerochrome infrared look, foliage burning hot pink against cyan skies",
+      "text_short": "Aerochrome infrared pink"
+    },
+    {
+      "name": "superia-xtra",
+      "text": "Fuji Superia look, cool-leaning consumer color with 90s snapshot character",
+      "text_short": "Superia 90s snapshot"
+    }
+  ]
+}

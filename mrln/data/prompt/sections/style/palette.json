@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "label": "Color Palette",
+  "description": "Committed color schemes. Warm/pale tags support palette-split duo scenes.",
+  "items": [
+    {
+      "name": "monochromatic-elegance",
+      "text": "monochromatic elegance, one hue explored through tone and texture",
+      "text_short": "monochromatic scheme"
+    },
+    {
+      "name": "black-and-white",
+      "text": "pure black-and-white, tonality and contrast carrying everything",
+      "text_short": "black and white",
+      "negative": "oversaturated colors"
+    },
+    {
+      "name": "pastel-softness",
+      "text": "soft pastel palette, powdered pinks, mints and baby blues",
+      "text_short": "soft pastels",
+      "tags": ["pale"]
+    },
+    {
+      "name": "neon-electric",
+      "text": "electric neon palette, saturated magenta, cyan and acid green on darkness",
+      "text_short": "electric neon",
+      "tags": ["neon", "night"]
+    },
+    {
+      "name": "earthy-organic",
+      "text": "earthy organic palette, terracotta, moss, ochre and warm browns",
+      "text_short": "earthy tones",
+      "tags": ["warm"]
+    },
+    {
+      "name": "jewel-tones",
+      "text": "rich jewel-tone palette, emerald, sapphire, ruby and gold",
+      "text_short": "jewel tones"
+    },
+    {
+      "name": "teal-orange",
+      "text": "cinematic teal-and-orange grade, cool shadows against warm skin and highlights",
+      "text_short": "teal and orange",
+      "tags": ["warm"]
+    },
+    {
+      "name": "duotone-graphic",
+      "text": "hard graphic duotone, two flat inks doing all the work",
+      "text_short": "graphic duotone"
+    },
+    {
+      "name": "sepia-heritage",
+      "text": "sepia heritage tones, faded amber warmth of an old archive",
+      "text_short": "sepia archive",
+      "tags": ["warm", "historical"]
+    },
+    {
+      "name": "muted-nordic",
+      "text": "muted Nordic palette, desaturated greys, milk white and cold blue-green",
+      "text_short": "muted Nordic",
+      "tags": ["pale"]
+    },
+    {
+      "name": "golden-warmth",
+      "text": "golden warm palette, honey, amber and candle-glow tones throughout",
+      "text_short": "golden warmth",
+      "tags": ["warm"]
+    },
+    {
+      "name": "iridescent-holo",
+      "text": "iridescent holographic palette, oil-slick shifts of violet, teal and pearl",
+      "text_short": "holographic iridescence"
+    }
+  ]
+}

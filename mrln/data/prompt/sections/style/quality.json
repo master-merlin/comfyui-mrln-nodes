@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "Quality Boost",
+  "description": "Model-family quality bundles — each pairs its positive boilerplate with the matching standard negative preset (Civitai top-creator calibrated). text_short carries the tag-style variant for anime checkpoints.",
+  "items": [
+    {
+      "name": "flux-minimal",
+      "text": "highly detailed, sharp focus, coherent natural detail",
+      "text_short": "highly detailed, sharp focus",
+      "negative": "logo, watermark"
+    },
+    {
+      "name": "photoreal-raw",
+      "text": "RAW photo, hyper-realistic, natural skin texture, accurate materials, 8K UHD fidelity",
+      "text_short": "RAW photo, hyper-realistic, 8k",
+      "negative": "cartoon, painting, illustration, deformed, watermark, oversmoothed skin"
+    },
+    {
+      "name": "illustrious-anime",
+      "text": "masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, detailed background",
+      "text_short": "masterpiece, best quality, very aesthetic, absurdres, newest",
+      "negative": "worst quality, bad quality, lowres, jpeg artifacts, bad anatomy, interlocked fingers, extra fingers, watermark, signature, chibi, child, underage"
+    },
+    {
+      "name": "sdxl-classic",
+      "text": "masterpiece, best quality, ultra-detailed, sharp focus, intricate details, cinematic lighting",
+      "text_short": "masterpiece, best quality, ultra-detailed",
+      "negative": "worst quality, low quality, normal quality, lowres, blurry, jpeg artifacts, watermark, text, signature, bad anatomy, extra limbs, extra fingers"
+    },
+    {
+      "name": "detail-eyes-face",
+      "text": "exceptionally detailed face, detailed expressive eyes, individual lashes, refined facial rendering",
+      "text_short": "detailed face, detailed eyes",
+      "negative": "blurry face, asymmetric eyes, cross-eyed, poorly drawn face"
+    },
+    {
+      "name": "detail-hands",
+      "text": "anatomically correct hands, five fingers, natural hand pose, refined finger detail",
+      "text_short": "correct detailed hands",
+      "negative": "extra fingers, missing fingers, fused fingers, malformed hands"
+    },
+    {
+      "name": "maximal-8k",
+      "text": "8K ultra-high-definition, extreme micro-detail, hyper-detailed surfaces, crystalline sharpness, HDR depth",
+      "text_short": "8k UHD, extreme detail, HDR",
+      "negative": "lowres, blurry, soft focus, compression artifacts"
+    },
+    {
+      "name": "clean-none",
+      "text": "clean unboosted rendering",
+      "text_short": "clean rendering",
+      "weight": 0.5
+    }
+  ]
+}

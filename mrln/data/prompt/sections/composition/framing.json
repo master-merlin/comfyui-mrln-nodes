@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Framing",
+  "description": "Compositional structure — how the frame is organized.",
+  "items": [
+    {
+      "name": "rule-of-thirds",
+      "text": "composed on the rule of thirds, subject set on a power point with directional space",
+      "text_short": "rule of thirds"
+    },
+    {
+      "name": "central-symmetry",
+      "text": "dead-center symmetrical composition, formal and confrontational",
+      "text_short": "central symmetry"
+    },
+    {
+      "name": "negative-space",
+      "text": "vast negative space dwarfing a small subject, minimalist breathing room",
+      "text_short": "vast negative space"
+    },
+    {
+      "name": "leading-lines",
+      "text": "strong leading lines converging on the subject from the frame edges",
+      "text_short": "leading lines"
+    },
+    {
+      "name": "golden-spiral",
+      "text": "golden-spiral composition, the eye swept along a natural curl to the focal point",
+      "text_short": "golden spiral flow"
+    },
+    {
+      "name": "frame-in-frame",
+      "text": "frame within a frame, the subject enclosed by arch, window or branches",
+      "text_short": "frame in frame"
+    },
+    {
+      "name": "diagonal-energy",
+      "text": "aggressive diagonal composition, tension pulling corner to corner",
+      "text_short": "diagonal tension"
+    },
+    {
+      "name": "layered-depth",
+      "text": "three distinct planes, foreground anchor, midground subject, atmospheric background",
+      "text_short": "layered depth planes"
+    },
+    {
+      "name": "pattern-break",
+      "text": "a repeating pattern broken by a single interrupting subject",
+      "text_short": "pattern with a break"
+    },
+    {
+      "name": "horizon-low",
+      "text": "horizon pinned low, the sky claiming most of the frame",
+      "text_short": "low horizon, big sky"
+    },
+    {
+      "name": "horizon-high",
+      "text": "horizon pinned high, the foreground ground plane dominating",
+      "text_short": "high horizon, deep ground"
+    },
+    {
+      "name": "tight-crop",
+      "text": "aggressively tight crop cutting into the subject, claustrophobic immediacy",
+      "text_short": "aggressive tight crop"
+    }
+  ]
+}

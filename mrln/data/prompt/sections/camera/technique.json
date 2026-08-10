@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Technique",
+  "description": "In-camera techniques that define the shot's physics.",
+  "items": [
+    {
+      "name": "long-exposure",
+      "text": "long exposure, moving elements smeared into silky trails while the static world stays sharp",
+      "text_short": "long exposure trails"
+    },
+    {
+      "name": "motion-panning",
+      "text": "panning with the subject, background streaked into horizontal speed lines, subject sharp",
+      "text_short": "panning speed streaks"
+    },
+    {
+      "name": "freeze-flash",
+      "text": "high-speed flash freeze, motion stopped absolutely mid-action, every droplet crisp",
+      "text_short": "high-speed freeze"
+    },
+    {
+      "name": "double-exposure",
+      "text": "double exposure, two scenes blended into one silhouetted composite",
+      "text_short": "double exposure blend"
+    },
+    {
+      "name": "tilt-shift-miniature",
+      "text": "tilt-shift miniature effect, a real scene rendered as a toy diorama by a sliver of focus",
+      "text_short": "tilt-shift miniature"
+    },
+    {
+      "name": "light-painting",
+      "text": "light painting, hand-drawn ribbons of light traced through a long exposure",
+      "text_short": "light painting ribbons",
+      "tags": ["night"]
+    },
+    {
+      "name": "focus-stack",
+      "text": "focus-stacked capture, impossible front-to-back macro sharpness",
+      "text_short": "focus-stacked sharpness"
+    },
+    {
+      "name": "lens-whacking",
+      "text": "freelensing light leaks, tilted dreamy focus and warm streaks bleeding into frame",
+      "text_short": "freelens light leaks"
+    },
+    {
+      "name": "zoom-burst",
+      "text": "zoom burst during exposure, the scene exploding outward in radial streaks",
+      "text_short": "zoom burst streaks"
+    },
+    {
+      "name": "through-prism",
+      "text": "shot through a handheld prism, refracted rainbow edges and doubled fragments",
+      "text_short": "prism refractions"
+    },
+    {
+      "name": "underexposed-moody",
+      "text": "deliberately underexposed, shadow-dominant frame with small islands of light",
+      "text_short": "moody underexposure"
+    },
+    {
+      "name": "overexposed-airy",
+      "text": "deliberately overexposed high-key, blown airy whites and floating detail",
+      "text_short": "airy high-key overexposure"
+    }
+  ]
+}

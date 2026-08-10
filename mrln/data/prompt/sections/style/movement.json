@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "label": "Art Movement",
+  "description": "Historical art movements as style directives — characteristics, never artist names.",
+  "items": [
+    {
+      "name": "impressionism",
+      "text": "impressionist rendering, broken color dabs, fleeting light over precise form",
+      "text_short": "impressionist dabs"
+    },
+    {
+      "name": "expressionism",
+      "text": "expressionist rendering, distorted forms and raw color carrying emotion over accuracy",
+      "text_short": "expressionist distortion"
+    },
+    {
+      "name": "art-nouveau",
+      "text": "art-nouveau styling, whiplash organic curves, ornamental florals and elegant flat framing",
+      "text_short": "art nouveau curves"
+    },
+    {
+      "name": "art-deco",
+      "text": "art-deco styling, stepped geometry, gilded fans and machine-age symmetry",
+      "text_short": "art deco geometry"
+    },
+    {
+      "name": "ukiyo-e",
+      "text": "ukiyo-e woodblock styling, flat color planes, bold outlines and stylized waves",
+      "text_short": "ukiyo-e woodblock",
+      "tags": ["anime"]
+    },
+    {
+      "name": "surrealism",
+      "text": "surrealist composition, dream-logic juxtapositions rendered with realistic precision",
+      "text_short": "surrealist dream logic"
+    },
+    {
+      "name": "cubism",
+      "text": "cubist rendering, the subject fractured into simultaneous geometric viewpoints",
+      "text_short": "cubist fracture"
+    },
+    {
+      "name": "bauhaus",
+      "text": "bauhaus design language, primary colors, elemental shapes, form strictly following function",
+      "text_short": "bauhaus primaries"
+    },
+    {
+      "name": "de-stijl",
+      "text": "de-stijl abstraction, black grids with primary color planes",
+      "text_short": "de stijl grid"
+    },
+    {
+      "name": "romanticism",
+      "text": "romanticist grandeur, sublime nature overwhelming small human figures",
+      "text_short": "romantic sublime"
+    },
+    {
+      "name": "baroque",
+      "text": "baroque drama, sweeping diagonals, rich fabrics and theatrical divine light",
+      "text_short": "baroque drama"
+    },
+    {
+      "name": "minimalism",
+      "text": "minimalist reduction, few elements, exact placement, maximal restraint",
+      "text_short": "minimalist restraint"
+    },
+    {
+      "name": "pop-art",
+      "text": "pop-art treatment, flat commercial color, halftone dots and bold outlines",
+      "text_short": "pop art halftone"
+    },
+    {
+      "name": "brutalism",
+      "text": "brutalist aesthetic, raw monolithic concrete masses and unapologetic weight",
+      "text_short": "brutalist mass"
+    },
+    {
+      "name": "abstract-expressionism",
+      "text": "abstract-expressionist energy, gestural sweeps and dripped texture at mural scale",
+      "text_short": "gestural abstraction"
+    }
+  ]
+}

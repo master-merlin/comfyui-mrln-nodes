@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Underwater Location",
+  "description": "Beneath the surface. Tagged 'underwater' for genre- and subject-filtered templates.",
+  "tags": ["underwater"],
+  "items": [
+    {
+      "name": "coral-garden",
+      "text": "A sunlit coral garden in crystal-clear shallows, fans and brain corals in saturated color, light ripples dancing across the sand.",
+      "text_short": "sunlit coral garden shallows"
+    },
+    {
+      "name": "kelp-cathedral",
+      "text": "Inside a towering kelp forest, golden fronds rising like cathedral pillars toward the silvery surface far above.",
+      "text_short": "towering kelp forest"
+    },
+    {
+      "name": "shipwreck",
+      "text": "A coral-crusted shipwreck listing on the seabed, shafts of light entering through torn hull plating.",
+      "text_short": "coral-crusted shipwreck"
+    },
+    {
+      "name": "blue-hole",
+      "text": "The rim of a deep blue hole, bright turquoise flats dropping into an indigo abyss.",
+      "text_short": "blue hole drop-off"
+    },
+    {
+      "name": "cenote-shaft",
+      "text": "A flooded cenote lit by a single column of light from the jungle opening above, roots trailing down into clear water.",
+      "text_short": "light shaft in a cenote"
+    },
+    {
+      "name": "abyssal-vent-field",
+      "text": "An abyssal hydrothermal vent field, black smokers shimmering with heat in the beam of a dive light.",
+      "text_short": "deep-sea vent field"
+    },
+    {
+      "name": "under-ice",
+      "text": "Beneath polar sea ice, the ceiling glowing turquoise, brine icicles reaching down into dark water.",
+      "text_short": "under polar ice ceiling"
+    },
+    {
+      "name": "seagrass-meadow",
+      "text": "A gently waving seagrass meadow over white sand, dappled with moving light patterns.",
+      "text_short": "waving seagrass meadow"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Season",
+  "description": "Seasonal dressing for any outdoor scene.",
+  "items": [
+    {
+      "name": "spring-bloom",
+      "text": "early spring, fresh green shoots and drifting blossom petals",
+      "text_short": "spring blossom"
+    },
+    {
+      "name": "high-summer",
+      "text": "high summer, saturated greens, strong sun and deep cool shade",
+      "text_short": "high summer"
+    },
+    {
+      "name": "late-summer-gold",
+      "text": "late summer, dry golden grasses and low warm dusty light",
+      "text_short": "late summer gold"
+    },
+    {
+      "name": "autumn-foliage",
+      "text": "peak autumn, crimson and amber foliage, fallen leaves carpeting the ground",
+      "text_short": "peak autumn colors"
+    },
+    {
+      "name": "late-autumn-bare",
+      "text": "late autumn, bare branches, low pale sun and long blue shadows",
+      "text_short": "bare late autumn"
+    },
+    {
+      "name": "deep-winter",
+      "text": "deep winter, thick snow cover, frozen stillness and breath-fog cold",
+      "text_short": "deep winter snow"
+    },
+    {
+      "name": "winter-thaw",
+      "text": "the first thaw, patchy melting snow, dripping icicles and dark wet earth",
+      "text_short": "melting winter thaw"
+    },
+    {
+      "name": "monsoon-lush",
+      "text": "monsoon season, dripping oversaturated greenery and heavy humid air",
+      "text_short": "lush monsoon green"
+    }
+  ]
+}

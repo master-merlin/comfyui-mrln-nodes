@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Aerial Location",
+  "description": "Scenes meant to be seen from above. Tagged 'aerial'; pair with the drone viewpoint.",
+  "tags": ["aerial"],
+  "items": [
+    {
+      "name": "patchwork-farmland",
+      "text": "A quilt of farmland from above, contrasting field colors stitched together by hedgerows and a winding lane.",
+      "text_short": "patchwork fields from above"
+    },
+    {
+      "name": "coastal-switchbacks",
+      "text": "A cliffside coastal road folding through hairpin switchbacks high above turquoise coves.",
+      "text_short": "coastal hairpin road from above"
+    },
+    {
+      "name": "river-delta-veins",
+      "text": "A braided river delta spreading like silver veins through dark wetlands toward the sea.",
+      "text_short": "braided river delta"
+    },
+    {
+      "name": "manhattan-grid",
+      "text": "The rectilinear canyon grid of a dense city center from directly overhead, rooftops and moving traffic in miniature.",
+      "text_short": "city grid straight down"
+    },
+    {
+      "name": "container-port",
+      "text": "A container port from above, candy-colored containers in perfect rows beside gantry cranes and a docked ship.",
+      "text_short": "container port geometry"
+    },
+    {
+      "name": "alpine-ridgeline",
+      "text": "A knife-edge alpine ridgeline from above, glaciers pouring off both flanks into shadowed valleys.",
+      "text_short": "alpine ridgeline from above"
+    },
+    {
+      "name": "atoll-lagoon",
+      "text": "A ring-shaped coral atoll enclosing a gradient lagoon of impossible blues.",
+      "text_short": "coral atoll lagoon"
+    },
+    {
+      "name": "interchange-knot",
+      "text": "A multi-level motorway interchange from above, sweeping ramps knotted into concrete calligraphy.",
+      "text_short": "motorway interchange knot"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "label": "Sci-Fi Location",
+  "description": "Speculative settings for science-fiction scenes. Tagged 'scifi' for genre-filtered templates.",
+  "tags": ["scifi"],
+  "items": [
+    {
+      "name": "megacity-canyon",
+      "text": "The floor of a megacity canyon, sheer kilometer-high towers on both sides stitched together by skybridges and streams of aerial traffic.",
+      "text_short": "megacity canyon between towers"
+    },
+    {
+      "name": "orbital-ring-promenade",
+      "text": "A curved promenade inside an orbital ring station, the planet's cloud-swirled surface filling the panoramic windows overhead.",
+      "text_short": "orbital station promenade"
+    },
+    {
+      "name": "hangar-bay",
+      "text": "A cavernous starship hangar bay, service gantries and fuel lines surrounding landing pads under cold floodlights.",
+      "text_short": "starship hangar bay"
+    },
+    {
+      "name": "alien-desert",
+      "text": "A desert plain under an alien sky with two moons, wind-carved rock arches glowing faintly with mineral veins.",
+      "text_short": "alien desert, twin moons"
+    },
+    {
+      "name": "neon-market",
+      "text": "A crowded street market beneath layered holographic advertisements, steam and neon bleeding together over food stalls.",
+      "text_short": "neon holographic street market",
+      "tags": ["night", "neon"]
+    },
+    {
+      "name": "terraforming-frontier",
+      "text": "The edge of a terraforming zone, atmosphere processors on the horizon, young green growth breaking through cracked red regolith.",
+      "text_short": "terraforming frontier zone"
+    },
+    {
+      "name": "derelict-generation-ship",
+      "text": "The overgrown interior of a derelict generation ship, vines wrapping dormant machinery beneath a fractured artificial sky.",
+      "text_short": "derelict generation ship interior"
+    },
+    {
+      "name": "cryo-vault",
+      "text": "A frost-rimmed cryogenic vault, rows of glowing stasis pods receding into darkness.",
+      "text_short": "cryogenic vault, glowing pods"
+    },
+    {
+      "name": "space-elevator-base",
+      "text": "The colossal anchor complex of a space elevator, its ribbon rising through the clouds and out of sight.",
+      "text_short": "space elevator anchor complex"
+    },
+    {
+      "name": "underwater-dome-city",
+      "text": "A transparent dome city on the ocean floor, bioluminescent life drifting past the pressure glass.",
+      "text_short": "underwater dome city",
+      "tags": ["underwater"]
+    },
+    {
+      "name": "gas-giant-platform",
+      "text": "A mining platform riding the upper cloud decks of a gas giant, endless amber storm bands wheeling below.",
+      "text_short": "platform above gas giant clouds"
+    },
+    {
+      "name": "quantum-server-cathedral",
+      "text": "A cathedral-scale server hall, crystalline compute pillars pulsing with slow light beneath vaulted cooling arrays.",
+      "text_short": "crystalline server cathedral"
+    }
+  ]
+}

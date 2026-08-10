@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Graphic Treatment",
+  "description": "Infographic, technical and poster treatments — the top engagement cluster in trending-prompt data.",
+  "items": [
+    {
+      "name": "blueprint-annotation",
+      "text": "photographic subject overlaid with blueprint-style technical annotations, white chalk-line callouts, dimensions and part labels",
+      "text_short": "blueprint annotation overlay"
+    },
+    {
+      "name": "isometric-infographic",
+      "text": "technical infographic in clean 45-degree isometric perspective, black ink annotations on pure white background",
+      "text_short": "isometric technical infographic"
+    },
+    {
+      "name": "exploded-teardown",
+      "text": "museum-style teardown, the subject decomposed into an exploded diagram of floating labeled components",
+      "text_short": "exploded teardown diagram"
+    },
+    {
+      "name": "museum-plate",
+      "text": "natural-history museum plate, specimen centered with taxonomy label, aged paper and engraved details",
+      "text_short": "museum specimen plate"
+    },
+    {
+      "name": "vintage-travel-poster",
+      "text": "vintage travel-poster design, flat color planes, stylized landmark and elegant retro title block",
+      "text_short": "vintage travel poster"
+    },
+    {
+      "name": "flat-design",
+      "text": "modern flat design illustration, geometric simplification, confident color blocking, no gradients",
+      "text_short": "flat design blocks"
+    },
+    {
+      "name": "cutaway-view",
+      "text": "technical cutaway view, the outer shell peeled open to reveal an intricately detailed interior",
+      "text_short": "technical cutaway"
+    },
+    {
+      "name": "field-notes",
+      "text": "naturalist field-notes page, ink sketches, handwritten margin notes and taped-in specimens",
+      "text_short": "field-notes page"
+    },
+    {
+      "name": "optical-illusion",
+      "text": "impossible-geometry optical illusion, clean high-contrast shapes defying consistent perspective",
+      "text_short": "impossible-geometry illusion"
+    },
+    {
+      "name": "brand-board",
+      "text": "brand identity board, the subject applied across mockups, swatches and typography specimens",
+      "text_short": "brand identity board"
+    }
+  ]
+}

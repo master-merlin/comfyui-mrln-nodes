@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "label": "Weather",
+  "description": "Weather conditions layered over any scene.",
+  "items": [
+    {
+      "name": "clear-sky",
+      "text": "crystal-clear sky, crisp visibility to the horizon",
+      "text_short": "clear sky"
+    },
+    {
+      "name": "dramatic-clouds",
+      "text": "towering dramatic cumulus clouds, patches of light moving across the ground",
+      "text_short": "dramatic cloudscape"
+    },
+    {
+      "name": "overcast",
+      "text": "flat overcast sky, soft shadowless grey light",
+      "text_short": "overcast grey"
+    },
+    {
+      "name": "light-rain",
+      "text": "light steady rain, glistening surfaces and fine droplets caught in the light",
+      "text_short": "light rain",
+      "negative": "dry ground"
+    },
+    {
+      "name": "downpour",
+      "text": "torrential downpour, sheets of rain, water streaming and splashing off every surface",
+      "text_short": "torrential rain",
+      "negative": "dry ground"
+    },
+    {
+      "name": "thunderstorm",
+      "text": "a brooding thunderstorm, lightning forking through charcoal clouds",
+      "text_short": "thunderstorm, forked lightning"
+    },
+    {
+      "name": "ground-fog",
+      "text": "low ground fog pooling knee-deep, shapes fading with distance",
+      "text_short": "low ground fog"
+    },
+    {
+      "name": "dense-mist",
+      "text": "dense enveloping mist, the world reduced to soft layered silhouettes",
+      "text_short": "dense mist layers"
+    },
+    {
+      "name": "snowfall",
+      "text": "quiet steady snowfall, fat flakes drifting, fresh powder muffling every edge",
+      "text_short": "steady snowfall"
+    },
+    {
+      "name": "blizzard",
+      "text": "horizontal wind-driven blizzard, whiteout gusts and streaking snow",
+      "text_short": "blizzard whiteout"
+    },
+    {
+      "name": "heat-haze",
+      "text": "shimmering heat haze rising from the ground, wavering mirage distortion",
+      "text_short": "heat haze shimmer"
+    },
+    {
+      "name": "after-the-rain",
+      "text": "freshly rained-out air, puddled reflections, drips falling from edges under a clearing sky",
+      "text_short": "wet streets after rain"
+    }
+  ]
+}

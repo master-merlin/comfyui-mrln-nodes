@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Portrait Viewpoint",
+  "description": "Framings for people — from full body to detail. Absorbs the classic boudoir shot list.",
+  "items": [
+    {
+      "name": "full-body",
+      "text": "full-body shot, the entire figure in frame with breathing room",
+      "text_short": "full body shot"
+    },
+    {
+      "name": "three-quarter-figure",
+      "text": "three-quarter figure shot, framed from head to mid-thigh",
+      "text_short": "three-quarter figure"
+    },
+    {
+      "name": "waist-up",
+      "text": "waist-up medium shot, natural conversational framing",
+      "text_short": "waist-up shot"
+    },
+    {
+      "name": "bust-portrait",
+      "text": "classic head-and-shoulders portrait framing",
+      "text_short": "head and shoulders"
+    },
+    {
+      "name": "close-up-face",
+      "text": "intimate close-up of the face, eyes carrying the frame",
+      "text_short": "face close-up"
+    },
+    {
+      "name": "extreme-detail",
+      "text": "extreme close-up detail shot, lips, lashes or hands filling the frame",
+      "text_short": "extreme detail crop"
+    },
+    {
+      "name": "over-the-shoulder",
+      "text": "over-the-shoulder framing, the subject glancing back toward the viewer",
+      "text_short": "over-shoulder glance"
+    },
+    {
+      "name": "profile",
+      "text": "clean side profile, features rendered in silhouette-sharp relief",
+      "text_short": "side profile"
+    },
+    {
+      "name": "back-view",
+      "text": "view from behind, the line of the back and shoulders leading the eye",
+      "text_short": "view from behind"
+    },
+    {
+      "name": "mirror-shot",
+      "text": "composed through a mirror, subject and reflection sharing the frame",
+      "text_short": "mirror reflection shot"
+    },
+    {
+      "name": "doorway-frame",
+      "text": "framed through a doorway, architecture bracketing the figure",
+      "text_short": "framed in doorway"
+    },
+    {
+      "name": "lying-overhead",
+      "text": "directly overhead looking down at the reclining subject",
+      "text_short": "overhead reclining shot"
+    }
+  ]
+}

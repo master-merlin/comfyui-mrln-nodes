@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "label": "Dramatic Light",
+  "description": "High-contrast, moody, stylized light — the theatrical end of the spectrum.",
+  "items": [
+    {
+      "name": "chiaroscuro",
+      "text": "chiaroscuro lighting, a single hard source carving the subject out of deep darkness",
+      "text_short": "chiaroscuro single source"
+    },
+    {
+      "name": "neon-rim",
+      "text": "electric neon rim light in magenta and cyan outlining the subject against darkness",
+      "text_short": "neon rim light",
+      "tags": ["night", "neon"]
+    },
+    {
+      "name": "single-practical",
+      "text": "one bare practical bulb overhead, harsh pool of light, hard-edged noir shadows",
+      "text_short": "bare bulb noir light",
+      "tags": ["night"]
+    },
+    {
+      "name": "volumetric-shafts",
+      "text": "volumetric light shafts cutting through haze, crisp god-ray beams and glowing dust",
+      "text_short": "volumetric light shafts"
+    },
+    {
+      "name": "silhouette-backlight",
+      "text": "powerful backlight reducing the subject to a rim-lit silhouette with a burning edge",
+      "text_short": "backlit silhouette"
+    },
+    {
+      "name": "police-strobe",
+      "text": "alternating red and blue emergency strobes sweeping the scene, hard color contrast",
+      "text_short": "red-blue strobe light",
+      "tags": ["night"]
+    },
+    {
+      "name": "lightning-flash",
+      "text": "a frozen lightning flash, stark white illumination against a storm-dark scene",
+      "text_short": "lightning flash"
+    },
+    {
+      "name": "underlight",
+      "text": "eerie light from below, inverted shadows giving an unsettling theatrical look",
+      "text_short": "eerie underlight"
+    },
+    {
+      "name": "stage-spot",
+      "text": "a tight theatrical spotlight in haze, everything outside its cone falling to black",
+      "text_short": "tight stage spotlight"
+    },
+    {
+      "name": "split-lighting",
+      "text": "hard split lighting, one half of the subject lit, the other in full shadow",
+      "text_short": "hard split light"
+    }
+  ]
+}

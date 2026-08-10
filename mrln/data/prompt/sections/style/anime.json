@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Anime Style",
+  "description": "Anime aesthetics described by their visual characteristics — no studio or artist names, by policy.",
+  "tags": ["anime"],
+  "items": [
+    {
+      "name": "pastoral-painterly",
+      "text": "painterly pastoral anime style, hand-painted watercolor backgrounds, soft clouds and nostalgic summer light",
+      "text_short": "painterly pastoral anime"
+    },
+    {
+      "name": "90s-cel",
+      "text": "90s cel anime style, hand-inked lines, limited palettes, film grain and halation glow",
+      "text_short": "90s cel anime"
+    },
+    {
+      "name": "modern-sakuga",
+      "text": "modern sakuga style, crisp digital lines, dynamic perspective and effects-heavy motion energy",
+      "text_short": "modern sakuga energy"
+    },
+    {
+      "name": "cinematic-keyvisual",
+      "text": "cinematic anime key visual, dramatic sky, painstaking light bloom and poster-grade composition",
+      "text_short": "anime key visual"
+    },
+    {
+      "name": "chibi",
+      "text": "chibi style, tiny rounded proportions, oversized heads and joyful simplicity",
+      "text_short": "chibi proportions"
+    },
+    {
+      "name": "watercolor-soft",
+      "text": "soft watercolor anime style, translucent washes, delicate lines and gentle pastel light",
+      "text_short": "watercolor anime"
+    },
+    {
+      "name": "dark-seinen",
+      "text": "dark seinen style, heavy inks, gritty crosshatching and muted desaturated palettes",
+      "text_short": "dark seinen inks"
+    },
+    {
+      "name": "shoujo-sparkle",
+      "text": "shoujo style, luminous eyes, flower motifs, sparkle overlays and airy linework",
+      "text_short": "shoujo sparkle"
+    },
+    {
+      "name": "flat-web",
+      "text": "flat modern web-anime style, bold graphic shapes, minimal shading and vivid color blocking",
+      "text_short": "flat web anime"
+    },
+    {
+      "name": "retro-manga",
+      "text": "retro manga style, screentone dots, expressive brush lines and black-and-white drama",
+      "text_short": "retro manga screentone"
+    }
+  ]
+}

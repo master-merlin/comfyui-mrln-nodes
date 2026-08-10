@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Capture Format",
+  "description": "The capture system's rendering signature.",
+  "items": [
+    {
+      "name": "35mm-full-frame",
+      "text": "full-frame 35mm capture, the versatile reportage standard",
+      "text_short": "35mm full frame"
+    },
+    {
+      "name": "medium-format-67",
+      "text": "6x7 medium format capture, cavernous tonal depth and slow deliberate framing",
+      "text_short": "6x7 medium format"
+    },
+    {
+      "name": "large-format-4x5",
+      "text": "4x5 large format capture, immense resolving detail and formal composed stillness",
+      "text_short": "4x5 large format"
+    },
+    {
+      "name": "digital-mf-back",
+      "text": "digital medium-format back, clinical 16-bit color and endless highlight latitude",
+      "text_short": "digital medium format"
+    },
+    {
+      "name": "instant-pack-film",
+      "text": "peel-apart instant pack film, imperfect chemistry edges and creamy tonality",
+      "text_short": "peel-apart instant film"
+    },
+    {
+      "name": "half-frame",
+      "text": "half-frame 35mm capture, grainy diaristic snapshot energy",
+      "text_short": "half-frame snapshot"
+    },
+    {
+      "name": "8x10-contact",
+      "text": "8x10 contact-print rendering, continuous tone with no visible grain at all",
+      "text_short": "8x10 contact print"
+    },
+    {
+      "name": "cinema-super35",
+      "text": "Super 35 cinema capture, motion-picture color science and gate weave charm",
+      "text_short": "Super 35 cinema"
+    }
+  ]
+}

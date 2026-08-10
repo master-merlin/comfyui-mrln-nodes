@@ -5,35 +5,94 @@
   "items": [
     {
       "name": "photorealistic",
-      "text": "hyper-realistic photograph, natural skin and material detail"
+      "text": "hyper-realistic photograph, natural skin and material detail",
+      "text_short": "hyper-realistic photo"
     },
     {
       "name": "cinematic-still",
-      "text": "cinematic film still, anamorphic framing, subtle grain"
+      "text": "cinematic film still, anamorphic framing, subtle grain",
+      "text_short": "cinematic film still"
     },
     {
       "name": "analog-film",
-      "text": "analog film photograph, Kodak Portra palette, soft halation"
+      "text": "analog film photograph, Kodak Portra palette, soft halation",
+      "text_short": "analog film photo"
     },
     {
       "name": "anime",
-      "text": "high-quality anime illustration, clean line art, cel shading"
+      "text": "high-quality anime illustration, clean line art, cel shading",
+      "text_short": "anime illustration",
+      "tags": ["anime"]
     },
     {
       "name": "oil-painting",
-      "text": "classical oil painting, visible brushwork, rich impasto"
+      "text": "classical oil painting, visible brushwork, rich impasto",
+      "text_short": "oil painting"
     },
     {
       "name": "watercolor",
-      "text": "delicate watercolor painting, soft washes, paper texture"
+      "text": "delicate watercolor painting, soft washes, paper texture",
+      "text_short": "watercolor painting"
     },
     {
       "name": "3d-render",
-      "text": "polished 3D render, physically-based materials, global illumination"
+      "text": "polished 3D render, physically-based materials, global illumination",
+      "text_short": "polished 3D render"
     },
     {
       "name": "comic-ink",
-      "text": "bold comic ink illustration, dramatic hatching, halftone shading"
+      "text": "bold comic ink illustration, dramatic hatching, halftone shading",
+      "text_short": "comic ink illustration"
+    },
+    {
+      "name": "gouache",
+      "text": "matte gouache painting, opaque velvety layers and crisp poster-like edges",
+      "text_short": "gouache painting"
+    },
+    {
+      "name": "charcoal",
+      "text": "expressive charcoal drawing, smudged shadow masses and rough paper tooth",
+      "text_short": "charcoal drawing"
+    },
+    {
+      "name": "colored-pencil",
+      "text": "layered colored-pencil illustration, visible strokes and waxy blended color",
+      "text_short": "colored pencil art"
+    },
+    {
+      "name": "pastel-chalk",
+      "text": "soft pastel chalk artwork, powdery blooms of color with fingertip blending",
+      "text_short": "soft pastel chalk"
+    },
+    {
+      "name": "ink-wash",
+      "text": "east-asian ink wash painting, tonal gradients of black ink and confident empty space",
+      "text_short": "ink wash painting"
+    },
+    {
+      "name": "paper-collage",
+      "text": "hand-crafted paper cut-out collage, layered torn edges, mixed textures and visible depth",
+      "text_short": "paper cut-out collage"
+    },
+    {
+      "name": "stained-glass",
+      "text": "stained-glass artwork, leaded outlines and luminous translucent color panes",
+      "text_short": "stained glass"
+    },
+    {
+      "name": "pixel-art",
+      "text": "detailed pixel art, deliberate limited palette and crisp dithered shading",
+      "text_short": "pixel art"
+    },
+    {
+      "name": "vector-illustration",
+      "text": "clean vector illustration, smooth curves, flat fills and geometric precision",
+      "text_short": "vector illustration"
+    },
+    {
+      "name": "embroidery",
+      "text": "embroidered textile artwork, visible stitch directions and raised thread texture",
+      "text_short": "embroidered textile"
     }
   ]
 }

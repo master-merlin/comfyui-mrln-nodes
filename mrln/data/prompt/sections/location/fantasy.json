@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Fantasy Location",
+  "description": "High-fantasy settings. Tagged 'fantasy' for genre-filtered templates.",
+  "tags": ["fantasy"],
+  "items": [
+    {
+      "name": "enchanted-forest",
+      "text": "An enchanted forest of colossal silver-barked trees, drifting motes of light and glowing fungi along mossy roots.",
+      "text_short": "glowing enchanted forest"
+    },
+    {
+      "name": "floating-isles",
+      "text": "A chain of floating islands trailing waterfalls into open sky, rope bridges swaying between grassy crags.",
+      "text_short": "floating islands, sky waterfalls"
+    },
+    {
+      "name": "dragon-roost",
+      "text": "A wind-scoured mountain roost littered with enormous scorched bones and half-melted treasure fused into the rock.",
+      "text_short": "dragon roost among scorched bones"
+    },
+    {
+      "name": "elven-city",
+      "text": "An elven city grown from living trees, spiral stairways and lantern-lit walkways winding through the canopy.",
+      "text_short": "elven treetop city"
+    },
+    {
+      "name": "wizard-library",
+      "text": "A towering circular library, bookshelves spiraling up out of sight, ladders on brass rails and floating candles.",
+      "text_short": "endless spiral wizard library"
+    },
+    {
+      "name": "crystal-cavern",
+      "text": "A cavern of house-sized luminous crystals, their cold light refracting through drifting mist.",
+      "text_short": "luminous crystal cavern"
+    },
+    {
+      "name": "ruined-temple",
+      "text": "A vine-strangled temple ruin deep in jungle, carved guardian statues half-swallowed by roots.",
+      "text_short": "jungle-swallowed temple ruin"
+    },
+    {
+      "name": "witchs-cottage",
+      "text": "A crooked cottage at the edge of a dark wood, herb bundles drying under the eaves and smoke curling from a leaning chimney.",
+      "text_short": "crooked witch's cottage"
+    },
+    {
+      "name": "portal-standing-stones",
+      "text": "A ring of ancient standing stones on a moor, the air inside shimmering like heat-haze with restrained magic.",
+      "text_short": "shimmering standing-stone ring"
+    },
+    {
+      "name": "throne-of-the-deep-king",
+      "text": "A subterranean throne hall carved from a single obsidian seam, rivers of magma glowing far below open galleries.",
+      "text_short": "obsidian throne hall over magma"
+    }
+  ]
+}

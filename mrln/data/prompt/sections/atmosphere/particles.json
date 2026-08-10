@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Particles",
+  "description": "The floating-detail layer — small drifting elements that give top-rated prompts their depth.",
+  "items": [
+    {
+      "name": "dust-motes",
+      "text": "fine dust motes drifting through the light",
+      "text_short": "drifting dust motes"
+    },
+    {
+      "name": "embers",
+      "text": "glowing embers rising and winking out in the air",
+      "text_short": "rising embers"
+    },
+    {
+      "name": "petals",
+      "text": "loose petals drifting sideways on the breeze",
+      "text_short": "drifting petals"
+    },
+    {
+      "name": "snow-flurry",
+      "text": "a light flurry of snowflakes hanging in the air",
+      "text_short": "snow flurry"
+    },
+    {
+      "name": "frozen-splash",
+      "text": "droplets frozen mid-air in a crisp suspended splash",
+      "text_short": "frozen splash droplets"
+    },
+    {
+      "name": "mist-wisps",
+      "text": "thin wisps of mist curling slowly through the scene",
+      "text_short": "curling mist wisps"
+    },
+    {
+      "name": "pollen-glow",
+      "text": "backlit pollen and seed fluff glowing like slow fireflies",
+      "text_short": "glowing pollen drift"
+    },
+    {
+      "name": "confetti",
+      "text": "scattered confetti caught mid-fall in vivid colors",
+      "text_short": "falling confetti"
+    },
+    {
+      "name": "sparks",
+      "text": "hot sparks scattering in bright short-lived arcs",
+      "text_short": "scattering sparks"
+    },
+    {
+      "name": "bokeh-orbs",
+      "text": "soft out-of-focus light orbs floating in the background depth",
+      "text_short": "floating bokeh orbs"
+    }
+  ]
+}

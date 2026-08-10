@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "label": "Lens",
+  "description": "Focal length and aperture character — each item is one committed lens choice.",
+  "items": [
+    {
+      "name": "85mm-f12",
+      "text": "shot on an 85mm f/1.2 portrait lens, razor-thin focus plane, melted creamy background",
+      "text_short": "85mm f/1.2 portrait lens"
+    },
+    {
+      "name": "50mm-f14",
+      "text": "shot on a 50mm f/1.4 at eye-natural perspective, gentle background separation",
+      "text_short": "50mm f/1.4"
+    },
+    {
+      "name": "135mm-compression",
+      "text": "shot on a 135mm telephoto, compressed perspective stacking background close behind the subject",
+      "text_short": "135mm compression"
+    },
+    {
+      "name": "35mm-environmental",
+      "text": "shot on a 35mm lens, subject in context with breathing space around the story",
+      "text_short": "35mm environmental"
+    },
+    {
+      "name": "24mm-wide",
+      "text": "shot on a 24mm wide angle, sweeping foreground-to-horizon depth",
+      "text_short": "24mm wide angle"
+    },
+    {
+      "name": "14mm-ultrawide",
+      "text": "shot on a 14mm ultra-wide, stretched edges and dramatic near-far exaggeration",
+      "text_short": "14mm ultra-wide"
+    },
+    {
+      "name": "600mm-telephoto",
+      "text": "shot on a 600mm super-telephoto, extreme reach, flattened perspective and buttery distant bokeh",
+      "text_short": "600mm super-telephoto"
+    },
+    {
+      "name": "100mm-macro",
+      "text": "shot on a 100mm macro lens at 1:1, microscopic surface detail, wafer-thin focus",
+      "text_short": "100mm macro 1:1"
+    },
+    {
+      "name": "anamorphic",
+      "text": "shot anamorphic, oval bokeh, horizontal blue flares and widescreen cinema geometry",
+      "text_short": "anamorphic flare look"
+    },
+    {
+      "name": "fisheye",
+      "text": "shot on a fisheye lens, curved horizon and bulging comic distortion",
+      "text_short": "fisheye distortion"
+    },
+    {
+      "name": "tilt-shift-lens",
+      "text": "shot on a tilt-shift lens, a knife-edge diagonal plane of focus through the scene",
+      "text_short": "tilt-shift focus plane"
+    },
+    {
+      "name": "vintage-glass",
+      "text": "shot on uncoated vintage glass, low contrast, swirly bokeh and glowing highlights",
+      "text_short": "vintage swirly glass"
+    },
+    {
+      "name": "f8-deep",
+      "text": "stopped down to f/8, everything critically sharp from foreground to horizon",
+      "text_short": "f/8 deep focus"
+    },
+    {
+      "name": "catadioptric",
+      "text": "shot on a mirror lens, signature donut-ring bokeh and flat tele perspective",
+      "text_short": "mirror-lens donut bokeh"
+    }
+  ]
+}

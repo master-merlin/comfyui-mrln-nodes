@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "label": "Aesthetic",
+  "description": "Named internet-era aesthetics and moods.",
+  "items": [
+    {
+      "name": "y2k",
+      "text": "Y2K aesthetic, chrome gradients, translucent plastics and optimistic techno-kitsch",
+      "text_short": "Y2K chrome"
+    },
+    {
+      "name": "vaporwave",
+      "text": "vaporwave aesthetic, pink-teal gradients, marble busts, grids and sunset palms",
+      "text_short": "vaporwave gradients",
+      "tags": ["neon"]
+    },
+    {
+      "name": "synthwave",
+      "text": "synthwave aesthetic, neon wireframe horizon, chrome text glow and 80s dusk",
+      "text_short": "synthwave horizon",
+      "tags": ["neon", "night"]
+    },
+    {
+      "name": "dark-academia",
+      "text": "dark-academia aesthetic, tweed and old libraries, candlelit study and autumnal gloom",
+      "text_short": "dark academia"
+    },
+    {
+      "name": "cottagecore",
+      "text": "cottagecore aesthetic, wildflower meadows, linen, fresh bread and gentle domestic idyll",
+      "text_short": "cottagecore idyll"
+    },
+    {
+      "name": "liminal-space",
+      "text": "liminal-space aesthetic, empty transitional interiors, humming fluorescents and uncanny stillness",
+      "text_short": "liminal emptiness"
+    },
+    {
+      "name": "memphis-design",
+      "text": "Memphis design aesthetic, playful clashing geometry, squiggles and confetti shapes",
+      "text_short": "Memphis shapes"
+    },
+    {
+      "name": "grunge-zine",
+      "text": "90s grunge zine aesthetic, photocopy noise, torn collage and safety-pin energy",
+      "text_short": "grunge zine collage"
+    },
+    {
+      "name": "whimsical-storybook",
+      "text": "whimsical storybook aesthetic, charming characters, cozy scenes and gentle humor",
+      "text_short": "whimsical storybook"
+    },
+    {
+      "name": "ethereal-dreamcore",
+      "text": "ethereal dreamcore aesthetic, glowing haze, floating elements and soft unreality",
+      "text_short": "ethereal dreamcore"
+    },
+    {
+      "name": "biophilic-future",
+      "text": "biophilic design aesthetic, living greenery integrated into clean warm architecture",
+      "text_short": "biophilic greenery"
+    },
+    {
+      "name": "wabi-sabi",
+      "text": "wabi-sabi aesthetic, imperfect natural materials, patina and contemplative emptiness",
+      "text_short": "wabi-sabi patina"
+    }
+  ]
+}

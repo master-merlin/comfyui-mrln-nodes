@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Print Process",
+  "description": "Physical printmaking processes as looks.",
+  "items": [
+    {
+      "name": "risograph",
+      "text": "risograph print look, limited spot colors, soft misregistration and grainy ink texture",
+      "text_short": "risograph grain"
+    },
+    {
+      "name": "screenprint",
+      "text": "screenprint look, bold flat ink layers with crisp hand-pulled edges",
+      "text_short": "screenprint layers"
+    },
+    {
+      "name": "linocut",
+      "text": "linocut print look, carved gouge marks, stark black shapes and handmade edges",
+      "text_short": "linocut carving"
+    },
+    {
+      "name": "woodcut",
+      "text": "woodcut print look, coarse grain-textured lines and rustic ink coverage",
+      "text_short": "woodcut texture"
+    },
+    {
+      "name": "cyanotype",
+      "text": "cyanotype print, Prussian-blue monochrome with sun-exposed soft edges",
+      "text_short": "cyanotype blue"
+    },
+    {
+      "name": "letterpress",
+      "text": "letterpress look, debossed impressions and inked texture on thick cotton paper",
+      "text_short": "letterpress deboss"
+    },
+    {
+      "name": "halftone-newsprint",
+      "text": "halftone newsprint look, visible dot screens, slight mis-inking and aged paper",
+      "text_short": "halftone newsprint"
+    },
+    {
+      "name": "etching",
+      "text": "copperplate etching look, fine crosshatched lines building velvety shadow",
+      "text_short": "etched crosshatch"
+    },
+    {
+      "name": "lithograph-vintage",
+      "text": "vintage travel-poster lithograph look, flat confident color planes and stylized forms",
+      "text_short": "vintage litho poster"
+    },
+    {
+      "name": "blueprint",
+      "text": "blueprint print, white technical linework glowing on deep cyan ground",
+      "text_short": "blueprint cyan"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Dynamic Viewpoint",
+  "description": "Energetic and unusual camera positions for any subject.",
+  "items": [
+    {
+      "name": "drone-high",
+      "text": "high drone shot looking steeply down, subject small in a vast environment",
+      "text_short": "high drone view",
+      "tags": ["aerial"]
+    },
+    {
+      "name": "birds-eye-topdown",
+      "text": "perfect top-down bird's-eye view, the scene flattened into graphic shapes",
+      "text_short": "top-down view",
+      "tags": ["aerial"]
+    },
+    {
+      "name": "worms-eye",
+      "text": "extreme worm's-eye view from ground level, subject towering against the sky",
+      "text_short": "worm's-eye view"
+    },
+    {
+      "name": "dutch-tilt",
+      "text": "dutch tilt, the horizon canted for restless tension",
+      "text_short": "dutch tilt"
+    },
+    {
+      "name": "pov-hands",
+      "text": "first-person point of view, the viewer's own hands entering the frame",
+      "text_short": "first-person POV"
+    },
+    {
+      "name": "isometric",
+      "text": "clean isometric three-quarter overhead perspective, diorama-like parallel projection",
+      "text_short": "isometric view"
+    },
+    {
+      "name": "through-foreground",
+      "text": "shot through out-of-focus foreground elements, layered voyeuristic depth",
+      "text_short": "through-foreground layers"
+    },
+    {
+      "name": "reflection-only",
+      "text": "the subject seen only as a reflection, in glass, water or chrome",
+      "text_short": "seen in reflection"
+    },
+    {
+      "name": "tracking-side",
+      "text": "side-on tracking view moving with the subject, background streaking past",
+      "text_short": "side tracking view"
+    },
+    {
+      "name": "macro-distance",
+      "text": "macro-range closeness, shallow focus, textures becoming landscapes",
+      "text_short": "macro closeness"
+    }
+  ]
+}

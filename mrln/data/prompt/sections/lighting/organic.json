@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "label": "Organic Light",
+  "description": "Natural and practical light sources with soft, believable falloff — the intimate end of the lighting spectrum.",
+  "items": [
+    {
+      "name": "window-light",
+      "text": "soft directional daylight from a single large window, gentle falloff into shadow, dust visible in the beam",
+      "text_short": "soft window light"
+    },
+    {
+      "name": "sheer-curtain-glow",
+      "text": "daylight diffused through sheer curtains, wrapping soft light with barely defined shadows",
+      "text_short": "curtain-diffused glow"
+    },
+    {
+      "name": "blinds-slats",
+      "text": "low sun slicing through venetian blinds, parallel bands of warm light raking across the scene",
+      "text_short": "light bands through blinds"
+    },
+    {
+      "name": "candlelight",
+      "text": "warm flickering candlelight, deep amber tones, intimate pools of light and soft darkness",
+      "text_short": "warm candlelight"
+    },
+    {
+      "name": "fireplace-glow",
+      "text": "the restless orange glow of a fireplace, warm highlights dancing on nearby surfaces",
+      "text_short": "fireplace glow"
+    },
+    {
+      "name": "string-lights",
+      "text": "warm fairy string lights, small soft points of glow and creamy bokeh in the background",
+      "text_short": "warm string lights"
+    },
+    {
+      "name": "bedside-lamp",
+      "text": "a single warm bedside lamp, cozy low-key light with soft shadow edges",
+      "text_short": "single bedside lamp"
+    },
+    {
+      "name": "golden-hour-window",
+      "text": "late golden-hour sun pouring horizontally through a window, long warm shadows and glowing edges",
+      "text_short": "golden hour through window",
+      "tags": ["day"]
+    },
+    {
+      "name": "overcast-softbox",
+      "text": "bright overcast sky acting as one huge softbox, shadowless even light with true colors",
+      "text_short": "soft overcast light",
+      "tags": ["day"]
+    },
+    {
+      "name": "dappled-leaves",
+      "text": "sunlight dappled through foliage, shifting spots of light and leaf-shadow patterns",
+      "text_short": "dappled leaf light",
+      "tags": ["day"]
+    }
+  ]
+}

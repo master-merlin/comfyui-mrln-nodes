@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Render Look",
+  "description": "3D and CG rendering signatures.",
+  "items": [
+    {
+      "name": "path-traced",
+      "text": "physically-based path-traced render, accurate global illumination, caustics and soft indirect bounce",
+      "text_short": "path-traced GI render"
+    },
+    {
+      "name": "cinematic-engine",
+      "text": "cinematic real-time engine render, lens effects, volumetrics and filmic tonemapping",
+      "text_short": "cinematic engine render"
+    },
+    {
+      "name": "clay-render",
+      "text": "monochrome clay render, matte grey material revealing pure form and light",
+      "text_short": "grey clay render"
+    },
+    {
+      "name": "wireframe-hybrid",
+      "text": "hybrid render, shaded model dissolving into visible wireframe topology",
+      "text_short": "wireframe hybrid"
+    },
+    {
+      "name": "lowpoly-flat",
+      "text": "stylized low-poly render, faceted geometry with flat pastel shading",
+      "text_short": "low-poly facets"
+    },
+    {
+      "name": "voxel",
+      "text": "voxel art render, the world assembled from tiny glowing cubes",
+      "text_short": "voxel cubes"
+    },
+    {
+      "name": "toon-shaded",
+      "text": "toon-shaded 3D render, stepped cel lighting with clean outline strokes",
+      "text_short": "toon-shaded 3D",
+      "tags": ["anime"]
+    },
+    {
+      "name": "subsurface-translucent",
+      "text": "render showcasing deep subsurface scattering, light glowing through translucent material",
+      "text_short": "subsurface glow render"
+    },
+    {
+      "name": "holographic-ui",
+      "text": "holographic interface render, translucent glowing panels and scanline shimmer",
+      "text_short": "holographic UI look",
+      "tags": ["scifi"]
+    },
+    {
+      "name": "diorama-render",
+      "text": "miniature diorama render, a self-contained floating world slice with tiny perfect props",
+      "text_short": "floating diorama render"
+    }
+  ]
+}

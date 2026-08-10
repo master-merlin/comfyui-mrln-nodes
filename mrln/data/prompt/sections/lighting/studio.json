@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Studio Light",
+  "description": "Controlled studio setups for portrait and product work.",
+  "items": [
+    {
+      "name": "softbox-key",
+      "text": "large octagonal softbox as key light at 45 degrees, creamy highlight roll-off and soft defined shadows",
+      "text_short": "large softbox key"
+    },
+    {
+      "name": "rembrandt",
+      "text": "classic Rembrandt lighting, key high and to the side leaving a triangle of light on the shadowed cheek",
+      "text_short": "Rembrandt lighting"
+    },
+    {
+      "name": "butterfly",
+      "text": "butterfly lighting from high front, symmetrical glamour shadows under nose and chin",
+      "text_short": "butterfly glamour light"
+    },
+    {
+      "name": "clamshell",
+      "text": "clamshell beauty lighting, soft key above and fill below erasing texture, luminous even skin",
+      "text_short": "clamshell beauty light"
+    },
+    {
+      "name": "rim-kicker",
+      "text": "twin rim kickers from behind separating the subject with bright edge highlights",
+      "text_short": "twin rim kickers"
+    },
+    {
+      "name": "gelled-duotone",
+      "text": "opposing gelled strobes, teal from one side and magenta from the other, saturated duotone modeling",
+      "text_short": "teal-magenta gel light"
+    },
+    {
+      "name": "hard-bare-flash",
+      "text": "hard bare direct flash, crisp fashion-editorial shadows thrown flat on the backdrop",
+      "text_short": "hard direct flash"
+    },
+    {
+      "name": "ring-light",
+      "text": "frontal ring light, shadowless beauty illumination with a circular catchlight in the eyes",
+      "text_short": "ring light beauty"
+    },
+    {
+      "name": "gridded-spot",
+      "text": "a gridded spot picking the subject out of a black studio void, controlled spill",
+      "text_short": "gridded spot on black"
+    },
+    {
+      "name": "white-cyclorama",
+      "text": "even high-key light on a seamless white cyclorama, floating shadowless product look",
+      "text_short": "high-key white cyc"
+    },
+    {
+      "name": "light-painting-sweep",
+      "text": "long-exposure light-painting sweeps wrapping the subject in ribbons of controlled highlight",
+      "text_short": "light-painting sweeps"
+    },
+    {
+      "name": "window-flag-negative",
+      "text": "single soft window source with black negative fill deepening the shadow side, quiet cinematic contrast",
+      "text_short": "soft key, negative fill"
+    }
+  ]
+}

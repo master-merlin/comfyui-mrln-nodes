@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "label": "Genre",
+  "description": "Genre flavor injected across any subject. Items tag themselves so genre-filtered slots can couple with matching locations.",
+  "items": [
+    {
+      "name": "science-fiction",
+      "text": "hard science-fiction aesthetic, functional technology, believable near-future materials",
+      "text_short": "sci-fi aesthetic",
+      "tags": ["scifi"]
+    },
+    {
+      "name": "cyberpunk",
+      "text": "cyberpunk aesthetic, high tech low life, neon on grime, chrome and rain",
+      "text_short": "cyberpunk neon-grime",
+      "tags": ["scifi", "neon"]
+    },
+    {
+      "name": "steampunk",
+      "text": "steampunk aesthetic, brass gauges, riveted copper, steam and Victorian machinery",
+      "text_short": "steampunk brass",
+      "tags": ["historical"]
+    },
+    {
+      "name": "solarpunk",
+      "text": "solarpunk aesthetic, verdant optimistic future, plants woven through bright clean architecture",
+      "text_short": "solarpunk green future",
+      "tags": ["scifi"]
+    },
+    {
+      "name": "high-fantasy",
+      "text": "high-fantasy aesthetic, mythic scale, enchanted materials and heraldic detail",
+      "text_short": "high fantasy",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "dark-fantasy",
+      "text": "dark-fantasy aesthetic, gothic dread, corrupted beauty and candlelit shadow",
+      "text_short": "dark fantasy gothic",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "film-noir",
+      "text": "film-noir aesthetic, venetian-blind shadows, cigarette haze and fatal glamour",
+      "text_short": "film noir shadows",
+      "tags": ["night"]
+    },
+    {
+      "name": "western",
+      "text": "western aesthetic, sun-bleached dust, worn leather and long horizons",
+      "text_short": "western dust and leather"
+    },
+    {
+      "name": "gothic-horror",
+      "text": "gothic-horror atmosphere, decayed grandeur, fog and wrought iron under a cold moon",
+      "text_short": "gothic horror mood",
+      "tags": ["night"]
+    },
+    {
+      "name": "retro-futurism",
+      "text": "retro-futurist aesthetic, atomic-age optimism, chrome fins and raygun curves",
+      "text_short": "atomic retro-future"
+    },
+    {
+      "name": "post-apocalyptic",
+      "text": "post-apocalyptic aesthetic, reclaimed ruins, improvised gear and beautiful decay",
+      "text_short": "post-apocalyptic ruins"
+    },
+    {
+      "name": "cosmic-horror",
+      "text": "cosmic-horror atmosphere, wrong geometry, scale beyond comprehension, dread in the vastness",
+      "text_short": "cosmic horror scale"
+    },
+    {
+      "name": "fairy-tale",
+      "text": "storybook fairy-tale aesthetic, gentle wonder, cottages and deep friendly woods",
+      "text_short": "storybook fairy tale",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "mythological",
+      "text": "classical mythological aesthetic, marble, laurels, gods and golden ratio grandeur",
+      "text_short": "classical mythology"
+    },
+    {
+      "name": "space-opera",
+      "text": "space-opera aesthetic, vast fleets, glowing nebulae and operatic galactic scale",
+      "text_short": "space opera scale",
+      "tags": ["scifi"]
+    }
+  ]
+}
