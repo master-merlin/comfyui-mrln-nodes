@@ -2058,6 +2058,39 @@ export function createComposerPanel(root, ctx) {
     return loraListCache;
   }
 
+  function loraSelect(current) {
+    // A real dropdown, not a datalist: datalists filter by the typed value,
+    // so a filled input "shows one entry". This always lists every installed
+    // file, grouped by subfolder like the template combo.
+    const sel = el("select", { title: "LoRA file (from ComfyUI's models/loras)" });
+    sel.append(el("option", { value: "" }, "— choose LoRA —"));
+    if (current) sel.append(el("option", { value: current }, current));
+    sel.value = current ?? "";
+    installedLoras().then((list) => {
+      const chosen = sel.value;
+      const groups = new Map();
+      for (const name of list) {
+        const cut = Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\"));
+        const folder = cut === -1 ? "" : name.slice(0, cut);
+        if (!groups.has(folder)) groups.set(folder, []);
+        groups.get(folder).push(name);
+      }
+      sel.replaceChildren(el("option", { value: "" }, "— choose LoRA —"));
+      for (const folder of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
+        const options = groups
+          .get(folder)
+          .map((name) => el("option", { value: name }, folder ? name.slice(folder.length + 1) : name));
+        if (folder) sel.append(el("optgroup", { label: folder }, ...options));
+        else sel.append(...options);
+      }
+      if (chosen && !list.includes(chosen)) {
+        sel.append(el("option", { value: chosen }, `⚠ not installed: ${chosen}`));
+      }
+      sel.value = chosen;
+    });
+    return sel;
+  }
+
   function openSectionForm(slug, body) {
     // Factory sections COMPOUND: the default save writes only your changes
     // (edited/new items, tombstones for hidden ones) as a thin extend file
@@ -2066,7 +2099,6 @@ export function createComposerPanel(root, ctx) {
     const hasFactory = Boolean(factoryBaseline);
     let saveMode = hasFactory ? (body.replaces ? "replace" : "extend") : "standalone";
 
-    const loraDatalist = el("datalist", { id: "mrln-loras" });
     const slugInput = el("input", { type: "text", value: slug ?? "", placeholder: "folder/name" });
     const labelInput = el("input", { type: "text", value: body.label ?? "" });
     const descInput = el("input", { type: "text", value: body.description ?? "" });
@@ -2140,7 +2172,7 @@ export function createComposerPanel(root, ctx) {
       if (item.data?.lora !== undefined) {
         // LoRA block: an extra editor line for the loader metadata — the
         // text above stays the catchword that lands in the prompt.
-        row.lora = el("input", { type: "text", value: item.data.lora ?? "", list: "mrln-loras" });
+        row.lora = loraSelect(item.data.lora ?? "");
         row.sm = el("input", {
           type: "text",
           inputmode: "decimal",
@@ -2362,23 +2394,17 @@ export function createComposerPanel(root, ctx) {
             class: "mrln-btn",
             title: "Add a LoRA block: catchword text for the prompt plus loader "
               + "metadata (file + strengths) that render as a <lora:…> tag",
-            onclick: async () => {
-              const loras = await installedLoras();
+            onclick: () =>
               addItemRow({
                 name: "",
                 text: "",
-                data: { lora: loras[0] ?? "", strength_model: 1.0, strength_clip: 1.0 },
-              });
-            },
+                data: { lora: "", strength_model: 1.0, strength_clip: 1.0 },
+              }),
           },
           "+ LoRA block"
         ),
         ...actions
-      ),
-      loraDatalist
-    );
-    installedLoras().then((list) =>
-      loraDatalist.replaceChildren(...list.map((name) => el("option", { value: name })))
+      )
     );
   }
 
