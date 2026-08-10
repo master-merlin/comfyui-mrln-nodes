@@ -331,6 +331,15 @@ export function createComposerPanel(root, ctx) {
     el(
       "div",
       { class: "mrln-actions" },
+      el(
+        "button",
+        {
+          class: "mrln-btn",
+          title: "Draw a new random selection (new master seed) — preview only, nothing is queued",
+          onclick: () => rerollSeed(),
+        },
+        "🎲 Randomize"
+      ),
       el("button", { class: "mrln-btn mrln-primary", onclick: () => applyToNode() }, "Apply to node"),
       el("button", { class: "mrln-btn", onclick: () => loadFromNode() }, "Load"),
       el("button", { class: "mrln-btn", title: "Fix every random slot to what the preview just drew", onclick: () => pinLastDraw() }, "Pin draw"),
@@ -384,6 +393,12 @@ export function createComposerPanel(root, ctx) {
     area.addEventListener("input", () => autoSize(area));
     requestAnimationFrame(() => autoSize(area)); // after it is in the DOM
     return area;
+  }
+
+  function rerollSeed() {
+    state.seed = Math.floor(Math.random() * 0xffffffff);
+    renderComposeTab(); // header seed input shows the new value
+    schedulePreview();
   }
 
   // ---- drag & drop reordering ----------------------------------------------
@@ -497,15 +512,7 @@ export function createComposerPanel(root, ctx) {
     });
     const reroll = el(
       "button",
-      {
-        class: "mrln-btn",
-        title: "New random master seed",
-        onclick: () => {
-          state.seed = Math.floor(Math.random() * 0xffffffff);
-          seedInput.value = state.seed;
-          schedulePreview();
-        },
-      },
+      { class: "mrln-btn", title: "New random master seed", onclick: () => rerollSeed() },
       "🎲"
     );
 
