@@ -1,5 +1,7 @@
 import pytest
 import support  # noqa: F401
+from promptlib_fixtures import build_library
+
 from mrln.promptlib import (
     ItemNotFoundError,
     SelectionError,
@@ -7,7 +9,6 @@ from mrln.promptlib import (
     resolve_section,
     resolve_template,
 )
-from promptlib_fixtures import build_library
 
 
 @pytest.fixture()

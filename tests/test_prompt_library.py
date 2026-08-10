@@ -2,8 +2,9 @@ import os
 
 import pytest
 import support  # noqa: F401
-from mrln.promptlib import Library, SchemaError, SectionNotFoundError, default_roots
 from promptlib_fixtures import build_library, build_roots, factory_only_library
+
+from mrln.promptlib import Library, SchemaError, SectionNotFoundError, default_roots
 
 
 def test_merged_slugs(tmp_path):

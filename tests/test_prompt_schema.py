@@ -1,7 +1,7 @@
 import pytest
 import support  # noqa: F401
-from mrln.promptlib import SchemaError, parse_section, parse_template
 
+from mrln.promptlib import SchemaError, parse_section, parse_template
 
 _DEFAULT_ITEMS = object()
 

@@ -98,7 +98,7 @@ def _check_version(data, source):
     if not isinstance(version, int) or version > _VERSION:
         raise SchemaError(
             source,
-            f"file version {version!r} requires a newer MRLN pack (this pack reads version {_VERSION})",
+            f"file version {version!r} needs a newer MRLN pack (this reads version {_VERSION})",
         )
 
 
@@ -256,7 +256,7 @@ def parse_template(data, slug, source):
     if not order:
         order = tuple(shared_ids) + (("@variant",) if variants else ())
     elif variants and "@variant" not in order:
-        order = order + ("@variant",)
+        order = (*order, "@variant")
 
     raw_render = data.get("render", {}) or {}
     if not isinstance(raw_render, dict):

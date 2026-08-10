@@ -3,6 +3,7 @@ the change reshuffles every seed users have stored — revert the change, do
 not update the constants."""
 
 import support  # noqa: F401
+
 from mrln.promptlib.seeding import derive_rng, weighted_index
 
 NAMES = ["red", "green", "blue", "gold"]

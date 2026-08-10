@@ -2,8 +2,9 @@ import json
 
 import pytest
 import support  # noqa: F401
-from mrln.promptlib import render, resolve_template
 from promptlib_fixtures import build_library
+
+from mrln.promptlib import render, resolve_template
 
 
 @pytest.fixture()
@@ -13,12 +14,12 @@ def lib(tmp_path):
 
 def resolved_basic(lib, **kw):
     tpl = lib.load_template("basic")
-    defaults = dict(
-        seed=0,
-        mode="as configured",
-        selection={"lighting": "daylight", "extra": "gold"},
-        variables={},
-    )
+    defaults = {
+        "seed": 0,
+        "mode": "as configured",
+        "selection": {"lighting": "daylight", "extra": "gold"},
+        "variables": {},
+    }
     defaults.update(kw)
     return tpl, resolve_template(lib, tpl, **defaults)
 

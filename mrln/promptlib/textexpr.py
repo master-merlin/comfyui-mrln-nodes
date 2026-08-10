@@ -35,7 +35,7 @@ class _Var:
 
 
 def parse(text):
-    nodes, pos = _parse_nodes(text, 0, top=True)
+    nodes, _pos = _parse_nodes(text, 0, top=True)
     return nodes
 
 
