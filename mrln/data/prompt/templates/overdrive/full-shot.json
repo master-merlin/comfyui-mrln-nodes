@@ -145,5 +145,6 @@
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",
     "block_joiner": "\n"
-  }
+  },
+  "negative": "watermark, text overlays, logo, deformed wheels, warped bodywork"
 }

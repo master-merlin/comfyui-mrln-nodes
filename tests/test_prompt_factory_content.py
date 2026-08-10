@@ -325,6 +325,54 @@ def test_no_artist_names_in_style_sections(lib):
             assert not banned.search(item.text), f"'{slug}/{item.name}' names an artist/studio"
 
 
+def test_template_conventions(lib):
+    """House rules for factory templates: a real description everywhere;
+    labeled-format templates must label every slot (labels are user-facing
+    prose lead-ins there) and use a {label}/{text} line pattern."""
+    for tpl_slug in lib.template_slugs():
+        tpl = lib.load_template(tpl_slug)
+        assert len(tpl.description) >= 20, f"{tpl_slug}: description missing or too thin"
+        assert tpl.negative, f"{tpl_slug}: every factory template ships a safety negative"
+        if tpl.render.format == "string_labeled":
+            assert "{label}" in tpl.render.labeled_line and "{text}" in tpl.render.labeled_line
+            for slot in list(tpl.slots) + [s for v in tpl.variants for s in v.slots]:
+                assert slot.label, f"{tpl_slug}: slot '{slot.id}' needs a label (labeled format)"
+
+
+def test_human_templates_carry_safety_negatives(lib):
+    """Any template that can draw human content carries the adult-safety
+    negative terms by default."""
+    for tpl_slug in lib.template_slugs():
+        tpl = lib.load_template(tpl_slug)
+        refs = [s.ref for s in tpl.slots] + [s.ref for v in tpl.variants for s in v.slots]
+        if any(ref.startswith(("human", "boudoir", "pose", "wardrobe")) for ref in refs):
+            assert "child" in tpl.negative and "underage" in tpl.negative, (
+                f"{tpl_slug}: human-drawing template must carry adult-safety negatives"
+            )
+
+
+def test_top_level_elements_have_template_depth(lib):
+    """Every major domain offers at least 3 templates to choose from."""
+    groups = {}
+    for slug in lib.template_slugs():
+        groups.setdefault(slug.split("/")[0], []).append(slug)
+    coverage = {
+        "vehicle": ["vehicle", "overdrive"],
+        "human": ["portrait", "boudoir", "character", "noir", "street"],
+        "anime": ["anime"],
+        "scifi": ["scifi"],
+        "fantasy": ["fantasy"],
+        "landscape": ["landscape", "astro"],
+        "animal": ["wildlife", "whimsy", "macro"],
+        "food": ["food"],
+        "product": ["product"],
+        "architecture": ["architecture"],
+    }
+    for element, folders in coverage.items():
+        count = sum(len(groups.get(folder, [])) for folder in folders)
+        assert count >= 3, f"element '{element}' has only {count} templates"
+
+
 def test_alias_table_empty_pre_release(lib):
     """Nothing has shipped, so pre-release renames were remapped directly
     and the alias table starts empty. From the first release on, renames

@@ -20,7 +20,9 @@
       "id": "setting",
       "ref": "location",
       "label": "Setting",
-      "tags_any": ["scifi"],
+      "tags_any": [
+        "scifi"
+      ],
       "emphasis": 1.1
     },
     {
@@ -49,7 +51,7 @@
     }
   ],
   "suffix": "Synthetic Rendering: (the boundary between engineered surface and living warmth rendered in loving macro detail:1.25), a single point of light in the eyes that might be a soul or a sensor, panel seams like scars.",
-  "negative": "watermark, text, cartoon, low detail, generic robot",
+  "negative": "watermark, text, cartoon, low detail, generic robot, child, underage",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",

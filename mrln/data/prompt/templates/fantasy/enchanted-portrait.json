@@ -1,7 +1,9 @@
 {
   "version": 1,
   "label": "Enchanted Portrait",
-  "type": ["human"],
+  "type": [
+    "human"
+  ],
   "description": "A painterly fantasy portrait: archetype, enchanted wardrobe and drifting light.",
   "prefix": "A luminous painterly fantasy portrait — a character rendered with the reverence of a museum masterwork, magic present as light rather than spectacle.",
   "slots": [
@@ -9,7 +11,9 @@
       "id": "figure",
       "ref": "human/archetype",
       "label": "The Figure",
-      "tags_any": ["fantasy"],
+      "tags_any": [
+        "fantasy"
+      ],
       "default": "sorceress",
       "emphasis": 1.25
     },
@@ -29,7 +33,9 @@
       "id": "setting",
       "ref": "location",
       "label": "Setting",
-      "tags_any": ["fantasy"],
+      "tags_any": [
+        "fantasy"
+      ],
       "emphasis": 1.1
     },
     {
@@ -58,7 +64,7 @@
     }
   ],
   "suffix": "Painterly Rendering: (brushwork visible in the shadows, detail concentrated at the face and hands:1.2), ornamental framing elements growing from the composition edges, magic glowing softly under the skin of the scene.",
-  "negative": "photobash artifacts, watermark, text, child, harsh digital sharpness",
+  "negative": "photobash artifacts, watermark, text, child, harsh digital sharpness, underage",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",
