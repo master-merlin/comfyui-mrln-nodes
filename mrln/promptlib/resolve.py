@@ -446,7 +446,7 @@ def _resolve_and_expand(
                 children.append(child)
                 child_text = child.text
                 if child_text and child.emphasis and child.emphasis != 1.0:
-                    child_text = f"({child_text}:{child.emphasis:g})"
+                    child_text = f"({child_text.rstrip('.')}:{child.emphasis:g})"
                 child_vars[child_slot.id] = child_text
             resolved = replace(resolved, children=tuple(children))
         base_text = item.text_short if (text_length == "short" and item.text_short) else item.text

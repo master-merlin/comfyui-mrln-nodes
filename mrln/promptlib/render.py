@@ -23,7 +23,8 @@ def _emphasized(slot):
     if not text:
         return ""
     if slot.emphasis and slot.emphasis != 1.0:
-        return f"({text}:{slot.emphasis:g})"
+        # a sentence period inside a weight wrapper reads as "…canopy.:1.15"
+        return f"({text.rstrip('.')}:{slot.emphasis:g})"
     return text
 
 
@@ -31,6 +32,10 @@ def _string(resolved, cfg):
     parts = [resolved.prefix]
     parts.extend(_emphasized(s) for s in resolved.slots)
     parts.append(resolved.suffix)
+    if cfg.joiner.lstrip().startswith(","):
+        # comma-joined fragments must not END in sentence periods (avoids
+        # "encounter., masterpiece"); interior sentences keep theirs.
+        return cfg.joiner.join(p.strip().rstrip(".") for p in parts if p)
     return cfg.joiner.join(p for p in parts if p)
 
 

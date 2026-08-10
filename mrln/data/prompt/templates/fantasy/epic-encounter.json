@@ -2,45 +2,33 @@
   "version": 1,
   "label": "Epic Encounter",
   "description": "Hero meets legend: fantasy archetype, mythical creature, enchanted arena and romanticist scale.",
-  "prefix": "An epic fantasy encounter.",
+  "prefix": "An epic fantasy encounter: exactly one hero facing exactly one legendary creature — no other people in the scene. The confrontation reads in a single glance.",
   "slots": [
-    {
-      "id": "quality",
-      "ref": "style/quality",
-      "label": "Quality boost",
-      "default": "sdxl-classic"
-    },
     {
       "id": "hero",
       "ref": "human/archetype",
-      "label": "The hero",
-      "tags_any": [
-        "fantasy"
-      ],
+      "label": "The Hero",
+      "tags_any": ["fantasy"],
       "emphasis": 1.2
     },
     {
       "id": "prop",
       "ref": "product/prop",
-      "label": "In hand",
-      "tags_any": [
-        "fantasy"
-      ],
+      "label": "Carried by the Hero",
+      "tags_any": ["fantasy"],
       "allow_empty": true
     },
     {
       "id": "legend",
       "ref": "animal/mythical",
-      "label": "The legend",
+      "label": "The Legend",
       "emphasis": 1.3
     },
     {
       "id": "arena",
       "ref": "location",
       "label": "Arena",
-      "tags_any": [
-        "fantasy"
-      ],
+      "tags_any": ["fantasy"],
       "emphasis": 1.15
     },
     {
@@ -52,26 +40,27 @@
     {
       "id": "genre",
       "ref": "style/genre",
-      "label": "Genre",
+      "label": "Design Language",
       "default": "high-fantasy"
     },
     {
       "id": "movement",
       "ref": "style/movement",
-      "label": "Painterly scale",
+      "label": "Painted As",
       "default": "romanticism"
     },
     {
       "id": "particles",
       "ref": "atmosphere/particles",
-      "label": "Air",
+      "label": "In the Air",
       "default": "embers"
     }
   ],
-  "suffix": "staggering sense of scale between hero and legend, painterly grandeur, coherent fantasy worldbuilding",
-  "negative": "modern objects, watermark, text, child, underage",
+  "suffix": "Encounter Rendering: (staggering sense of scale between the lone hero and the legend:1.2), masterpiece quality, ultra-detailed, sharp focus, cinematic lighting, painterly grandeur, coherent fantasy worldbuilding.",
+  "negative": "modern objects, watermark, text, child, underage, extra people, crowd, duplicate characters",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }
