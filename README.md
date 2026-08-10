@@ -23,6 +23,7 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 | Domain | Nodes |
 | ------ | ----- |
 | `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON); **Prompt Section** — a single library section as a standalone node for graph-native wiring |
+| `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: factory content ships with the pack
 (including the OverDrive car-photography showcase: `overdrive/full-shot`,

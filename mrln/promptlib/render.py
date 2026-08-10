@@ -57,9 +57,9 @@ def render(resolved, fmt, cfg):
             obj[slot.id] = slot.text  # no emphasis in JSON formats
         if resolved.suffix:
             obj["suffix"] = resolved.suffix
-        positive = json.dumps(obj, ensure_ascii=False)
+        positive = json.dumps(obj, ensure_ascii=False, indent=2)
     elif fmt == "json_flat":
-        positive = json.dumps({"prompt": _string(resolved, cfg)}, ensure_ascii=False)
+        positive = json.dumps({"prompt": _string(resolved, cfg)}, ensure_ascii=False, indent=2)
     else:
         raise ValueError(f"unknown format '{fmt}' (formats: {', '.join(FORMATS)})")
 

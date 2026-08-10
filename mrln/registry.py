@@ -16,7 +16,7 @@ import traceback
 from .pack import logger
 
 # Activate domains here — one entry per module in mrln/nodes/, load order preserved.
-DOMAINS = ("prompt",)
+DOMAINS = ("prompt", "text")
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
