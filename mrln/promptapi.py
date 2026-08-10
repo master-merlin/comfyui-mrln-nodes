@@ -13,7 +13,9 @@ filesystem any other way. JSON in, JSON out; errors are
 {"error": ..., "remediation": ...} with a matching HTTP status.
 """
 
+import asyncio
 import json
+import threading
 import traceback
 
 from . import promptlib as pl
@@ -384,6 +386,30 @@ ROUTES = (
 )
 
 
+def _warm_library_caches():
+    """Populate the module-level parse cache once at server boot so the
+    composer's first open never pays the cold-file cost (first-touch AV
+    scanning of ~170 JSON files can cost seconds on Windows)."""
+    try:
+        lib = pl.open_library()
+        count = 0
+        for slug in lib.section_slugs():
+            try:
+                lib.load_section(slug)
+                count += 1
+            except pl.PromptLibError:
+                pass
+        for slug in lib.template_slugs():
+            try:
+                lib.load_template(slug)
+                count += 1
+            except pl.PromptLibError:
+                pass
+        logger.info("MRLN prompt library warmed (%d files)", count)
+    except Exception:
+        logger.debug("MRLN prompt library warm-up skipped", exc_info=True)
+
+
 def register_routes():
     """Attach ROUTES to the running ComfyUI server. Returns False (never
     raises) when there is no server to attach to."""
@@ -412,11 +438,15 @@ def register_routes():
                     return web.json_response(body, status=400)
             else:
                 payload = dict(request.rel_url.query)
-            status, data = handler(pl.open_library(), payload)
+            # handlers are pure/synchronous — run them in the executor so
+            # they never block (or wait behind) the busy boot-time loop
+            loop = asyncio.get_running_loop()
+            status, data = await loop.run_in_executor(None, handler, pl.open_library(), payload)
             return web.json_response(data, status=status)
 
         return endpoint
 
     for method, path, handler, reads_body in ROUTES:
         getattr(instance.routes, method)(path)(adapt(handler, reads_body))
+    threading.Thread(target=_warm_library_caches, name="mrln-prompt-warmup", daemon=True).start()
     return True

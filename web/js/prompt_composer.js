@@ -13,11 +13,17 @@ if (!document.querySelector(`link[href="${cssUrl}"]`)) {
 }
 
 async function apiJson(route, options = {}) {
+  const started = performance.now();
   const resp = await api.fetchApi(route, {
     headers: { "Content-Type": "application/json" },
     ...options,
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
   });
+  const ms = performance.now() - started;
+  if (ms > 400) {
+    // surfaces WHERE first-open time goes (busy boot loop, AV first-touch…)
+    console.debug(`[MRLN] slow request ${route.split("?")[0]} took ${Math.round(ms)}ms`);
+  }
   let data = null;
   try {
     data = await resp.json();
