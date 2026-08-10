@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "label": "Night Lighting",
+  "description": "Lighting conditions matching the night sceneries.",
+  "tags": [
+    "night"
+  ],
+  "items": [
+    {
+      "name": "blue-hour",
+      "text": "The deep, cool, ambient glow of the blue hour."
+    },
+    {
+      "name": "neon-wash",
+      "text": "A vibrant, complex wash of multi-colored light from dense, overlapping neon signs."
+    },
+    {
+      "name": "full-moon",
+      "text": "A clear, cold night illuminated by a full moon, casting long, soft, cool-toned shadows."
+    },
+    {
+      "name": "headlights-only",
+      "text": "A pitch-black environment illuminated solely by the car's own advanced headlights and taillights."
+    },
+    {
+      "name": "chiaroscuro",
+      "text": "A dramatic, high-contrast chiaroscuro effect from a single, hard light source."
+    },
+    {
+      "name": "aurora-curtains",
+      "text": "The ethereal curtains of a visible aurora borealis painting the sky."
+    },
+    {
+      "name": "storm-light-break",
+      "text": "A moody, atmospheric scene under dark, heavy storm clouds, with dramatic, directional light breaking through a small gap."
+    }
+  ]
+}

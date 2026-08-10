@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "label": "Performance Infusion",
+  "description": "Donor for aggressive, performance-oriented design elements (vents, stance, major aerodynamic shapes).",
+  "items": [
+    {
+      "name": "bmw-m4",
+      "text": "BMW M4",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "porsche-911-gt3-rs",
+      "text": "Porsche 911 GT3 RS",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "lamborghini-hurac-n",
+      "text": "Lamborghini Huracán",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "audi-r8-v10",
+      "text": "Audi R8 V10",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "jaguar-f-type-svr",
+      "text": "Jaguar F-Type SVR",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "chevrolet-corvette-zr1",
+      "text": "Chevrolet Corvette ZR1",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "ford-gt",
+      "text": "Ford GT",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "nissan-gt-r-nismo",
+      "text": "Nissan GT-R Nismo",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "alfa-romeo-giulia-quadrifoglio",
+      "text": "Alfa Romeo Giulia Quadrifoglio",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "mercedes-amg-gt-black-series",
+      "text": "Mercedes-AMG GT Black Series",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "dodge-viper-acr",
+      "text": "Dodge Viper ACR",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "porsche-cayman-gt4-rs",
+      "text": "Porsche Cayman GT4 RS",
+      "weight": 0.0833,
+      "tags": [
+        "high-performance-road"
+      ]
+    },
+    {
+      "name": "mclaren-p1",
+      "text": "McLaren P1",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "hennessey-venom-f5",
+      "text": "Hennessey Venom F5",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "ssc-tuatara",
+      "text": "SSC Tuatara",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "koenigsegg-agera-rs",
+      "text": "Koenigsegg Agera RS",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "bugatti-chiron",
+      "text": "Bugatti Chiron",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "lamborghini-aventador-svj",
+      "text": "Lamborghini Aventador SVJ",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "mclaren-senna",
+      "text": "McLaren Senna",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "pagani-zonda-r",
+      "text": "Pagani Zonda R",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "aston-martin-vulcan",
+      "text": "Aston Martin Vulcan",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "brabham-bt62",
+      "text": "Brabham BT62",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "bugatti-bolide",
+      "text": "Bugatti Bolide",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "ferrari-fxx-k-evo",
+      "text": "Ferrari FXX-K Evo",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "lamborghini-sesto-elemento",
+      "text": "Lamborghini Sesto Elemento",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "pagani-huayra-r",
+      "text": "Pagani Huayra R",
+      "weight": 0.0714,
+      "tags": [
+        "track-hypercars"
+      ]
+    },
+    {
+      "name": "gma-t-50s-niki-lauda",
+      "text": "GMA T.50s Niki Lauda",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "porsche-935-modern",
+      "text": "Porsche 935 (modern)",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "ferrari-488-gt-modificata",
+      "text": "Ferrari 488 GT Modificata",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "lmp1-hypercar-aero-concept",
+      "text": "LMP1 Hypercar aero concept",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "formula-1-aero-concept",
+      "text": "Formula 1 aero concept",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "radical-rxc-gt",
+      "text": "Radical RXC GT",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "praga-bohema",
+      "text": "Praga Bohema",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "dtm-race-car-aero-concept",
+      "text": "DTM race car aero concept",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "lamborghini-essenza-scv12",
+      "text": "Lamborghini Essenza SCV12",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    },
+    {
+      "name": "porsche-911-gt1-strassenversion",
+      "text": "Porsche 911 GT1 Strassenversion",
+      "weight": 0.1,
+      "tags": [
+        "motorsport-concepts"
+      ]
+    }
+  ]
+}

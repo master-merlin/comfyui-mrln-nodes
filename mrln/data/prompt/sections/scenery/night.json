@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "label": "Night Scenery",
+  "description": "Composite scene descriptions (place + ambience) for night and low-light shots.",
+  "tags": [
+    "night"
+  ],
+  "items": [
+    {
+      "name": "rooftop-parking-deck",
+      "text": "The exposed rooftop level of a concrete open-air parking deck, offering an unobstructed, panoramic view of a dense, glittering city skyline.",
+      "weight": 0.2,
+      "tags": [
+        "urban-city-night"
+      ]
+    },
+    {
+      "name": "shibuya-crossing",
+      "text": "The center of Shibuya Crossing in Tokyo, the car stationary on the marked asphalt, surrounded by colossal, intensely bright, animated video screens.",
+      "weight": 0.2,
+      "tags": [
+        "urban-city-night"
+      ]
+    },
+    {
+      "name": "rain-slicked-street",
+      "text": "A generic, rain-slicked (but not actively raining) urban street, with streetlights reflecting off the dark pavement.",
+      "weight": 0.2,
+      "tags": [
+        "urban-city-night"
+      ]
+    },
+    {
+      "name": "cobblestone-street",
+      "text": "A quiet, empty European cobblestone street, with the ancient stones reflecting the warm glow from window lights.",
+      "weight": 0.2,
+      "tags": [
+        "urban-city-night"
+      ]
+    },
+    {
+      "name": "empty-boulevard",
+      "text": "A wide, empty boulevard in a major city, lined with closed shops and glowing traffic lights.",
+      "weight": 0.2,
+      "tags": [
+        "urban-city-night"
+      ]
+    },
+    {
+      "name": "blade-runner-district",
+      "text": "A wide, multi-lane street in a futuristic financial district like 'Blade Runner', where monolithic skyscrapers are adorned with massive, animated holographic advertisements.",
+      "weight": 0.25,
+      "tags": [
+        "high-tech-futuristic"
+      ]
+    },
+    {
+      "name": "high-tech-street",
+      "text": "A generic high-tech city street, with glowing architectural elements and clean, minimalist lines.",
+      "weight": 0.25,
+      "tags": [
+        "high-tech-futuristic"
+      ]
+    },
+    {
+      "name": "space-station-hangar",
+      "text": "Inside a futuristic space station hangar bay with a large viewport showing a view of Earth or a nebula.",
+      "weight": 0.25,
+      "tags": [
+        "high-tech-futuristic"
+      ]
+    },
+    {
+      "name": "underground-hypercar-garage",
+      "text": "An exclusive minimalist underground hypercar garage, with walls of obsidian-like polished stone and concrete, lit by sharp architectural light strips in the floor and ceiling.",
+      "weight": 0.25,
+      "tags": [
+        "high-tech-futuristic"
+      ]
+    },
+    {
+      "name": "shipping-dock-cranes",
+      "text": "An industrial shipping dock, the scene dominated by the artificial lights of towering container cranes and immense, orderly stacks of cargo containers.",
+      "weight": 0.2,
+      "tags": [
+        "industrial-remote"
+      ]
+    },
+    {
+      "name": "industrial-back-alley",
+      "text": "A dimly lit back alley behind industrial buildings, with dumpsters and external pipes.",
+      "weight": 0.2,
+      "tags": [
+        "industrial-remote"
+      ]
+    },
+    {
+      "name": "cooling-towers",
+      "text": "A decommissioned nuclear power plant, with the two massive, concrete cooling towers silhouetted against the night sky and lit by stark, orange-toned security lights at their base.",
+      "weight": 0.2,
+      "tags": [
+        "industrial-remote"
+      ]
+    },
+    {
+      "name": "flickering-industrial-street",
+      "text": "An old industrial street with flickering streetlights, rusted metal fences, and graffiti-scarred walls.",
+      "weight": 0.2,
+      "tags": [
+        "industrial-remote"
+      ]
+    },
+    {
+      "name": "deserted-racetrack",
+      "text": "A deserted racetrack, with the empty grandstands and pit lane creating a lonely, silent atmosphere under stark floodlights.",
+      "weight": 0.2,
+      "tags": [
+        "industrial-remote"
+      ]
+    },
+    {
+      "name": "suspension-bridge-leds",
+      "text": "A sleek, modern suspension bridge, with the elegant geometry of the massive suspension cables and towers lit by programmed architectural LEDs against the dark sky.",
+      "weight": 0.2,
+      "tags": [
+        "unique-moody"
+      ]
+    },
+    {
+      "name": "parking-garage-fluorescent",
+      "text": "An empty, multi-level concrete parking garage with stark, repeating fluorescent lighting.",
+      "weight": 0.2,
+      "tags": [
+        "unique-moody"
+      ]
+    },
+    {
+      "name": "underwater-tunnel",
+      "text": "A transparent, acrylic underwater tunnel, surrounded by the dark water and deep-sea marine life of a massive aquarium.",
+      "weight": 0.2,
+      "tags": [
+        "unique-moody"
+      ]
+    },
+    {
+      "name": "railway-station-forecourt",
+      "text": "The grand, empty forecourt of a historic railway station like St. Pancras International, its intricate ironwork ceiling visible.",
+      "weight": 0.2,
+      "tags": [
+        "unique-moody"
+      ]
+    },
+    {
+      "name": "fjord-aurora-dock",
+      "text": "On a quiet wooden dock on a Norwegian fjord, with the shimmering green and purple curtains of the aurora borealis reflecting in the still, dark water.",
+      "weight": 0.2,
+      "tags": [
+        "unique-moody"
+      ]
+    }
+  ]
+}

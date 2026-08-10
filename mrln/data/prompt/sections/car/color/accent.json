@@ -1,27 +1,135 @@
 {
   "version": 1,
   "label": "Accent Color",
-  "description": "Contrast / highlight materials and colors.",
+  "description": "Contrasting elements: front splitter, side skirts, diffuser.",
   "items": [
     {
-      "name": "neon-green",
-      "text": "vibrant neon green"
-    },
-    {
-      "name": "electric-pulse-blue",
-      "text": "electric pulse blue"
-    },
-    {
-      "name": "hyper-chrome",
-      "text": "reflective hyper chrome"
+      "name": "deep-glossy-black",
+      "text": "Deep Glossy Black",
+      "weight": 0.2,
+      "tags": [
+        "classic-neutral"
+      ]
     },
     {
       "name": "woven-carbon",
-      "text": "woven carbon fiber"
+      "text": "woven carbon fiber",
+      "weight": 0.2,
+      "tags": [
+        "classic-neutral"
+      ]
+    },
+    {
+      "name": "hyper-chrome",
+      "text": "reflective hyper chrome",
+      "weight": 0.2,
+      "tags": [
+        "classic-neutral"
+      ]
+    },
+    {
+      "name": "platinum-silver",
+      "text": "Platinum Silver",
+      "weight": 0.2,
+      "tags": [
+        "classic-neutral"
+      ]
+    },
+    {
+      "name": "midnight-chrome-dark-metallic",
+      "text": "Midnight Chrome dark metallic",
+      "weight": 0.2,
+      "tags": [
+        "classic-neutral"
+      ]
+    },
+    {
+      "name": "neon-green",
+      "text": "vibrant neon green",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
+    },
+    {
+      "name": "electric-pulse-blue",
+      "text": "electric pulse blue",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
+    },
+    {
+      "name": "crimson-energy-red",
+      "text": "Crimson Energy Red",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
+    },
+    {
+      "name": "glowing-circuitry-lines",
+      "text": "Glowing Circuitry Lines",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
+    },
+    {
+      "name": "anodized-red-metallic",
+      "text": "Anodized Red metallic",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
+    },
+    {
+      "name": "anodized-blue-metallic",
+      "text": "Anodized Blue metallic",
+      "weight": 0.1667,
+      "tags": [
+        "bold-high-tech"
+      ]
     },
     {
       "name": "polished-gold",
-      "text": "polished glossy gold"
+      "text": "polished glossy gold",
+      "weight": 0.2,
+      "tags": [
+        "metallic"
+      ]
+    },
+    {
+      "name": "titanium-metallic",
+      "text": "Titanium metallic",
+      "weight": 0.2,
+      "tags": [
+        "metallic"
+      ]
+    },
+    {
+      "name": "copper-metallic",
+      "text": "Copper metallic",
+      "weight": 0.2,
+      "tags": [
+        "metallic"
+      ]
+    },
+    {
+      "name": "bronze-metallic",
+      "text": "Bronze metallic",
+      "weight": 0.2,
+      "tags": [
+        "metallic"
+      ]
+    },
+    {
+      "name": "rose-gold-metallic",
+      "text": "Rose Gold Metallic",
+      "weight": 0.2,
+      "tags": [
+        "metallic"
+      ]
     }
   ]
 }

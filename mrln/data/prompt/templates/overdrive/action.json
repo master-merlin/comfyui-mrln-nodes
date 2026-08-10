@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "label": "OverDrive Driving State",
+  "description": "Action/repose state edit prompt (driving-style stage of the OverDrive workflow).",
+  "prefix": "The car is depicted in the following state of action or repose, with corresponding environmental effects and occupant status:",
+  "slots": [
+    {
+      "id": "state",
+      "ref": "car/action"
+    }
+  ],
+  "suffix": "This action or state should be depicted realistically, with appropriate physical effects on the car, its occupants (if any), and its immediate environment.",
+  "render": {
+    "format": "string",
+    "joiner": "\n\n"
+  }
+}

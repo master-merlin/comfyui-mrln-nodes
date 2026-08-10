@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "OverDrive Scenery",
+  "description": "Scenery replacement edit prompt (backdrop stage of the OverDrive workflow). Day and night variants couple matching sceneries and lighting conditions.",
+  "prefix": "Keep the orientation, position and scale of the car and perfectly merge the car into the scenery:\n\nHigh-resolution photo, advertisement style, featuring cinematic lighting, HDR quality, volumetric atmosphere.",
+  "variants": [
+    {
+      "name": "day",
+      "label": "Day / Studio",
+      "slots": [
+        {
+          "id": "scene",
+          "ref": "scenery/day",
+          "label": "Scenery: "
+        },
+        {
+          "id": "light",
+          "ref": "scenery/light-day",
+          "label": "The overall lighting condition is: "
+        }
+      ]
+    },
+    {
+      "name": "night",
+      "label": "Night / Low-light",
+      "slots": [
+        {
+          "id": "scene",
+          "ref": "scenery/night",
+          "label": "Scenery: "
+        },
+        {
+          "id": "light",
+          "ref": "scenery/light-night",
+          "label": "The overall lighting condition is: "
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "suffix": "Adjust the car's lighting to match the scene.\nThe lighting creates vivid, sharp reflections on the car's perfectly dry surfaces.",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}{text}",
+    "block_joiner": "\n\n"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "label": "Livery Graphics",
+  "description": "Optional livery extras — use with allow_empty so 'none' stays a weighted outcome. Item texts contain inline {a|b} wildcards that roll with the slot seed.",
+  "items": [
+    {
+      "name": "graphics",
+      "text": "Graphics option: {subtle pinstriping|minimalist geometric graphics|glowing energy lines}."
+    },
+    {
+      "name": "stripes",
+      "text": "Stripes option: {sharp dual full-length racing stripes|clean offset racing stripe|bold side stripes clearly visible}."
+    },
+    {
+      "name": "sponsor-decals",
+      "text": "Racing aesthetic: scattered fictional sponsor decals rendered crisply."
+    },
+    {
+      "name": "racing-livery",
+      "text": "Livery option: full pro racing livery inspired by {modern GT3|classic Group C|cyberpunk|JGTC}."
+    },
+    {
+      "name": "graphic-wrap",
+      "text": "Wrap option: unique graphic wrap {angular geometric|digital camo|circuitry motifs}."
+    }
+  ]
+}

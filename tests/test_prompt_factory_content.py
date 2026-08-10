@@ -83,3 +83,89 @@ def test_constraint_demo_present(lib):
     neon = next(i for i in urban.items if i.name == "neon-highway")
     assert "night" in neon.requires
     assert neon.negative == "daylight"
+
+
+# -- OverDrive conversion ----------------------------------------------------
+
+OVERDRIVE_TEMPLATES = (
+    "overdrive/action",
+    "overdrive/car-design",
+    "overdrive/full-shot",
+    "overdrive/paintshop",
+    "overdrive/scenery",
+)
+
+
+def test_overdrive_templates_present(lib):
+    assert set(OVERDRIVE_TEMPLATES) <= set(lib.template_slugs())
+
+
+def test_overdrive_group_weights_uniform(lib):
+    """Weights preserve the original nested-brace draw: every tag group in a
+    converted section carries the same total weight."""
+    for slug in ("car/color/paint", "car/design-base", "scenery/day"):
+        section = lib.load_section(slug)
+        totals = {}
+        for item in section.items:
+            assert item.tags, f"{slug}/{item.name} lost its group tag"
+            totals[item.tags[0]] = totals.get(item.tags[0], 0.0) + item.weight
+        values = list(totals.values())
+        assert max(values) - min(values) < 0.01, (slug, totals)
+
+
+def test_overdrive_label_expansion_end_to_end(lib):
+    tpl = lib.load_template("overdrive/car-design")
+    resolved = resolve_template(
+        lib, tpl, seed=1, mode="as configured", selection={}, variables={}
+    )
+    out = render(resolved, tpl.render.format, tpl.render)
+    assert "(HycadeBodykit style aggressive wide body kit:1.1)" in out.positive
+    assert "(sleek 'Overdrive' license plate:1.2)" in out.positive
+    custom = resolve_template(
+        lib,
+        tpl,
+        seed=1,
+        mode="as configured",
+        selection={},
+        variables={"trigger": "MyKit", "plate": "MRLN"},
+    )
+    custom_out = render(custom, tpl.render.format, tpl.render)
+    assert "MyKit style" in custom_out.positive
+    assert "'MRLN' license plate" in custom_out.positive
+
+
+def test_overdrive_scenery_variants_couple_day_night(lib):
+    tpl = lib.load_template("overdrive/scenery")
+    seen = set()
+    for seed in range(20):
+        resolved = resolve_template(
+            lib, tpl, seed=seed, mode="as configured", selection={}, variables={}
+        )
+        seen.add(resolved.variant)
+        expected = (
+            ("scenery/night", "scenery/light-night")
+            if resolved.variant == "night"
+            else ("scenery/day", "scenery/light-day")
+        )
+        for s in resolved.slots:
+            assert s.section_slug in expected, (resolved.variant, s.section_slug)
+    assert seen == {"day", "night"}
+
+
+def test_overdrive_graphics_wildcards_expand(lib):
+    tpl = lib.load_template("overdrive/paintshop")
+    hit = False
+    for seed in range(30):
+        resolved = resolve_template(
+            lib,
+            tpl,
+            seed=seed,
+            mode="as configured",
+            selection={"graphics": "random"},
+            variables={},
+        )
+        graphics = next(s for s in resolved.slots if s.id == "graphics")
+        if graphics.item_name is not None:
+            assert "{" not in graphics.text and "|" not in graphics.text
+            hit = True
+    assert hit

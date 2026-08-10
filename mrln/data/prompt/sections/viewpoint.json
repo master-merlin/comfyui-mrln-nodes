@@ -7,16 +7,36 @@
       "text": "medium-shot, eye-level, front-three-quarter view, reflections on the paint"
     },
     {
-      "name": "low-angle-front",
-      "text": "dramatic low angle front view"
+      "name": "rear-three-quarter",
+      "text": "rear three-quarter view"
+    },
+    {
+      "name": "front-view",
+      "text": "straight-on front view"
+    },
+    {
+      "name": "rear-view",
+      "text": "rear view"
     },
     {
       "name": "side-profile",
       "text": "clean side profile view"
     },
     {
-      "name": "rear-three-quarter",
-      "text": "rear three-quarter view"
+      "name": "low-angle-front",
+      "text": "dramatic low angle front view"
+    },
+    {
+      "name": "low-angle-rear",
+      "text": "dramatic low angle rear view"
+    },
+    {
+      "name": "high-angle-front",
+      "text": "high angle front view"
+    },
+    {
+      "name": "high-angle-rear",
+      "text": "high angle rear view"
     },
     {
       "name": "top-down",
@@ -25,6 +45,10 @@
     {
       "name": "dutch-angle",
       "text": "dramatic Dutch angle tilt"
+    },
+    {
+      "name": "extreme-wide-angle",
+      "text": "extreme wide-angle perspective"
     }
   ]
 }

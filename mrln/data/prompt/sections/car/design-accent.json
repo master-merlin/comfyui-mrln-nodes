@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "label": "Styling Accents",
+  "description": "Donor for subtly integrated styling accents (lighting signatures, unique lines, material finishes).",
+  "items": [
+    {
+      "name": "lamborghini-reventon",
+      "text": "Lamborghini Reventon",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "mclaren-765lt",
+      "text": "McLaren 765LT",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "bugatti-divo",
+      "text": "Bugatti Divo",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "mclaren-speedtail",
+      "text": "McLaren Speedtail",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "koenigsegg-jesko",
+      "text": "Koenigsegg Jesko",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "pagani-utopia",
+      "text": "Pagani Utopia",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "lexus-lfa",
+      "text": "Lexus LFA",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "koenigsegg-regera",
+      "text": "Koenigsegg Regera",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "lamborghini-si-n-fkp-37",
+      "text": "Lamborghini Sián FKP 37",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "bugatti-centodieci",
+      "text": "Bugatti Centodieci",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "ferrari-daytona-sp3",
+      "text": "Ferrari Daytona SP3",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "porsche-918-spyder",
+      "text": "Porsche 918 Spyder",
+      "weight": 0.0833,
+      "tags": [
+        "modern-production"
+      ]
+    },
+    {
+      "name": "bugatti-vision-gran-turismo",
+      "text": "Bugatti Vision Gran Turismo",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "ferrari-modulo",
+      "text": "Ferrari Modulo",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "pininfarina-battista",
+      "text": "Pininfarina Battista",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "koenigsegg-gemera",
+      "text": "Koenigsegg Gemera",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "mclaren-ultimate-vision-gt",
+      "text": "McLaren Ultimate Vision GT",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "jaguar-vision-gran-turismo",
+      "text": "Jaguar Vision Gran Turismo",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "chrysler-me-four-twelve-concept",
+      "text": "Chrysler ME Four-Twelve Concept",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "audi-ai-race-pb18-e-tron",
+      "text": "Audi AI:RACE (PB18 e-tron)",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "bmw-vision-next-100",
+      "text": "BMW Vision Next 100",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "mercedes-benz-vision-avtr",
+      "text": "Mercedes-Benz Vision AVTR",
+      "weight": 0.1,
+      "tags": [
+        "concept-accents"
+      ]
+    },
+    {
+      "name": "apollo-intensa-emozione",
+      "text": "Apollo Intensa Emozione",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "devel-sixteen",
+      "text": "Devel Sixteen",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "arrinera-hussarya",
+      "text": "Arrinera Hussarya",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "ktm-x-bow-gt-xr",
+      "text": "KTM X-Bow GT-XR",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "donkervoort-d8-gto",
+      "text": "Donkervoort D8 GTO",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "zenvo-tsr-s",
+      "text": "Zenvo TSR-S",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "dallara-stradale",
+      "text": "Dallara Stradale",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "w-motors-lykan-hypersport",
+      "text": "W Motors Lykan Hypersport",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "spyker-c8-aileron",
+      "text": "Spyker C8 Aileron",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "glickenhaus-scg-004s",
+      "text": "Glickenhaus SCG 004S",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    },
+    {
+      "name": "apollo-project-evo",
+      "text": "Apollo Project Evo",
+      "weight": 0.0909,
+      "tags": [
+        "boutique-exotic"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "label": "OverDrive Full Shot",
+  "description": "Single-stage showcase: the complete OverDrive look (fusion + livery + scenery + state) as one prompt for plain text-to-image workflows.",
+  "prefix": "High-resolution photo, advertisement style, unique futuristic concept car, featuring cinematic lighting, HDR quality, volumetric atmosphere.\n\nSole subject: one unique concept car, an advanced blend of three automotive personalities. The final result should be a cohesive, innovative design.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Body-kit LoRA trigger",
+      "default": "HycadeBodykit"
+    },
+    {
+      "name": "plate",
+      "label": "License plate caption",
+      "default": "Overdrive"
+    }
+  ],
+  "slots": [
+    {
+      "id": "base",
+      "ref": "car/design-base",
+      "label": "Primary design influence"
+    },
+    {
+      "id": "infusion",
+      "ref": "car/design-infusion",
+      "label": "Performance engineering infusion"
+    },
+    {
+      "id": "accent",
+      "ref": "car/design-accent",
+      "label": "Styling and tech refinement"
+    },
+    {
+      "id": "paint",
+      "ref": "car/color/paint",
+      "label": "Car primary color"
+    },
+    {
+      "id": "finish",
+      "ref": "car/finish",
+      "label": "Primary color finish"
+    },
+    {
+      "id": "contrast",
+      "ref": "car/color/accent",
+      "label": "Contrasting part colors"
+    },
+    {
+      "id": "highlight",
+      "ref": "car/color/highlight",
+      "label": "Accent highlights"
+    },
+    {
+      "id": "wheels",
+      "ref": "car/wheel",
+      "label": "Rims"
+    },
+    {
+      "id": "calipers",
+      "ref": "car/caliper",
+      "label": "Brake calipers"
+    },
+    {
+      "id": "aero",
+      "ref": "car/aero-addon",
+      "label": "Aero add-on",
+      "allow_empty": true
+    },
+    {
+      "id": "state",
+      "ref": "car/action",
+      "label": "Depicted state"
+    },
+    {
+      "id": "view",
+      "ref": "viewpoint",
+      "label": "Image viewpoint",
+      "emphasis": 1.2
+    }
+  ],
+  "variants": [
+    {
+      "name": "day",
+      "label": "Day / Studio",
+      "slots": [
+        {
+          "id": "scene",
+          "ref": "scenery/day",
+          "label": "Scenery"
+        },
+        {
+          "id": "light",
+          "ref": "scenery/light-day",
+          "label": "Lighting"
+        }
+      ]
+    },
+    {
+      "name": "night",
+      "label": "Night / Low-light",
+      "slots": [
+        {
+          "id": "scene",
+          "ref": "scenery/night",
+          "label": "Scenery"
+        },
+        {
+          "id": "light",
+          "ref": "scenery/light-night",
+          "label": "Lighting"
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "base",
+    "infusion",
+    "accent",
+    "paint",
+    "finish",
+    "contrast",
+    "highlight",
+    "wheels",
+    "calipers",
+    "aero",
+    "@variant",
+    "state",
+    "view"
+  ],
+  "suffix": "Mandatory: ({trigger} style aggressive wide body kit:1.1), flawlessly integrated; significantly lowered suspension; (sleek '{plate}' license plate:1.2) clearly visible.\n\nHyperrealistic material textures (carbon weave, metal, glass, tires). Large wheels reveal bright calipers/discs. Sharp highlights, deep shadows define form. Subtle futuristic details: sensors, displays, emblems.\n\nThe overall photographic style is cinematic, high-impact HDR, exceptionally realistic; employ shallow depth of field (like f/1.4-f/2.8) for isolation and bokeh. Sharp focus on the main body of the car.",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

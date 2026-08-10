@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "label": "Driving State",
+  "description": "State of action or repose, with environmental effects and occupant status.",
+  "items": [
+    {
+      "name": "auto-show-pose",
+      "text": "The car is unoccupied and perfectly stationary in a pristine, 'auto show' pose, with its wheels perfectly straight, emphasizing its clean lines and design details. The scene is calm and silent.",
+      "weight": 0.3333,
+      "tags": [
+        "posed-static"
+      ]
+    },
+    {
+      "name": "magazine-parked",
+      "text": "The car is unoccupied and elegantly parked with its front wheels turned slightly to showcase the rim design and caliper, as if presented for a magazine cover shoot.",
+      "weight": 0.3333,
+      "tags": [
+        "posed-static"
+      ]
+    },
+    {
+      "name": "poised-motionless",
+      "text": "The car is unoccupied, poised and motionless, captured moments before a journey and exuding a sense of potential energy.",
+      "weight": 0.3333,
+      "tags": [
+        "posed-static"
+      ]
+    },
+    {
+      "name": "cruising-smooth",
+      "text": "The car is cruising smoothly at a moderate speed, with a driver's silhouette faintly visible through the tinted glass. A subtle motion blur on the background and wheels conveys effortless movement.",
+      "weight": 0.3333,
+      "tags": [
+        "smooth-motion"
+      ]
+    },
+    {
+      "name": "gliding-curve",
+      "text": "The car is gliding along a gentle curve on an open road, showing a slight, graceful body lean. A partially obscured driver is visible inside, focused on the road.",
+      "weight": 0.3333,
+      "tags": [
+        "smooth-motion"
+      ]
+    },
+    {
+      "name": "low-tracking-float",
+      "text": "The car is captured from a low tracking shot, appearing to float over the pavement at speed. The driver is a subtle, non-distracting presence inside the cockpit.",
+      "weight": 0.3333,
+      "tags": [
+        "smooth-motion"
+      ]
+    },
+    {
+      "name": "powerslide-drift",
+      "text": "The car is executing a controlled powerslide (drift) around a paved corner, with thick plumes of tire smoke from the rear wheels. A focused driver wearing a helmet is clearly visible behind the wheel.",
+      "weight": 0.25,
+      "tags": [
+        "aggressive-dynamics"
+      ]
+    },
+    {
+      "name": "launch-standstill",
+      "text": "The car is launching aggressively from a standstill, rear tires wrinkling under torque. A helmeted driver is visible, hands gripping the steering wheel.",
+      "weight": 0.25,
+      "tags": [
+        "aggressive-dynamics"
+      ]
+    },
+    {
+      "name": "hard-braking",
+      "text": "The car is braking hard into a corner, with the nose dipping down and brake calipers glowing hot. The helmeted driver's posture reflects the intense g-forces.",
+      "weight": 0.25,
+      "tags": [
+        "aggressive-dynamics"
+      ]
+    },
+    {
+      "name": "cornering-limit",
+      "text": "The car is cornering at the limit on a paved surface, exhibiting noticeable body roll. The focused, helmeted driver is actively steering the car through the turn.",
+      "weight": 0.25,
+      "tags": [
+        "aggressive-dynamics"
+      ]
+    },
+    {
+      "name": "concours-flawless",
+      "text": "The unoccupied car is presented in flawless, concours-ready condition, perfectly clean and immaculate as if untouched by the elements (this is the default state).",
+      "weight": 0.25,
+      "tags": [
+        "condition-storytelling"
+      ]
+    },
+    {
+      "name": "road-grime",
+      "text": "The recently parked car is unoccupied, but shows subtle signs of a completed journey, such as a light splattering of road grime on the front fascia and cooling brake discs.",
+      "weight": 0.25,
+      "tags": [
+        "condition-storytelling"
+      ]
+    },
+    {
+      "name": "rain-beaded",
+      "text": "The unoccupied car is uniformly wet and dripping, covered in clean beads of water as if just after a sudden rain shower. The surface below it is also damp.",
+      "weight": 0.25,
+      "tags": [
+        "condition-storytelling"
+      ]
+    },
+    {
+      "name": "fresh-tire-marks",
+      "text": "The car is leaving fresh, dark tire marks on the paved surface from a recent display of acceleration, with the helmeted driver still in the cockpit as the car comes to a stop.",
+      "weight": 0.25,
+      "tags": [
+        "condition-storytelling"
+      ]
+    },
+    {
+      "name": "pit-stop",
+      "text": "The unoccupied car is in a high-tech pit stop, captured mid-tire-change with a motion-blurred pit crew surrounding it.",
+      "weight": 0.3333,
+      "tags": [
+        "service-showcase"
+      ]
+    },
+    {
+      "name": "dynamometer-run",
+      "text": "The car is on a dynamometer inside a workshop, the rear wheels a complete blur. A technician or helmeted driver is in the driver's seat, operating the vehicle.",
+      "weight": 0.3333,
+      "tags": [
+        "service-showcase"
+      ]
+    },
+    {
+      "name": "detailing",
+      "text": "The unoccupied car is being meticulously detailed in a pristine, brightly-lit workshop, with a detailer polishing a panel.",
+      "weight": 0.3333,
+      "tags": [
+        "service-showcase"
+      ]
+    }
+  ]
+}

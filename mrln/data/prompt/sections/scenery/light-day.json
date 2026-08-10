@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "label": "Day Lighting",
+  "description": "Lighting conditions matching the day sceneries.",
+  "tags": [
+    "day"
+  ],
+  "items": [
+    {
+      "name": "golden-hour",
+      "text": "The warm, low-angled light of the long summer golden hour, casting extremely long and soft shadows."
+    },
+    {
+      "name": "backlit-rim-light",
+      "text": "Strong, direct backlighting from a low sun, creating a brilliant, sharp rim-light effect that silhouettes the vehicle."
+    },
+    {
+      "name": "volumetric-god-rays",
+      "text": "Hazy, atmospheric daylight with visible volumetric sunbeams (god rays)."
+    },
+    {
+      "name": "overcast-softbox",
+      "text": "Soft, perfectly even light from a bright but uniformly overcast sky, acting as a giant natural softbox."
+    },
+    {
+      "name": "high-key-studio",
+      "text": "Flawless high-key studio lighting from massive softboxes and a cyclorama."
+    },
+    {
+      "name": "hard-spotlight",
+      "text": "A dramatic, single, hard-edged spotlight in an otherwise dark studio."
+    }
+  ]
+}

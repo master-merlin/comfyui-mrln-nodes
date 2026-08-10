@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "label": "Highlight Color",
+  "description": "Minor highlights distinctly visible on trim and details.",
+  "items": [
+    {
+      "name": "pulse-neon-green",
+      "text": "Pulse Neon Green",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "electric-pink",
+      "text": "Electric Pink",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "shocking-purple",
+      "text": "Shocking Purple",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "neon-violet",
+      "text": "Neon Violet",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "bright-teal",
+      "text": "Bright Teal",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "neon-turquoise",
+      "text": "Neon Turquoise",
+      "weight": 0.1667,
+      "tags": [
+        "neon-electric"
+      ]
+    },
+    {
+      "name": "blazing-red",
+      "text": "Blazing Red",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "bright-orange",
+      "text": "Bright Orange",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "golden-yellow",
+      "text": "Golden Yellow",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "flame-red",
+      "text": "Flame Red",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "deep-cobalt-blue",
+      "text": "Deep Cobalt Blue",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "candy-apple-red",
+      "text": "Candy Apple Red",
+      "weight": 0.1667,
+      "tags": [
+        "rich-bold"
+      ]
+    },
+    {
+      "name": "piano-black-gloss",
+      "text": "Piano Black gloss",
+      "weight": 0.3333,
+      "tags": [
+        "classic"
+      ]
+    },
+    {
+      "name": "reflective-chrome",
+      "text": "Reflective Chrome",
+      "weight": 0.3333,
+      "tags": [
+        "classic"
+      ]
+    },
+    {
+      "name": "emissive-white",
+      "text": "Emissive White",
+      "weight": 0.3333,
+      "tags": [
+        "classic"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "label": "Wheel Finish",
+  "items": [
+    {
+      "name": "reflective-chrome",
+      "text": "Reflective Chrome",
+      "weight": 0.2,
+      "tags": [
+        "bright-polished"
+      ]
+    },
+    {
+      "name": "platinum-silver",
+      "text": "Platinum Silver",
+      "weight": 0.2,
+      "tags": [
+        "bright-polished"
+      ]
+    },
+    {
+      "name": "hyper-silver-metallic",
+      "text": "Hyper Silver metallic",
+      "weight": 0.2,
+      "tags": [
+        "bright-polished"
+      ]
+    },
+    {
+      "name": "diamond-cut-face",
+      "text": "Diamond Cut Face",
+      "weight": 0.2,
+      "tags": [
+        "bright-polished"
+      ]
+    },
+    {
+      "name": "brushed-aluminum",
+      "text": "Brushed Aluminum",
+      "weight": 0.2,
+      "tags": [
+        "bright-polished"
+      ]
+    },
+    {
+      "name": "glossy-black",
+      "text": "Glossy Black",
+      "weight": 0.2,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "exposed-carbon-fiber",
+      "text": "Exposed Carbon Fiber",
+      "weight": 0.2,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "matte-black",
+      "text": "Matte Black",
+      "weight": 0.2,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "midnight-chrome-dark-metallic",
+      "text": "Midnight Chrome dark metallic",
+      "weight": 0.2,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "titanium-metallic",
+      "text": "Titanium metallic",
+      "weight": 0.2,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "gold-metallic",
+      "text": "Gold metallic",
+      "weight": 0.2,
+      "tags": [
+        "color-metallic"
+      ]
+    },
+    {
+      "name": "bronze-satin-finish",
+      "text": "Bronze Satin finish",
+      "weight": 0.2,
+      "tags": [
+        "color-metallic"
+      ]
+    },
+    {
+      "name": "anodized-gold-metallic",
+      "text": "Anodized Gold metallic",
+      "weight": 0.2,
+      "tags": [
+        "color-metallic"
+      ]
+    },
+    {
+      "name": "contrasting-primary-color",
+      "text": "Contrasting Primary Color",
+      "weight": 0.2,
+      "tags": [
+        "color-metallic"
+      ]
+    },
+    {
+      "name": "neon-violet",
+      "text": "Neon Violet",
+      "weight": 0.2,
+      "tags": [
+        "color-metallic"
+      ]
+    }
+  ]
+}

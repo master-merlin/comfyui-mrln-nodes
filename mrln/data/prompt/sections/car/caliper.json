@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "label": "Brake Caliper Color",
+  "description": "Calipers are clearly visible behind the wheel spokes.",
+  "items": [
+    {
+      "name": "racing-red",
+      "text": "Racing Red",
+      "weight": 0.25,
+      "tags": [
+        "traditional"
+      ]
+    },
+    {
+      "name": "performance-yellow",
+      "text": "Performance Yellow",
+      "weight": 0.25,
+      "tags": [
+        "traditional"
+      ]
+    },
+    {
+      "name": "gloss-black",
+      "text": "Gloss Black",
+      "weight": 0.25,
+      "tags": [
+        "traditional"
+      ]
+    },
+    {
+      "name": "polished-silver",
+      "text": "Polished Silver",
+      "weight": 0.25,
+      "tags": [
+        "traditional"
+      ]
+    },
+    {
+      "name": "neon-green",
+      "text": "Neon Green",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "electric-blue",
+      "text": "Electric Blue",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "vibrant-orange",
+      "text": "Vibrant Orange",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "gold-metallic",
+      "text": "Gold metallic",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "lime-green",
+      "text": "Lime Green",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "purple",
+      "text": "Purple",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    },
+    {
+      "name": "teal",
+      "text": "Teal",
+      "weight": 0.1429,
+      "tags": [
+        "high-impact"
+      ]
+    }
+  ]
+}

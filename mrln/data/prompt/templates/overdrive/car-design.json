@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "label": "OverDrive Car Design",
+  "description": "Three-way concept fusion prompt (design stage of the OverDrive workflow): renders a neutral grey car in a studio, ready for the paintshop and scenery stages.",
+  "prefix": "High-resolution photo, advertisement style, unique futuristic concept car, featuring cinematic lighting, HDR quality.\n\nSole subject: one unique concept car, an advanced blend of three automotive personalities. The final result should be a cohesive, innovative design.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Body-kit LoRA trigger",
+      "default": "HycadeBodykit"
+    },
+    {
+      "name": "plate",
+      "label": "License plate caption",
+      "default": "Overdrive"
+    }
+  ],
+  "slots": [
+    {
+      "id": "base",
+      "ref": "car/design-base",
+      "label": "The vehicle's core silhouette and foundational features are drawn from one of the following, ensuring the chosen car's primary identity is recognizable:"
+    },
+    {
+      "id": "infusion",
+      "ref": "car/design-infusion",
+      "label": "This base is then infused with aggressive, performance-oriented design elements (like vents, stance, or major aerodynamic shapes) inspired by one of the following:"
+    },
+    {
+      "id": "accent",
+      "ref": "car/design-accent",
+      "label": "Finally, the design is refined with subtly integrated advanced styling accents (like lighting signatures, unique lines, or material finishes) inspired by one of the following:"
+    },
+    {
+      "id": "view",
+      "ref": "viewpoint",
+      "emphasis": 1.2,
+      "label": "Crucially, the vehicle must be depicted in exceptionally clean, well-maintained condition; its surface is immaculate, perfectly smooth and completely dry, reflecting light sharply.\n\nMandatory: ({trigger} style aggressive wide body kit:1.1), flawlessly integrated; significantly lowered suspension; (sleek '{plate}' license plate:1.2) clearly visible.\n\nHyperrealistic material textures (carbon weave, metal, glass, tires). Large wheels reveal bright calipers/discs. Sharp highlights, deep shadows define form. Subtle futuristic details: sensors, displays, emblems.\n\nImage viewpoint (whole car):"
+    },
+    {
+      "id": "aero",
+      "ref": "car/aero-addon",
+      "label": "Optional:",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "The neutral Matte Middle Gray colored car is rendered against a natural grey photographic studio background.\n\nHigh-resolution photo, advertisement style, employ shallow depth of field (like f/1.4-f/2.8) for isolation and bokeh. The overall photographic style is cinematic, high-impact HDR, exceptionally realistic, volumetric atmosphere.",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}\n{text}",
+    "block_joiner": "\n\n"
+  }
+}

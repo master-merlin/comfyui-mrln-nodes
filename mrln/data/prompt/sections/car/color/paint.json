@@ -1,24 +1,223 @@
 {
   "version": 1,
   "label": "Primary Car Color",
-  "description": "Body paint colors.",
+  "description": "Body paint colors; tags group the palettes, weights keep each palette equally likely.",
   "items": [
     {
-      "name": "carbon-grey-matte",
-      "text": "carbon grey matte"
+      "name": "alpine-white",
+      "text": "Alpine White",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
     },
     {
-      "name": "guards-red",
-      "text": "Guards Red",
-      "data": {
-        "hex": [
-          "#D2232A"
-        ]
-      }
+      "name": "chalk",
+      "text": "Chalk",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "glacier-white",
+      "text": "Glacier White",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "pearl-white",
+      "text": "Pearl White",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "carrara-white",
+      "text": "Carrara White",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "nardo-gray",
+      "text": "Nardo Gray",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "skyscraper-grey",
+      "text": "Skyscraper Grey",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "gunmetal-grey",
+      "text": "Gunmetal Grey",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "brooklyn-grey",
+      "text": "Brooklyn Grey",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "obsidian-black",
+      "text": "Obsidian Black",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "notte-black",
+      "text": "Notte Black",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "mythos-black",
+      "text": "Mythos Black",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "vanta-black",
+      "text": "Vanta Black",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "carbon-grey-matte",
+      "text": "carbon grey matte",
+      "weight": 0.0714,
+      "tags": [
+        "whites-greys-blacks"
+      ]
+    },
+    {
+      "name": "midnight-blue",
+      "text": "Midnight Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "sapphire-blue",
+      "text": "Sapphire Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "portimao-blue",
+      "text": "Portimao Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "gentian-blue",
+      "text": "Gentian Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "misano-blue",
+      "text": "Misano Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "tanzanite-blue",
+      "text": "Tanzanite Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "daytona-violet",
+      "text": "Daytona Violet",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "techno-violet",
+      "text": "Techno Violet",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "thundernight-metallic",
+      "text": "Thundernight Metallic",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "viola-hong-kong",
+      "text": "Viola Hong Kong",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "viola-parsifae",
+      "text": "Viola Parsifae",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
+    },
+    {
+      "name": "midnight-purple",
+      "text": "Midnight Purple",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ]
     },
     {
       "name": "miami-blue",
       "text": "Miami Blue",
+      "weight": 0.0769,
+      "tags": [
+        "blues-purples"
+      ],
       "data": {
         "hex": [
           "#00B3E3"
@@ -26,17 +225,225 @@
       }
     },
     {
-      "name": "nardo-gray",
-      "text": "Nardo Gray"
+      "name": "ferrari-red",
+      "text": "Ferrari Red",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
     },
     {
-      "name": "midnight-purple",
-      "text": "Midnight Purple",
-      "weight": 0.5
+      "name": "guards-red",
+      "text": "Guards Red",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ],
+      "data": {
+        "hex": [
+          "#D2232A"
+        ]
+      }
+    },
+    {
+      "name": "carmine-red",
+      "text": "Carmine Red",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
+    },
+    {
+      "name": "racing-red",
+      "text": "Racing Red",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
+    },
+    {
+      "name": "volcano-red",
+      "text": "Volcano Red",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
+    },
+    {
+      "name": "soul-red-crystal-metallic",
+      "text": "Soul Red Crystal Metallic",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
+    },
+    {
+      "name": "papaya-orange",
+      "text": "Papaya Orange",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
+    },
+    {
+      "name": "orange-flame-metallic",
+      "text": "Orange Flame Metallic",
+      "weight": 0.125,
+      "tags": [
+        "reds-oranges"
+      ]
     },
     {
       "name": "british-racing-green",
-      "text": "British Racing Green"
+      "text": "British Racing Green",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "isle-of-man-green",
+      "text": "Isle of Man Green",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "porsche-green",
+      "text": "Porsche Green",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "verde-mantis",
+      "text": "Verde Mantis",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "verde-scandal",
+      "text": "Verde Scandal",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "xp-green",
+      "text": "XP Green",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "signal-yellow",
+      "text": "Signal Yellow",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "sao-paulo-yellow",
+      "text": "Sao Paulo Yellow",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "cyber-yellow",
+      "text": "Cyber Yellow",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "giallo-inti",
+      "text": "Giallo Inti",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "electric-lime-green",
+      "text": "Electric Lime Green",
+      "weight": 0.0909,
+      "tags": [
+        "greens-yellows"
+      ]
+    },
+    {
+      "name": "titanium-silver",
+      "text": "Titanium Silver",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "frozen-bronze-metallic",
+      "text": "Frozen Bronze Metallic",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "kalahari",
+      "text": "Kalahari",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "mojave-beige",
+      "text": "Mojave Beige",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "dark-olive-metallic",
+      "text": "Dark Olive Metallic",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "goodwood-green-pearl",
+      "text": "Goodwood Green Pearl",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "champagne-gold",
+      "text": "Champagne Gold",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
+    },
+    {
+      "name": "copper-crest",
+      "text": "Copper Crest",
+      "weight": 0.125,
+      "tags": [
+        "metallic-earth"
+      ]
     }
   ]
 }

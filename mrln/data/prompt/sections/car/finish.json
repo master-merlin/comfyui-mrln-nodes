@@ -4,23 +4,83 @@
   "items": [
     {
       "name": "matte",
-      "text": "matte finish"
+      "text": "matte finish",
+      "weight": 0.3333,
+      "tags": [
+        "standard"
+      ]
     },
     {
       "name": "glossy-high-reflectance",
-      "text": "glossy high-reflectance finish"
+      "text": "glossy high-reflectance finish",
+      "weight": 0.3333,
+      "tags": [
+        "standard"
+      ]
     },
     {
       "name": "satin-sheen",
-      "text": "satin sheen finish"
+      "text": "satin sheen finish",
+      "weight": 0.3333,
+      "tags": [
+        "standard"
+      ]
+    },
+    {
+      "name": "metallic-flake",
+      "text": "Metallic Flake",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
     },
     {
       "name": "pearlescent",
-      "text": "pearlescent finish"
+      "text": "pearlescent finish",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
+    },
+    {
+      "name": "color-shifting-iridescent",
+      "text": "Color-shifting Iridescent",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
+    },
+    {
+      "name": "liquid-metal",
+      "text": "Liquid Metal",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
     },
     {
       "name": "chameleon-flip",
-      "text": "chameleon color-flip paint"
+      "text": "chameleon color-flip paint",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
+    },
+    {
+      "name": "anodized-matte",
+      "text": "Anodized Matte",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
+    },
+    {
+      "name": "panther-black-matte",
+      "text": "Panther Black Matte",
+      "weight": 0.1429,
+      "tags": [
+        "special"
+      ]
     }
   ]
 }
