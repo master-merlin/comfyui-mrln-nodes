@@ -72,13 +72,15 @@ export function createComposerPanel(root, ctx) {
     lastPreview: null,
     previewNo: 0,
     previewTimer: null,
+    choicesOpen: false,
+    negativeOpen: false,
     tab: "compose",
   };
 
   // ---- skeleton ------------------------------------------------------------
 
-  const composeTab = el("div");
-  const libraryTab = el("div", { style: "display:none" });
+  const composeTab = el("div", { class: "mrln-tab-body" });
+  const libraryTab = el("div", { class: "mrln-tab-body", style: "display:none" });
   const tabButtons = el(
     "div",
     { class: "mrln-tabs" },
@@ -323,6 +325,42 @@ export function createComposerPanel(root, ctx) {
   // ---- compose tab ---------------------------------------------------------
 
   const previewBox = el("div");
+  const footer = el(
+    "div",
+    { class: "mrln-footer" },
+    el(
+      "div",
+      { class: "mrln-actions" },
+      el("button", { class: "mrln-btn mrln-primary", onclick: () => applyToNode() }, "Apply to node"),
+      el("button", { class: "mrln-btn", onclick: () => loadFromNode() }, "Load"),
+      el("button", { class: "mrln-btn", title: "Fix every random slot to what the preview just drew", onclick: () => pinLastDraw() }, "Pin draw"),
+      el(
+        "button",
+        {
+          class: "mrln-btn",
+          title: "Save this template (current picks become its defaults) to your user library",
+          onclick: () => saveTemplate(state.slug),
+        },
+        "Save"
+      ),
+      el(
+        "button",
+        {
+          class: "mrln-btn",
+          onclick: async () => {
+            const slug = await askString(
+              "Save as template",
+              "Template slug (lowercase, '/' for folders):",
+              `${state.slug}-mine`
+            );
+            if (slug) await saveTemplate(slug.trim());
+          },
+        },
+        "Save as…"
+      )
+    ),
+    previewBox
+  );
 
   function field(name, control) {
     return el(
@@ -421,22 +459,20 @@ export function createComposerPanel(root, ctx) {
     }
 
     parts.push(
-      field("Mode", modeSelect),
+      el("div", { class: "mrln-grid2" }, field("Mode", modeSelect), field("Format", formatSelect)),
       field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
-      field("Format", formatSelect),
       metaPromptBlock(),
-      el("hr", { class: "mrln-sep" }),
-      el("div", {}, orderedRows()),
-      addSectionRow(),
-      el("hr", { class: "mrln-sep" })
+      el("div", { class: "mrln-slot-list" }, orderedRows()),
+      addSectionRow()
     );
 
     const variables = state.rawData.variables ?? [];
     const triggerVar = variables.find((v) => v.name === "trigger");
     parts.push(
       field(
-        "Trigger ({trigger} — usable in template text, labels and items)",
+        "Trigger word {trigger}",
         el("input", {
+          title: "{trigger} is replaced everywhere: template text, lead-ins and item texts",
           type: "text",
           value: state.trigger,
           placeholder: triggerVar?.default ?? "",
@@ -466,40 +502,7 @@ export function createComposerPanel(root, ctx) {
       )
     );
 
-    parts.push(
-      el(
-        "div",
-        { class: "mrln-actions" },
-        el("button", { class: "mrln-btn mrln-primary", onclick: applyToNode }, "Apply to node"),
-        el("button", { class: "mrln-btn", onclick: loadFromNode }, "Load from node"),
-        el("button", { class: "mrln-btn", onclick: pinLastDraw }, "Pin last draw"),
-        el(
-          "button",
-          {
-            class: `mrln-btn ${state.modified ? "mrln-primary" : ""}`,
-            title: "Save this template (current picks become its defaults) to your user library",
-            onclick: () => saveTemplate(state.slug),
-          },
-          "Save"
-        ),
-        el(
-          "button",
-          {
-            class: "mrln-btn",
-            onclick: async () => {
-              const slug = await askString(
-                "Save as template",
-                "Template slug (lowercase, '/' for folders):",
-                `${state.slug}-mine`
-              );
-              if (slug) await saveTemplate(slug.trim());
-            },
-          },
-          "Save as…"
-        )
-      ),
-      previewBox
-    );
+    parts.push(footer);
 
     composeTab.replaceChildren(...parts);
     renderPreview(state.lastPreview, null);
@@ -609,11 +612,11 @@ export function createComposerPanel(root, ctx) {
     variantSelect.value = state.variant;
     return el(
       "div",
-      { class: "mrln-slot" },
+      { class: "mrln-slot mrln-variant-head" },
       el(
         "div",
         { class: "mrln-slot-label" },
-        "Variant block",
+        el("span", {}, "Variant block"),
         el("span", { class: "mrln-chip" }, "@variant"),
         el(
           "span",
@@ -735,7 +738,7 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` },
-        labelText,
+        el("span", {}, labelText),
         chips,
         buttons
       ),
@@ -790,12 +793,7 @@ export function createComposerPanel(root, ctx) {
       },
       "+ Add"
     );
-    return el(
-      "div",
-      { class: "mrln-inline" },
-      refSelect,
-      addButton
-    );
+    return el("div", { class: "mrln-addrow", title: "Add a section (or folder scope) as a new slot" }, refSelect, addButton);
   }
 
   function renderPreview(preview, err) {
@@ -814,26 +812,46 @@ export function createComposerPanel(root, ctx) {
       previewBox.replaceChildren(el("div", { class: "mrln-note" }, "Previewing…"));
       return;
     }
-    const children = [];
-    if (preview.variant && state.variant === "random") {
-      children.push(el("div", { class: "mrln-note" }, `Drew variant: ${preview.variant}`));
-    }
-    children.push(
-      el("span", { class: "mrln-field-name" }, "Prompt preview"),
-      el("pre", { class: "mrln-pre" }, preview.positive),
-      el("span", { class: "mrln-field-name" }, "Choices"),
-      el("pre", { class: "mrln-pre" }, preview.choices)
-    );
-    if (preview.negative) {
-      children.push(
+    const children = [
+      el(
+        "div",
+        { class: "mrln-preview-head" },
         el(
-          "details",
-          { class: "mrln-fold" },
-          el("summary", {}, "Negative"),
-          el("pre", { class: "mrln-pre" }, preview.negative)
+          "span",
+          { class: "mrln-field-name" },
+          "Live preview",
+          preview.variant && state.variant === "random" ? ` — drew variant: ${preview.variant}` : ""
+        ),
+        el(
+          "button",
+          {
+            class: "mrln-btn mrln-mini",
+            title: "Copy the prompt to the clipboard",
+            onclick: () => {
+              navigator.clipboard?.writeText(preview.positive);
+              ctx.toast("success", "Prompt copied");
+            },
+          },
+          "⧉ copy"
         )
+      ),
+      el("pre", { class: "mrln-pre" }, preview.positive),
+    ];
+    const fold = (title, text, key) =>
+      el(
+        "details",
+        {
+          class: "mrln-fold",
+          open: state[key] ? "" : null,
+          ontoggle: (e) => {
+            state[key] = e.target.open;
+          },
+        },
+        el("summary", {}, title),
+        el("pre", { class: "mrln-pre" }, text)
       );
-    }
+    children.push(fold("Choices (what was drawn per section)", preview.choices, "choicesOpen"));
+    if (preview.negative) children.push(fold("Negative", preview.negative, "negativeOpen"));
     previewBox.replaceChildren(...children);
   }
 
