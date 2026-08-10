@@ -90,6 +90,15 @@ class PromptTemplate:
                         "appear after 'Refresh node definitions'.",
                     },
                 ),
+                "trigger": (
+                    "STRING",
+                    {
+                        "default": "",
+                        "tooltip": "Value for the {trigger} variable — usually your LoRA "
+                        "trigger word or the subject line (e.g. 'BMWM4CS_G82'). Type it "
+                        "here or connect a STRING output from another node.",
+                    },
+                ),
                 "selection": (
                     "STRING",
                     {
@@ -155,22 +164,19 @@ class PromptTemplate:
                 ),
             },
             "optional": {
-                "trigger": (
-                    "STRING",
-                    {
-                        "default": "",
-                        "tooltip": "Value for the {trigger} variable (e.g. a LoRA trigger word). "
-                        "Type it here or connect a STRING output from another node.",
-                    },
-                ),
                 "variables": (
                     "STRING",
                     {
                         "multiline": True,
                         "default": "",
-                        "placeholder": "name=value",
-                        "tooltip": "Extra template variables, one 'name=value' per line; fills "
-                        "{name} placeholders in template and item text.",
+                        "placeholder": "# extra template variables, one per line, e.g.\n"
+                        "# plate=MRLN 500   → fills {plate} in overdrive/full-shot\n"
+                        "# caption=RIVIERA  → fills {caption} in poster/travel",
+                        "tooltip": "Extra template variables as 'name=value' lines. Each line "
+                        "fills the matching {name} placeholder in the template's prefix/"
+                        "suffix and item texts — e.g. 'plate=MRLN 500' sets the license "
+                        "plate caption {plate} in overdrive/full-shot. The template's "
+                        "Composer view lists which variables it declares.",
                     },
                 ),
             },
