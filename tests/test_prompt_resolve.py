@@ -6,6 +6,7 @@ from mrln.promptlib import (
     ItemNotFoundError,
     SelectionError,
     parse_kv_lines,
+    parse_template,
     resolve_section,
     resolve_template,
 )
@@ -215,3 +216,51 @@ def test_resolve_section_random_and_emoji(lib):
 def test_resolve_section_scope_error(lib):
     with pytest.raises(ItemNotFoundError):
         resolve_section(lib, "lighting", "urban/shibuya", seed=0)
+
+
+# -- label expansion ---------------------------------------------------------
+
+
+def _label_template(paint_label):
+    return parse_template(
+        {
+            "variables": [{"name": "trigger", "default": "HycadeBodykit"}],
+            "slots": [
+                {"id": "paint", "ref": "color", "default": "red", "label": paint_label},
+                {"id": "lighting", "ref": "lighting", "default": "random"},
+            ],
+        },
+        "labeled",
+        "mem",
+    )
+
+
+def test_labels_expand_variables(lib):
+    tpl = _label_template("Mandatory: ({trigger}:1.1). Body color:")
+    resolved = resolve_template(lib, tpl, seed=0, mode="as configured", selection={}, variables={})
+    assert slot(resolved, "paint").label == "Mandatory: (HycadeBodykit:1.1). Body color:"
+    resolved = resolve_template(
+        lib, tpl, seed=0, mode="as configured", selection={}, variables={"trigger": "MySubject"}
+    )
+    assert slot(resolved, "paint").label == "Mandatory: (MySubject:1.1). Body color:"
+
+
+def test_label_expansion_does_not_disturb_draws(lib):
+    plain = _label_template("plain label")
+    braced = _label_template("wildcard {a|b} and {trigger}")
+    for seed in range(6):
+        a = resolve_template(
+            lib, plain, seed=seed, mode="as configured", selection={}, variables={}
+        )
+        b = resolve_template(
+            lib, braced, seed=seed, mode="as configured", selection={}, variables={}
+        )
+        assert [s.item_name for s in a.slots] == [s.item_name for s in b.slots]
+    labels = {
+        resolve_template(lib, braced, seed=seed, mode="as configured", selection={}, variables={})
+        .slots[0]
+        .label
+        for seed in range(12)
+    }
+    assert labels <= {"wildcard a and HycadeBodykit", "wildcard b and HycadeBodykit"}
+    assert len(labels) == 2  # the @label rng actually varies with the seed

@@ -10,9 +10,28 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .errors import SchemaError, SectionNotFoundError, TemplateNotFoundError
-from .schema import parse_section, parse_template
+from .schema import SLUG_SEGMENT_RE, parse_section, parse_template
 
 KINDS = ("sections", "templates", "profiles", "system_prompts")
+WRITABLE_KINDS = ("sections", "templates")
+
+
+def validate_slug(slug):
+    """Path-safe slug or SchemaError. Every '/'-segment must match
+    SLUG_SEGMENT_RE — this is the only gate between request strings and
+    filesystem paths, so it rejects '', '..', '\\', absolute paths and
+    empty segments by construction."""
+    if not isinstance(slug, str) or not slug:
+        raise SchemaError(str(slug), "slug must be a non-empty string")
+    for segment in slug.split("/"):
+        if not SLUG_SEGMENT_RE.match(segment):
+            raise SchemaError(
+                slug,
+                f"invalid slug segment {segment!r} — use lowercase letters, digits, "
+                "'.', '_' or '-', and '/' to separate folders",
+            )
+    return slug
+
 
 # (path, mtime_ns) -> parsed object; module-level so nodes/tests share it
 _PARSE_CACHE: dict = {}
@@ -119,6 +138,47 @@ class Library:
             sub = slug[len(ref) + 1 :]
             result.extend((f"{sub}/{item.name}", section, item) for item in section.items)
         return result
+
+    # -- user-tier writes --------------------------------------------------
+
+    def save_user(self, kind, slug, data):
+        """Validate `data` with the real parser, then write it VERBATIM as a
+        user-tier file (dumping would strip unknown keys the schema
+        tolerates). Returns the written path. Factory is never written."""
+        if kind not in WRITABLE_KINDS:
+            raise SchemaError(kind, f"unwritable kind (writable: {', '.join(WRITABLE_KINDS)})")
+        if self.user_root is None:
+            raise SchemaError(slug, "no user library directory is configured")
+        validate_slug(slug)
+        if not isinstance(data, dict):
+            raise SchemaError(slug, "file content must be a JSON object")
+        parser = parse_section if kind == "sections" else parse_template
+        parser(data, slug, f"user:{slug}")  # never write a file the engine can't read
+        kind_dir = (self.user_root / kind).resolve()
+        target = (kind_dir / f"{slug}.json").resolve()
+        if kind_dir not in target.parents:  # defense in depth after validate_slug
+            raise SchemaError(slug, "slug escapes the user library directory")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        os.replace(tmp, target)
+        return target
+
+    def delete_user(self, kind, slug):
+        """Delete a user-tier file (factory is read-only). Returns True when
+        a factory file with the same slug remains — the slug reverts to
+        factory content instead of disappearing."""
+        if kind not in WRITABLE_KINDS:
+            raise SchemaError(kind, f"unwritable kind (writable: {', '.join(WRITABLE_KINDS)})")
+        not_found = SectionNotFoundError if kind == "sections" else TemplateNotFoundError
+        validate_slug(slug)
+        path = self.user_root / kind / f"{slug}.json" if self.user_root else None
+        if path is None or not path.is_file():
+            user_slugs = [s for s, e in self._scan(kind).items() if e.tier == "user"]
+            raise not_found(slug, user_slugs)
+        path.unlink()
+        entry = self._scan(kind).get(slug)
+        return entry is not None and entry.tier == "factory"
 
     # -- change detection --------------------------------------------------
 

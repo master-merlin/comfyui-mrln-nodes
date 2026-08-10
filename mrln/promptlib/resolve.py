@@ -267,6 +267,12 @@ def _resolve_and_expand(lib, slot, key, seed, mode, selection, variables):
         text = expand(item.text, variables, rng)
         if text != resolved.text:
             resolved = replace(resolved, text=text)
+    if "{" in resolved.label:
+        # Labels carry template prose, so they expand too — under their own
+        # "@label:" seed namespace so no existing draw stream shifts.
+        label = expand(resolved.label, variables, derive_rng(seed, f"@label:{key}"))
+        if label != resolved.label:
+            resolved = replace(resolved, label=label)
     return resolved
 
 

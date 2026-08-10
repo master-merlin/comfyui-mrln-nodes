@@ -15,7 +15,7 @@ from .errors import (
     UnknownVariableError,
     WildcardSyntaxError,
 )
-from .library import Library, default_roots, open_library
+from .library import Library, default_roots, open_library, validate_slug
 from .render import FORMATS, Rendered, render
 from .resolve import (
     MODES,
@@ -26,7 +26,18 @@ from .resolve import (
     resolve_section,
     resolve_template,
 )
-from .schema import Section, SectionItem, Slot, Template, Variant, parse_section, parse_template
+from .schema import (
+    RenderConfig,
+    Section,
+    SectionItem,
+    Slot,
+    Template,
+    Variable,
+    Variant,
+    parse_section,
+    parse_template,
+)
+from .serialize import dump_section, dump_template
 
 __all__ = [
     "FORMATS",
@@ -36,6 +47,7 @@ __all__ = [
     "Library",
     "PromptLibError",
     "RecursionLimitError",
+    "RenderConfig",
     "RenderError",
     "Rendered",
     "ResolvedPrompt",
@@ -49,9 +61,12 @@ __all__ = [
     "Template",
     "TemplateNotFoundError",
     "UnknownVariableError",
+    "Variable",
     "Variant",
     "WildcardSyntaxError",
     "default_roots",
+    "dump_section",
+    "dump_template",
     "open_library",
     "parse_kv_lines",
     "parse_section",
@@ -59,4 +74,5 @@ __all__ = [
     "render",
     "resolve_section",
     "resolve_template",
+    "validate_slug",
 ]
