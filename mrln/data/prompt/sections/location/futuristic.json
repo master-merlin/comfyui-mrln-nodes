@@ -1,6 +1,7 @@
 {
   "version": 1,
   "label": "Futuristic Location",
+  "tags": ["scifi"],
   "items": [
     {
       "name": "blade-runner-district",
@@ -27,8 +28,30 @@
       "name": "underwater-tunnel",
       "text": "A transparent, acrylic underwater tunnel, surrounded by the dark water and deep-sea marine life of a massive aquarium.",
       "tags": [
-        "night"
+        "night",
+        "underwater"
       ]
+    },
+    {
+      "name": "skybridge-plaza",
+      "text": "A glass skybridge plaza strung between two supertowers, clouds drifting below the transparent floor.",
+      "text_short": "glass skybridge plaza"
+    },
+    {
+      "name": "vertical-garden-atrium",
+      "text": "A vast solarpunk atrium, terraced vertical gardens cascading down sunlit white architecture.",
+      "text_short": "solarpunk garden atrium"
+    },
+    {
+      "name": "maglev-platform",
+      "text": "A floating maglev platform at height, guideways curving off between the towers into haze.",
+      "text_short": "elevated maglev platform"
+    },
+    {
+      "name": "fusion-plant-hall",
+      "text": "The cathedral hall of a fusion plant, the torus vessel glowing faint blue behind layered containment glass.",
+      "text_short": "glowing fusion hall",
+      "tags": ["night"]
     }
   ]
 }

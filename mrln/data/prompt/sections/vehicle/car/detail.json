@@ -1,19 +1,49 @@
 {
   "version": 1,
   "label": "Detail",
+  "description": "Small story-carrying details on and around the car.",
+  "suits": ["object", "vehicle", "car"],
   "items": [
     {
       "name": "overdrive-plate",
-      "text": "sleek 'Overdrive' license plate clearly visible"
+      "text": "sleek 'Overdrive' license plate clearly visible",
+      "text_short": "Overdrive plate"
     },
     {
       "name": "tow-hook",
-      "text": "functional-looking tow hook subtly visible near front"
+      "text": "functional-looking red tow hook subtly visible at the front splitter",
+      "text_short": "red tow hook"
+    },
+    {
+      "name": "brake-glow",
+      "text": "carbon-ceramic discs still glowing faint orange behind the spokes from hard driving",
+      "text_short": "glowing brake discs",
+      "tags": ["night"]
+    },
+    {
+      "name": "heat-haze-exhaust",
+      "text": "heat haze shimmering above the quad exhaust tips",
+      "text_short": "exhaust heat shimmer"
+    },
+    {
+      "name": "rain-beads",
+      "text": "fresh rain beaded across the paint, each droplet holding a tiny reflection",
+      "text_short": "rain-beaded paint"
+    },
+    {
+      "name": "rubber-pickup",
+      "text": "fresh rubber pickup on the rear tires and light track grime behind the arches",
+      "text_short": "track-fresh tire pickup"
+    },
+    {
+      "name": "carbon-weave-macro",
+      "text": "exposed carbon weave catching light across the aero surfaces",
+      "text_short": "visible carbon weave"
+    },
+    {
+      "name": "puddle-mirror",
+      "text": "a ground puddle mirroring the car's stance in perfect symmetry",
+      "text_short": "puddle mirror reflection"
     }
-  ],
-  "suits": [
-    "object",
-    "vehicle",
-    "car"
   ]
 }

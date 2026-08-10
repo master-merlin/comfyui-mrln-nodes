@@ -1,54 +1,77 @@
 {
   "version": 1,
   "label": "Viewing Angle & Composition",
+  "description": "The full elevation x orientation matrix from the top-ranked prompts, each with its compositional payoff.",
   "items": [
     {
       "name": "front-three-quarter",
-      "text": "medium-shot, eye-level, front-three-quarter view, reflections on the paint"
+      "text": "eye-level front three-quarter view, the classic stance shot with reflections rolling across the bodywork",
+      "text_short": "front three-quarter view"
+    },
+    {
+      "name": "low-front-three-quarter",
+      "text": "dramatic low-angle front three-quarter view, the subject looming with reflections raking the lower panels",
+      "text_short": "low front three-quarter"
     },
     {
       "name": "rear-three-quarter",
-      "text": "rear three-quarter view"
+      "text": "eye-level rear three-quarter view emphasizing the haunches and exhaust detail",
+      "text_short": "rear three-quarter view"
+    },
+    {
+      "name": "low-rear-three-quarter",
+      "text": "low-angle rear three-quarter view, wide rear track dominating the frame",
+      "text_short": "low rear three-quarter"
     },
     {
       "name": "front-view",
-      "text": "straight-on front view"
+      "text": "straight-on front view, perfectly symmetrical and confrontational",
+      "text_short": "straight front view"
     },
     {
       "name": "rear-view",
-      "text": "rear view"
+      "text": "straight-on rear view, symmetrical tail composition with light strips reading clean",
+      "text_short": "straight rear view"
     },
     {
       "name": "side-profile",
-      "text": "clean side profile view"
+      "text": "clean side profile view, the entire silhouette line presented like a design drawing",
+      "text_short": "clean side profile"
     },
     {
-      "name": "low-angle-front",
-      "text": "dramatic low angle front view"
+      "name": "low-side-profile",
+      "text": "low-angle side profile skimming just above the ground plane, reflections doubling beneath",
+      "text_short": "low ground-skim profile"
     },
     {
-      "name": "low-angle-rear",
-      "text": "dramatic low angle rear view"
-    },
-    {
-      "name": "high-angle-front",
-      "text": "high angle front view"
-    },
-    {
-      "name": "high-angle-rear",
-      "text": "high angle rear view"
+      "name": "elevated-three-quarter",
+      "text": "elevated three-quarter view from above eye height, showing the surface sculpture of the upper bodywork",
+      "text_short": "elevated three-quarter"
     },
     {
       "name": "top-down",
-      "text": "steep top-down view"
+      "text": "steep top-down view flattening the subject into graphic shapes against the ground",
+      "text_short": "steep top-down"
     },
     {
       "name": "dutch-angle",
-      "text": "dramatic Dutch angle tilt"
+      "text": "dramatic Dutch-tilt angle injecting restless motion into a static scene",
+      "text_short": "Dutch tilt"
     },
     {
-      "name": "extreme-wide-angle",
-      "text": "extreme wide-angle perspective"
+      "name": "extreme-wide-close",
+      "text": "extreme wide-angle from very close, near surfaces stretching dramatically toward the viewer",
+      "text_short": "close wide-angle stretch"
+    },
+    {
+      "name": "through-foreground",
+      "text": "framed through out-of-focus foreground elements for layered voyeuristic depth",
+      "text_short": "through-foreground frame"
+    },
+    {
+      "name": "reflection-composition",
+      "text": "composed around a mirror surface, the subject and its reflection sharing equal weight",
+      "text_short": "reflection composition"
     }
   ]
 }

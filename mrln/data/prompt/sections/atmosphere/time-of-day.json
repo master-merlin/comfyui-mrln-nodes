@@ -1,41 +1,79 @@
 {
   "version": 1,
   "label": "Time of Day / Atmosphere",
+  "description": "The hour and its air — each item paints light temperature, shadow length and sky character.",
   "items": [
     {
       "name": "summer-sundown",
-      "text": "early sundown during summer with long shadows and warm light",
-      "tags": [
-        "day"
-      ]
-    },
-    {
-      "name": "midday-clear",
-      "text": "bright midday under a clear blue sky",
-      "tags": [
-        "day"
-      ]
-    },
-    {
-      "name": "night-clear",
-      "text": "clear night",
-      "tags": [
-        "night"
-      ]
+      "text": "early sundown during summer, long soft shadows stretching across the ground and warm amber light wrapping every surface",
+      "text_short": "warm summer sundown",
+      "tags": ["day"]
     },
     {
       "name": "golden-hour",
-      "text": "golden hour with warm low sun",
-      "tags": [
-        "day"
-      ]
+      "text": "deep golden hour, the low sun turning the air honey-colored and edging every contour with glow",
+      "text_short": "deep golden hour",
+      "tags": ["day"]
+    },
+    {
+      "name": "midday-clear",
+      "text": "bright midday under a cloudless cobalt sky, short hard shadows and maximum color saturation",
+      "text_short": "bright clear midday",
+      "tags": ["day"]
     },
     {
       "name": "morning-mist",
-      "text": "early morning with delicate mist rising",
-      "tags": [
-        "day"
-      ]
+      "text": "early morning with delicate mist rising off the ground, pale gold light diffusing through the haze",
+      "text_short": "misty gold morning",
+      "tags": ["day"]
+    },
+    {
+      "name": "blue-hour",
+      "text": "blue hour after sunset, the sky a deep luminous cobalt while artificial lights switch on warm against it",
+      "text_short": "cobalt blue hour",
+      "tags": ["night"]
+    },
+    {
+      "name": "night-clear",
+      "text": "a crystal-clear night, star-pricked black sky and cool ambient moonglow",
+      "text_short": "clear starry night",
+      "tags": ["night"]
+    },
+    {
+      "name": "midnight-city-glow",
+      "text": "deep midnight, the scene lit only by scattered artificial sources burning against darkness",
+      "text_short": "midnight artificial glow",
+      "tags": ["night"]
+    },
+    {
+      "name": "first-light",
+      "text": "the first minutes of dawn, a thin rose-and-silver band on the horizon and the world still half asleep in cool shadow",
+      "text_short": "rose-silver first light",
+      "tags": ["day"]
+    },
+    {
+      "name": "stormlight",
+      "text": "eerie pre-storm light, sun breaking under charcoal clouds and igniting the scene against a near-black sky",
+      "text_short": "sunlit against storm-dark sky",
+      "tags": ["day"]
+    },
+    {
+      "name": "hazy-afternoon",
+      "text": "a hazy late afternoon, sunlight scattered soft through suspended dust and warmth",
+      "text_short": "hazy warm afternoon",
+      "tags": ["day"]
+    },
+    {
+      "name": "moonlit",
+      "text": "full moonlight silvering every edge, deep blue shadow pools and quiet monochrome calm",
+      "text_short": "silver moonlight",
+      "tags": ["night"]
+    },
+    {
+      "name": "overcast-noon",
+      "text": "flat overcast noon, shadowless even grey light rendering true colors and textures",
+      "text_short": "flat overcast noon",
+      "tags": ["day"]
     }
   ]
 }

@@ -5,15 +5,45 @@
   "items": [
     {
       "name": "white-infinity-cove",
-      "text": "A clean white photography studio with a large, seamless infinity cove background."
+      "text": "A clean white photography studio with a large, seamless infinity cove background.",
+      "text_short": "white infinity cove"
     },
     {
       "name": "dark-concrete-studio",
-      "text": "A minimalist photo studio with polished, dark concrete floors and raw, unpainted concrete walls."
+      "text": "A minimalist photo studio with polished, dark concrete floors and raw, unpainted concrete walls.",
+      "text_short": "dark concrete studio"
     },
     {
       "name": "light-tent",
-      "text": "Inside a large, enclosed photography light tent, providing perfectly diffused, even illumination."
+      "text": "Inside a large, enclosed photography light tent, providing perfectly diffused, even illumination.",
+      "text_short": "diffused light tent"
+    },
+    {
+      "name": "black-void",
+      "text": "A pure black void studio, the subject floating in darkness with only controlled light defining it.",
+      "text_short": "pure black void"
+    },
+    {
+      "name": "colorama-sweep",
+      "text": "A studio with a saturated seamless colorama paper sweep curving floor into wall.",
+      "text_short": "colored paper sweep"
+    },
+    {
+      "name": "daylight-studio",
+      "text": "A converted daylight studio, huge north-facing industrial windows and white-washed brick.",
+      "text_short": "north-light daylight studio",
+      "tags": ["day"],
+      "requires": ["day"]
+    },
+    {
+      "name": "mirror-floor-stage",
+      "text": "A studio stage with a polished black mirror floor doubling the subject in perfect reflection.",
+      "text_short": "black mirror floor stage"
+    },
+    {
+      "name": "scrim-tunnel",
+      "text": "A wrap-around scrim tunnel glowing from behind, the subject bathed in enormous soft gradient light.",
+      "text_short": "glowing scrim tunnel"
     }
   ]
 }

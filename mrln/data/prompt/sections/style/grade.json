@@ -1,18 +1,47 @@
 {
   "version": 1,
   "label": "Style & Grade",
+  "description": "Finishing grade — the commercial polish layer.",
   "items": [
     {
       "name": "vibrant-high-class",
-      "text": "vibrant high class car photography, advertisement style"
+      "text": "vibrant high-class advertisement grade, saturated confident color and premium sheen",
+      "text_short": "vibrant advertisement grade"
     },
     {
       "name": "moody-cinematic",
-      "text": "moody, cinematic, high-contrast, luxurious"
+      "text": "moody cinematic grade, high contrast, crushed shadows and luxurious restraint",
+      "text_short": "moody cinematic grade"
     },
     {
       "name": "clean-advertisement",
-      "text": "clean commercial advertisement look, crisp and polished"
+      "text": "clean commercial advertisement look, crisp, polished and color-accurate",
+      "text_short": "clean commercial grade"
+    },
+    {
+      "name": "filmic-fade",
+      "text": "filmic grade with lifted blacks, gentle highlight roll-off and organic color drift",
+      "text_short": "filmic faded grade"
+    },
+    {
+      "name": "bleach-bypass",
+      "text": "bleach-bypass grade, desaturated silver retention with gritty metallic contrast",
+      "text_short": "bleach-bypass grit"
+    },
+    {
+      "name": "golden-luxury",
+      "text": "golden luxury grade, warm champagne midtones and softly blooming highlights",
+      "text_short": "golden luxury grade"
+    },
+    {
+      "name": "cool-technical",
+      "text": "cool technical grade, precise steel-blue neutrality with clinical sharpness",
+      "text_short": "cool technical grade"
+    },
+    {
+      "name": "punchy-editorial",
+      "text": "punchy editorial grade, deep contrast, controlled saturation and magazine-cover snap",
+      "text_short": "punchy editorial grade"
     }
   ]
 }

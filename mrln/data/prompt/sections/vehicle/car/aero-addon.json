@@ -2,27 +2,47 @@
   "version": 1,
   "label": "Aero Add-on",
   "description": "Optional aero features; use allow_empty on the slot.",
+  "suits": ["object", "vehicle", "car"],
   "items": [
     {
       "name": "vented-hood",
-      "text": "vented performance hood"
+      "text": "vented performance hood with functional heat-extraction louvres",
+      "text_short": "vented hood"
     },
     {
       "name": "roof-scoop",
-      "text": "functional roof scoop"
+      "text": "functional roof scoop feeding the engine bay",
+      "text_short": "roof scoop"
     },
     {
       "name": "swan-neck-wing",
-      "text": "massive rear wing with swan neck mounts"
+      "text": "massive rear wing on elegant swan-neck mounts",
+      "text_short": "swan-neck wing"
     },
     {
       "name": "active-aero",
-      "text": "active aerodynamic wing elements"
+      "text": "active aerodynamic elements caught mid-deployment",
+      "text_short": "active aero deployed"
+    },
+    {
+      "name": "front-canards",
+      "text": "aggressive stacked front canards carving the air at the corners",
+      "text_short": "stacked canards"
+    },
+    {
+      "name": "rear-diffuser",
+      "text": "an enormous multi-strake rear diffuser dominating the lower tail",
+      "text_short": "multi-strake diffuser"
+    },
+    {
+      "name": "ducktail",
+      "text": "a subtle integrated ducktail spoiler flowing out of the decklid line",
+      "text_short": "integrated ducktail"
+    },
+    {
+      "name": "fender-vents",
+      "text": "sculpted fender vents exhaling air behind each wheel",
+      "text_short": "sculpted fender vents"
     }
-  ],
-  "suits": [
-    "object",
-    "vehicle",
-    "car"
   ]
 }

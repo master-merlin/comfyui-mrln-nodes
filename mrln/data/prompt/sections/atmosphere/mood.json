@@ -1,66 +1,66 @@
 {
   "version": 1,
   "label": "Mood",
-  "description": "The emotional temperature of the image.",
+  "description": "The emotional temperature — each item names the mood and paints how it shows in the frame.",
   "items": [
     {
       "name": "serene",
-      "text": "serene, still and quietly balanced, unhurried calm",
+      "text": "a serene, unhurried calm, every element settled and balanced, nothing asking for attention",
       "text_short": "serene calm"
     },
     {
       "name": "melancholic",
-      "text": "melancholic and wistful, a gentle ache of things passing",
+      "text": "a melancholic wistfulness, muted tones and empty space carrying a gentle ache of things passing",
       "text_short": "melancholic"
     },
     {
       "name": "nostalgic",
-      "text": "warmly nostalgic, like a memory slightly softened at the edges",
+      "text": "warm nostalgia, edges slightly softened and colors faded like a memory that improved with age",
       "text_short": "nostalgic warmth"
     },
     {
       "name": "tense",
-      "text": "taut and suspenseful, something about to happen",
+      "text": "taut suspense, held breath in the composition, something about to happen just outside the frame",
       "text_short": "tense suspense"
     },
     {
       "name": "ominous",
-      "text": "ominous and foreboding, a quiet weight of dread",
+      "text": "ominous foreboding, weight gathering in the shadows and a low visual hum of dread",
       "text_short": "ominous dread"
     },
     {
       "name": "euphoric",
-      "text": "euphoric and weightless, bursting bright energy",
+      "text": "euphoric weightless energy, light flaring, everything bright and lifted mid-celebration",
       "text_short": "euphoric energy"
     },
     {
       "name": "triumphant",
-      "text": "triumphant and monumental, chest-out heroic grandeur",
+      "text": "triumphant monumental grandeur, low angles and swelling scale, a chest-out heroic finale",
       "text_short": "triumphant grandeur"
     },
     {
       "name": "intimate",
-      "text": "intimate and hushed, a private moment the viewer almost intrudes on",
+      "text": "hushed intimacy, close framing and soft light, a private moment the viewer almost intrudes on",
       "text_short": "intimate hush"
     },
     {
       "name": "playful",
-      "text": "playful and mischievous, light-hearted charm",
+      "text": "light-hearted playful charm, bouncing color and a wink hidden somewhere in the scene",
       "text_short": "playful charm"
     },
     {
       "name": "mysterious",
-      "text": "mysterious and withholding, more implied than shown",
+      "text": "withholding mystery, more implied than shown, key details dissolving into shadow and haze",
       "text_short": "mysterious"
     },
     {
       "name": "desolate",
-      "text": "desolate and abandoned, emptiness pressing in",
+      "text": "desolate abandonment, vast emptiness pressing in on one small element that remains",
       "text_short": "desolate emptiness"
     },
     {
       "name": "dreamlike",
-      "text": "dreamlike and untethered, logic softened into reverie",
+      "text": "dreamlike reverie, physics gently loosened, glow where there should be edges",
       "text_short": "dreamlike reverie"
     }
   ]

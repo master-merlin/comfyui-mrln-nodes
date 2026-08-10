@@ -1,19 +1,48 @@
 {
   "version": 1,
   "label": "Light Quality",
-  "description": "Time-neutral lighting character.",
+  "description": "Time-neutral lighting character — the physics of the light itself.",
   "items": [
     {
       "name": "hdr-cinematic",
-      "text": "HDR, cinematic lighting, volumetric light, strong contrasts between light and shadow"
+      "text": "HDR cinematic lighting, volumetric light, strong sculpted contrast between light and shadow",
+      "text_short": "HDR cinematic contrast"
     },
     {
       "name": "soft-diffused",
-      "text": "soft diffused light, gentle falloff"
+      "text": "soft diffused light with gentle gradual falloff and open readable shadows",
+      "text_short": "soft diffused light"
     },
     {
       "name": "studio-softbox",
-      "text": "perfect studio lighting with large softboxes"
+      "text": "perfect studio lighting from large softboxes, controlled highlights and clean shadow edges",
+      "text_short": "studio softbox light"
+    },
+    {
+      "name": "hard-specular",
+      "text": "hard specular light snapping crisp highlights off every glossy surface, knife-edged shadows",
+      "text_short": "hard specular snap"
+    },
+    {
+      "name": "bounced-ambient",
+      "text": "soft bounced ambient light filling from every direction, shadows barely whispering",
+      "text_short": "bounced ambient fill"
+    },
+    {
+      "name": "glowing-low-key",
+      "text": "low-key lighting, small islands of glow floating in expansive darkness",
+      "text_short": "low-key glow islands",
+      "tags": ["night"]
+    },
+    {
+      "name": "high-key-airy",
+      "text": "high-key lighting, luminous airy whites with detail floating in brightness",
+      "text_short": "high-key airy light"
+    },
+    {
+      "name": "mixed-temperature",
+      "text": "mixed color-temperature light, warm practicals fighting cool ambient for every surface",
+      "text_short": "warm-cool mixed light"
     }
   ]
 }

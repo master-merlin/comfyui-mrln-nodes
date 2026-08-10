@@ -21,6 +21,28 @@
     {
       "name": "yacht-harbor-dock",
       "text": "A clean wooden dock in an exclusive yacht harbor, lined with mooring posts and coiled ropes."
+    },
+    {
+      "name": "private-airstrip",
+      "text": "A private desert airstrip beside an open jet hangar, heat shimmering off the apron and a business jet waiting behind.",
+      "text_short": "private jet airstrip"
+    },
+    {
+      "name": "infinity-pool-terrace",
+      "text": "A clifftop infinity-pool terrace, the water edge dissolving seamlessly into the sea horizon beyond.",
+      "text_short": "infinity pool terrace"
+    },
+    {
+      "name": "grand-hotel-portico",
+      "text": "The lantern-lit portico of a grand belle-époque hotel, brass luggage carts and a red carpet under the columns.",
+      "text_short": "grand hotel portico"
+    },
+    {
+      "name": "alpine-lodge-drive",
+      "text": "The snow-banked drive of an exclusive alpine lodge, warm windows glowing against dusk-blue peaks.",
+      "text_short": "alpine lodge drive",
+      "tags": ["night"],
+      "requires": ["night"]
     }
   ]
 }
