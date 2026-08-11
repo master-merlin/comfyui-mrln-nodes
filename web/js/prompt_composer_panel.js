@@ -2320,14 +2320,13 @@ export function createComposerPanel(root, ctx) {
   }
 
   function loraPicker(current) {
-    // Folder-first picking for libraries with hundreds of files: a folder
-    // select narrows, a substring filter narrows further, the file select
-    // shows what remains. The current file's folder preselects, so a
-    // trainer-series switch starts among its siblings.
+    // One dropdown for everything, ComfyUI-native style: folders appear
+    // inline as group headers, no pre-navigation. The substring filter
+    // narrows the list for big libraries.
     const file = el("select", { title: "LoRA file (from ComfyUI's models/loras)" });
-    const folder = el("select", { title: "Folder — narrows the file list" });
     const filter = el("input", {
       type: "text",
+      class: "mrln-lora-filter",
       placeholder: "filter…",
       title: "Substring filter over the file names",
     });
@@ -2338,37 +2337,25 @@ export function createComposerPanel(root, ctx) {
     let names = current ? [current] : [];
     const rebuild = () => {
       const chosen = file.value;
-      const dir = folder.value;
       const needle = filter.value.trim().toLowerCase();
-      let pool = names;
-      if (dir) pool = pool.filter((n) => dirOf(n) === dir);
-      if (needle) pool = pool.filter((n) => n.toLowerCase().includes(needle));
+      const pool = needle ? names.filter((n) => n.toLowerCase().includes(needle)) : names;
       file.replaceChildren(el("option", { value: "" }, "— choose LoRA —"));
-      if (dir) {
-        // narrowed view: a group header names the active folder, so the
-        // dropdown itself shows where these files live
-        const options = pool.map((name) =>
-          el("option", { value: name }, dir === "." ? name : name.slice(dir.length + 1))
-        );
-        if (dir === ".") file.append(el("optgroup", { label: "📁 (root)" }, ...options));
-        else file.append(el("optgroup", { label: `📁 ${dir}` }, ...options));
-      } else {
-        const groups = new Map();
-        for (const name of pool) {
-          const d = dirOf(name);
-          if (!groups.has(d)) groups.set(d, []);
-          groups.get(d).push(name);
-        }
-        for (const d of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
-          const options = groups
-            .get(d)
-            .map((name) => el("option", { value: name }, d === "." ? name : name.slice(d.length + 1)));
-          file.append(el("optgroup", { label: d === "." ? "📁 (root)" : `📁 ${d}` }, ...options));
-        }
+      const groups = new Map();
+      for (const name of pool) {
+        const d = dirOf(name);
+        if (!groups.has(d)) groups.set(d, []);
+        groups.get(d).push(name);
+      }
+      for (const d of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
+        const options = groups
+          .get(d)
+          .map((name) => el("option", { value: name }, d === "." ? name : name.slice(d.length + 1)));
+        if (d === ".") file.append(...options);
+        else file.append(el("optgroup", { label: `📁 ${d}` }, ...options));
       }
       if (chosen && !pool.includes(chosen)) {
-        // keep the selection visible while narrowed away — or flag a file
-        // that is not installed at all
+        // keep the selection visible when the filter hides it — the warning
+        // is reserved for files truly absent from disk
         const installed = names.includes(chosen);
         file.append(el("option", { value: chosen }, installed ? chosen : `⚠ not installed: ${chosen}`));
       }
@@ -2376,19 +2363,12 @@ export function createComposerPanel(root, ctx) {
     };
     installedLoras().then((list) => {
       if (list.length) names = list;
-      const dirs = [...new Set(names.map(dirOf))].sort((a, b) => a.localeCompare(b));
-      folder.replaceChildren(el("option", { value: "" }, "📁 all folders"));
-      for (const d of dirs) {
-        folder.append(el("option", { value: d }, d === "." ? "📁 (root)" : `📁 ${d}`));
-      }
-      if (current && dirs.includes(dirOf(current))) folder.value = dirOf(current);
       rebuild();
     });
-    folder.addEventListener("change", rebuild);
     filter.addEventListener("input", rebuild);
     file.append(el("option", { value: current ?? "" }, current || "— choose LoRA —"));
     file.value = current ?? "";
-    return { file, folder, filter };
+    return { file, filter };
   }
 
   function openSectionForm(slug, body) {
@@ -2504,7 +2484,6 @@ export function createComposerPanel(root, ctx) {
         // text above stays the catchword that lands in the prompt.
         const picker = loraPicker(item.data.lora ?? "");
         row.lora = picker.file;
-        row.loraFolder = picker.folder;
         row.loraFilter = picker.filter;
         row.sm = el("input", {
           type: "text",
@@ -2591,18 +2570,7 @@ export function createComposerPanel(root, ctx) {
             "tr",
             { class: "mrln-lora-row" },
             el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
-            el(
-              "td",
-              { colspan: 3 },
-              el("div", { class: "mrln-inline" }, row.loraFolder, row.loraFilter)
-            ),
-            el("td", { class: "mrln-w-act" })
-          ),
-          el(
-            "tr",
-            { class: "mrln-lora-row" },
-            el("td", { class: "mrln-w-origin" }),
-            el("td", { colspan: 2 }, row.lora),
+            el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.lora)),
             el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
             el("td", { class: "mrln-w-act" })
           ),

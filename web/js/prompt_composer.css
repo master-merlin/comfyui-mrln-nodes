@@ -227,6 +227,7 @@ textarea.mrln-auto {
 .mrln-slot.mrln-broken { border-color: #a55; }
 .mrln-items-table tr.mrln-hidden-item td { opacity: 0.45; text-decoration: line-through; }
 .mrln-items-table tr.mrln-lora-row td { padding-top: 0; }
+.mrln-inline > input.mrln-lora-filter { flex: 0 0 90px; }
 .mrln-items-table tr.mrln-lora-end td {
   border-bottom: 1px solid var(--border-color, #333);
   padding-bottom: 4px;
