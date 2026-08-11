@@ -2507,6 +2507,12 @@ export function createComposerPanel(root, ctx) {
           } catch {
             if (req !== loraMetaReq) return;
           }
+          // auto-filled AIR follows the file on every switch; only a comment
+          // the user typed themselves is preserved
+          const commentIsAuto = () => {
+            const current = row.comment.value.trim();
+            return !current || current === row.autoAir || current.startsWith("urn:air:");
+          };
           try {
             const civ = await ctx.apiJson(
               `/mrln/prompt/lora-civitai?name=${encodeURIComponent(file)}`
@@ -2518,9 +2524,18 @@ export function createComposerPanel(root, ctx) {
                 + `${civ.trained_words?.length > 1 ? `; all: ${civ.trained_words.join(", ")}` : ""})`;
               found = true;
             }
-            if (civ.air && !row.comment.value.trim()) row.comment.value = civ.air;
+            if (commentIsAuto()) {
+              row.comment.value = civ.air ?? "";
+              row.autoAir = civ.air ?? "";
+            }
           } catch {
             if (req !== loraMetaReq) return;
+            if (commentIsAuto()) {
+              // the previous file's AIR must not stick to a file Civitai
+              // doesn't know
+              row.comment.value = "";
+              row.autoAir = "";
+            }
           }
           if (!found) {
             row.text.value = "";
