@@ -1371,14 +1371,21 @@ export function createComposerPanel(root, ctx) {
     const chips = [];
     if (isVariantSlot) chips.push(el("span", { class: "mrln-chip" }, state.variant));
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
-    if (pool.some((p) => p.lora)) {
+    const loraItem = pool.find((p) => p.lora);
+    if (loraItem) {
       chips.push(
         el(
-          "span",
+          "button",
           {
-            class: "mrln-chip mrln-user",
-            title: "This section carries LoRA blocks — a drawn block loads its "
-              + "file via the template node's loras output → LoRA Apply (MRLN)",
+            class: "mrln-chip mrln-chip-btn mrln-user",
+            title: "This section carries LoRA blocks (loaded via the loras "
+              + "output → LoRA Apply node). Click to edit the section in the "
+              + "Library tab.",
+            onclick: async () => {
+              switchTab("library");
+              await openSectionEditor(loraItem.section_slug ?? slot.ref);
+              editorBox.scrollIntoView({ block: "nearest" });
+            },
           },
           "LoRA"
         )
