@@ -231,10 +231,29 @@ textarea.mrln-auto {
   border-bottom: 1px solid var(--border-color, #333);
 }
 .mrln-items-table tr.mrln-lora-row .mrln-inline input { min-width: 34px; }
-.mrln-composer input.mrln-input-error {
+.mrln-composer input.mrln-input-error,
+.mrln-composer textarea.mrln-input-error {
   border-color: #e66;
   box-shadow: 0 0 0 1px #e66;
 }
+
+/* '{' reference assist: menu anchored under the field */
+.mrln-assist { position: relative; display: block; min-width: 0; }
+.mrln-brace-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  max-height: 180px;
+  overflow-y: auto;
+  background: var(--comfy-menu-bg, #242424);
+  border: 1px solid var(--border-color, #555);
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.mrln-brace-item { padding: 3px 6px; cursor: pointer; font-size: 11px; }
+.mrln-brace-item:hover { background: var(--comfy-input-bg, #1a1a1a); }
 .mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
 .mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
 .mrln-items-table .mrln-w-origin { width: 24px; }

@@ -136,6 +136,24 @@ def lib(tmp_path):
             "slots": [{"id": "cars", "ref": "car", "default": "gt3"}],
         },
     )
+    _write(
+        factory,
+        "sections/scenario.json",
+        {
+            "items": [
+                {
+                    "name": "alt",
+                    "text": "{a sleek {kit} pass|wide angle, {kit} parked}",
+                    "slots": [{"id": "kit", "ref": "lora/car", "default": "m4-kit"}],
+                }
+            ]
+        },
+    )
+    _write(
+        factory,
+        "templates/segment-alt.json",
+        {"slots": [{"id": "scenario", "ref": "scenario", "default": "alt"}]},
+    )
     return Library(factory, None)
 
 
@@ -267,6 +285,21 @@ def test_unknown_placeholder_suggests_close_slot_id(lib):
     # the UAT case: slot auto-named 'cars' from lora/cars, prefix says {car-lora}
     with pytest.raises(Exception, match=r"Did you mean '\{cars\}'"):
         rt(lib, "typo")
+
+
+def test_item_text_alternates_and_weaves_child_bare(lib):
+    # the 'segment' pattern: an item randoms between two texts, each consuming
+    # a child draw bare (no lead-in) — and a LoRA child still signals the loader
+    tpl, resolved = rt(lib, "segment-alt")
+    out = render(resolved, "string", tpl.render)
+    assert out.positive in ("a sleek BMWM4CS_G82 pass", "wide angle, BMWM4CS_G82 parked")
+    assert lora_entries(resolved) == [
+        {
+            "lora": "mastermerlin\\bmw_m4_cs.safetensors",
+            "strength_model": 0.35,
+            "strength_clip": 0.35,
+        }
+    ]
 
 
 def test_preview_api_exposes_inline_flag(lib):

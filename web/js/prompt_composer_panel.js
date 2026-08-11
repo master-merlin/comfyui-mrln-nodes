@@ -35,6 +35,90 @@ function parseToken(token) {
   return { random: false, seed: "", item: (token ?? "").trim() };
 }
 
+const REF_RE = /(?<!\{)\{([A-Za-z_][A-Za-z0-9_-]*)\}(?!\})/g;
+
+function validateRefs(field, knownNames) {
+  // red border when the text references a {name} that nothing provides
+  const unknown = [...new Set([...field.value.matchAll(REF_RE)].map((m) => m[1]))].filter(
+    (name) => !knownNames().has(name)
+  );
+  field.classList.toggle("mrln-input-error", unknown.length > 0);
+  if (unknown.length) {
+    field.title = `unknown reference {${unknown.join("}, {")}} — type '{' to pick from `
+      + "what is available";
+  } else if (field.dataset.mrlnBaseTitle !== undefined) {
+    field.title = field.dataset.mrlnBaseTitle;
+  }
+  return unknown;
+}
+
+function braceAssist(field, getOptions, onPick) {
+  // Typing '{' opens a picker over everything referencable at the caret;
+  // choosing inserts the name and closes the brace. Returns a wrapper to
+  // mount instead of the bare field (the menu anchors to it).
+  const menu = el("div", { class: "mrln-brace-menu", style: "display:none" });
+  const wrap = el("span", { class: "mrln-assist" }, field, menu);
+  const hide = () => {
+    menu.style.display = "none";
+  };
+  const openBrace = () => {
+    // last unclosed, unescaped '{' before the caret; returns {pos, partial}
+    const caret = field.selectionStart ?? 0;
+    const value = field.value;
+    for (let i = caret - 1; i >= 0; i--) {
+      const ch = value[i];
+      if (ch === "}") return null;
+      if (ch === "{") {
+        if (value[i - 1] === "{") return null; // '{{' literal escape
+        const partial = value.slice(i + 1, caret);
+        return /^[A-Za-z0-9_-]*$/.test(partial) ? { pos: i, partial } : null;
+      }
+    }
+    return null;
+  };
+  const refresh = () => {
+    const at = openBrace();
+    if (!at) {
+      hide();
+      return;
+    }
+    const lower = at.partial.toLowerCase();
+    const options = getOptions().filter((o) => o.name.toLowerCase().startsWith(lower));
+    if (!options.length) {
+      hide();
+      return;
+    }
+    menu.replaceChildren(
+      ...options.slice(0, 14).map((option) =>
+        el(
+          "div",
+          {
+            class: "mrln-brace-item",
+            onmousedown: (e) => {
+              e.preventDefault(); // beat the blur
+              field.setRangeText(`${option.name}}`, at.pos + 1, field.selectionStart, "end");
+              hide();
+              onPick?.(option);
+              field.dispatchEvent(new Event("input", { bubbles: false }));
+              field.focus();
+            },
+          },
+          option.name,
+          option.hint ? el("span", { class: "mrln-slug" }, ` ${option.hint}`) : null
+        )
+      )
+    );
+    menu.style.display = "";
+  };
+  field.addEventListener("input", refresh);
+  field.addEventListener("click", refresh);
+  field.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hide();
+  });
+  field.addEventListener("blur", () => setTimeout(hide, 150));
+  return wrap;
+}
+
 function parseKvLines(text) {
   const map = {};
   for (const raw of (text ?? "").split("\n")) {
@@ -1017,14 +1101,30 @@ export function createComposerPanel(root, ctx) {
         schedulePreview();
       },
     });
+    const wrapRefOptions = () => {
+      const options = [{ name: "trigger", hint: "node trigger widget" }];
+      for (const v of state.rawData.variables ?? []) options.push({ name: v.name, hint: "variable" });
+      for (const s of state.rawData.slots ?? [])
+        options.push({ name: s.id, hint: `slot → ${s.ref} (weaves inline)` });
+      for (const variant of state.rawData.variants ?? [])
+        for (const s of variant.slots ?? [])
+          options.push({ name: s.id, hint: `slot → ${s.ref} (${variant.name} only)` });
+      return options;
+    };
+    const wrapKnown = () => new Set(wrapRefOptions().map((o) => o.name));
+    for (const area of [prefixArea, suffixArea]) {
+      area.dataset.mrlnBaseTitle = "";
+      area.addEventListener("input", () => validateRefs(area, wrapKnown));
+      validateRefs(area, wrapKnown);
+    }
     const hasText = Boolean(state.rawData.prefix || state.rawData.suffix);
     return el(
       "details",
       { class: "mrln-fold", open: hasText ? "" : null },
       el("summary", {}, "Template text & type (label / prefix / suffix / negative / classifiers)"),
       field("Label (display name)", labelInput),
-      field("Prefix", prefixArea),
-      field("Suffix", suffixArea),
+      field("Prefix", braceAssist(prefixArea, wrapRefOptions)),
+      field("Suffix", braceAssist(suffixArea, wrapRefOptions)),
       field("Negative", negativeInput),
       field("Type (classifiers)", typeInput)
     );
@@ -2217,10 +2317,40 @@ export function createComposerPanel(root, ctx) {
       const row = {
         orig: item,
         hidden: Boolean(item.hidden),
+        slots: (item.slots ?? []).map((s) => ({ ...s })), // child refs, grown via '{'
         name: el("input", { type: "text", value: item.name ?? "" }),
         text: el("input", { type: "text", value: item.text ?? "", title: item.text ?? "" }),
         weight: el("input", { type: "text", value: item.weight ?? "" }),
       };
+      // '{' assist: pick a declared child, the trigger, or any section —
+      // picking a section auto-declares it as a child slot of this item,
+      // so its draw weaves into the text bare (no lead-in)
+      const itemRefOptions = () => {
+        const options = [];
+        const used = new Set(["trigger"]);
+        for (const s of row.slots) {
+          options.push({ name: s.id, hint: `child → ${s.ref}` });
+          used.add(s.id);
+        }
+        options.push({ name: "trigger", hint: "node trigger widget" });
+        for (const sec of state.library?.sections ?? []) {
+          if (row.slots.some((s) => s.ref === sec.slug)) continue;
+          const base = sec.slug.split("/").pop();
+          let id = base;
+          let n = 2;
+          while (used.has(id)) id = `${base}-${n++}`;
+          used.add(id);
+          options.push({ name: id, hint: sec.slug, create: { id, ref: sec.slug } });
+        }
+        return options;
+      };
+      const itemKnown = () => new Set(["trigger", ...row.slots.map((s) => s.id)]);
+      row.text.dataset.mrlnBaseTitle = item.text ?? "";
+      const textAssist = braceAssist(row.text, itemRefOptions, (option) => {
+        if (option.create) row.slots.push({ ...option.create });
+      });
+      row.text.addEventListener("input", () => validateRefs(row.text, itemKnown));
+      validateRefs(row.text, itemKnown);
       const fromFactory = item.origin === "factory";
       const originChip = fromFactory
         ? el("span", { class: "mrln-chip mrln-factory", title: "Lives in the factory tier" }, "F")
@@ -2252,7 +2382,7 @@ export function createComposerPanel(root, ctx) {
         { class: row.hidden ? "mrln-hidden-item" : null },
         el("td", { class: "mrln-w-origin" }, originChip),
         el("td", { class: "mrln-w-name" }, row.name),
-        el("td", {}, row.text),
+        el("td", {}, textAssist),
         el("td", { class: "mrln-w-weight" }, row.weight),
         el("td", { class: "mrln-w-act" }, actionButton)
       );
@@ -2300,9 +2430,6 @@ export function createComposerPanel(root, ctx) {
             row.text.title = `${err.message} — type the trigger word / catchword yourself`;
           }
         });
-        row.text.addEventListener("input", () => {
-          row.text.classList.remove("mrln-input-error");
-        });
         table.append(
           el(
             "tr",
@@ -2319,6 +2446,7 @@ export function createComposerPanel(root, ctx) {
 
     function cleanedItem(row) {
       const item = { ...row.orig, name: row.name.value.trim(), text: row.text.value };
+      if (row.slots.length) item.slots = row.slots.map((s) => ({ ...s }));
       delete item.origin; // runtime provenance, never persisted
       delete item.hidden;
       if (!item.name) delete item.name;
