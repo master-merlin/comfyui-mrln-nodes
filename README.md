@@ -86,12 +86,16 @@ each item's tier (F/U), factory items can be hidden/restored, and saving
 defaults to a thin "extend factory" diff that survives pack updates (full
 replace available per save) — and templates as validated raw JSON. The
 De-compose tab works the other way around: paste a finished prompt and it
-is programmatically decomposed against your library — matched fragments
-become slots pinned to their items, the residue becomes new items, new
-sections, or prefix/suffix prose, and one click stores the whole mapping
-as a template (the endpoint takes an `engine` parameter, so an Ollama/LLM
-decomposer can plug in later). On frontends without the API the panel
-simply doesn't appear — the nodes work identically without it.
+is decomposed against your library — matched fragments become slots pinned
+to their items, the residue becomes new items, new sections, or
+prefix/suffix prose, and one click stores the whole mapping as a template.
+Three engines: `programmatic` (offline token matcher), `llm` (a configured
+local or cloud backend splits and maps against the library catalog) and
+`hybrid` (the programmatic result rides in the LLM system prompt as
+suggestions to verify or correct); every LLM assignment is validated
+against the real library, and a failing backend falls back to the
+programmatic result instead of erroring. On frontends without the API the
+panel simply doesn't appear — the nodes work identically without it.
 
 The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per

@@ -2167,14 +2167,22 @@ export function createComposerPanel(root, ctx) {
       ctx.toast("warn", "Nothing to decompose", "Paste a prompt first.");
       return;
     }
+    const engine = d.engine ?? "programmatic";
+    const body = { prompt: d.text, type: d.type, engine };
+    if (engine !== "programmatic") {
+      body.backend = d.backend ?? "ollama";
+      body.model = d.model ?? "";
+      body.timeout = 120; // an LLM chewing a mega-prompt needs headroom
+      ctx.toast("info", "De-composing…", `${engine} engine via ${body.backend}`);
+    }
     try {
-      d.report = await ctx.apiJson("/mrln/prompt/decompose", {
-        method: "POST",
-        body: { prompt: d.text, type: d.type, engine: "heuristic" },
-      });
+      d.report = await ctx.apiJson("/mrln/prompt/decompose", { method: "POST", body });
     } catch (err) {
       ctx.toast("error", "Decompose failed", err.message);
       return;
+    }
+    if (d.report.llm_error) {
+      ctx.toast("warn", "LLM engine fell back", d.report.llm_error);
     }
     d.plans = d.report.fragments.map((f, i) => defaultPlan(f, i, d.report.fragments));
     renderDecomposeTab();
@@ -2380,15 +2388,52 @@ export function createComposerPanel(root, ctx) {
         d.type = e.target.value;
       },
     });
+    const engineSelect = el("select", {
+      title: "programmatic: token matcher, offline. llm: the model splits and "
+        + "maps against the library catalog. hybrid: the programmatic result "
+        + "rides in the LLM system prompt as suggestions to verify or correct. "
+        + "llm/hybrid fall back to programmatic when the backend fails.",
+      onchange: (e) => {
+        d.engine = e.target.value;
+        renderDecomposeTab();
+      },
+    });
+    for (const engine of ["programmatic", "llm", "hybrid"]) {
+      engineSelect.append(el("option", { value: engine }, engine));
+    }
+    engineSelect.value = d.engine ?? "programmatic";
+    const backendSelect = el("select", {
+      title: "LLM backend for the llm/hybrid engines — locals need the URL, "
+        + "clouds the API key from the Settings tab",
+      onchange: (e) => {
+        d.backend = e.target.value;
+      },
+    });
+    for (const backend of ["ollama", "lm studio", "anthropic", "openai", "gemini", "openrouter"]) {
+      backendSelect.append(el("option", { value: backend }, backend));
+    }
+    backendSelect.value = d.backend ?? "ollama";
+    const modelInput = el("input", {
+      type: "text",
+      value: d.model ?? "",
+      placeholder: "model — e.g. gemma3:12b (required for Ollama)",
+      title: "Model for the llm/hybrid engines; cloud backends fall back to a default",
+      oninput: (e) => {
+        d.model = e.target.value;
+      },
+    });
     const parts = [
       el(
         "div",
         { class: "mrln-note" },
-        "Programmatic decomposition (heuristic matcher). An Ollama/LLM engine can plug "
-          + "into the same endpoint later."
+        "Map a pasted prompt onto your library. The programmatic matcher is "
+          + "offline and deterministic; llm/hybrid ask a configured backend "
+          + "and validate every assignment against the real library."
       ),
       field("Prompt to decompose", promptArea),
       field("Template type (classifiers)", typeInput),
+      el("div", { class: "mrln-grid2" }, field("Engine", engineSelect), field("Backend", (d.engine ?? "programmatic") === "programmatic" ? el("span", { class: "mrln-note" }, "—") : backendSelect)),
+      (d.engine ?? "programmatic") === "programmatic" ? null : field("Model", modelInput),
       el(
         "div",
         { class: "mrln-actions" },

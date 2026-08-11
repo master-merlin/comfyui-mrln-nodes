@@ -3,7 +3,7 @@ selection, and format-aware rendering. Pure Python, zero dependencies,
 fully importable without ComfyUI.
 """
 
-from .decompose import ENGINES, decompose
+from .decompose import ENGINES, decompose, score_match
 from .errors import (
     ItemNotFoundError,
     PromptLibError,
@@ -101,6 +101,7 @@ __all__ = [
     "render",
     "resolve_section",
     "resolve_template",
+    "score_match",
     "trigger_from_metadata",
     "validate_slug",
 ]

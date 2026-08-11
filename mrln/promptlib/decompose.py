@@ -3,22 +3,26 @@ existing section item where one matches, leave the rest as honest residue.
 
 Pure and deterministic — the composer's De-compose tab renders the report
 and lets the user resolve residue (new items via extend-saves, prefix or
-suffix prose) before storing the result as a template. `engine` selects the
-decomposition strategy: "heuristic" (this module) now; "ollama" is reserved
-for an LLM-backed decomposer and rejected with a clear message until wired.
+suffix prose) before storing the result as a template. This module IS the
+"programmatic" engine ("heuristic" is accepted as its old alias). The
+"llm" and "hybrid" engines live in the API layer (promptapi) because they
+call a backend: llm asks the model directly, hybrid feeds this module's
+report into the LLM system prompt as suggestions to verify or correct —
+both validate every assignment against the real library via score_match().
 
-Matching model (v1, honest about its limits): the prompt splits into lines,
-each line first tries to match a whole item (optionally behind a "Label:"
-lead-in), then falls back to comma-piece matching. Scores are token-set F1;
-emphasis wrappers "(text:1.3)" and unexpanded {a|b} wildcards are stripped
-before comparison. The LLM engine will own smarter splitting later.
+Matching model (programmatic): the prompt splits into lines, each line
+first tries to match a whole item (optionally behind a "Label:" lead-in),
+then falls back to comma-piece matching. Scores are token-set F1; emphasis
+wrappers "(text:1.3)" and unexpanded {a|b} wildcards are stripped before
+comparison.
 """
 
 import re
 
 from .errors import SelectionError
 
-ENGINES = ("heuristic", "ollama")
+ENGINES = ("programmatic", "llm", "hybrid")
+_ENGINE_ALIASES = {"heuristic": "programmatic"}
 _LINE_SCORE = 0.85  # full line vs one item
 _PIECE_SCORE = 0.6  # comma piece vs one item
 _LABEL_RE = re.compile(r"^[^:\n]{1,60}:\s+")
@@ -84,13 +88,29 @@ def _match_fragment(text, candidates, threshold):
     return {"text": text, "match": None}
 
 
-def decompose(lib, prompt_text, *, template_type=(), engine="heuristic"):
+def score_match(lib, text, section_slug, item_name):
+    """Token-F1 of a fragment against one specific item, or None when the
+    section/item does not exist — the LLM engines use this both to validate
+    an assignment and to attach an honest score to it."""
+    try:
+        section = lib.load_section(section_slug)
+    except Exception:
+        return None
+    target = next((i for i in section.items if i.name == item_name and not i.hidden), None)
+    if target is None:
+        return None
+    return round(_f1(_tokens(text), _tokens(target.text)), 3)
+
+
+def decompose(lib, prompt_text, *, template_type=(), engine="programmatic"):
+    engine = _ENGINE_ALIASES.get(engine, engine)
     if engine not in ENGINES:
         raise SelectionError(engine, f"unknown engine (engines: {', '.join(ENGINES)})")
-    if engine == "ollama":
+    if engine != "programmatic":
         raise SelectionError(
             engine,
-            "the Ollama engine is not wired up yet — use 'heuristic' for now",
+            "the llm/hybrid engines run through the Composer API "
+            "(POST /mrln/prompt/decompose) — this module is the programmatic engine",
         )
     if not isinstance(prompt_text, str) or not prompt_text.strip():
         raise SelectionError("prompt", "nothing to decompose — paste a prompt first")
