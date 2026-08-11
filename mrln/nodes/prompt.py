@@ -511,6 +511,14 @@ def parse_llm_spec(llm):
     return data
 
 
+def _effective_max_tokens(prompt, max_tokens):
+    """A keep-everything rewrite cannot be shorter than its input — raise a
+    too-small generation cap so the backend never truncates silently (that
+    reads as 'the enhancer ate my prompt'). Words -> tokens with headroom."""
+    floor = int(len(prompt.split()) * 1.8) + 64
+    return max(max_tokens, min(floor, 8192))
+
+
 def _enforce_protected(text, protect):
     """(repaired_text, missing) — every protected span must survive the
     rewrite EXACTLY; spans the LLM dropped or mutated are re-appended so a
@@ -615,7 +623,10 @@ class PromptEnhance:
                         "default": 512,
                         "min": 16,
                         "max": 8192,
-                        "tooltip": "Generation cap for the rewrite.",
+                        "tooltip": "Generation cap for the rewrite. Auto-raised when the "
+                        "input is longer than the cap allows — a keep-everything "
+                        "rewrite can never be shorter than its input (the report "
+                        "notes when this happens).",
                     },
                 ),
                 "timeout": (
@@ -748,6 +759,7 @@ class PromptEnhance:
         # 'from mrln import …' only resolves in pytest
         from .. import promptapi
 
+        effective_max = _effective_max_tokens(prompt, max_tokens)
         try:
             text = promptapi.llm_chat(
                 pl.open_library(),
@@ -757,7 +769,7 @@ class PromptEnhance:
                 prompt=prompt,
                 temperature=temperature,
                 seed=seed,
-                max_tokens=max_tokens,
+                max_tokens=effective_max,
                 timeout=timeout,
                 free_vram=free_vram,
             )
@@ -778,10 +790,15 @@ class PromptEnhance:
                 if missing
                 else f" · {len(protect)} protected span(s) verified"
             )
+        raised = (
+            f" · token cap auto-raised {max_tokens}→{effective_max} to fit the input"
+            if effective_max > max_tokens
+            else ""
+        )
         return (
             text,
             f"enhanced via {backend}:{model or 'default'} seed {seed} "
-            f"temp {temperature:g} ({vram}){guarded}",
+            f"temp {temperature:g} ({vram}){guarded}{raised}",
         )
 
 

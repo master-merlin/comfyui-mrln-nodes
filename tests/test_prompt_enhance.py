@@ -160,6 +160,18 @@ def test_llm_pull_endpoint(tmp_path):
     assert all(":" in m for m in promptapi.SUGGESTED_OLLAMA_MODELS)
 
 
+def test_effective_max_tokens_floor():
+    from mrln.nodes.prompt import _effective_max_tokens
+
+    short = "a red car at dusk"
+    assert _effective_max_tokens(short, 512) == 512  # ample cap untouched
+    long_prompt = "word " * 400  # ~400-word composed prompt
+    floor = _effective_max_tokens(long_prompt, 512)
+    assert floor > 512  # 512 would truncate a keep-everything rewrite
+    assert _effective_max_tokens("word " * 20000, 512) == 8192  # hard ceiling
+    assert _effective_max_tokens(short, 2048) == 2048  # explicit user cap wins
+
+
 def test_enforce_protected_trigger_words():
     from mrln.nodes.prompt import _enforce_protected
 
