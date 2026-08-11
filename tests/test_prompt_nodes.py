@@ -77,7 +77,8 @@ def test_loras_output_json(classes, template_node, user_tier):
         seed=0,
         format="template default",
     )
-    assert out[0].endswith("<lora:kits/hycade:0.87>")
+    assert "HycadeBodykit" in out[0]
+    assert "<lora:" not in out[0]  # signalling rides the loras output, not the prompt
     assert _json.loads(out[3]) == [
         {"lora": "kits\\hycade.safetensors", "strength_model": 0.87, "strength_clip": 0.87}
     ]

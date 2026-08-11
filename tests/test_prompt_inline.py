@@ -182,11 +182,13 @@ def test_suffix_weaves_too(lib):
     assert out.positive == "dusk pit lane, captured beside a silver GT3 coupe"
 
 
-def test_lora_catchword_inline_keeps_tag_and_entries(lib):
+def test_lora_catchword_inline_prompt_stays_clean(lib):
+    # the shipping workflow: trigger woven in context, loading signalled via
+    # entries → LoRA Apply node; no inert <lora:> tokens in the prompt
     tpl, resolved = rt(lib, "inline-lora")
     out = render(resolved, "string", tpl.render)
     assert out.positive.startswith("a pristine BMWM4CS_G82 on track")
-    assert out.positive.endswith("<lora:mastermerlin/bmw_m4_cs:0.35>")
+    assert "<lora:" not in out.positive
     assert out.positive.count("BMWM4CS_G82") == 1
     assert lora_entries(resolved) == [
         {

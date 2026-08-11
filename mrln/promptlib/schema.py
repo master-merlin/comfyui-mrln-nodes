@@ -83,7 +83,11 @@ class RenderConfig:
     block_joiner: str = "\n"
     profile: str | None = None
     text_length: str = "long"  # which item text renders: text vs text_short
-    lora_tags: bool = True  # emit <lora:name:strength> for items carrying data.lora
+    # Emit <lora:name:strength> INTO the prompt text for items carrying
+    # data.lora. Default OFF: in ComfyUI the tags are inert tokens — the
+    # 'loras' node output + LoRA Apply (MRLN) is the loading mechanism.
+    # Opt in per template for A1111-style tag-parsing loaders.
+    lora_tags: bool = False
 
 
 @dataclass(frozen=True)
@@ -321,7 +325,7 @@ def parse_template(data, slug, source):
         block_joiner=str(raw_render.get("block_joiner", "\n")),
         profile=raw_render.get("profile"),
         text_length=text_length,
-        lora_tags=bool(raw_render.get("lora_tags", True)),
+        lora_tags=bool(raw_render.get("lora_tags", False)),
     )
 
     variables = []

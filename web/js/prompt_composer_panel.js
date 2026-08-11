@@ -2453,7 +2453,8 @@ export function createComposerPanel(root, ctx) {
           {
             class: "mrln-btn",
             title: "Add a LoRA block: catchword text for the prompt plus loader "
-              + "metadata (file + strengths) that render as a <lora:…> tag",
+              + "metadata (file + strengths) signalled to the LoRA Apply (MRLN) "
+              + "node via the template node's loras output",
             onclick: () =>
               addItemRow({
                 name: "",

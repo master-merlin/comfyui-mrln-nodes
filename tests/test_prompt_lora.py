@@ -1,4 +1,7 @@
-"""LoRA blocks: items carrying data.lora emit <lora:...> tags."""
+"""LoRA blocks: items carrying data.lora signal the loader via lora_entries
+(the node's 'loras' output → LoRA Apply). <lora:...> PROMPT tags are opt-in
+(render.lora_tags) for A1111-style tag-parsing loaders — in ComfyUI they are
+inert tokens, so the default keeps the prompt clean."""
 
 import json
 
@@ -61,7 +64,18 @@ def lib(tmp_path):
     _write(
         factory,
         "templates/nested-lora.json",
-        {"slots": [{"id": "scene", "ref": "host", "default": "carrier"}]},
+        {
+            "slots": [{"id": "scene", "ref": "host", "default": "carrier"}],
+            "render": {"lora_tags": True},
+        },
+    )
+    _write(
+        factory,
+        "templates/tagged.json",
+        {
+            "slots": [{"id": "kit", "ref": "lora/car", "default": "m4-kit"}],
+            "render": {"lora_tags": True},
+        },
     )
     _write(
         factory,
@@ -87,8 +101,18 @@ def test_tag_built_from_data(lib):
     assert lora_tags(resolved) == ["<lora:mastermerlin/bmw_m4_cs:0.35:1>"]
 
 
-def test_string_render_appends_tag_and_choices_report(lib):
+def test_default_render_keeps_prompt_clean(lib):
+    # ComfyUI-native default: the prompt carries only the catchword — loading
+    # is signalled via lora_entries/the Apply node, and choices still report
     tpl, resolved = rt(lib, "with-lora")
+    out = render(resolved, "string", tpl.render)
+    assert "<lora:" not in out.positive
+    assert out.positive.endswith("BMWM4CS_G82")
+    assert "lora: <lora:mastermerlin/bmw_m4_cs:0.35:1>" in out.choices
+
+
+def test_opt_in_appends_tag_and_choices_report(lib):
+    tpl, resolved = rt(lib, "tagged")
     out = render(resolved, "string", tpl.render)
     assert out.positive.endswith("BMWM4CS_G82 <lora:mastermerlin/bmw_m4_cs:0.35:1>")
     assert "lora: <lora:mastermerlin/bmw_m4_cs:0.35:1>" in out.choices
@@ -100,7 +124,7 @@ def test_strength_clip_defaults_to_model(lib):
 
 
 def test_labeled_and_json_formats(lib):
-    tpl, resolved = rt(lib, "with-lora")
+    tpl, resolved = rt(lib, "tagged")
     labeled = render(resolved, "string_labeled", tpl.render)
     assert labeled.positive.splitlines()[-1] == "LoRAs: <lora:mastermerlin/bmw_m4_cs:0.35:1>"
     obj = json.loads(render(resolved, "json", tpl.render).positive)
@@ -116,7 +140,7 @@ def test_nested_child_lora_emits(lib):
     assert out.positive.endswith("<lora:styles/gloss:0.8>")
 
 
-def test_lora_tags_flag_disables_emission(lib):
+def test_explicit_false_also_keeps_prompt_clean(lib):
     tpl, resolved = rt(lib, "no-tags")
     out = render(resolved, "string", tpl.render)
     assert "<lora:" not in out.positive
