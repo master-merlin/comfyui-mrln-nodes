@@ -38,14 +38,26 @@ function parseToken(token) {
 const REF_RE = /(?<!\{)\{([A-Za-z_][A-Za-z0-9_-]*)\}(?!\})/g;
 
 function placeMenu(anchor, menu) {
-  // flip above the anchor when the panel's bottom would cut the menu,
-  // and never demand more height than the visible space offers
+  // FIXED positioning escapes the panel's overflow clipping (the menu was
+  // being cut at the scroll container's edge, not the window's); flip
+  // above the anchor when the window bottom is tight.
   const rect = anchor.getBoundingClientRect();
   const below = window.innerHeight - rect.bottom;
-  const above = rect.top;
-  const flipUp = below < 200 && above > below;
+  const flipUp = below < 220 && rect.top > below;
+  menu.style.position = "fixed";
+  menu.style.left = `${rect.left}px`;
+  menu.style.width = `${rect.width}px`;
+  menu.style.right = "auto";
+  if (flipUp) {
+    menu.style.top = "auto";
+    menu.style.bottom = `${window.innerHeight - rect.top}px`;
+    menu.style.maxHeight = `${Math.max(120, rect.top - 16)}px`;
+  } else {
+    menu.style.bottom = "auto";
+    menu.style.top = `${rect.bottom}px`;
+    menu.style.maxHeight = `${Math.max(120, below - 16)}px`;
+  }
   menu.classList.toggle("mrln-menu-up", flipUp);
-  menu.style.maxHeight = `${Math.max(120, (flipUp ? above : below) - 16)}px`;
 }
 
 function validateRefs(field, knownNames) {
@@ -69,7 +81,11 @@ function braceAssist(field, getOptions, onPick) {
   // mount instead of the bare field (the menu anchors to it).
   const menu = el("div", { class: "mrln-brace-menu", style: "display:none" });
   const wrap = el("span", { class: "mrln-assist" }, field, menu);
+  const onScroll = (e) => {
+    if (!menu.contains(e.target)) hide(); // fixed menus must not desync
+  };
   const hide = () => {
+    if (menu.style.display !== "none") window.removeEventListener("scroll", onScroll, true);
     menu.style.display = "none";
   };
   const openBrace = () => {
@@ -119,6 +135,7 @@ function braceAssist(field, getOptions, onPick) {
         )
       )
     );
+    if (menu.style.display === "none") window.addEventListener("scroll", onScroll, true);
     menu.style.display = "";
     placeMenu(field, menu);
   };
@@ -2358,9 +2375,13 @@ export function createComposerPanel(root, ctx) {
     let names = current ? [current] : [];
     let cwd = current ? dirOf(current) : "";
     let open = false;
+    const onScroll = (e) => {
+      if (!menu.contains(e.target)) hide(); // fixed menus must not desync
+    };
     const hide = () => {
       open = false;
       menu.style.display = "none";
+      window.removeEventListener("scroll", onScroll, true);
     };
     const choose = (name) => {
       value.value = name;
@@ -2426,6 +2447,7 @@ export function createComposerPanel(root, ctx) {
       menu.replaceChildren(...out);
       menu.style.display = "";
       placeMenu(control, menu);
+      if (!open) window.addEventListener("scroll", onScroll, true);
       open = true;
     };
     control.addEventListener("click", () => {
