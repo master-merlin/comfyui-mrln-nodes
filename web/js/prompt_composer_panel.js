@@ -603,7 +603,17 @@ export function createComposerPanel(root, ctx) {
     el(
       "div",
       { class: "mrln-actions" },
-      el("button", { class: "mrln-btn mrln-primary", onclick: () => applyToNode() }, "Apply to node"),
+      el(
+        "button",
+        {
+          class: "mrln-btn mrln-primary",
+          title: "Write template + settings to the node. Unsaved template edits "
+            + "are saved to your user library first — the node always renders "
+            + "the saved file.",
+          onclick: () => applyToNode(),
+        },
+        "Apply to node"
+      ),
       el(
         "button",
         {
@@ -1525,15 +1535,7 @@ export function createComposerPanel(root, ctx) {
 
   // ---- node interop --------------------------------------------------------
 
-  function applyToNode() {
-    if (state.modified) {
-      ctx.toast(
-        "warn",
-        "Unsaved template changes",
-        "Save first — the node reads the template from the library."
-      );
-      return;
-    }
+  async function applyToNode() {
     const node = ctx.selectedTemplateNode();
     if (!node) {
       ctx.toast(
@@ -1543,8 +1545,18 @@ export function createComposerPanel(root, ctx) {
       );
       return;
     }
+    // The node reads the template from the LIBRARY, so unsaved draft edits
+    // can never reach it — save them first as part of the same gesture.
+    // Selection/audition lines are captured beforehand: the post-save reload
+    // resets mute/solo state.
+    const selectionLines = buildSelectionLines();
+    const withAudition = auditionActive();
+    const wasModified = state.modified;
+    if (wasModified && !(await saveTemplate(state.slug))) {
+      return; // save failed — its toast names the cause
+    }
     ctx.setWidget(node, "template", state.slug);
-    ctx.setWidget(node, "selection", buildSelectionLines());
+    ctx.setWidget(node, "selection", selectionLines);
     ctx.setWidget(node, "selection_mode", state.mode);
     ctx.setWidget(node, "seed", state.seed);
     ctx.setWidget(node, "format", state.format);
@@ -1557,7 +1569,8 @@ export function createComposerPanel(root, ctx) {
       "success",
       "Applied to node",
       `template: ${state.slug}` +
-        (auditionActive() ? " — mute/solo written as 'off' selection lines" : "")
+        (wasModified ? " (edits saved to your user library)" : "") +
+        (withAudition ? " — mute/solo written as 'off' selection lines" : "")
     );
   }
 
