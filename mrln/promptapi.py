@@ -630,10 +630,24 @@ def handle_save_settings(lib, payload):
     return 200, {"ok": True, "civitai_key_set": bool(settings.get("civitai_api_key"))}
 
 
+# Curated pull suggestions for the Enhance node's model dropdown — small
+# instruct models that rewrite prompts well. Ollama downloads a pick via
+# /mrln/prompt/llm-pull. Edit freely; installed models are filtered out.
+SUGGESTED_OLLAMA_MODELS = (
+    "gemma3:12b",
+    "gemma3:4b",
+    "qwen3:14b",
+    "qwen3:8b",
+    "llama3.2:3b",
+    "phi4:14b",
+    "mistral-small:24b",
+)
+
+
 @_guarded
 def handle_llm_validate(lib, payload):
     """Ping a local LLM backend and list its models — powers the green
-    checkmarks in the Composer settings."""
+    checkmarks in the Composer settings and the Enhance node's dropdown."""
     provider = _require_str(payload, "provider")
     llm = _llm_settings(_read_settings(lib))
     import urllib.error
@@ -656,9 +670,54 @@ def handle_llm_validate(lib, payload):
         }
     if provider == "ollama":
         models = sorted(m.get("name", "") for m in data.get("models") or [] if m.get("name"))
+        stems = {m.split(":")[0] for m in models}
+        suggested = [
+            s for s in SUGGESTED_OLLAMA_MODELS if s not in models and s.split(":")[0] not in stems
+        ]
     else:
         models = sorted(m.get("id", "") for m in data.get("data") or [] if m.get("id"))
-    return 200, {"state": "ok", "provider": provider, "models": models}
+        suggested = []  # LM Studio has no pull API — install via its own UI
+    return 200, {"state": "ok", "provider": provider, "models": models, "suggested": suggested}
+
+
+# model name -> {"status": "pulling"|"done"|"error", "detail": str}; module
+# scope like _ENHANCE_CACHE — worker threads write, the poll endpoint reads.
+_PULL_STATUS = {}
+
+
+def _pull_worker(url, model):
+    import urllib.request
+
+    try:
+        request = urllib.request.Request(
+            f"{url}/api/pull",
+            data=json.dumps({"model": model, "stream": False}).encode("utf-8"),
+            headers={"Content-Type": "application/json", "User-Agent": "ComfyUI-MRLN-Nodes"},
+        )
+        # a multi-GB pull is legitimately slow — generous cap, not the 5s ping
+        with urllib.request.urlopen(request, timeout=3600) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        _PULL_STATUS[model] = {"status": "done", "detail": str(data.get("status") or "success")}
+    except Exception as exc:
+        _PULL_STATUS[model] = {"status": "error", "detail": str(exc)}
+
+
+@_guarded
+def handle_llm_pull(lib, payload):
+    """POST starts an Ollama model download in the background; GET (same
+    route) polls its status. The dropdown suggestion click lands here."""
+    model = _require_str(payload, "model")
+    if payload.get("start"):
+        current = _PULL_STATUS.get(model)
+        if current and current.get("status") == "pulling":
+            return 200, {"model": model, "status": "pulling", "detail": "already running"}
+        llm = _llm_settings(_read_settings(lib))
+        url = llm.get("ollama_url") or DEFAULT_OLLAMA_URL
+        _PULL_STATUS[model] = {"status": "pulling", "detail": ""}
+        threading.Thread(target=_pull_worker, args=(url, model), daemon=True).start()
+        return 200, {"model": model, "status": "pulling", "detail": "started"}
+    status = _PULL_STATUS.get(model) or {"status": "unknown", "detail": "no pull started"}
+    return 200, {"model": model, **status}
 
 
 _ECO_MAP = (
@@ -829,6 +888,8 @@ ROUTES = (
     ("get", "/mrln/prompt/profile", handle_profile, False),
     ("post", "/mrln/prompt/save-profile", handle_save_profile, True),
     ("get", "/mrln/prompt/llm-validate", handle_llm_validate, False),
+    ("get", "/mrln/prompt/llm-pull", handle_llm_pull, False),
+    ("post", "/mrln/prompt/llm-pull", handle_llm_pull, True),
     ("post", "/mrln/prompt/preview", handle_preview, True),
     ("post", "/mrln/prompt/save-section", handle_save_section, True),
     ("post", "/mrln/prompt/save-template", handle_save_template, True),

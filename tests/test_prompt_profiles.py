@@ -8,7 +8,14 @@ import pytest
 import support
 
 from mrln import promptapi
-from mrln.promptlib import Library, SelectionError, compose, fill_json_template, merged_profiles
+from mrln.promptlib import (
+    Library,
+    SchemaError,
+    SelectionError,
+    compose,
+    fill_json_template,
+    merged_profiles,
+)
 
 
 def _write(root, rel, obj):
@@ -66,6 +73,13 @@ def lib(tmp_path):
             "profiles": {
                 "krea2": {"llm": {"params": {"max_words": 99}}},
                 "mine": {"render": {"format": "json"}},
+                "tuned": {
+                    # per-profile template VARIANT: sparse diff vs standard
+                    "overrides": {
+                        "prefix": "TUNED:",
+                        "slots": {"paint": {"default": "blue", "emphasis": 1.4}},
+                    },
+                },
                 "ideo": {
                     "render": {"format": "string"},
                     "json_template": {
@@ -115,9 +129,13 @@ def test_template_extends_pack(lib):
 def test_standard_profile_is_plain_render(lib):
     composed = run(lib)
     assert composed.profile == "standard"
-    assert composed.llm == "{}"
     assert composed.format == "string"
     assert composed.rendered.positive == "bright red, ocean blue"
+    # the llm output always carries the prompt — ONE wire feeds Enhance
+    assert json.loads(composed.llm) == {
+        "target": "standard",
+        "prompt": "bright red, ocean blue",
+    }
 
 
 def test_profile_render_overrides_apply(lib):
@@ -125,7 +143,12 @@ def test_profile_render_overrides_apply(lib):
     assert composed.format == "string_labeled"
     assert "Color: bright red" in composed.rendered.positive
     llm = json.loads(composed.llm)
-    assert llm == {"target": "krea2", "system": "USER-KREA", "params": {"max_words": 99}}
+    assert llm == {
+        "target": "krea2",
+        "prompt": composed.rendered.positive,
+        "system": "USER-KREA",
+        "params": {"max_words": 99},
+    }
 
 
 def test_profile_text_length_and_widget_precedence(lib):
@@ -138,8 +161,74 @@ def test_profile_text_length_and_widget_precedence(lib):
 
 
 def test_unknown_profile_lists_names(lib):
-    with pytest.raises(SelectionError, match="standard, ideo, krea2, mine, sdxl"):
+    with pytest.raises(SelectionError, match="standard, ideo, krea2, mine, sdxl, tuned"):
         run(lib, profile="nope")
+
+
+# -- per-profile template variants (overrides) -------------------------------
+
+
+def test_overrides_apply_as_variant(lib):
+    tuned = run(lib, profile="tuned")
+    assert tuned.rendered.positive.startswith("TUNED:")
+    assert "(ocean blue:1.4)" in tuned.rendered.positive  # paint: blue @ 1.4
+    # the base render stays untouched — 'standard' is always the way back
+    standard = run(lib)
+    assert standard.rendered.positive == "bright red, ocean blue"
+
+
+def test_overrides_validation(lib, tmp_path):
+    def bad_template(name, overrides):
+        _write(
+            tmp_path / "factory",
+            f"templates/{name}.json",
+            {
+                "slots": [{"id": "paint", "ref": "color"}],
+                "profiles": {"x": {"overrides": overrides}},
+            },
+        )
+        lib.invalidate()  # the scan memo must see the file written after first load
+
+    bad_template("bad-slot", {"slots": {"ghost": {"default": "red"}}})
+    with pytest.raises(SchemaError, match="unknown slot 'ghost'"):
+        lib.load_template("bad-slot")
+    bad_template("bad-key", {"order": ["paint"]})
+    with pytest.raises(SchemaError, match="unknown overrides key"):
+        lib.load_template("bad-key")
+    bad_template("bad-emphasis", {"slots": {"paint": {"emphasis": -1}}})
+    with pytest.raises(SchemaError, match="'emphasis' must be > 0"):
+        lib.load_template("bad-emphasis")
+    bad_template("bad-field", {"slots": {"paint": {"label": "X"}}})
+    with pytest.raises(SchemaError, match="allow only default/emphasis"):
+        lib.load_template("bad-field")
+
+
+def test_overrides_via_preview_and_save_api(lib):
+    status, body = promptapi.handle_preview(
+        lib, {"template": "basic", "seed": 0, "profile": "tuned"}
+    )
+    assert status == 200, body
+    assert body["positive"].startswith("TUNED:")
+    # saving a template with a variant diff roundtrips; broken ones 400
+    raw = {
+        "slots": [{"id": "paint", "ref": "color", "default": "red"}],
+        "profiles": {"sdxl": {"overrides": {"slots": {"paint": {"default": "blue"}}}}},
+    }
+    status, _ = promptapi.handle_save_template(lib, {"slug": "variant-rt", "data": raw})
+    assert status == 200
+    composed = compose(
+        lib,
+        lib.load_template("variant-rt"),
+        seed=0,
+        mode="as configured",
+        selection={},
+        variables={},
+        profile="sdxl",
+    )
+    assert composed.rendered.positive == "blue"  # override pick, profile's short text
+    raw["profiles"]["sdxl"]["overrides"]["slots"]["ghost"] = {"default": "x"}
+    status, body = promptapi.handle_save_template(lib, {"slug": "variant-rt", "data": raw})
+    assert status == 400 and "ghost" in body["error"]
 
 
 # -- json_template ---------------------------------------------------------
@@ -288,6 +377,7 @@ def test_node_llm_output_and_profile_render(node_env):
     )
     llm = json.loads(out[4])
     assert llm["target"] == "sdxl" and "system" in llm
+    assert llm["prompt"] == out[0]  # single wire: the llm output carries the prompt
     standard = node.execute(
         template="overdrive/full-shot",
         selection="",
@@ -295,7 +385,8 @@ def test_node_llm_output_and_profile_render(node_env):
         seed=3,
         format="template default",
     )
-    assert standard[4] == "{}"
+    standard_llm = json.loads(standard[4])
+    assert standard_llm["target"] == "standard" and standard_llm["prompt"] == standard[0]
     assert (
         node_env.VALIDATE_INPUTS(template="overdrive/full-shot", selection="", profile="krea2")
         is True

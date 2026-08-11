@@ -63,6 +63,27 @@ def test_passthrough_without_system(classes):
     assert "no system prompt" in report
 
 
+def test_single_wire_llm_carries_prompt(classes, tmp_path):
+    # the Template node's llm output is self-sufficient: {target, prompt,
+    # system} — no separate prompt wire needed
+    user = tmp_path / "user"
+    user.mkdir(parents=True, exist_ok=True)
+    (user / "settings.json").write_text(
+        json.dumps({"llm": {"ollama_url": "http://127.0.0.1:9"}}), encoding="utf-8"
+    )
+    node = classes["MRLN_PromptEnhance"]()
+    spec = json.dumps({"target": "sdxl", "prompt": "wired via llm", "system": "rewrite"})
+    prompt, report = _run(node, prompt="", llm=spec)
+    assert prompt == "wired via llm"  # pass-through of the SPEC's prompt
+    assert "pass-through" in report
+    # an explicit prompt input wins over the one inside the llm wire
+    prompt, _ = _run(node, prompt="explicit wins", llm=spec)
+    assert prompt == "explicit wins"
+    # nothing anywhere -> actionable pass-through, never a crash
+    prompt, report = _run(node, prompt="", llm="")
+    assert prompt == "" and "nothing to enhance" in report
+
+
 def test_unreachable_backend_passes_through_or_raises(classes, tmp_path):
     user = tmp_path / "user"
     user.mkdir(parents=True, exist_ok=True)
@@ -100,6 +121,28 @@ def test_llm_validate_endpoint(tmp_path):
     )
     status, body = promptapi.handle_llm_validate(lib, {"provider": "ollama"})
     assert status == 502 and "unreachable" in body["error"]
+
+
+def test_llm_pull_endpoint(tmp_path):
+    import time
+
+    lib = build_library(tmp_path)
+    (tmp_path / "user").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "user" / "settings.json").write_text(
+        json.dumps({"llm": {"ollama_url": "http://127.0.0.1:9"}}), encoding="utf-8"
+    )
+    assert promptapi.handle_llm_pull(lib, {"model": ""})[0] == 400
+    status, body = promptapi.handle_llm_pull(lib, {"model": "tiny-test", "start": True})
+    assert status == 200 and body["status"] == "pulling"
+    for _ in range(100):  # connection-refused fails fast; poll like the UI does
+        status, body = promptapi.handle_llm_pull(lib, {"model": "tiny-test"})
+        if body["status"] != "pulling":
+            break
+        time.sleep(0.05)
+    assert body["status"] == "error"
+    # curated dropdown suggestions exist and are pullable names
+    assert promptapi.SUGGESTED_OLLAMA_MODELS
+    assert all(":" in m for m in promptapi.SUGGESTED_OLLAMA_MODELS)
 
 
 def test_settings_roundtrip_llm_urls(tmp_path):

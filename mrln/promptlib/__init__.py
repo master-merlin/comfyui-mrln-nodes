@@ -21,6 +21,7 @@ from .lorameta import read_safetensors_metadata, trigger_from_metadata
 from .profiles import (
     STANDARD,
     Composed,
+    apply_template_overrides,
     compose,
     fill_json_template,
     merged_profiles,
@@ -80,6 +81,7 @@ __all__ = [
     "Variable",
     "Variant",
     "WildcardSyntaxError",
+    "apply_template_overrides",
     "compose",
     "decompose",
     "default_roots",

@@ -369,6 +369,7 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 .mrln-tree li:hover { background: var(--comfy-menu-bg, #2a2a2a); }
 .mrln-tree .mrln-slug { opacity: 0.55; font-size: 10px; }
 .mrln-tree-head { margin: 8px 0 2px; font-weight: bold; opacity: 0.8; }
+.mrln-editor-close { float: right; }
 
 .mrln-items-table { width: 100%; border-collapse: collapse; }
 .mrln-items-table td { padding: 2px; vertical-align: top; }

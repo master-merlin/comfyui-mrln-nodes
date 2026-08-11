@@ -182,7 +182,8 @@ export function createComposerPanel(root, ctx) {
     library: null, // GET /library body
     slug: null, // selected template slug
     detail: null, // GET /template body: {template, pools, raw, tier}
-    rawData: null, // editable working copy of detail.raw
+    rawData: null, // editable working copy: base ⊕ active profile's overrides
+    baseRaw: null, // pristine detail.raw — the 'standard' state variant diffs compare to
     orderIds: [], // combined render order: shared slot ids + "@variant"
     modified: false, // rawData differs from the file on disk
     variant: null, // active variant name | "random" | null
@@ -213,16 +214,23 @@ export function createComposerPanel(root, ctx) {
   const composeTab = el("div", { class: "mrln-tab-body" });
   const decomposeTab = el("div", { class: "mrln-tab-body", style: "display:none" });
   const libraryTab = el("div", { class: "mrln-tab-body", style: "display:none" });
-  const tabNames = ["compose", "decompose", "library"];
-  const tabBodies = { compose: composeTab, decompose: decomposeTab, library: libraryTab };
+  const settingsTab = el("div", { class: "mrln-tab-body", style: "display:none" });
+  const tabNames = ["compose", "decompose", "library", "settings"];
+  const tabBodies = {
+    compose: composeTab,
+    decompose: decomposeTab,
+    library: libraryTab,
+    settings: settingsTab,
+  };
   const tabButtons = el(
     "div",
     { class: "mrln-tabs" },
     el("button", { class: "mrln-active", onclick: () => switchTab("compose") }, "Compose"),
     el("button", { onclick: () => switchTab("decompose") }, "De-compose"),
-    el("button", { onclick: () => switchTab("library") }, "Library")
+    el("button", { onclick: () => switchTab("library") }, "Library"),
+    el("button", { onclick: () => switchTab("settings") }, "Settings")
   );
-  root.replaceChildren(tabButtons, composeTab, decomposeTab, libraryTab);
+  root.replaceChildren(tabButtons, composeTab, decomposeTab, libraryTab, settingsTab);
 
   function switchTab(name) {
     state.tab = name;
@@ -232,6 +240,7 @@ export function createComposerPanel(root, ctx) {
     });
     if (name === "library") renderLibraryTab();
     if (name === "decompose") renderDecomposeTab();
+    if (name === "settings") renderSettingsTab();
   }
 
   // Persistent element so markModified never re-renders (a re-render would
@@ -286,7 +295,8 @@ export function createComposerPanel(root, ctx) {
         `/mrln/prompt/template?slug=${encodeURIComponent(state.slug)}`
       );
       if (!state.modified) {
-        state.rawData = structuredClone(state.detail.raw);
+        state.baseRaw = structuredClone(state.detail.raw);
+        state.rawData = effectiveRaw(state.profile);
         state.loadedLabel = state.rawData.label ?? null;
         state.orderIds = syncOrderIds();
       }
@@ -317,6 +327,8 @@ export function createComposerPanel(root, ctx) {
     const allSlots = [
       ...(state.rawData.slots ?? []),
       ...(state.rawData.variants ?? []).flatMap((v) => v.slots ?? []),
+      ...(state.baseRaw?.slots ?? []),
+      ...(state.baseRaw?.variants ?? []).flatMap((v) => v.slots ?? []),
     ];
     for (const slot of allSlots) {
       const fixedDefault = fix(slot.ref, slot.default);
@@ -327,6 +339,135 @@ export function createComposerPanel(root, ctx) {
         if (fixedPick) row.item = fixedPick;
       }
     }
+  }
+
+  // ---- per-profile template variants ---------------------------------------
+  // A template can carry profiles.<name>.overrides: a sparse diff vs the
+  // standard render (prefix/suffix/negative/variant_default + slot default/
+  // emphasis). Editing with a Target profile selected edits THAT variant;
+  // Save stores only the diff, the base file stays untouched — 'standard'
+  // is always the way back. Mirrors the trainer's family/definitions split.
+
+  function overridesFor(profileName, raw = state.baseRaw) {
+    if (!profileName || profileName === "standard") return null;
+    return raw?.profiles?.[profileName]?.overrides ?? null;
+  }
+
+  function overrideTweakCount(ov) {
+    if (!ov) return 0;
+    const scalars = ["prefix", "suffix", "negative", "variant_default"];
+    return (
+      Object.keys(ov.slots ?? {}).length + scalars.filter((key) => key in ov).length
+    );
+  }
+
+  function effectiveRaw(profileName) {
+    const data = structuredClone(state.baseRaw);
+    const ov = overridesFor(profileName);
+    if (!ov) return data;
+    for (const key of ["prefix", "suffix", "negative", "variant_default"]) {
+      if (ov[key] !== undefined) data[key] = ov[key];
+    }
+    const bySlot = ov.slots ?? {};
+    const fix = (slot) => {
+      const so = bySlot[slot.id];
+      if (!so) return;
+      if (so.default !== undefined) {
+        if (so.default === "random") delete slot.default;
+        else slot.default = so.default;
+      }
+      if (so.emphasis !== undefined) {
+        if (so.emphasis === null) delete slot.emphasis;
+        else slot.emphasis = so.emphasis;
+      }
+    };
+    (data.slots ?? []).forEach(fix);
+    (data.variants ?? []).forEach((v) => (v.slots ?? []).forEach(fix));
+    return data;
+  }
+
+  function diffProfileOverrides(effective, base) {
+    const ov = {};
+    for (const key of ["prefix", "suffix", "negative", "variant_default"]) {
+      if ((effective[key] ?? "") !== (base[key] ?? "")) ov[key] = effective[key] ?? "";
+    }
+    const slotMap = (raw) => {
+      const map = new Map();
+      for (const s of raw.slots ?? []) map.set(s.id, s);
+      for (const v of raw.variants ?? []) for (const s of v.slots ?? []) map.set(s.id, s);
+      return map;
+    };
+    const baseSlots = slotMap(base);
+    const slots = {};
+    for (const [id, slot] of slotMap(effective)) {
+      const baseSlot = baseSlots.get(id);
+      if (!baseSlot) continue; // structural adds belong to the base template
+      const so = {};
+      if ((slot.default ?? "random") !== (baseSlot.default ?? "random")) {
+        so.default = slot.default ?? "random";
+      }
+      if ((slot.emphasis ?? null) !== (baseSlot.emphasis ?? null)) {
+        so.emphasis = slot.emphasis ?? null;
+      }
+      if (Object.keys(so).length) slots[id] = so;
+    }
+    if (Object.keys(slots).length) ov.slots = slots;
+    return Object.keys(ov).length ? ov : null;
+  }
+
+  function rebuildForProfile(profileName) {
+    // Re-derive the working copy from base ⊕ overrides — only safe when
+    // there are no unsaved edits (callers guard on state.modified).
+    state.rawData = effectiveRaw(profileName);
+    state.loadedLabel = state.rawData.label ?? null;
+    state.orderIds = syncOrderIds();
+    state.rows = new Map();
+    for (const slot of allSlots()) {
+      state.rows.set(slot.id, parseToken(slot.default ?? "random"));
+    }
+    const variants = state.rawData.variants ?? [];
+    state.variant = variants.length
+      ? state.rawData.variant_default || variants[0].name
+      : null;
+  }
+
+  function setTargetProfile(name) {
+    state.profile = name;
+    if (!state.modified) rebuildForProfile(name);
+    renderComposeTab();
+    schedulePreview();
+  }
+
+  async function revertProfileTweaks() {
+    const profile = state.profile ?? "standard";
+    const ov = overridesFor(profile);
+    if (!ov || !state.slug) return;
+    const count = overrideTweakCount(ov);
+    if (!window.confirm(
+      `Remove the ${count} stored tweak(s) of '${state.slug}' for profile `
+        + `'${profile}'? The variant falls back to the standard render.`
+    )) {
+      return;
+    }
+    const data = structuredClone(state.baseRaw);
+    delete data.profiles[profile].overrides;
+    if (!Object.keys(data.profiles[profile]).length) delete data.profiles[profile];
+    if (!Object.keys(data.profiles).length) delete data.profiles;
+    data.version = 1;
+    try {
+      await ctx.apiJson("/mrln/prompt/save-template", {
+        method: "POST",
+        body: { slug: state.slug, data },
+      });
+    } catch (err) {
+      ctx.toast("error", "Revert failed", err.message);
+      return;
+    }
+    ctx.toast("success", "Profile tweaks removed", `${state.slug} · ${profile} = standard again`);
+    const keep = profile;
+    await loadLibrary();
+    await selectTemplate(state.slug);
+    setTargetProfile(keep);
   }
 
   async function selectTemplate(slug) {
@@ -344,6 +485,7 @@ export function createComposerPanel(root, ctx) {
       );
       return;
     }
+    state.baseRaw = structuredClone(state.detail.raw);
     state.rawData = structuredClone(state.detail.raw);
     state.loadedLabel = state.rawData.label ?? null;
     state.modified = false;
@@ -528,6 +670,12 @@ export function createComposerPanel(root, ctx) {
     // selection lines, exactly like the node executes them.
     const draft = structuredClone(state.rawData);
     if (state.orderIds.length) draft.order = [...state.orderIds];
+    // Under a profile the working copy ALREADY embodies its overrides —
+    // strip them so the preview doesn't apply the stored diff twice.
+    const profile = state.profile ?? "standard";
+    if (profile !== "standard" && draft.profiles?.[profile]?.overrides) {
+      delete draft.profiles[profile].overrides;
+    }
     return draft;
   }
 
@@ -562,7 +710,36 @@ export function createComposerPanel(root, ctx) {
   }
 
   async function saveTemplate(slug, { asNew = false } = {}) {
-    const data = buildSaveData();
+    const profile = state.profile ?? "standard";
+    let data;
+    let savedNote = `${slug} (user library)`;
+    if (profile !== "standard" && !asNew && slug === state.slug && state.baseRaw) {
+      // Variant save: the base file keeps its standard state — only the
+      // diff vs standard lands under profiles.<name>.overrides.
+      const effective = buildSaveData();
+      data = structuredClone(state.baseRaw);
+      data.version = 1;
+      const ov = diffProfileOverrides(effective, state.baseRaw);
+      data.profiles = data.profiles ?? {};
+      if (ov) {
+        data.profiles[profile] = { ...(data.profiles[profile] ?? {}), overrides: ov };
+        savedNote = `${slug} · '${profile}' variant (${overrideTweakCount(ov)} tweak(s) vs standard)`;
+      } else if (data.profiles[profile]?.overrides) {
+        delete data.profiles[profile].overrides;
+        if (!Object.keys(data.profiles[profile]).length) delete data.profiles[profile];
+        savedNote = `${slug} · '${profile}' now matches standard — stored tweaks removed`;
+      }
+    } else {
+      // Standard save (or save-as fork: the CURRENT variant state becomes
+      // the new template's standard).
+      data = buildSaveData();
+      if (asNew && profile !== "standard" && data.profiles?.[profile]?.overrides) {
+        // the fork's standard IS this variant — carrying the diff too would
+        // just restate it
+        delete data.profiles[profile].overrides;
+        if (!Object.keys(data.profiles[profile]).length) delete data.profiles[profile];
+      }
+    }
     if (asNew && slug !== state.slug && data.label && data.label === state.loadedLabel) {
       // Save-as under a new slug: an inherited label would masquerade as the
       // source template in every picker — drop it so the display name derives
@@ -578,10 +755,13 @@ export function createComposerPanel(root, ctx) {
       ctx.toast("error", "Save failed", err.message);
       return false;
     }
-    ctx.toast("success", "Template saved", `${slug} (user library)`);
+    ctx.toast("success", "Template saved", savedNote);
     ctx.refreshCombos();
     await loadLibrary();
     await selectTemplate(slug);
+    // selectTemplate resets to standard — keep tuning the variant the user
+    // was on (also keeps Apply-to-node writing the right profile widget).
+    if (profile !== "standard" && !asNew) setTargetProfile(profile);
     return true;
   }
 
@@ -953,6 +1133,18 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
+  function editorCloseBtn() {
+    return el(
+      "button",
+      {
+        class: "mrln-btn mrln-mini mrln-editor-close",
+        title: "Close this editor (unsaved edits here are discarded)",
+        onclick: () => editorBox.replaceChildren(),
+      },
+      "✕"
+    );
+  }
+
   function renderComposeTab() {
     if (!state.rawData) {
       composeTab.replaceChildren(
@@ -1082,12 +1274,10 @@ export function createComposerPanel(root, ctx) {
     const profileSelect = el("select", {
       title: "Target-model profile: applies its render overrides (format/length) "
         + "and carries its LLM system prompt on the node's llm output. Explicit "
-        + "Format/Text length choices here still win. Defined in profiles.json "
-        + "+ the template's own profiles.",
-      onchange: (e) => {
-        state.profile = e.target.value;
-        schedulePreview();
-      },
+        + "Format/Text length choices here still win. With a profile selected, "
+        + "structural edits + Save store a per-profile VARIANT of this template "
+        + "(a diff vs standard — the base file stays untouched).",
+      onchange: (e) => setTargetProfile(e.target.value),
     });
     profileSelect.append(el("option", { value: "standard" }, "standard"));
     for (const name of Object.keys(state.detail?.template?.profiles ?? {}).sort()) {
@@ -1095,6 +1285,27 @@ export function createComposerPanel(root, ctx) {
     }
     profileSelect.value = state.profile ?? "standard";
     if (profileSelect.value !== (state.profile ?? "standard")) profileSelect.value = "standard";
+    const tweakCount = overrideTweakCount(overridesFor(state.profile));
+    const profileWrap = el("div", { class: "mrln-inline" }, profileSelect);
+    if (tweakCount) {
+      profileWrap.append(
+        el(
+          "span",
+          {
+            class: "mrln-chip mrln-user",
+            title: `This template stores ${tweakCount} tweak(s) for '${state.profile}' `
+              + "(vs the standard render). Save with this profile selected updates "
+              + "them; ↺ removes them.",
+          },
+          `✎ ${tweakCount}`
+        ),
+        smallBtn(
+          "Remove this profile's stored tweaks — back to the standard render",
+          "↺",
+          revertProfileTweaks
+        )
+      );
+    }
 
     parts.push(
       el("div", { class: "mrln-grid2" }, field("Mode", modeSelect), field("Format", formatSelect)),
@@ -1107,7 +1318,7 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-grid2" },
-        field("Target profile", profileSelect),
+        field("Target profile", profileWrap),
         field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
       ),
       metaPromptBlock(),
@@ -1837,6 +2048,7 @@ export function createComposerPanel(root, ctx) {
     state.trigger = ctx.getWidget(node, "trigger") ?? "";
     state.variables = ctx.getWidget(node, "variables") ?? "";
     state.profile = ctx.getWidget(node, "profile") ?? "standard";
+    rebuildForProfile(state.profile); // rows/defaults reflect the node's variant
     applyKvToRows(parseKvLines(ctx.getWidget(node, "selection") ?? ""));
     renderComposeTab();
     schedulePreview();
@@ -2313,7 +2525,6 @@ export function createComposerPanel(root, ctx) {
       treeBlock("sections", "Sections", lib.sections, sectionLi),
       treeBlock("templates", "Templates", lib.templates, templateLi),
       profilesBlock(),
-      settingsBlock(),
       el("hr", { class: "mrln-sep" }),
       editorBox
     );
@@ -2492,7 +2703,8 @@ export function createComposerPanel(root, ctx) {
           ? el("span", { class: "mrln-chip mrln-user" }, body.factory ? "factory+user" : "user")
           : name
             ? el("span", { class: "mrln-chip mrln-factory" }, "factory")
-            : null
+            : null,
+        editorCloseBtn()
       ),
       el(
         "div",
@@ -2517,7 +2729,7 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
-  function settingsBlock() {
+  function renderSettingsTab() {
     // The key is stored SERVER-side in your user tier (settings.json) and
     // never echoed back — it must never live in a node widget, because
     // widget values persist into workflow PNGs.
@@ -2597,14 +2809,13 @@ export function createComposerPanel(root, ctx) {
         ctx.toast("error", "Settings save failed", err.message);
       }
     };
-    return el(
-      "details",
-      { class: "mrln-fold" },
-      el("summary", {}, "Settings (Civitai · local LLM backends)"),
+    settingsTab.replaceChildren(
+      el("div", { class: "mrln-tree-head" }, "Civitai"),
       el(
         "div",
         { class: "mrln-note" },
-        "Civitai: used by LoRA blocks to look up trigger words + AIR tags by file hash."
+        "Used by LoRA blocks to look up trigger words + AIR tags by file hash. "
+          + "The key is stored server-side in your user tier and never echoed back."
       ),
       el(
         "div",
@@ -2623,11 +2834,13 @@ export function createComposerPanel(root, ctx) {
         el("button", { class: "mrln-btn", onclick: () => save(true) }, "Clear")
       ),
       status,
+      el("hr", { class: "mrln-sep" }),
+      el("div", { class: "mrln-tree-head" }, "Local LLM backends"),
       el(
         "div",
         { class: "mrln-note" },
-        "Local LLM backends for the Prompt Enhance (MRLN) node — Validate saves "
-          + "the URL and lists installed models."
+        "Used by the Prompt Enhance (MRLN) node — Validate saves the URL and "
+          + "lists installed models (they feed the node's model dropdown)."
       ),
       ollama.row,
       ollama.rowStatus,
@@ -3209,7 +3422,8 @@ export function createComposerPanel(root, ctx) {
         slug ? `Section: ${slug}` : "New section",
         body.merged
           ? el("span", { class: "mrln-chip mrln-merged" }, "factory+user")
-          : tierChip(body.tier)
+          : tierChip(body.tier),
+        editorCloseBtn()
       ),
       body.merged
         ? el(
@@ -3307,7 +3521,7 @@ export function createComposerPanel(root, ctx) {
       );
     }
     editorBox.replaceChildren(
-      el("div", { class: "mrln-tree-head" }, `Template: ${slug}`, tierChip(body.tier)),
+      el("div", { class: "mrln-tree-head" }, `Template: ${slug}`, tierChip(body.tier), editorCloseBtn()),
       body.tier === "factory"
         ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
         : null,

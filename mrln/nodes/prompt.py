@@ -95,8 +95,8 @@ class PromptTemplate:
         "preview to see what was drawn.",
         "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
         "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
-        "JSON spec of the selected profile's LLM step ({target, system, params}; '{}' for "
-        "standard) — for the planned 'Prompt Enhance (MRLN)' node.",
+        "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, system, params} — it "
+        "carries the rendered prompt plus the selected profile's LLM system prompt.",
     )
 
     @classmethod
@@ -517,10 +517,12 @@ _ENHANCE_CACHE = {}  # (backend, model, system, prompt, seed, temp, max_tokens) 
 class PromptEnhance:
     """Rewrite a prompt with an LLM under a target-model system prompt.
 
-    Wire the Prompt Template node's prompt and llm outputs in: the selected
-    profile's system prompt tells the LLM how the TARGET image model wants
-    its prompts (prose for KREA/FLUX, tags for SDXL/Pony, ...). Runs against
-    local Ollama or LM Studio (URLs in the Composer's Settings fold, where
+    ONE wire does it: the Prompt Template node's llm output carries the
+    rendered prompt plus the selected profile's system prompt, which tells
+    the LLM how the TARGET image model wants its prompts (prose for
+    KREA/FLUX, tags for SDXL/Pony, ...). The optional prompt input enhances
+    any other STRING instead and wins when both are wired. Runs against
+    local Ollama or LM Studio (URLs in the Composer's Settings tab, where
     Validate also lists installed models). Deterministic per seed where the
     backend supports it, cached per input so re-queues never re-call, and a
     failing backend passes the original prompt through instead of killing
@@ -542,19 +544,11 @@ class PromptEnhance:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt": (
-                    "STRING",
-                    {
-                        "forceInput": True,
-                        "tooltip": "The prompt to enhance — usually the Prompt Template "
-                        "node's prompt output (any STRING works).",
-                    },
-                ),
                 "backend": (
                     ["ollama", "lm studio"],
                     {
                         "tooltip": "Local LLM backend. URLs are configured in the Composer's "
-                        "Settings fold; Validate there lists the installed models.",
+                        "Settings tab; Validate there lists the installed models.",
                     },
                 ),
                 "model": (
@@ -563,8 +557,9 @@ class PromptEnhance:
                         "default": "",
                         "tooltip": "Model name, e.g. 'gemma3:12b' (Ollama) or an LM Studio "
                         "model id. Required for Ollama; LM Studio falls back to its "
-                        "loaded model. The Composer settings' Validate button lists "
-                        "what is installed.",
+                        "loaded model. In the browser this becomes a dropdown of "
+                        "installed models plus pull suggestions Ollama downloads on "
+                        "pick.",
                     },
                 ),
                 "temperature": (
@@ -629,9 +624,18 @@ class PromptEnhance:
                     "STRING",
                     {
                         "forceInput": True,
-                        "tooltip": "The Prompt Template node's llm output: the selected "
-                        "profile's {target, system, params}. Without it, the system "
-                        "override below is used.",
+                        "tooltip": "The Prompt Template node's llm output — the single "
+                        "wire: {target, prompt, system, params}. It carries the "
+                        "rendered prompt AND the profile's system prompt.",
+                    },
+                ),
+                "prompt": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "Optional override: enhance this STRING instead of "
+                        "the prompt carried inside the llm input (wins when both are "
+                        "wired). Use it to enhance text from any other node.",
                     },
                 ),
                 "system": (
@@ -659,7 +663,6 @@ class PromptEnhance:
 
     def execute(
         self,
-        prompt,
         backend,
         model,
         temperature,
@@ -669,9 +672,18 @@ class PromptEnhance:
         free_vram,
         on_error,
         llm="",
+        prompt="",
         system="",
     ):
         spec = parse_llm_spec(llm)
+        # explicit prompt input wins; otherwise the llm wire carries it
+        prompt = str(prompt).strip() or str(spec.get("prompt") or "")
+        if not prompt.strip():
+            return (
+                "",
+                "pass-through: nothing to enhance — wire the Prompt Template node's "
+                "llm output (it carries the prompt), or the prompt input",
+            )
         system_text = system.strip() or str(spec.get("system") or "").strip()
         if not system_text:
             return (

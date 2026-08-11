@@ -58,6 +58,39 @@ def _effective_render(cfg, profile):
     return replace(cfg, **known) if known else cfg
 
 
+def apply_template_overrides(tpl, overrides):
+    """A template profile's 'overrides' block: a per-profile VARIANT of the
+    template stored as a sparse diff against the standard render (prefix/
+    suffix/negative/variant_default plus per-slot default/emphasis by id).
+    The base template stays untouched on disk, so 'standard' is always the
+    way back."""
+    if not overrides:
+        return tpl
+    slot_ov = overrides.get("slots") or {}
+
+    def _fix(slot):
+        raw = slot_ov.get(slot.id)
+        if not isinstance(raw, dict):
+            return slot
+        known = {}
+        if "default" in raw:
+            known["default"] = str(raw["default"])
+        if "emphasis" in raw:
+            known["emphasis"] = None if raw["emphasis"] is None else float(raw["emphasis"])
+        return replace(slot, **known) if known else slot
+
+    known = {
+        key: str(overrides[key])
+        for key in ("prefix", "suffix", "negative", "variant_default")
+        if key in overrides
+    }
+    known["slots"] = tuple(_fix(s) for s in tpl.slots)
+    known["variants"] = tuple(
+        replace(v, slots=tuple(_fix(s) for s in v.slots)) for v in tpl.variants
+    )
+    return replace(tpl, **known)
+
+
 def _fill_string(text, positive, negative, slot_texts):
     stripped = text.strip()
     if stripped == "{positive}":
@@ -111,7 +144,7 @@ def fill_json_template(node, positive, negative, slot_texts):
 class Composed:
     resolved: object  # ResolvedPrompt
     rendered: object  # Rendered (positive may be a filled json_template)
-    llm: str  # JSON: {"target", "system"?, "params"?} — "{}" for standard
+    llm: str  # JSON: {"target", "prompt", "system"?, "params"?} — one wire feeds Enhance
     format: str  # effective format after profile + widget precedence
     text_length: str
     profile: str
@@ -142,6 +175,7 @@ def compose(
                 f"unknown profile (have: {', '.join([STANDARD, *sorted(available)])})",
             )
         prof = available[name]
+    tpl = apply_template_overrides(tpl, prof.get("overrides"))
     cfg = _effective_render(tpl.render, prof)
     effective_length = text_length if text_length not in _WIDGET_DEFAULT else cfg.text_length
     resolved = resolve_template(
@@ -163,9 +197,11 @@ def compose(
         payload = {} if filled is _DROP else filled
         out = replace(out, positive=json.dumps(payload, ensure_ascii=False, indent=2))
 
-    llm = {}
+    # the llm output is self-sufficient: it carries the rendered prompt, so
+    # a single wire feeds the Enhance node (its prompt input stays optional
+    # for enhancing arbitrary strings)
+    llm = {"target": name, "prompt": out.positive}
     if name != STANDARD:
-        llm["target"] = name
         for key in ("system", "params"):
             value = (prof.get("llm") or {}).get(key)
             if value:

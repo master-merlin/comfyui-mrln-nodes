@@ -73,8 +73,121 @@ function getWidget(node, name) {
   return (node.widgets ?? []).find((w) => w.name === name)?.value;
 }
 
+// ---- Prompt Enhance: model dropdown (progressive enhancement) --------------
+// Server-side the model widget stays a plain STRING, so the node works
+// headless and via the API. In the browser it becomes a dropdown listing
+// the backend's installed models plus curated "⬇ pull" suggestions that
+// Ollama downloads in the background when picked.
+const PULL_PREFIX = "⬇ pull ";
+const llmModels = {}; // provider -> {models, suggested, fetchedAt, error}
+
+async function refreshLlmModels(provider) {
+  try {
+    const body = await apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
+    llmModels[provider] = {
+      models: body.models ?? [],
+      suggested: body.suggested ?? [],
+      fetchedAt: Date.now(),
+      error: null,
+    };
+  } catch (err) {
+    llmModels[provider] = {
+      models: [],
+      suggested: llmModels[provider]?.suggested ?? [],
+      fetchedAt: Date.now(),
+      error: err.message,
+    };
+  }
+  return llmModels[provider];
+}
+
+function enhanceProvider(node) {
+  const backend = (node.widgets ?? []).find((w) => w.name === "backend")?.value ?? "ollama";
+  return backend === "lm studio" ? "lmstudio" : "ollama";
+}
+
+function watchPull(provider, model) {
+  const started = Date.now();
+  const poll = async () => {
+    if (Date.now() - started > 45 * 60 * 1000) return; // stop polling silently
+    let body = null;
+    try {
+      body = await apiJson(`/mrln/prompt/llm-pull?model=${encodeURIComponent(model)}`);
+    } catch {
+      /* transient — keep polling */
+    }
+    if (body?.status === "done") {
+      toast("success", "Model pulled", `${model} is installed — the next Enhance run uses it`);
+      refreshLlmModels(provider);
+      return;
+    }
+    if (body?.status === "error") {
+      toast("error", `Pull failed: ${model}`, body.detail ?? "");
+      return;
+    }
+    setTimeout(poll, 4000);
+  };
+  setTimeout(poll, 4000);
+}
+
+function enhanceModelDropdown(node) {
+  const widget = (node.widgets ?? []).find((w) => w.name === "model");
+  if (!widget || widget.type === "combo") return;
+  widget.type = "combo";
+  widget.options = widget.options ?? {};
+  widget.options.values = () => {
+    const provider = enhanceProvider(node);
+    const entry = llmModels[provider];
+    // sync return from cache; kick an async refresh when stale so the NEXT
+    // open is current (litegraph needs the list immediately)
+    if (!entry || Date.now() - entry.fetchedAt > 30000) refreshLlmModels(provider);
+    const values = [...(entry?.models ?? [])];
+    const current = String(widget.value ?? "").trim();
+    if (current && !values.includes(current)) values.unshift(current);
+    if (provider === "ollama") {
+      values.push(...(entry?.suggested ?? []).map((m) => `${PULL_PREFIX}${m}`));
+    }
+    return values.length ? values : [current || ""];
+  };
+  const prevCallback = widget.callback;
+  widget.callback = function (value, ...rest) {
+    if (typeof value === "string" && value.startsWith(PULL_PREFIX)) {
+      const model = value.slice(PULL_PREFIX.length);
+      widget.value = model; // widget is set now; the pull lands in the background
+      const provider = enhanceProvider(node);
+      apiJson("/mrln/prompt/llm-pull", { method: "POST", body: { model, start: true } })
+        .then(() => {
+          toast("info", "Pulling model", `${model} — Ollama downloads it in the background`);
+          watchPull(provider, model);
+        })
+        .catch((err) => toast("error", "Pull failed to start", err.message));
+      return prevCallback?.call(this, model, ...rest);
+    }
+    return prevCallback?.call(this, value, ...rest);
+  };
+  refreshLlmModels(enhanceProvider(node));
+  const backendWidget = (node.widgets ?? []).find((w) => w.name === "backend");
+  if (backendWidget) {
+    const backendCallback = backendWidget.callback;
+    backendWidget.callback = function (...args) {
+      const result = backendCallback?.apply(this, args);
+      refreshLlmModels(enhanceProvider(node));
+      return result;
+    };
+  }
+}
+
 app.registerExtension({
   name: "mrln.promptComposer",
+  beforeRegisterNodeDef(nodeType, nodeData) {
+    if (nodeData?.name !== "MRLN_PromptEnhance") return;
+    const onNodeCreated = nodeType.prototype.onNodeCreated;
+    nodeType.prototype.onNodeCreated = function () {
+      const result = onNodeCreated?.apply(this, arguments);
+      enhanceModelDropdown(this);
+      return result;
+    };
+  },
   setup() {
     if (!app.extensionManager?.registerSidebarTab) {
       console.log(

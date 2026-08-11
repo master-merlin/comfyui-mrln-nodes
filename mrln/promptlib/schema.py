@@ -366,6 +366,40 @@ def parse_template(data, slug, source):
             )
         if "text_length" in prof_render and prof_render["text_length"] not in TEXT_LENGTHS:
             raise SchemaError(source, f"profile '{pname}': unknown text_length")
+        raw_ov = raw_profile.get("overrides")
+        if raw_ov is not None:
+            # per-profile template variant: sparse diff vs the standard render
+            if not isinstance(raw_ov, dict):
+                raise SchemaError(source, f"profile '{pname}': 'overrides' must be an object")
+            unknown = set(raw_ov) - {"prefix", "suffix", "negative", "variant_default", "slots"}
+            if unknown:
+                raise SchemaError(
+                    source,
+                    f"profile '{pname}': unknown overrides key(s): {', '.join(sorted(unknown))}",
+                )
+            ov_slots = raw_ov.get("slots", {}) or {}
+            if not isinstance(ov_slots, dict):
+                raise SchemaError(
+                    source, f"profile '{pname}': overrides 'slots' must map slot id -> fields"
+                )
+            slot_ids = {s.id for s in slots} | {s.id for v in variants for s in v.slots}
+            for sid, fields_ in ov_slots.items():
+                if sid not in slot_ids:
+                    raise SchemaError(
+                        source, f"profile '{pname}': overrides target unknown slot '{sid}'"
+                    )
+                if not isinstance(fields_, dict) or set(fields_) - {"default", "emphasis"}:
+                    raise SchemaError(
+                        source,
+                        f"profile '{pname}': slot '{sid}' overrides allow only default/emphasis",
+                    )
+                ov_emphasis = fields_.get("emphasis")
+                if ov_emphasis is not None and (
+                    not isinstance(ov_emphasis, (int, float)) or ov_emphasis <= 0
+                ):
+                    raise SchemaError(
+                        source, f"profile '{pname}': slot '{sid}': 'emphasis' must be > 0"
+                    )
         profiles[pname] = copy.deepcopy(raw_profile)
 
     label = data.get("label") or slug.rsplit("/", 1)[-1].replace("-", " ").title()
