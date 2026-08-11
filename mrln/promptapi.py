@@ -14,6 +14,7 @@ filesystem any other way. JSON in, JSON out; errors are
 """
 
 import asyncio
+import contextlib
 import json
 import re
 import threading
@@ -379,6 +380,19 @@ def _retarget_default(default, section_slug, ref, renames):
     return None
 
 
+def _write_json_atomic(path, data, *, ensure_ascii=True):
+    """Sibling-.tmp + os.replace — the Library.save_user pattern: a crash
+    mid-write can never truncate the live file (settings.json holds API
+    keys; library files are the persistence truth)."""
+    import os
+
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=ensure_ascii, indent=2)
+        fh.write("\n")
+    os.replace(tmp, path)
+
+
 def _propagate_item_renames(lib, section_slug, renames):
     """Rewrite USER-tier template slot defaults referencing renamed items.
     Factory templates are read-only; workflow selections are healed at
@@ -406,9 +420,7 @@ def _propagate_item_renames(lib, section_slug, renames):
                     slot["default"] = new_default
                     changed = True
         if changed:
-            with open(entry.path, "w", encoding="utf-8") as fh:
-                json.dump(data, fh, ensure_ascii=False, indent=2)
-                fh.write("\n")
+            _write_json_atomic(entry.path, data, ensure_ascii=False)
             rewritten += 1
     if rewritten:
         lib.invalidate()
@@ -700,32 +712,33 @@ def handle_save_profile(lib, payload):
             f"profile name '{name}' must be lowercase-kebab and not 'standard' (reserved)"
         )
     data = payload.get("data")
-    user_profiles = dict(_profiles_file(lib.user_root))
-    if data is None:
-        if name not in user_profiles:
-            return 404, {
-                "error": f"no user-tier entry for profile '{name}'",
-                "remediation": "only user-tier entries can be deleted; factory "
-                "profiles are read-only",
-            }
-        user_profiles.pop(name)
-        action = "deleted"
-    else:
-        if not isinstance(data, dict):
-            raise ApiError("'data' must be an object (or null to delete the user entry)")
-        render_over = data.get("render") or {}
-        if not isinstance(render_over, dict):
-            raise ApiError("'render' must be an object")
-        if "format" in render_over and render_over["format"] not in pl.FORMATS:
-            raise ApiError(f"unknown render format '{render_over['format']}'")
-        if "text_length" in render_over and render_over["text_length"] not in pl.TEXT_LENGTHS:
-            raise ApiError("unknown text_length (lengths: long, short)")
-        user_profiles[name] = data
-        action = "saved"
-    lib.user_root.mkdir(parents=True, exist_ok=True)
-    with open(lib.user_root / "profiles.json", "w", encoding="utf-8") as fh:
-        json.dump({"profiles": user_profiles}, fh, ensure_ascii=False, indent=2)
-        fh.write("\n")
+    with _SETTINGS_LOCK:
+        user_profiles = dict(_profiles_file(lib.user_root))
+        if data is None:
+            if name not in user_profiles:
+                return 404, {
+                    "error": f"no user-tier entry for profile '{name}'",
+                    "remediation": "only user-tier entries can be deleted; factory "
+                    "profiles are read-only",
+                }
+            user_profiles.pop(name)
+            action = "deleted"
+        else:
+            if not isinstance(data, dict):
+                raise ApiError("'data' must be an object (or null to delete the user entry)")
+            render_over = data.get("render") or {}
+            if not isinstance(render_over, dict):
+                raise ApiError("'render' must be an object")
+            if "format" in render_over and render_over["format"] not in pl.FORMATS:
+                raise ApiError(f"unknown render format '{render_over['format']}'")
+            if "text_length" in render_over and render_over["text_length"] not in pl.TEXT_LENGTHS:
+                raise ApiError("unknown text_length (lengths: long, short)")
+            user_profiles[name] = data
+            action = "saved"
+        lib.user_root.mkdir(parents=True, exist_ok=True)
+        _write_json_atomic(
+            lib.user_root / "profiles.json", {"profiles": user_profiles}, ensure_ascii=False
+        )
     lib.invalidate()
     return 200, {
         "ok": True,
@@ -733,6 +746,12 @@ def handle_save_profile(lib, payload):
         "action": action,
         "profiles": sorted(lib.pack_profiles()),
     }
+
+
+# settings.json and profiles.json are read-modify-write and the handlers
+# run on the executor thread pool — one lock so two overlapping saves
+# (e.g. the Settings tab's per-provider Save buttons) never drop a write
+_SETTINGS_LOCK = threading.Lock()
 
 
 def _settings_path(lib):
@@ -792,52 +811,52 @@ def handle_save_settings(lib, payload):
             "error": "no user library root configured",
             "remediation": "set MRLN_PROMPT_DIR or run inside ComfyUI",
         }
-    settings = _read_settings(lib)
-    if "civitai_api_key" in payload:
-        raw = payload.get("civitai_api_key")
-        if not isinstance(raw, str):
-            raise ApiError("'civitai_api_key' must be a string")
-        if raw.strip():
-            settings["civitai_api_key"] = raw.strip()
-        else:
-            settings.pop("civitai_api_key", None)  # empty clears
-    if "llm" in payload:
-        raw_llm = payload.get("llm")
-        if not isinstance(raw_llm, dict):
-            raise ApiError("'llm' must be an object")
-        llm = _llm_settings(settings)
-        for key in ("ollama_url", "lmstudio_url"):
-            if key in raw_llm:
-                value = raw_llm[key]
-                if not isinstance(value, str):
-                    raise ApiError(f"'llm.{key}' must be a string")
-                value = value.strip().rstrip("/")
-                if value:
-                    llm[key] = value
-                else:
-                    llm.pop(key, None)  # empty reverts to the default
-        settings["llm"] = llm
-    if "llm_api_keys" in payload:
-        raw_keys = payload.get("llm_api_keys")
-        if not isinstance(raw_keys, dict):
-            raise ApiError("'llm_api_keys' must be an object of provider -> key")
-        keys = settings.get("llm_api_keys")
-        keys = keys if isinstance(keys, dict) else {}
-        for provider, value in raw_keys.items():
-            if provider not in CLOUD_PROVIDERS:
-                raise ApiError(
-                    f"unknown provider '{provider}' (have: {', '.join(CLOUD_PROVIDERS)})"
-                )
-            if not isinstance(value, str):
-                raise ApiError(f"'llm_api_keys.{provider}' must be a string")
-            if value.strip():
-                keys[provider] = value.strip()
+    with _SETTINGS_LOCK:
+        settings = _read_settings(lib)
+        if "civitai_api_key" in payload:
+            raw = payload.get("civitai_api_key")
+            if not isinstance(raw, str):
+                raise ApiError("'civitai_api_key' must be a string")
+            if raw.strip():
+                settings["civitai_api_key"] = raw.strip()
             else:
-                keys.pop(provider, None)  # empty clears, like the Civitai key
-        settings["llm_api_keys"] = keys
-    lib.user_root.mkdir(parents=True, exist_ok=True)
-    with open(_settings_path(lib), "w", encoding="utf-8") as fh:
-        json.dump(settings, fh, indent=2)
+                settings.pop("civitai_api_key", None)  # empty clears
+        if "llm" in payload:
+            raw_llm = payload.get("llm")
+            if not isinstance(raw_llm, dict):
+                raise ApiError("'llm' must be an object")
+            llm = _llm_settings(settings)
+            for key in ("ollama_url", "lmstudio_url"):
+                if key in raw_llm:
+                    value = raw_llm[key]
+                    if not isinstance(value, str):
+                        raise ApiError(f"'llm.{key}' must be a string")
+                    value = value.strip().rstrip("/")
+                    if value:
+                        llm[key] = value
+                    else:
+                        llm.pop(key, None)  # empty reverts to the default
+            settings["llm"] = llm
+        if "llm_api_keys" in payload:
+            raw_keys = payload.get("llm_api_keys")
+            if not isinstance(raw_keys, dict):
+                raise ApiError("'llm_api_keys' must be an object of provider -> key")
+            keys = settings.get("llm_api_keys")
+            keys = keys if isinstance(keys, dict) else {}
+            for provider, value in raw_keys.items():
+                if provider not in CLOUD_PROVIDERS:
+                    raise ApiError(
+                        f"unknown provider '{provider}' (have: {', '.join(CLOUD_PROVIDERS)})"
+                    )
+                if not isinstance(value, str):
+                    raise ApiError(f"'llm_api_keys.{provider}' must be a string")
+                if value.strip():
+                    keys[provider] = value.strip()
+                else:
+                    keys.pop(provider, None)  # empty clears, like the Civitai key
+            settings["llm_api_keys"] = keys
+        lib.user_root.mkdir(parents=True, exist_ok=True)
+        _write_json_atomic(_settings_path(lib), settings)
     keys = settings.get("llm_api_keys") or {}
     return 200, {
         "ok": True,
@@ -945,9 +964,11 @@ def _pull_worker(url, model):
 @_guarded
 def handle_llm_pull(lib, payload):
     """POST starts an Ollama model download in the background; GET (same
-    route) polls its status. The dropdown suggestion click lands here."""
+    route) polls its status. The dropdown suggestion click lands here.
+    Only JSON `true` counts as start — GET query values are strings, so a
+    polling (or cross-site) GET can never kick off a pull."""
     model = _require_str(payload, "model")
-    if payload.get("start"):
+    if payload.get("start") is True:
         current = _PULL_STATUS.get(model)
         if current and current.get("status") == "pulling":
             return 200, {"model": model, "status": "pulling", "detail": "already running"}
@@ -1309,6 +1330,7 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
     import urllib.request
 
     status = _LORA_DL_STATUS[status_key]
+    part_path = None
     try:
         request = urllib.request.Request(
             f"https://civitai.com/api/v1/model-versions/{version_id}", headers=meta_headers
@@ -1370,6 +1392,11 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
     except Exception as exc:
         status["status"] = "error"
         status["detail"] = str(exc)
+        # never leave a multi-GB torso in the loras folder: os.replace has
+        # not run (or already consumed the file), so drop the partial
+        if part_path and os.path.exists(part_path):
+            with contextlib.suppress(OSError):
+                os.remove(part_path)
 
 
 @_guarded
@@ -1378,14 +1405,16 @@ def handle_lora_download(lib, payload):
     begins a background download of the AIR-referenced Civitai file into
     the loras folder; GET {air} polls progress. When section+item are given
     and the final path differs from `stored`, the section item is healed to
-    point at the downloaded file."""
+    point at the downloaded file. Only JSON `true` counts as start — GET
+    query values are strings, so a polling (or cross-site) GET can never
+    write into the loras folder."""
     air = _require_str(payload, "air")
     parsed = parse_air(air)
     if parsed is None:
         raise ApiError(
             f"'{air}' is not a Civitai AIR urn (urn:air:<eco>:<type>:civitai:<model>@<version>)"
         )
-    if not payload.get("start"):
+    if payload.get("start") is not True:
         status = _LORA_DL_STATUS.get(air) or {"status": "unknown", "detail": "no download started"}
         return 200, {"air": air, **status}
     current = _LORA_DL_STATUS.get(air)
@@ -1535,6 +1564,10 @@ def register_routes():
                     return web.json_response(body, status=400)
             else:
                 payload = dict(request.rel_url.query)
+                # GET only ever polls/reads: the state-changing 'start' flag
+                # rides POST JSON bodies exclusively, so a bare cross-site
+                # GET (no CORS preflight) can never trigger a download
+                payload.pop("start", None)
             # handlers are pure/synchronous — run them in the executor so
             # they never block (or wait behind) the busy boot-time loop
             loop = asyncio.get_running_loop()

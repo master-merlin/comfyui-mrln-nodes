@@ -264,6 +264,14 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
     else:
         if fixed_first:
             first_pool = draw_pool or pool
+            if not first_pool:
+                # mirror the random path: an empty section (legal) must fail
+                # as a loud PromptLibError, not an IndexError
+                raise SelectionError(
+                    slot.id,
+                    f"no items in '{slot.ref}' to pin as a fixed default — add items "
+                    "to the section, point the slot elsewhere, or mute it with 'off'",
+                )
             qualified, section, item = first_pool[0]
         else:
             qualified, section, item = _find_item(pool, slot.ref, value)
@@ -425,6 +433,13 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=
         if text and rs.emphasis and rs.emphasis != 1.0:
             text = f"({text.rstrip('.')}:{rs.emphasis:g})"
         slot_vars[rs.id] = text
+    # A woven variant slot must never break the prompt: when its block is
+    # muted or the other variant is active it never resolves, so it weaves
+    # "" like a muted slot (setdefault keeps the active variant's draw).
+    for v in tpl.variants:
+        for s in v.slots:
+            if s.id != "trigger":
+                slot_vars.setdefault(s.id, "")
     inline_ids = set()
     for wrapper in (tpl.prefix, tpl.suffix):
         if wrapper:
@@ -475,6 +490,7 @@ def _resolve_and_expand(
     text_length="long",
     depth=0,
     consumed=None,
+    strict=False,
 ):
     resolved, rng, item = _resolve_slot(
         lib,
@@ -484,6 +500,7 @@ def _resolve_and_expand(
         mode=mode,
         selection=selection,
         template_type=template_type,
+        strict=strict,
     )
     if item is not None:
         child_vars = {}
@@ -495,6 +512,8 @@ def _resolve_and_expand(
                 dotted = replace(child_slot, id=f"{slot.id}.{child_slot.id}")
                 if consumed is not None:
                     consumed.add(dotted.id)
+                # strict never propagates: it covers the CALLER's own pick,
+                # while child defaults are authored content that heals
                 child = _resolve_and_expand(
                     lib,
                     dotted,
@@ -534,17 +553,26 @@ def resolve_section(lib, section_ref, item_token, *, seed, allow_empty=False):
     slot = Slot(id="section", ref=section_ref, allow_empty=allow_empty)
     key = f"@section:{section_ref}"
     selection = {"section": str(item_token)}
+    # The template path's expander also resolves item CHILD slots (factory
+    # items ship them); a non-nested draw is bit-identical to the old direct
+    # path (same key, same rng, same expand), so existing seeds stay stable.
     # strict: the standalone Section node IS its pick — a stale item name
-    # stays a hard, actionable error here (no template to heal it in)
-    resolved, rng, item = _resolve_slot(
-        lib, slot, key, master_seed=seed, mode="as configured", selection=selection, strict=True
+    # stays a hard, actionable error here (no template to heal it in).
+    resolved = _resolve_and_expand(
+        lib, slot, key, seed, "as configured", selection, {"trigger": ""}, strict=True
     )
     if resolved.missing:
         # The standalone Section node IS its section — there is nothing to
         # skip to, so a dead ref stays a hard, actionable error here.
         raise SectionNotFoundError(section_ref, lib.section_slugs() + lib.section_folders())
-    if item is not None and item.text:
-        text = expand(item.text, {"trigger": ""}, rng)
-        if text != resolved.text:
-            resolved = replace(resolved, text=text)
+    # child negatives fold into the one negative the Section node emits,
+    # deduped the same way resolve_template aggregates them
+    negatives = [part for part in resolved.negative.split(", ") if part]
+    for child in walk_slots(resolved.children):
+        for part in child.negative.split(", "):
+            if part and part not in negatives:
+                negatives.append(part)
+    negative = ", ".join(negatives)
+    if negative != resolved.negative:
+        resolved = replace(resolved, negative=negative)
     return resolved

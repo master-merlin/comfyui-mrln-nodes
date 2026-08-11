@@ -145,9 +145,21 @@ class Library:
             except Exception as exc:
                 _log.warning("ignoring malformed %s: %s", path, exc)
                 continue
-            for name, profile in (data.get("profiles") or {}).items():
-                if isinstance(profile, dict):
-                    merged[str(name)] = overlay_profile(merged.get(str(name), {}), profile)
+            if not isinstance(data, dict):
+                _log.warning("ignoring malformed %s: root must be a JSON object", path)
+                continue
+            profiles = data.get("profiles") or {}
+            if not isinstance(profiles, dict):
+                _log.warning("ignoring malformed %s: 'profiles' must be an object", path)
+                continue
+            for name, profile in profiles.items():
+                if str(name) == "standard":  # reserved: the unprofiled render
+                    _log.warning("ignoring reserved profile name 'standard' in %s", path)
+                    continue
+                if not isinstance(profile, dict):
+                    _log.warning("ignoring malformed profile %r in %s", name, path)
+                    continue
+                merged[str(name)] = overlay_profile(merged.get(str(name), {}), profile)
         self._scan_cache["@profiles"] = merged
         return merged
 
@@ -252,10 +264,21 @@ class Library:
         section = self._parse_file(entry.path, slug, parse_section)
         if entry.tier != "user" or section.replaces:
             return section
+        factory_slug = slug
         factory_path = self.factory_root / "sections" / f"{slug}.json"
         if not factory_path.is_file():
-            return section
-        factory = self._parse_file(factory_path, slug, parse_section)
+            # A factory rename must not detach a user extend-file: follow
+            # the alias table to the renamed factory baseline before giving
+            # up on merging.
+            def _factory_file(s):
+                return (self.factory_root / "sections" / f"{s}.json").is_file()
+
+            target = self._alias_target("sections", slug, _factory_file)
+            if target is None:
+                return section
+            factory_slug = target
+            factory_path = self.factory_root / "sections" / f"{target}.json"
+        factory = self._parse_file(factory_path, factory_slug, parse_section)
         return merge_sections(factory, section)
 
     def load_template(self, slug):

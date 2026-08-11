@@ -184,9 +184,39 @@ function enhanceModelDropdown(node) {
       return;
     }
     if (value === CUSTOM_ENTRY) {
-      const typed = window.prompt("Model name", lastReal);
-      combo.value = typed?.trim() ? typed.trim() : lastReal;
-      lastReal = combo.value;
+      // The frontend assigns the picked entry to the widget BEFORE this
+      // callback runs — restore a real value right away so the sentinel can
+      // never be serialized (the dialog below resolves asynchronously, and
+      // window.prompt throws on Electron/ComfyUI Desktop).
+      combo.value = lastReal;
+      const applyTyped = (typed) => {
+        if (typeof typed !== "string" || !typed.trim()) return;
+        combo.value = typed.trim();
+        lastReal = combo.value;
+        app.graph?.change?.();
+        app.graph?.setDirtyCanvas(true, true);
+      };
+      const nativePrompt = () => {
+        try {
+          applyTyped(window.prompt("Model name", lastReal));
+        } catch {
+          toast(
+            "warn",
+            "Custom model entry unavailable",
+            "This frontend cannot open a text prompt — pick one of the listed models instead."
+          );
+        }
+      };
+      const dialog = app.extensionManager?.dialog;
+      if (typeof dialog?.prompt === "function") {
+        Promise.resolve(
+          dialog.prompt({ title: "Custom model", message: "Model name", defaultValue: lastReal })
+        )
+          .then(applyTyped)
+          .catch(nativePrompt);
+      } else {
+        nativePrompt();
+      }
       return;
     }
     lastReal = value;
@@ -197,7 +227,7 @@ function enhanceModelDropdown(node) {
       const current = String(combo.value ?? "").trim();
       if (current && current !== CUSTOM_ENTRY) lastReal = current;
       if (isCloud()) {
-        const values = current ? [current] : [];
+        const values = current && current !== CUSTOM_ENTRY ? [current] : [];
         for (const m of CLOUD_MODEL_SUGGESTIONS[provider] ?? []) {
           if (!values.includes(m)) values.push(m);
         }

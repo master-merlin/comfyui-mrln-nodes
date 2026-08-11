@@ -19,10 +19,27 @@ app.registerExtension({
       const selectionWidget = widgets.find((w) => w.name === "selection");
       if (!templateWidget || !selectionWidget) return;
 
+      // Legacy combo menus fire the callback even when the user re-picks
+      // the entry that is already active — that is not a switch, so the
+      // selection must survive. Track the previous value and only clear on
+      // an actual change.
+      let lastTemplate = templateWidget.value;
+      // Workflow loads assign widget values without firing callbacks on
+      // legacy frontends — resync so a post-load same-value re-pick is not
+      // mistaken for a switch.
+      const onConfigure = this.onConfigure;
+      this.onConfigure = function (...args) {
+        const result = onConfigure?.apply(this, args);
+        lastTemplate = templateWidget.value;
+        return result;
+      };
+
       const original = templateWidget.callback;
       templateWidget.callback = function (value, ...rest) {
         const result = original?.call(this, value, ...rest);
-        if ((selectionWidget.value ?? "") !== "") {
+        const changed = value !== lastTemplate;
+        lastTemplate = value;
+        if (changed && (selectionWidget.value ?? "") !== "") {
           selectionWidget.value = "";
           selectionWidget.callback?.("");
           app.graph?.setDirtyCanvas(true, true);

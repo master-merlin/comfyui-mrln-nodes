@@ -200,6 +200,8 @@ export function createComposerPanel(root, ctx) {
     soloed: new Set(), // audition only: solo set — non-empty means ONLY these render
     lastPreview: null,
     previewNo: 0,
+    templateNo: 0, // selectTemplate supersede token, mirrors previewNo
+    libraryError: null, // last /library failure — tabs render it with a Retry
     previewTimer: null,
     choicesOpen: false,
     negativeOpen: false,
@@ -256,6 +258,58 @@ export function createComposerPanel(root, ctx) {
     modifiedNote.style.display = "";
   }
 
+  // ---- two-step confirmations ----------------------------------------------
+  // window.confirm/window.prompt throw on the Desktop (Electron) frontend,
+  // so destructive actions confirm by ARMING instead: the first attempt
+  // arms for ~4s, repeating it within the window executes.
+
+  const armedActions = new Map(); // key -> arm deadline (ms epoch)
+
+  function confirmTwoStep(key, title, detail) {
+    if ((armedActions.get(key) ?? 0) > Date.now()) {
+      armedActions.delete(key);
+      return true;
+    }
+    armedActions.set(key, Date.now() + 4000);
+    ctx.toast("warn", title, detail);
+    return false;
+  }
+
+  function confirmDiscardEdits(key) {
+    if (!state.modified) return true;
+    return confirmTwoStep(
+      `discard:${key}`,
+      "Unsaved template changes",
+      "Repeat the action within 4s to discard them — or Save first."
+    );
+  }
+
+  function armDestructive(button, reallyLabel, action) {
+    // Button flavor: the first click relabels the button to the question and
+    // arms it; the second click (any call while armed) runs the stored
+    // action. Auto-disarms after ~4s.
+    if (button.mrlnArmed) {
+      clearTimeout(button.mrlnArmed.timer);
+      button.textContent = button.mrlnArmed.label;
+      button.classList.remove("mrln-armed");
+      const run = button.mrlnArmed.action;
+      button.mrlnArmed = null;
+      run();
+      return;
+    }
+    button.mrlnArmed = {
+      label: button.textContent,
+      action,
+      timer: setTimeout(() => {
+        button.textContent = button.mrlnArmed.label;
+        button.classList.remove("mrln-armed");
+        button.mrlnArmed = null;
+      }, 4000),
+    };
+    button.textContent = reallyLabel;
+    button.classList.add("mrln-armed");
+  }
+
   // ---- data loading --------------------------------------------------------
 
   function loadingNote(message) {
@@ -267,6 +321,21 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
+  function libraryErrorNote(message) {
+    // The panel is a singleton and boots loadLibrary exactly once — a dead
+    // load must offer recovery, not a blank tab until a browser reload.
+    return el(
+      "div",
+      {},
+      el("div", { class: "mrln-error" }, `Library unavailable: ${message}`),
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el("button", { class: "mrln-btn", onclick: () => loadLibrary(false) }, "Retry")
+      )
+    );
+  }
+
   async function loadLibrary(keepSelection = true) {
     if (!state.library) {
       composeTab.replaceChildren(loadingNote("Loading prompt library…"));
@@ -274,16 +343,24 @@ export function createComposerPanel(root, ctx) {
     try {
       state.library = await ctx.apiJson("/mrln/prompt/library");
     } catch (err) {
-      composeTab.replaceChildren(
-        el("div", { class: "mrln-error" }, `Library unavailable: ${err.message}`)
-      );
+      if (state.library) {
+        // a failed RELOAD must not nuke a working panel — keep loaded data
+        ctx.toast("error", "Library reload failed", err.message);
+        return;
+      }
+      state.libraryError = err.message;
+      composeTab.replaceChildren(libraryErrorNote(err.message));
+      if (state.tab === "library") renderLibraryTab();
+      if (state.tab === "decompose") renderDecomposeTab();
       return;
     }
+    state.libraryError = null;
     const slugs = state.library.templates.map((t) => t.slug);
     if (!keepSelection || !slugs.includes(state.slug)) state.slug = slugs[0] ?? null;
     if (state.slug && !state.detail) await selectTemplate(state.slug);
     else renderComposeTab();
     if (state.tab === "library") renderLibraryTab();
+    if (state.tab === "decompose") renderDecomposeTab();
   }
 
   async function refreshDetail() {
@@ -415,6 +492,25 @@ export function createComposerPanel(root, ctx) {
     return Object.keys(ov).length ? ov : null;
   }
 
+  function structuralDrift(effective, base) {
+    // Everything the sparse profile diff CANNOT carry: slot adds/removes,
+    // refs, lead-in labels, variant structure, order, template label/type.
+    // default/emphasis and the prose scalars stay out — those diff fine.
+    const sig = (raw) => {
+      const slotSig = (s) => [s.id, s.ref, s.label ?? ""];
+      const sharedIds = (raw.slots ?? []).map((s) => s.id);
+      const synthesized = (raw.variants ?? []).length ? [...sharedIds, "@variant"] : sharedIds;
+      return JSON.stringify({
+        label: raw.label ?? "",
+        type: raw.type ?? [],
+        slots: (raw.slots ?? []).map(slotSig),
+        variants: (raw.variants ?? []).map((v) => [v.name, (v.slots ?? []).map(slotSig)]),
+        order: Array.isArray(raw.order) ? raw.order : synthesized,
+      });
+    };
+    return sig(effective) !== sig(base);
+  }
+
   function rebuildForProfile(profileName) {
     // Re-derive the working copy from base ⊕ overrides — only safe when
     // there are no unsaved edits (callers guard on state.modified).
@@ -433,16 +529,11 @@ export function createComposerPanel(root, ctx) {
   }
 
   async function revertProfileTweaks() {
+    // Confirmation happens via the armed ↺ button — window.confirm throws
+    // on the Desktop (Electron) frontend.
     const profile = state.profile ?? "standard";
     const ov = overridesFor(profile);
     if (!ov || !state.slug) return;
-    const count = overrideTweakCount(ov);
-    if (!window.confirm(
-      `Remove the ${count} stored tweak(s) of '${state.slug}' for profile `
-        + `'${profile}'? The variant falls back to the standard render.`
-    )) {
-      return;
-    }
     const data = structuredClone(state.baseRaw);
     delete data.profiles[profile].overrides;
     if (!Object.keys(data.profiles[profile]).length) delete data.profiles[profile];
@@ -465,20 +556,45 @@ export function createComposerPanel(root, ctx) {
   }
 
   async function selectTemplate(slug) {
-    state.slug = slug;
+    // Supersede guard (mirrors previewNo): out-of-order responses from fast
+    // template switching must not land — and state.slug commits only AFTER
+    // a successful fetch, so a failed load can never leave slug pointing at
+    // one template while rawData holds another (Save would then overwrite
+    // the wrong file). Returns true when this call took effect.
+    const no = ++state.templateNo;
     if (!state.detail) {
       composeTab.replaceChildren(loadingNote(`Loading '${slug}'…`));
     }
+    let detail;
     try {
-      state.detail = await ctx.apiJson(
+      detail = await ctx.apiJson(
         `/mrln/prompt/template?slug=${encodeURIComponent(slug)}`
       );
     } catch (err) {
-      composeTab.replaceChildren(
-        el("div", { class: "mrln-error" }, `Cannot load '${slug}': ${err.message}`)
+      if (no !== state.templateNo) return false; // a newer pick owns the tab
+      const banner = el(
+        "div",
+        { class: "mrln-error" },
+        `Cannot load '${slug}': ${err.message} `,
+        el(
+          "button",
+          { class: "mrln-btn mrln-mini", onclick: () => selectTemplate(slug) },
+          "Retry"
+        )
       );
-      return;
+      if (state.rawData) {
+        // previous template stays fully usable (combo, footer) — the failed
+        // slug was never committed to state
+        renderComposeTab();
+        composeTab.prepend(banner);
+      } else {
+        composeTab.replaceChildren(banner);
+      }
+      return false;
     }
+    if (no !== state.templateNo) return false; // superseded by a newer pick
+    state.slug = slug;
+    state.detail = detail;
     state.baseRaw = structuredClone(state.detail.raw);
     state.rawData = structuredClone(state.detail.raw);
     state.loadedLabel = state.rawData.label ?? null;
@@ -491,6 +607,7 @@ export function createComposerPanel(root, ctx) {
     state.lastPreview = null;
     renderComposeTab();
     schedulePreview();
+    return true;
   }
 
   function initRowsFromRaw() {
@@ -660,14 +777,26 @@ export function createComposerPanel(root, ctx) {
   function applyKvToRows(map) {
     const offRe = /^(?:🔇 )?off$/;
     if (map.variant && (state.rawData.variants ?? []).length) {
-      if (offRe.test(map.variant.trim())) state.muted.add("@variant");
-      else state.variant = map.variant;
+      if (offRe.test(map.variant.trim())) {
+        state.muted.add("@variant");
+      } else {
+        // an explicit pick overrides a baked "off" variant_default — the
+        // node renders it, so the panel must un-mute to match
+        state.muted.delete("@variant");
+        state.variant = map.variant;
+      }
     }
     for (const slot of allSlots()) {
       const token = map[slot.id];
       if (token === undefined) continue;
-      if (offRe.test(token.trim())) state.muted.add(slot.id);
-      else state.rows.set(slot.id, parseToken(token));
+      if (offRe.test(token.trim())) {
+        state.muted.add(slot.id);
+      } else {
+        // explicit selection lines override an "off" default server-side —
+        // mirror that here or Apply would silently drop the pick
+        state.muted.delete(slot.id);
+        state.rows.set(slot.id, parseToken(token));
+      }
     }
     for (const [key, token] of Object.entries(map)) {
       if (!key.includes(".")) continue; // nested pins from the node
@@ -742,6 +871,18 @@ export function createComposerPanel(root, ctx) {
       // Variant save: the base file keeps its standard state — only the
       // diff vs standard lands under profiles.<name>.overrides.
       const effective = buildSaveData();
+      if (structuralDrift(effective, state.baseRaw)) {
+        // the sparse diff cannot carry these — refuse instead of dropping
+        // them behind a success toast (the edits stay in the working copy)
+        ctx.toast(
+          "error",
+          "Structural edits don't fit a profile variant",
+          `Added/removed/reordered slots or label edits cannot ride the '${profile}' `
+            + "diff — switch Target profile to 'standard' to save them into the "
+            + "base template, or use Save as…. Nothing was saved."
+        );
+        return false;
+      }
       data = structuredClone(state.baseRaw);
       data.version = 1;
       const ov = diffProfileOverrides(effective, state.baseRaw);
@@ -798,6 +939,7 @@ export function createComposerPanel(root, ctx) {
   async function newTemplate() {
     // Net-new composition: create a blank user-tier template and drop into
     // the normal compose flow — '+ Add section' builds it up, Save persists.
+    if (!confirmDiscardEdits("new-template")) return; // it ends in selectTemplate
     const slug = await askString(
       "New template",
       "Slug for the new template (folder/name, lowercase-kebab — e.g. 'my/street-scene'):",
@@ -923,8 +1065,14 @@ export function createComposerPanel(root, ctx) {
       }
     };
     collect(state.lastPreview?.slots);
-    for (const key of [...state.rows.keys()]) {
-      if (key.includes(".") && !seen.has(key)) state.rows.delete(key); // stale pins
+    if (state.lastPreview) {
+      // Prune stale pins only against a REAL preview: right after a template
+      // or Load-from-node switch lastPreview is null, and pruning then would
+      // wipe the nested pins just read from the node before the first
+      // preview (which is built FROM those pins) can confirm them.
+      for (const key of [...state.rows.keys()]) {
+        if (key.includes(".") && !seen.has(key)) state.rows.delete(key); // stale pins
+      }
     }
     for (const mount of composeTab.querySelectorAll("[data-mrln-nested]")) {
       const resolved = (state.lastPreview?.slots ?? []).find(
@@ -1064,13 +1212,27 @@ export function createComposerPanel(root, ctx) {
         "button",
         {
           class: "mrln-btn",
-          onclick: async () => {
+          onclick: async (e) => {
+            const button = e.currentTarget;
+            if (button.mrlnArmed) {
+              armDestructive(button); // second click — run the armed overwrite
+              return;
+            }
             const slug = await askString(
               "Save as template",
               "Template slug (lowercase, '/' for folders):",
               `${state.slug}-mine`
             );
-            if (slug) await saveTemplate(slug.trim(), { asNew: true });
+            if (!slug?.trim()) return;
+            const clean = slug.trim();
+            if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
+              // silent clobber guard — newTemplate refuses, Save as… arms
+              armDestructive(button, `Really overwrite '${clean}'?`, () =>
+                saveTemplate(clean, { asNew: true })
+              );
+              return;
+            }
+            await saveTemplate(clean, { asNew: true });
           },
         },
         "Save as…"
@@ -1207,7 +1369,9 @@ export function createComposerPanel(root, ctx) {
       {
         class: "mrln-btn mrln-mini mrln-editor-close",
         title: "Close this editor (unsaved edits here are discarded)",
-        onclick: () => editorBox.replaceChildren(),
+        onclick: () => {
+          if (confirmReplaceEditor()) setEditor();
+        },
       },
       "✕"
     );
@@ -1231,7 +1395,13 @@ export function createComposerPanel(root, ctx) {
     }
 
     const templateSelect = el("select", {
-      onchange: (e) => selectTemplate(e.target.value),
+      onchange: (e) => {
+        if (!confirmDiscardEdits("switch-template")) {
+          e.target.value = state.slug; // revert until the pick is repeated
+          return;
+        }
+        selectTemplate(e.target.value);
+      },
     });
     // grouped by top-level folder — 38+ templates need structure in a combo
     const templateGroups = new Map();
@@ -1363,8 +1533,9 @@ export function createComposerPanel(root, ctx) {
       title: "Target-model profile: applies its render overrides (format/length) "
         + "and carries its LLM system prompt on the node's llm output. Explicit "
         + "Format/Text length choices here still win. With a profile selected, "
-        + "structural edits + Save store a per-profile VARIANT of this template "
-        + "(a diff vs standard — the base file stays untouched).",
+        + "prose/default/emphasis edits + Save store a per-profile VARIANT of "
+        + "this template (a diff vs standard — the base file stays untouched; "
+        + "structural changes still need the 'standard' profile).",
       onchange: (e) => setTargetProfile(e.target.value),
     });
     profileSelect.append(el("option", { value: "standard" }, "standard"));
@@ -1390,7 +1561,7 @@ export function createComposerPanel(root, ctx) {
         smallBtn(
           "Remove this profile's stored tweaks — back to the standard render",
           "↺",
-          revertProfileTweaks
+          (e) => armDestructive(e.currentTarget, "Really remove?", revertProfileTweaks)
         )
       );
     }
@@ -1775,6 +1946,7 @@ export function createComposerPanel(root, ctx) {
               + "output → LoRA Apply node). Click to edit the section in the "
               + "Library tab.",
             onclick: async () => {
+              if (!confirmReplaceEditor()) return;
               switchTab("library");
               await openSectionEditor(loraItem.section_slug ?? slot.ref);
               editorBox.scrollIntoView({ block: "nearest" });
@@ -2185,8 +2357,10 @@ export function createComposerPanel(root, ctx) {
       return;
     }
     const slug = ctx.getWidget(node, "template") || state.slug;
-    await selectTemplate(slug); // fresh from disk — discards structural edits
-    if (!state.rawData) return;
+    if (!confirmDiscardEdits("load-from-node")) return;
+    // fresh from disk — a failed/superseded load must not fall through to
+    // applying the node's selection onto whatever template was loaded before
+    if (!(await selectTemplate(slug))) return;
     state.mode = ctx.getWidget(node, "selection_mode") ?? state.mode;
     state.seed = Number(ctx.getWidget(node, "seed") ?? state.seed) || 0;
     state.format = ctx.getWidget(node, "format") ?? state.format;
@@ -2381,15 +2555,33 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
-  async function saveDecomposedTemplate() {
+  async function saveDecomposedTemplate(button) {
     const d = state.decompose;
     if (!d.report) return;
+    if (button?.mrlnArmed) {
+      armDestructive(button); // second click — run the armed overwrite
+      return;
+    }
     const slug = await askString(
       "Create template from decomposition",
       "Template slug (lowercase, '/' for folders):",
       "decomposed/my-prompt"
     );
-    if (!slug) return;
+    if (!slug?.trim()) return;
+    const clean = slug.trim();
+    if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
+      // the prefilled default slug makes second-run collisions likely — arm
+      // instead of silently overwriting the earlier decomposition
+      armDestructive(button, `Really overwrite '${clean}'?`, () =>
+        performDecomposedSave(clean)
+      );
+      return;
+    }
+    await performDecomposedSave(clean);
+  }
+
+  async function performDecomposedSave(slug) {
+    const d = state.decompose;
     const type = d.type.split(",").map((t) => t.trim()).filter(Boolean);
     const prefixParts = [];
     const suffixParts = [];
@@ -2464,21 +2656,28 @@ export function createComposerPanel(root, ctx) {
     try {
       await ctx.apiJson("/mrln/prompt/save-template", {
         method: "POST",
-        body: { slug: slug.trim(), data },
+        body: { slug, data },
       });
     } catch (err) {
       ctx.toast("error", "Template save failed", err.message);
       return;
     }
-    ctx.toast("success", "Template created", `${slug.trim()} — opening in Compose`);
+    ctx.toast("success", "Template created", `${slug} — opening in Compose`);
     ctx.refreshCombos();
     await loadLibrary();
-    await selectTemplate(slug.trim());
+    await selectTemplate(slug);
     switchTab("compose");
   }
 
   function renderDecomposeTab() {
-    if (!state.library) return;
+    if (!state.library) {
+      decomposeTab.replaceChildren(
+        state.libraryError
+          ? libraryErrorNote(state.libraryError)
+          : loadingNote("Loading prompt library…")
+      );
+      return;
+    }
     const d = state.decompose;
     const promptArea = autoArea(
       {
@@ -2644,7 +2843,7 @@ export function createComposerPanel(root, ctx) {
             {
               class: "mrln-btn mrln-primary",
               title: "Save new items/sections, then store the mapping as a template",
-              onclick: () => saveDecomposedTemplate(),
+              onclick: (e) => saveDecomposedTemplate(e.currentTarget),
             },
             "Create template…"
           )
@@ -2657,11 +2856,35 @@ export function createComposerPanel(root, ctx) {
   // ---- library tab ---------------------------------------------------------
 
   const editorBox = el("div");
+  // Editor forms live only in closures — replacing editorBox drops typed
+  // content. Track typing (capture phase: some internal events don't
+  // bubble) and gate every user-initiated replacement on confirmReplaceEditor.
+  let editorDirty = false;
+  editorBox.addEventListener("input", () => (editorDirty = true), true);
+  editorBox.addEventListener("change", () => (editorDirty = true), true);
+
+  function setEditor(...children) {
+    editorBox.replaceChildren(...children);
+    editorDirty = false; // fresh (or cleared) content — typing starts clean
+  }
+
+  function confirmReplaceEditor() {
+    if (!editorDirty) return true;
+    return confirmTwoStep(
+      "editor",
+      "Unsaved editor changes",
+      "Repeat the click within 4s to replace the editor and discard them."
+    );
+  }
 
   function sectionLi(section) {
     return el(
       "li",
-      { onclick: () => openSectionEditor(section.slug) },
+      {
+        onclick: () => {
+          if (confirmReplaceEditor()) openSectionEditor(section.slug);
+        },
+      },
       section.error ? `⚠ ${section.slug}` : section.label,
       el(
         "span",
@@ -2698,7 +2921,11 @@ export function createComposerPanel(root, ctx) {
   function templateLi(template) {
     return el(
       "li",
-      { onclick: () => openTemplateEditor(template.slug) },
+      {
+        onclick: () => {
+          if (confirmReplaceEditor()) openTemplateEditor(template.slug);
+        },
+      },
       template.error ? `⚠ ${template.slug}` : template.label,
       el("span", { class: "mrln-slug" }, template.slug),
       tierChip(template.tier),
@@ -2966,7 +3193,7 @@ export function createComposerPanel(root, ctx) {
               `${written} file(s) written`
                 + (kept ? `, ${kept} kept — tick overwrite to replace them` : "")
             );
-            editorBox.replaceChildren();
+            setEditor();
             ctx.refreshCombos();
             await loadLibrary();
             if (isTemplate && report.template_slug) {
@@ -2986,7 +3213,7 @@ export function createComposerPanel(root, ctx) {
     );
 
     const loraCount = (plan.loras ?? []).length;
-    editorBox.replaceChildren(
+    setEditor(
       el(
         "div",
         { class: "mrln-tree-head" },
@@ -3016,7 +3243,14 @@ export function createComposerPanel(root, ctx) {
   }
 
   function renderLibraryTab() {
-    if (!state.library) return;
+    if (!state.library) {
+      libraryTab.replaceChildren(
+        state.libraryError
+          ? libraryErrorNote(state.libraryError)
+          : loadingNote("Loading prompt library…")
+      );
+      return;
+    }
     const lib = state.library;
     const filterInput = el("input", {
       type: "text",
@@ -3038,7 +3272,16 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-actions" },
-        el("button", { class: "mrln-btn", onclick: () => newSection() }, "New section…"),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            onclick: () => {
+              if (confirmReplaceEditor()) newSection();
+            },
+          },
+          "New section…"
+        ),
         el("button", { class: "mrln-btn", onclick: () => newTemplate() }, "New template…"),
         el(
           "button",
@@ -3046,7 +3289,9 @@ export function createComposerPanel(root, ctx) {
             class: "mrln-btn",
             title: "Import a shared MRLN bundle (.mrln.json) — sections, template and "
               + "LoRA download links included",
-            onclick: () => importBundlePicker(),
+            onclick: () => {
+              if (confirmReplaceEditor()) importBundlePicker();
+            },
           },
           "Import…"
         ),
@@ -3065,7 +3310,11 @@ export function createComposerPanel(root, ctx) {
     const rows = (state.library.profiles ?? []).map((p) =>
       el(
         "li",
-        { onclick: () => openProfileEditor(p.name) },
+        {
+          onclick: () => {
+            if (confirmReplaceEditor()) openProfileEditor(p.name);
+          },
+        },
         p.name,
         el("span", { class: "mrln-slug" }, " target-model profile"),
         el(
@@ -3102,7 +3351,16 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-actions" },
-        el("button", { class: "mrln-btn", onclick: () => openProfileEditor(null) }, "New profile…")
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            onclick: () => {
+              if (confirmReplaceEditor()) openProfileEditor(null);
+            },
+          },
+          "New profile…"
+        )
       ),
       el("ul", { class: "mrln-tree" }, rows)
     );
@@ -3114,7 +3372,7 @@ export function createComposerPanel(root, ctx) {
       try {
         body = await ctx.apiJson(`/mrln/prompt/profile?name=${encodeURIComponent(name)}`);
       } catch (err) {
-        editorBox.replaceChildren(el("div", { class: "mrln-error" }, err.message));
+        setEditor(el("div", { class: "mrln-error" }, err.message));
         return;
       }
     }
@@ -3203,29 +3461,32 @@ export function createComposerPanel(root, ctx) {
           {
             class: "mrln-btn",
             title: "Remove your user-tier entry — factory content (if any) shows through again",
-            onclick: async () => {
-              try {
-                await ctx.apiJson("/mrln/prompt/save-profile", {
-                  method: "POST",
-                  body: { name: body.name, data: null },
-                });
-              } catch (err) {
-                ctx.toast("error", "Delete failed", err.message);
-                return;
-              }
-              ctx.toast("success", "User entry deleted", body.name);
-              ctx.refreshCombos();
-              await loadLibrary();
-              if (state.slug) await refreshDetail();
-              editorBox.replaceChildren();
-            },
+            // two-step arm: this wipes the profile file (system prompt,
+            // params, json_template) irrecoverably, one row over from Save
+            onclick: (e) =>
+              armDestructive(e.currentTarget, "Really delete?", async () => {
+                try {
+                  await ctx.apiJson("/mrln/prompt/save-profile", {
+                    method: "POST",
+                    body: { name: body.name, data: null },
+                  });
+                } catch (err) {
+                  ctx.toast("error", "Delete failed", err.message);
+                  return;
+                }
+                ctx.toast("success", "User entry deleted", body.name);
+                ctx.refreshCombos();
+                await loadLibrary();
+                if (state.slug) await refreshDetail();
+                setEditor();
+              }),
           },
           "Delete user entry"
         )
       );
     }
 
-    editorBox.replaceChildren(
+    setEditor(
       el(
         "div",
         { class: "mrln-tree-head" },
@@ -3468,7 +3729,7 @@ export function createComposerPanel(root, ctx) {
     try {
       body = await ctx.apiJson(`/mrln/prompt/section?slug=${encodeURIComponent(slug)}`);
     } catch (err) {
-      editorBox.replaceChildren(el("div", { class: "mrln-error" }, err.message));
+      setEditor(el("div", { class: "mrln-error" }, err.message));
       return;
     }
     openSectionForm(slug, body);
@@ -4124,7 +4385,7 @@ export function createComposerPanel(root, ctx) {
       );
     }
 
-    editorBox.replaceChildren(
+    setEditor(
       el(
         "div",
         { class: "mrln-tree-head" },
@@ -4185,7 +4446,7 @@ export function createComposerPanel(root, ctx) {
     try {
       body = await ctx.apiJson(`/mrln/prompt/template?slug=${encodeURIComponent(slug)}`);
     } catch (err) {
-      editorBox.replaceChildren(el("div", { class: "mrln-error" }, err.message));
+      setEditor(el("div", { class: "mrln-error" }, err.message));
       return;
     }
     const slugInput = el("input", { type: "text", value: slug });
@@ -4210,11 +4471,18 @@ export function createComposerPanel(root, ctx) {
         return;
       }
       errorLine.textContent = "";
+      editorDirty = false; // the editor now matches disk
       ctx.toast("success", "Template saved", `${slugInput.value.trim()} (user library)`);
       state.libGroups.add("templates:@block");
       state.libGroups.add(`templates:${slugInput.value.trim().split("/")[0]}`);
       ctx.refreshCombos();
       await loadLibrary();
+      if (slugInput.value.trim() === state.slug) {
+        // the JSON just saved IS the on-disk truth — reload the compose
+        // working copy, or a later compose-side Save/Apply would post the
+        // stale pre-edit structure back over these edits
+        await selectTemplate(state.slug);
+      }
     }
 
     const actions = [
@@ -4229,7 +4497,7 @@ export function createComposerPanel(root, ctx) {
         )
       );
     }
-    editorBox.replaceChildren(
+    setEditor(
       el("div", { class: "mrln-tree-head" }, `Template: ${slug}`, tierChip(body.tier), editorCloseBtn()),
       body.tier === "factory"
         ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
@@ -4265,10 +4533,20 @@ export function createComposerPanel(root, ctx) {
       ctx.toast("error", "Delete failed", err.message);
       return;
     }
-    editorBox.replaceChildren();
+    setEditor();
     ctx.refreshCombos();
+    const wasLoaded = kind === "templates" && slug === state.slug;
+    if (wasLoaded) {
+      // The loaded working copy points at a file that just changed identity
+      // (deleted, or reverted to factory). Drop it so loadLibrary runs a
+      // full selectTemplate — otherwise stale rows/edits survive under a
+      // reassigned slug and a later Save would post them over an unrelated
+      // template.
+      state.detail = null;
+      state.modified = false;
+    }
     await loadLibrary();
-    if (state.slug) await refreshDetail(); // pools may have reverted to factory
+    if (state.slug && !wasLoaded) await refreshDetail(); // pools may have reverted to factory
   }
 
   // ---- boot ----------------------------------------------------------------

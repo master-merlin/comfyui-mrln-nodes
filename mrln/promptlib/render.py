@@ -39,14 +39,13 @@ def _string(resolved, cfg):
     return cfg.joiner.join(p for p in parts if p)
 
 
-def lora_entries(resolved):
-    """[{'lora': name-as-authored, 'strength_model': x, 'strength_clip': y}]
-    for every drawn item carrying data.lora — the machine-readable stack
-    the MRLN LoRA Apply node consumes (file names stay exactly as
-    authored so the loader can resolve them). When the item's comment
-    carries a Civitai AIR urn it rides along as 'air', making the wire
-    self-describing: a machine missing the file knows where to get it."""
+def _lora_entries(resolved):
+    """(entries, warnings). Schema rejects non-numeric strengths at parse
+    time, but an old bad user file (or hand-built data) must degrade — skip
+    the entry with a ⚠ choices warning — instead of killing every compose
+    that draws the item (_choices calls this unconditionally)."""
     entries = []
+    warnings = []
     seen = set()
     for slot in walk_slots(resolved.slots):
         data = slot.data or {}
@@ -57,17 +56,31 @@ def lora_entries(resolved):
         if name in seen:
             continue
         seen.add(name)
-        sm = float(data.get("strength_model", 1.0))
-        entry = {
-            "lora": name,
-            "strength_model": sm,
-            "strength_clip": float(data.get("strength_clip", sm)),
-        }
+        try:
+            sm = float(data.get("strength_model", 1.0))
+            sc = float(data.get("strength_clip", sm))
+        except (TypeError, ValueError):
+            warnings.append(
+                f"⚠ {slot.id}: LoRA '{name}' has a non-numeric strength — entry "
+                "skipped; fix the item's data in the Composer"
+            )
+            continue
+        entry = {"lora": name, "strength_model": sm, "strength_clip": sc}
         comment = str(data.get("comment") or "").strip()
         if comment.lower().startswith("urn:air:"):
             entry["air"] = comment
         entries.append(entry)
-    return entries
+    return entries, warnings
+
+
+def lora_entries(resolved):
+    """[{'lora': name-as-authored, 'strength_model': x, 'strength_clip': y}]
+    for every drawn item carrying data.lora — the machine-readable stack
+    the MRLN LoRA Apply node consumes (file names stay exactly as
+    authored so the loader can resolve them). When the item's comment
+    carries a Civitai AIR urn it rides along as 'air', making the wire
+    self-describing: a machine missing the file knows where to get it."""
+    return _lora_entries(resolved)[0]
 
 
 def lora_tags(resolved):
@@ -206,6 +219,7 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
 
     for tag in lora_tags(resolved):
         lines.append(f"lora: {tag}")
+    lines.extend(_lora_entries(resolved)[1])  # skipped-entry warnings
 
     present = set()
     for slot in walk_slots(resolved.slots):

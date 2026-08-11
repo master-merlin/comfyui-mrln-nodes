@@ -107,6 +107,12 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
 }
 .mrln-composer button.mrln-btn:hover { background: var(--comfy-menu-bg, #333); }
 .mrln-composer button.mrln-primary { border-color: #4a8; }
+/* two-step confirm: first click arms (question label), second executes */
+.mrln-composer button.mrln-armed {
+  border-color: #e66 !important;
+  color: #e88;
+  opacity: 1;
+}
 .mrln-actions { display: flex; flex-wrap: wrap; gap: 5px; }
 .mrln-actions .mrln-btn { padding: 4px 8px; }
 

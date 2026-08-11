@@ -166,6 +166,15 @@ def _parse_item(raw, index, source):
     data = raw.get("data")
     if data is not None and not isinstance(data, dict):
         raise SchemaError(source, f"items[{index}] ('{name}'): 'data' must be an object")
+    if data and data.get("lora"):
+        # render float-coerces these on EVERY compose (the choices report
+        # walks lora entries unconditionally), so bad values must fail here
+        for key in ("strength_model", "strength_clip"):
+            strength = data.get(key)
+            if strength is not None and not isinstance(strength, (int, float)):
+                raise SchemaError(
+                    source, f"items[{index}] ('{name}'): data '{key}' must be a number"
+                )
     slots = tuple(
         _parse_slot(raw_slot, f"items[{index}] ('{name}') slots", source)
         for raw_slot in raw.get("slots", []) or []

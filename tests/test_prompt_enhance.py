@@ -2,7 +2,10 @@
 and backend failure behavior — all offline (unreachable ports), no live
 LLM required."""
 
+import importlib
 import json
+import re
+import sys
 
 import pytest
 import support
@@ -270,3 +273,95 @@ def test_settings_roundtrip_llm_urls(tmp_path):
     assert body["llm"]["ollama_url"] == "http://10.0.0.5:11434"  # trailing slash stripped
     assert body["llm"]["lmstudio_url"] == promptapi.DEFAULT_LMSTUDIO_URL
     assert promptapi.handle_save_settings(lib, {"llm": "nope"})[0] == 400
+
+
+# -- success path (canned llm_chat — no network) -------------------------------
+
+
+def _node_api(cls):
+    """The promptapi module the node's `from .. import promptapi` binds.
+    The pack loads ComfyUI-style under its own package name, so this is a
+    DIFFERENT module object from tests' `mrln.promptapi` — patch the one
+    the node actually calls."""
+    package = sys.modules[cls.__module__].__package__  # <pack>.mrln.nodes
+    return importlib.import_module(package.rsplit(".", 1)[0] + ".promptapi")
+
+
+def _fake_chat(monkeypatch, cls, reply):
+    """monkeypatch llm_chat with a canned rewrite; returns the call log."""
+    calls = []
+
+    def fake(lib, **kwargs):
+        calls.append(kwargs)
+        return reply
+
+    monkeypatch.setattr(_node_api(cls), "llm_chat", fake)
+    return calls
+
+
+def test_enhance_success_reenforces_protected_spans(classes, monkeypatch):
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "a sleek coupe at dusk.")  # trigger "improved" away
+    spec = json.dumps(
+        {"prompt": "photo of a BMWM4CS_G82 coupe", "system": "rewrite", "protect": ["BMWM4CS_G82"]}
+    )
+    text, report = _run(cls(), prompt="", llm=spec)
+    assert text == "a sleek coupe at dusk. BMWM4CS_G82"  # re-appended verbatim
+    assert "re-injected 1 protected span(s): BMWM4CS_G82" in report
+    # the span was demanded verbatim in the system prompt sent to the LLM
+    assert "PROTECTED SPANS" in calls[0]["system"] and '"BMWM4CS_G82"' in calls[0]["system"]
+    assert calls[0]["prompt"] == "photo of a BMWM4CS_G82 coupe"
+
+
+def test_enhance_cache_stores_enforced_text_and_skips_backend(classes, monkeypatch):
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "cache probe rewrite, glossy")
+    spec = json.dumps(
+        {"prompt": "cache probe input CACHTRIG_77", "system": "rewrite", "protect": ["CACHTRIG_77"]}
+    )
+    first, _ = _run(cls(), prompt="", llm=spec)
+    assert first.endswith("CACHTRIG_77") and len(calls) == 1
+    second, report = _run(cls(), prompt="", llm=spec)
+    assert len(calls) == 1  # served from the memo cache — no second LLM call
+    assert second == first  # the cache holds the ENFORCED text, not the raw rewrite
+    assert "(cached)" in report
+
+
+def test_enhance_seed_zero_derives_stable_seed(classes, monkeypatch):
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "seed probe rewrite")
+    _, report_a = _run(cls(), prompt="seed probe alpha", system="rewrite", seed=0)
+    _, report_b = _run(cls(), prompt="seed probe alpha", system="rewrite", seed=0)
+    seed_a = int(re.search(r"seed (\d+)", report_a).group(1))
+    seed_b = int(re.search(r"seed (\d+)", report_b).group(1))
+    assert seed_a == seed_b != 0  # identical inputs -> identical derived seed
+    assert calls[0]["seed"] == seed_a  # and the backend saw that very seed
+    # a different prompt derives a different seed — derived, not constant
+    _, report_c = _run(cls(), prompt="seed probe beta", system="rewrite", seed=0)
+    assert int(re.search(r"seed (\d+)", report_c).group(1)) != seed_a
+
+
+def test_enhance_token_cap_auto_raise_reaches_backend(classes, monkeypatch):
+    from mrln.nodes.prompt import _effective_max_tokens
+
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "token cap probe rewrite")
+    long_prompt = "token cap probe " + "word " * 400
+    _, report = _run(cls(), prompt=long_prompt, system="rewrite", max_tokens=64)
+    effective = _effective_max_tokens(long_prompt, 64)
+    assert calls[0]["max_tokens"] == effective > 64  # effective cap, not the widget value
+    assert f"token cap auto-raised 64→{effective}" in report
+
+
+def test_enhance_protect_skips_spans_absent_from_override(classes, monkeypatch):
+    # an overridden prompt input may not contain the llm wire's spans —
+    # those must NOT be enforced (or appended) onto unrelated text
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "override rewrite, clean")
+    spec = json.dumps(
+        {"prompt": "original with OVTRIG_9", "system": "rewrite", "protect": ["OVTRIG_9"]}
+    )
+    text, report = _run(cls(), prompt="a totally different override text", llm=spec)
+    assert text == "override rewrite, clean"  # nothing re-injected
+    assert "OVTRIG_9" not in text and "protected" not in report
+    assert "PROTECTED SPANS" not in calls[0]["system"]

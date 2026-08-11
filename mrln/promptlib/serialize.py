@@ -8,6 +8,8 @@ tolerates); these dumpers serve panel-built objects, tests, and future
 embedded bundles.
 """
 
+import copy
+
 from .schema import RenderConfig
 
 _DEFAULT_RENDER = RenderConfig()
@@ -137,4 +139,6 @@ def dump_template(tpl):
     render = dump_render(tpl.render)
     if render:
         out["render"] = render
+    if tpl.profiles:
+        out["profiles"] = copy.deepcopy(tpl.profiles)
     return out

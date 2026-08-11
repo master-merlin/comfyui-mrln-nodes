@@ -8,12 +8,15 @@ compose() is the single template pipeline (profile -> resolve -> render
 endpoint, so parity is structural, not tested-for."""
 
 import json
+import logging
 import re
 from dataclasses import dataclass, replace
 
 from .errors import SelectionError
 from .render import render
 from .resolve import resolve_template, walk_slots
+
+_log = logging.getLogger(__name__)
 
 STANDARD = "standard"
 _RENDER_OVERRIDES = (
@@ -50,6 +53,19 @@ def merged_profiles(lib, tpl):
     return merged
 
 
+def _normalize_profile(name, prof):
+    """Template-level profiles are schema-validated, but pack-level ones
+    from profiles.json are raw user JSON — a wrong-shaped sub-block is
+    ignored with a warning so it can never crash compose."""
+    out = dict(prof)
+    for key in ("render", "llm", "overrides", "json_template"):
+        value = out.get(key)
+        if value is not None and not isinstance(value, dict):
+            _log.warning("profile '%s': ignoring non-object '%s' (%r)", name, key, value)
+            del out[key]
+    return out
+
+
 def _effective_render(cfg, profile):
     overrides = profile.get("render") or {}
     known = {k: overrides[k] for k in _RENDER_OVERRIDES if k in overrides}
@@ -58,7 +74,7 @@ def _effective_render(cfg, profile):
     return replace(cfg, **known) if known else cfg
 
 
-def apply_template_overrides(tpl, overrides):
+def apply_template_overrides(tpl, overrides, *, profile=STANDARD):
     """A template profile's 'overrides' block: a per-profile VARIANT of the
     template stored as a sparse diff against the standard render (prefix/
     suffix/negative/variant_default plus per-slot default/emphasis by id).
@@ -66,7 +82,9 @@ def apply_template_overrides(tpl, overrides):
     way back."""
     if not overrides:
         return tpl
-    slot_ov = overrides.get("slots") or {}
+    slot_ov = overrides.get("slots")
+    if not isinstance(slot_ov, dict):  # pack-level overrides arrive unvalidated
+        slot_ov = {}
 
     def _fix(slot):
         raw = slot_ov.get(slot.id)
@@ -76,7 +94,14 @@ def apply_template_overrides(tpl, overrides):
         if "default" in raw:
             known["default"] = str(raw["default"])
         if "emphasis" in raw:
-            known["emphasis"] = None if raw["emphasis"] is None else float(raw["emphasis"])
+            try:
+                known["emphasis"] = None if raw["emphasis"] is None else float(raw["emphasis"])
+            except (TypeError, ValueError):
+                raise SelectionError(
+                    f"profile={profile}",
+                    f"slot '{slot.id}': override 'emphasis' must be a number, "
+                    f"got {raw['emphasis']!r} — fix the profile",
+                ) from None
         return replace(slot, **known) if known else slot
 
     known = {
@@ -174,8 +199,8 @@ def compose(
                 f"profile={name}",
                 f"unknown profile (have: {', '.join([STANDARD, *sorted(available)])})",
             )
-        prof = available[name]
-    tpl = apply_template_overrides(tpl, prof.get("overrides"))
+        prof = _normalize_profile(name, available[name])
+    tpl = apply_template_overrides(tpl, prof.get("overrides"), profile=name)
     cfg = _effective_render(tpl.render, prof)
     effective_length = text_length if text_length not in _WIDGET_DEFAULT else cfg.text_length
     resolved = resolve_template(
