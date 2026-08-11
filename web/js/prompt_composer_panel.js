@@ -917,12 +917,17 @@ export function createComposerPanel(root, ctx) {
         schedulePreview();
       },
     });
-    itemSelect.append(el("option", { value: "random" }, "🎲 random"));
+    const singleOnly = (pool ?? []).length === 1;
+    if (!singleOnly) itemSelect.append(el("option", { value: "random" }, "🎲 random"));
     itemSelect.append(el("option", { value: "off" }, "🔇 off"));
     for (const item of pool ?? []) {
       itemSelect.append(el("option", { value: item.name, title: item.text }, item.name));
     }
-    itemSelect.value = row.random ? "random" : row.item || "random";
+    itemSelect.value = row.random
+      ? singleOnly
+        ? pool[0].name
+        : "random"
+      : row.item || (singleOnly ? pool[0].name : "random");
 
     const seedInput = el("input", {
       class: "mrln-narrow",
@@ -1631,7 +1636,11 @@ export function createComposerPanel(root, ctx) {
         schedulePreview();
       },
     });
-    itemSelect.append(el("option", { value: "random" }, "🎲 random"));
+    // A 1-item pool has nothing random about it — show the item instead of
+    // '🎲 random' (the draw is deterministic either way; allow_empty pools
+    // keep 'random' since empty is a genuine second outcome).
+    const singleOnly = pool.length === 1 && !slot.allow_empty;
+    if (!singleOnly) itemSelect.append(el("option", { value: "random" }, "🎲 random"));
     const defaultItem = parseToken(slot.default ?? "random").item;
     for (const item of pool) {
       const marks = [
@@ -1649,8 +1658,11 @@ export function createComposerPanel(root, ctx) {
         )
       );
     }
-    itemSelect.value = row.random ? "random" : row.item;
-    if (itemSelect.value === "") itemSelect.value = "random"; // stale item name
+    itemSelect.value = row.random && !singleOnly ? "random" : row.item;
+    if (itemSelect.value === "") {
+      itemSelect.value = singleOnly ? pool[0].name : "random"; // stale item name
+    }
+    if (singleOnly) itemSelect.title = "Only item in this section — drawn every time";
 
     const seedInput = el("input", {
       class: "mrln-narrow",
@@ -1659,7 +1671,7 @@ export function createComposerPanel(root, ctx) {
       placeholder: "seed",
       title: "Optional per-slot seed — decouples this slot from the master seed",
       value: row.seed,
-      style: row.random ? "" : "display:none",
+      style: row.random && !singleOnly ? "" : "display:none",
       oninput: (e) => {
         row.seed = e.target.value.replace(/\D/g, "");
         schedulePreview();
@@ -3025,7 +3037,7 @@ export function createComposerPanel(root, ctx) {
         control.title = `${value.value} — not installed`;
       }
     });
-    return { file: value, filter, control: wrap };
+    return { file: value, filter, control: wrap, set: choose };
   }
 
   function openSectionForm(slug, body) {
@@ -3143,6 +3155,7 @@ export function createComposerPanel(root, ctx) {
         row.lora = picker.file;
         row.loraFilter = picker.filter;
         row.loraControl = picker.control;
+        row.loraSet = picker.set;
         row.sm = el("input", {
           type: "text",
           inputmode: "decimal",
@@ -3223,6 +3236,114 @@ export function createComposerPanel(root, ctx) {
               + "type the trigger word / catchword yourself";
           }
         });
+        // Missing-file healer: a template shared across machines carries the
+        // file name + AIR urn — when the file is absent here, offer the
+        // Civitai download (background, SHA256-verified) and re-point the
+        // block if the chosen folder differs.
+        row.missingBox = el("div", { class: "mrln-lora-missing", style: "display:none" });
+        const norm = (n) => n.replaceAll("\\", "/").toLowerCase();
+        const downloadMissing = async (file, air) => {
+          const parts = file.replaceAll("\\", "/").split("/");
+          const filename = parts.pop();
+          const folder = await askString(
+            "Download LoRA from Civitai",
+            "Subfolder under your loras directory (empty = root):",
+            parts.join("/")
+          );
+          if (folder == null) return; // cancelled
+          try {
+            await ctx.apiJson("/mrln/prompt/lora-download", {
+              method: "POST",
+              body: {
+                air,
+                start: true,
+                folder,
+                filename,
+                section: slug ?? "",
+                item: row.name.value.trim(),
+                stored: file,
+              },
+            });
+          } catch (err) {
+            ctx.toast("error", "Download failed to start", err.message);
+            return;
+          }
+          const progress = el("span", { class: "mrln-note" }, "starting download…");
+          row.missingBox.replaceChildren(progress);
+          const poll = async () => {
+            let body = null;
+            try {
+              body = await ctx.apiJson(
+                `/mrln/prompt/lora-download?air=${encodeURIComponent(air)}`
+              );
+            } catch {
+              setTimeout(poll, 3000);
+              return;
+            }
+            if (body.status === "downloading") {
+              const mb = (n) => (n / (1 << 20)).toFixed(0);
+              progress.textContent = body.total
+                ? `downloading… ${mb(body.loaded)} / ${mb(body.total)} MB`
+                : `downloading… ${mb(body.loaded ?? 0)} MB`;
+              setTimeout(poll, 1500);
+              return;
+            }
+            if (body.status === "done") {
+              loraListCache = null; // pickers must list the new file
+              ctx.toast(
+                "success",
+                "LoRA downloaded",
+                body.healed ? `${body.name} — LoRA block re-pointed` : body.name
+              );
+              if (body.healed) {
+                row.loraSet(body.healed); // picker + trigger/AIR follow the heal
+                await refreshDetail(); // compose tab pools reflect the new path
+              } else {
+                checkMissing();
+              }
+              return;
+            }
+            ctx.toast("error", "LoRA download failed", body.detail ?? "");
+            checkMissing();
+          };
+          setTimeout(poll, 1500);
+        };
+        const checkMissing = async () => {
+          const file = row.lora.value;
+          if (!file) {
+            row.missingBox.style.display = "none";
+            return;
+          }
+          const names = await installedLoras();
+          if (!names.length || names.some((n) => norm(n) === norm(file))) {
+            row.missingBox.style.display = "none";
+            return;
+          }
+          const air = (row.comment.value || "").trim();
+          row.missingBox.style.display = "";
+          row.missingBox.replaceChildren(
+            el("span", { class: "mrln-error" }, "file missing on this machine"),
+            air.toLowerCase().startsWith("urn:air:")
+              ? el(
+                  "button",
+                  {
+                    class: "mrln-btn",
+                    title: `Download ${air} from Civitai into your loras folder `
+                      + "(background, SHA256-verified) and re-point this block "
+                      + "if the path changes",
+                    onclick: () => downloadMissing(file, air),
+                  },
+                  "⬇ Get from Civitai"
+                )
+              : el(
+                  "span",
+                  { class: "mrln-note" },
+                  "no AIR in the comment — pick a local file instead"
+                )
+          );
+        };
+        row.lora.addEventListener("change", checkMissing);
+        checkMissing();
         table.append(
           el(
             "tr",
@@ -3236,7 +3357,7 @@ export function createComposerPanel(root, ctx) {
             "tr",
             { class: "mrln-lora-row mrln-lora-end" },
             el("td", { class: "mrln-w-origin" }),
-            el("td", { colspan: 3 }, row.comment),
+            el("td", { colspan: 3 }, row.comment, row.missingBox),
             el("td", { class: "mrln-w-act" })
           )
         );

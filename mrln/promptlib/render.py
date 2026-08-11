@@ -43,7 +43,9 @@ def lora_entries(resolved):
     """[{'lora': name-as-authored, 'strength_model': x, 'strength_clip': y}]
     for every drawn item carrying data.lora — the machine-readable stack
     the MRLN LoRA Apply node consumes (file names stay exactly as
-    authored so the loader can resolve them)."""
+    authored so the loader can resolve them). When the item's comment
+    carries a Civitai AIR urn it rides along as 'air', making the wire
+    self-describing: a machine missing the file knows where to get it."""
     entries = []
     seen = set()
     for slot in walk_slots(resolved.slots):
@@ -56,13 +58,15 @@ def lora_entries(resolved):
             continue
         seen.add(name)
         sm = float(data.get("strength_model", 1.0))
-        entries.append(
-            {
-                "lora": name,
-                "strength_model": sm,
-                "strength_clip": float(data.get("strength_clip", sm)),
-            }
-        )
+        entry = {
+            "lora": name,
+            "strength_model": sm,
+            "strength_clip": float(data.get("strength_clip", sm)),
+        }
+        comment = str(data.get("comment") or "").strip()
+        if comment.lower().startswith("urn:air:"):
+            entry["air"] = comment
+        entries.append(entry)
     return entries
 
 

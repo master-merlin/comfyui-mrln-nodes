@@ -49,7 +49,7 @@ from .schema import (
     parse_section,
     parse_template,
 )
-from .serialize import dump_section, dump_template
+from .serialize import dump_item, dump_section, dump_template
 
 __all__ = [
     "CONFLICT_POLICIES",
@@ -85,6 +85,7 @@ __all__ = [
     "compose",
     "decompose",
     "default_roots",
+    "dump_item",
     "dump_section",
     "dump_template",
     "fill_json_template",

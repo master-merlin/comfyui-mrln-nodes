@@ -844,6 +844,198 @@ def handle_lora_civitai(lib, payload):
     return 200, out
 
 
+# -- LoRA download by AIR (heal missing files) -------------------------------
+# A section item stores the LoRA file name + its Civitai AIR urn in the
+# comment. On a machine that lacks the file, the Composer offers to fetch
+# it: background thread (multi-GB files), SHA256-verified, .safetensors
+# only, then the section item is re-pointed if the chosen path differs.
+
+_AIR_RE = re.compile(r"^urn:air:[a-z0-9._-]+:[a-z0-9._-]+:civitai:(\d+)@(\d+)$", re.IGNORECASE)
+_SAFE_SEGMENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._ -]*$")
+_LORA_DL_STATUS = {}  # air urn -> {"status", "detail", "name", "loaded", "total"}
+
+
+def parse_air(air):
+    """(model_id, version_id) from a Civitai AIR urn, or None."""
+    match = _AIR_RE.match(str(air or "").strip())
+    if not match:
+        return None
+    return int(match.group(1)), int(match.group(2))
+
+
+def _sanitize_subfolder(folder):
+    """Relative subfolder under the loras root — every segment checked, no
+    escapes, backslashes normalized. Empty means the root itself."""
+    folder = str(folder or "").strip().replace("\\", "/").strip("/")
+    if not folder:
+        return ""
+    parts = [p.strip() for p in folder.split("/") if p.strip()]
+    for part in parts:
+        if not _SAFE_SEGMENT.match(part) or part in (".", ".."):
+            raise ApiError(f"invalid folder segment '{part}'")
+    return "/".join(parts)
+
+
+def _sanitize_lora_filename(name):
+    base = str(name or "").replace("\\", "/").rsplit("/", 1)[-1].strip()
+    if not base:
+        return ""
+    if not base.lower().endswith(".safetensors"):
+        base += ".safetensors"
+    if not _SAFE_SEGMENT.match(base):
+        raise ApiError(f"invalid file name '{base}'")
+    return base
+
+
+def _heal_section_lora(lib, section_slug, item_name, new_lora):
+    """Re-point a section item's data.lora at the downloaded file (user-tier
+    write). Factory-origin items get a full self-contained snapshot — the
+    tier merge replaces items by name wholesale, so a thin entry would wipe
+    the item's texts."""
+    section = lib.load_section(section_slug)
+    target = next((i for i in section.items if i.name == item_name), None)
+    if target is None:
+        raise ApiError(f"item '{item_name}' not found in section '{section_slug}'")
+    raw = {"items": []}
+    user_file = (lib.user_root / "sections" / f"{section_slug}.json") if lib.user_root else None
+    if user_file and user_file.is_file():
+        raw = json.loads(user_file.read_text(encoding="utf-8"))
+        raw.setdefault("items", [])
+    entry = next(
+        (i for i in raw["items"] if isinstance(i, dict) and i.get("name") == item_name), None
+    )
+    if entry is None:
+        entry = pl.dump_item(target)
+        raw["items"].append(entry)
+    entry["data"] = {**(entry.get("data") or {}), "lora": new_lora}
+    lib.save_user("sections", section_slug, raw)
+
+
+def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir, filename, heal):
+    """Background thread: Civitai version metadata -> stream the primary
+    .safetensors file -> SHA256 verify -> move into place -> optional heal.
+    Writes progress into _LORA_DL_STATUS; never raises."""
+    import os
+    import urllib.parse
+    import urllib.request
+
+    status = _LORA_DL_STATUS[status_key]
+    try:
+        request = urllib.request.Request(
+            f"https://civitai.com/api/v1/model-versions/{version_id}", headers=meta_headers
+        )
+        with urllib.request.urlopen(request, timeout=30) as resp:
+            meta = json.loads(resp.read().decode("utf-8"))
+        files = [
+            f
+            for f in (meta.get("files") or [])
+            if str(f.get("name") or "").lower().endswith(".safetensors")
+        ]
+        if not files:
+            raise RuntimeError("this Civitai version ships no .safetensors file")
+        chosen = next((f for f in files if f.get("primary")), files[0])
+        filename = filename or _sanitize_lora_filename(chosen.get("name"))
+        want_sha = str((chosen.get("hashes") or {}).get("SHA256") or "").lower()
+        url = str(chosen.get("downloadUrl") or "")
+        if not url:
+            url = f"https://civitai.com/api/download/models/{version_id}"
+        if token:
+            # token rides the QUERY, not a header: the download redirects to
+            # presigned storage where an Authorization header breaks the
+            # signature
+            sep = "&" if "?" in url else "?"
+            url = f"{url}{sep}token={urllib.parse.quote(token)}"
+        os.makedirs(dest_dir, exist_ok=True)
+        final_path = os.path.join(dest_dir, filename)
+        part_path = final_path + ".part"
+        import hashlib
+
+        digest = hashlib.sha256()
+        loaded = 0
+        request = urllib.request.Request(url, headers={"User-Agent": "ComfyUI-MRLN-Nodes"})
+        with urllib.request.urlopen(request, timeout=120) as resp:
+            status["total"] = int(resp.headers.get("Content-Length") or 0)
+            with open(part_path, "wb") as fh:
+                for chunk in iter(lambda: resp.read(1 << 20), b""):
+                    fh.write(chunk)
+                    digest.update(chunk)
+                    loaded += len(chunk)
+                    status["loaded"] = loaded
+        if want_sha and digest.hexdigest().lower() != want_sha:
+            os.remove(part_path)
+            raise RuntimeError(
+                f"SHA256 mismatch after download (got {digest.hexdigest()[:12]}…, "
+                f"Civitai says {want_sha[:12]}…) — file discarded"
+            )
+        os.replace(part_path, final_path)
+        status["name"] = filename
+        if heal:
+            lib, section_slug, item_name, folder, stored = heal
+            new_name = f"{folder}/{filename}" if folder else filename
+            stored = str(stored or "").replace("\\", "/")
+            if stored.lower() != new_name.lower():
+                _heal_section_lora(lib, section_slug, item_name, new_name)
+                status["healed"] = new_name
+        status["status"] = "done"
+        status["detail"] = f"saved as {filename}"
+    except Exception as exc:
+        status["status"] = "error"
+        status["detail"] = str(exc)
+
+
+@_guarded
+def handle_lora_download(lib, payload):
+    """POST {air, start:true, folder?, filename?, section?, item?, stored?}
+    begins a background download of the AIR-referenced Civitai file into
+    the loras folder; GET {air} polls progress. When section+item are given
+    and the final path differs from `stored`, the section item is healed to
+    point at the downloaded file."""
+    air = _require_str(payload, "air")
+    parsed = parse_air(air)
+    if parsed is None:
+        raise ApiError(
+            f"'{air}' is not a Civitai AIR urn (urn:air:<eco>:<type>:civitai:<model>@<version>)"
+        )
+    if not payload.get("start"):
+        status = _LORA_DL_STATUS.get(air) or {"status": "unknown", "detail": "no download started"}
+        return 200, {"air": air, **status}
+    current = _LORA_DL_STATUS.get(air)
+    if current and current.get("status") == "downloading":
+        return 200, {"air": air, **current}
+    try:
+        import folder_paths
+    except ImportError:
+        return 400, {
+            "error": "LoRA downloads run inside a running ComfyUI only",
+            "remediation": "download the file manually and place it in your loras folder",
+        }
+    roots = folder_paths.get_folder_paths("loras")
+    if not roots:
+        return 400, {"error": "no loras folder registered in this ComfyUI"}
+    folder = _sanitize_subfolder(payload.get("folder"))
+    filename = _sanitize_lora_filename(payload.get("filename"))
+    import os
+
+    dest_dir = os.path.join(roots[0], *folder.split("/")) if folder else roots[0]
+    _, version_id = parsed
+    token = str(_read_settings(lib).get("civitai_api_key") or "")
+    meta_headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
+    if token:
+        meta_headers["Authorization"] = f"Bearer {token}"
+    heal = None
+    section = str(payload.get("section") or "").strip()
+    item = str(payload.get("item") or "").strip()
+    if section and item:
+        heal = (lib, section, item, folder, str(payload.get("stored") or ""))
+    _LORA_DL_STATUS[air] = {"status": "downloading", "detail": "", "loaded": 0, "total": 0}
+    threading.Thread(
+        target=_lora_download_worker,
+        args=(air, meta_headers, token, version_id, dest_dir, filename, heal),
+        daemon=True,
+    ).start()
+    return 200, {"air": air, "status": "downloading"}
+
+
 @_guarded
 def handle_lora_meta(lib, payload):
     """Trigger word from an installed LoRA's own metadata. Names come from
@@ -883,6 +1075,8 @@ ROUTES = (
     ("get", "/mrln/prompt/items", handle_items, False),
     ("get", "/mrln/prompt/lora-meta", handle_lora_meta, False),
     ("get", "/mrln/prompt/lora-civitai", handle_lora_civitai, False),
+    ("get", "/mrln/prompt/lora-download", handle_lora_download, False),
+    ("post", "/mrln/prompt/lora-download", handle_lora_download, True),
     ("get", "/mrln/prompt/settings", handle_settings, False),
     ("post", "/mrln/prompt/save-settings", handle_save_settings, True),
     ("get", "/mrln/prompt/profile", handle_profile, False),

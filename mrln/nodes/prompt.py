@@ -389,8 +389,9 @@ class PromptSection:
 
 
 def parse_loras_json(loras):
-    """'loras' JSON -> validated [(name, strength_model, strength_clip)].
-    Pure so pytest covers it; raises ValueError with remediation text."""
+    """'loras' JSON -> validated [(name, strength_model, strength_clip, air)].
+    Pure so pytest covers it; raises ValueError with remediation text. The
+    air urn is "" when the block carries none."""
     if not isinstance(loras, str) or not loras.strip():
         return []
     try:
@@ -408,7 +409,7 @@ def parse_loras_json(loras):
             raise ValueError(f"lora entry {entry!r} is missing the 'lora' file name")
         sm = float(entry.get("strength_model", 1.0))
         sc = float(entry.get("strength_clip", sm))
-        result.append((str(entry["lora"]), sm, sc))
+        result.append((str(entry["lora"]), sm, sc, str(entry.get("air") or "")))
     return result
 
 
@@ -470,13 +471,18 @@ class LoraApply:
 
         available = folder_paths.get_filename_list("loras")
         normalized = {name.replace("\\", "/").lower(): name for name in available}
-        for name, strength_model, strength_clip in entries:
+        for name, strength_model, strength_clip, air in entries:
             real = name if name in available else normalized.get(name.replace("\\", "/").lower())
             if real is None:
+                hint = (
+                    f" Its Civitai AIR is {air} — the Composer's section editor "
+                    "offers a one-click download that heals the LoRA block."
+                    if air
+                    else " Fix the LoRA block in the Composer (Library tab) or install the file."
+                )
                 raise FileNotFoundError(
-                    f"LoRA '{name}' not found in your loras folder — fix the LoRA "
-                    "block in the Composer (Library tab) or install the file "
-                    f"(available: {len(available)} files)"
+                    f"LoRA '{name}' not found in your loras folder "
+                    f"({len(available)} files available).{hint}"
                 )
             path = folder_paths.get_full_path("loras", real)
             lora_sd = comfy.utils.load_torch_file(path, safe_load=True)

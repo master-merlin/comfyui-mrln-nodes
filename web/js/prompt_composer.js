@@ -179,14 +179,13 @@ function enhanceModelDropdown(node) {
 
 app.registerExtension({
   name: "mrln.promptComposer",
-  beforeRegisterNodeDef(nodeType, nodeData) {
-    if (nodeData?.name !== "MRLN_PromptEnhance") return;
-    const onNodeCreated = nodeType.prototype.onNodeCreated;
-    nodeType.prototype.onNodeCreated = function () {
-      const result = onNodeCreated?.apply(this, arguments);
-      enhanceModelDropdown(this);
-      return result;
-    };
+  nodeCreated(node) {
+    // the extension-level hook fires for every constructed node with its
+    // widgets already built — prototype onNodeCreated is NOT reliably
+    // invoked across frontend versions
+    if ((node.comfyClass ?? node.type) === "MRLN_PromptEnhance") {
+      enhanceModelDropdown(node);
+    }
   },
   setup() {
     if (!app.extensionManager?.registerSidebarTab) {

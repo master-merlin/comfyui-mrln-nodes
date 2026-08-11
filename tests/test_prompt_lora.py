@@ -32,6 +32,7 @@ def lib(tmp_path):
                         "lora": "mastermerlin\\bmw_m4_cs.safetensors",
                         "strength_model": 0.35,
                         "strength_clip": 1.0,
+                        "comment": "urn:air:sdxl:lora:civitai:333@444",
                     },
                 },
                 {
@@ -154,7 +155,7 @@ def test_muted_and_plain_items_emit_nothing(lib):
     assert lora_tags(resolved) == []
 
 
-def test_lora_entries_keep_authored_names(lib):
+def test_lora_entries_keep_authored_names_and_carry_air(lib):
     from mrln.promptlib import lora_entries
 
     _tpl, resolved = rt(lib, "with-lora")
@@ -163,8 +164,14 @@ def test_lora_entries_keep_authored_names(lib):
             "lora": "mastermerlin\\bmw_m4_cs.safetensors",
             "strength_model": 0.35,
             "strength_clip": 1.0,
+            # the comment's AIR urn rides along: the wire tells a machine
+            # missing the file where to get it
+            "air": "urn:air:sdxl:lora:civitai:333@444",
         }
     ]
+    # a plain comment is NOT an air field
+    _tpl, resolved = rt(lib, "with-lora", selection={"kit": "style-kit"})
+    assert "air" not in lora_entries(resolved)[0]
 
 
 def test_parse_loras_json_roundtrip_and_errors():
@@ -175,10 +182,82 @@ def test_parse_loras_json_roundtrip_and_errors():
     entries = parse_loras_json(
         '[{"lora": "a.safetensors", "strength_model": 0.5}, {"lora": "b", "strength_clip": 0.7}]'
     )
-    assert entries == [("a.safetensors", 0.5, 0.5), ("b", 1.0, 0.7)]
+    assert entries == [("a.safetensors", 0.5, 0.5, ""), ("b", 1.0, 0.7, "")]
+    entries = parse_loras_json('[{"lora": "x", "air": "urn:air:sdxl:lora:civitai:1@2"}]')
+    assert entries == [("x", 1.0, 1.0, "urn:air:sdxl:lora:civitai:1@2")]
     with pytest.raises(ValueError, match="not valid JSON"):
         parse_loras_json("{broken")
     with pytest.raises(ValueError, match="missing the 'lora'"):
         parse_loras_json('[{"strength_model": 1}]')
     with pytest.raises(ValueError, match="JSON list"):
         parse_loras_json('{"lora": "x"}')
+
+
+# -- download-by-AIR healing --------------------------------------------------
+
+
+def test_parse_air():
+    from mrln.promptapi import parse_air
+
+    assert parse_air("urn:air:sdxl:lora:civitai:333@444") == (333, 444)
+    assert parse_air("URN:AIR:flux1:lora:civitai:1@2") == (1, 2)
+    assert parse_air("urn:air:sdxl:lora:civitai:333") is None  # no version
+    assert parse_air("urn:air:sdxl:lora:tensorart:1@2") is None  # civitai only
+    assert parse_air("") is None and parse_air(None) is None
+
+
+def test_download_path_sanitizers():
+    from mrln.promptapi import ApiError, _sanitize_lora_filename, _sanitize_subfolder
+
+    assert _sanitize_subfolder("") == ""
+    assert _sanitize_subfolder("testing\\deep") == "testing/deep"
+    assert _sanitize_subfolder("/testing/") == "testing"
+    with pytest.raises(ApiError):
+        _sanitize_subfolder("../escape")
+    with pytest.raises(ApiError):
+        _sanitize_subfolder("ok/../escape")
+    assert _sanitize_lora_filename("car") == "car.safetensors"
+    assert _sanitize_lora_filename("sub\\car.safetensors") == "car.safetensors"
+    assert _sanitize_lora_filename("") == ""
+    with pytest.raises(ApiError):
+        _sanitize_lora_filename("bad|name")
+
+
+def test_lora_download_endpoint_guards(tmp_path):
+    from mrln import promptapi
+
+    lib = Library(tmp_path / "factory", tmp_path / "user")
+    status, body = promptapi.handle_lora_download(lib, {"air": "not-an-air", "start": True})
+    assert status == 400 and "AIR" in body["error"]
+    status, body = promptapi.handle_lora_download(lib, {"air": "urn:air:sdxl:lora:civitai:1@2"})
+    assert status == 200 and body["status"] == "unknown"  # poll before any start
+    # outside a running ComfyUI there is no loras folder to write into
+    status, body = promptapi.handle_lora_download(
+        lib, {"air": "urn:air:sdxl:lora:civitai:1@2", "start": True}
+    )
+    assert status == 400 and "ComfyUI" in body["error"]
+
+
+def test_heal_section_lora(lib, tmp_path):
+    from mrln.promptapi import ApiError, _heal_section_lora
+
+    user = tmp_path / "user"
+    healing = Library(tmp_path / "factory", user)
+    # factory-origin item: the user tier gets a FULL snapshot (thin entries
+    # would wipe the texts — tier merge replaces items by name wholesale)
+    _heal_section_lora(healing, "lora/car", "m4-kit", "moved/bmw_m4_cs.safetensors")
+    merged = healing.load_section("lora/car")
+    item = next(i for i in merged.items if i.name == "m4-kit")
+    assert item.data["lora"] == "moved/bmw_m4_cs.safetensors"
+    assert item.text == "BMWM4CS_G82"  # texts survived the heal
+    assert item.data["strength_model"] == 0.35  # sibling data keys survived
+    assert item.data["comment"] == "urn:air:sdxl:lora:civitai:333@444"
+    # healing again edits the existing user entry in place
+    _heal_section_lora(healing, "lora/car", "m4-kit", "again/bmw_m4_cs.safetensors")
+    merged = healing.load_section("lora/car")
+    item = next(i for i in merged.items if i.name == "m4-kit")
+    assert item.data["lora"] == "again/bmw_m4_cs.safetensors"
+    raw = json.loads((user / "sections" / "lora" / "car.json").read_text(encoding="utf-8"))
+    assert len([i for i in raw["items"] if i.get("name") == "m4-kit"]) == 1
+    with pytest.raises(ApiError):
+        _heal_section_lora(healing, "lora/car", "ghost", "x.safetensors")
