@@ -497,14 +497,22 @@ _DECOMPOSE_SYSTEM = (
     "each fragment onto a catalog of prompt-library items.\n"
     "Answer with STRICT JSON only — no prose, no markdown fences:\n"
     '{"fragments": [{"text": "<verbatim fragment>", "section": "<slug or null>", '
-    '"item": "<item name or null>"}]}\n'
+    '"item": "<item name or null>", "name": "<kebab-case name or null>", '
+    '"rewrite": "<polished text or null>", "short": "<compact tags or null>"}]}\n'
     "Rules:\n"
-    "- The fragments joined in order must cover the whole input; keep the "
-    "original wording verbatim.\n"
+    "- The fragments joined in order must cover the whole input; 'text' keeps "
+    "the original wording verbatim.\n"
     "- Assign section+item ONLY when the fragment expresses the same content "
     "as that item; otherwise use null for both.\n"
     "- Only use section slugs and item names from the catalog below. Never "
-    "invent names.\n"
+    "invent names for 'section'/'item'.\n"
+    "- For UNMATCHED fragments (section null) also deliver library-grade "
+    "enrichment: 'name' = a short kebab-case name for the fragment as a "
+    "library item; 'rewrite' = the fragment rewritten as one polished, "
+    "self-contained, renderable description — expand shorthand, fix grammar, "
+    "keep every stated fact, add nothing new; 'short' = the same content as "
+    "a compact comma-separated tag phrase. Matched fragments: null for all "
+    "three.\n"
 )
 
 
@@ -575,6 +583,19 @@ def _validate_llm_fragments(lib, raw_fragments):
                 entry["suggestion"] = {"section": str(section), "score": 0.0}
             except Exception:
                 pass
+        if entry["match"] is None:
+            # library-grade enrichment for the residue: the raw fragment makes
+            # a poor item text — the LLM's rewrite becomes the new item
+            name = re.sub(r"[^a-z0-9._-]+", "-", str(raw.get("name") or "").strip().lower())
+            name = name.strip("-.")[:60]
+            rewrite = str(raw.get("rewrite") or "").strip()
+            short = str(raw.get("short") or "").strip()
+            if name:
+                entry["suggested_name"] = name
+            if rewrite:
+                entry["rewrite"] = rewrite
+            if short:
+                entry["short"] = short
         fragments.append(entry)
     return fragments
 
@@ -613,7 +634,7 @@ def _llm_decompose(lib, prompt_text, template_type, engine, backend, model, time
         prompt=prompt_text,
         temperature=0.1,
         seed=seed,
-        max_tokens=4000,
+        max_tokens=6000,  # rewrites ride along — the old 4000 truncated them
         timeout=timeout,
     )
     data = _extract_json(text)

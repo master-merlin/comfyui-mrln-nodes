@@ -2551,6 +2551,17 @@ export function createComposerPanel(root, ctx) {
       { class: `mrln-slot${fragment.match ? "" : " mrln-broken"}` },
       el("div", { class: "mrln-slot-label", title: `fragment ${index + 1}` },
         el("span", {}, fragment.text)),
+      fragment.rewrite
+        ? el(
+            "div",
+            {
+              class: "mrln-note",
+              title: "Library-grade rewrite from the LLM engine — new items and "
+                + "prefix/suffix prose use this instead of the raw fragment",
+            },
+            `✦ ${fragment.rewrite}`
+          )
+        : null,
       ...controls
     );
   }
@@ -2605,16 +2616,21 @@ export function createComposerPanel(root, ctx) {
         return;
       }
       if (fragment.match) return; // matched but excluded
-      if (plan.action === "prefix") prefixParts.push(fragment.text);
-      else if (plan.action === "suffix") suffixParts.push(fragment.text);
+      // llm/hybrid engines deliver a polished rewrite for the residue — the
+      // raw fragment is coverage evidence, the rewrite is the library text
+      const prose = fragment.rewrite || fragment.text;
+      if (plan.action === "prefix") prefixParts.push(prose);
+      else if (plan.action === "suffix") suffixParts.push(prose);
       else if (plan.action === "new-item" || plan.action === "new-section") {
         const section = plan.action === "new-item" ? plan.section : plan.newSection;
         if (!section) return;
         const items = newItemsBySection.get(section) ?? [];
-        const base = jsSlugify(fragment.text);
+        const base = jsSlugify(fragment.suggested_name || fragment.text);
         let name = base;
         for (let n = 2; items.some((item) => item.name === name); n++) name = `${base}-${n}`;
-        items.push({ name, text: fragment.text });
+        const item = { name, text: prose };
+        if (fragment.short) item.text_short = fragment.short;
+        items.push(item);
         newItemsBySection.set(section, items);
         slots.push({ id: slotId(section.split("/").pop()), ref: section, default: name });
       }

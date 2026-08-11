@@ -126,6 +126,36 @@ def test_validate_llm_fragments(lib):
     assert validated[2]["match"] is None and "suggestion" not in validated[2]
 
 
+def test_validate_llm_fragments_enrichment(lib):
+    # unmatched residue carries library-grade rewrites; matched never does
+    raw = [
+        {
+            "text": "matte grey",
+            "section": None,
+            "item": None,
+            "name": "Matte Grey!!",
+            "rewrite": "matte cement grey with a satin sheen",
+            "short": "matte grey, satin",
+        },
+        {
+            "text": "bright red",
+            "section": "color",
+            "item": "red",
+            "name": "ignored",
+            "rewrite": "ignored",
+            "short": "ignored",
+        },
+        {"text": "no extras", "section": None, "item": None, "rewrite": "  "},
+    ]
+    validated = promptapi._validate_llm_fragments(lib, raw)
+    assert validated[0]["suggested_name"] == "matte-grey"  # kebab-sanitized
+    assert validated[0]["rewrite"] == "matte cement grey with a satin sheen"
+    assert validated[0]["short"] == "matte grey, satin"
+    assert "rewrite" not in validated[1] and "suggested_name" not in validated[1]
+    assert "rewrite" not in validated[2]  # blank enrichment is dropped
+    assert "rewrite" in promptapi._DECOMPOSE_SYSTEM  # the contract asks for it
+
+
 def test_extract_json_tolerance():
     assert promptapi._extract_json('noise {"a": 1} trailing')["a"] == 1
     assert promptapi._extract_json('<think>{bad}</think>```json\n{"a": 2}\n```')["a"] == 2
