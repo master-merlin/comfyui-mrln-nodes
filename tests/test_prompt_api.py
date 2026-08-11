@@ -33,6 +33,8 @@ def test_library_listing(lib):
     sections = {s["slug"]: s for s in body["sections"]}
     assert sections["color"]["tier"] == "user"  # user override wins
     assert sections["lighting"]["item_count"] == 2
+    assert sections["lora/kits"]["has_lora"] is True  # LoRA pill in the tree
+    assert sections["lighting"]["has_lora"] is False
     assert "location" in body["folders"]
     assert body["fingerprint"] == lib.fingerprint()
 
@@ -85,6 +87,13 @@ def test_items_folder_scope(lib):
     body = ok(promptapi.handle_items(lib, {"ref": "location"}))
     names = [item["name"] for item in body["items"]]
     assert "nature/alpine-pass" in names and "urban/shibuya" in names
+
+
+def test_items_carry_lora_flag(lib):
+    body = ok(promptapi.handle_items(lib, {"ref": "lora/kits"}))
+    assert body["items"][0]["lora"] == "kits\\hycade.safetensors"
+    plain = ok(promptapi.handle_items(lib, {"ref": "lighting"}))
+    assert all("lora" not in item for item in plain["items"])
 
 
 # -- preview -----------------------------------------------------------------

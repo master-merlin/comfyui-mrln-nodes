@@ -17,7 +17,7 @@ def test_merged_slugs(tmp_path):
 
 def test_section_folders(tmp_path):
     lib = build_library(tmp_path)
-    assert lib.section_folders() == ["location"]
+    assert lib.section_folders() == ["location", "lora"]  # user-tier folders count too
 
 
 def test_user_overrides_factory(tmp_path):

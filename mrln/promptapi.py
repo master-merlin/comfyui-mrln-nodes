@@ -101,8 +101,9 @@ def _slot_detail(slot, missing_refs=()):
 
 
 def _pool(lib, ref):
-    return [
-        {
+    pool = []
+    for qualified, section, item in lib.scope_items(ref):
+        entry = {
             "name": qualified,
             "text": item.text,
             "negative": item.negative,
@@ -110,8 +111,10 @@ def _pool(lib, ref):
             "section_slug": section.slug,
             "tier": item.origin or lib.tier_of("sections", section.slug),
         }
-        for qualified, section, item in lib.scope_items(ref)
-    ]
+        if item.data and item.data.get("lora"):
+            entry["lora"] = str(item.data["lora"])
+        pool.append(entry)
+    return pool
 
 
 @_guarded
@@ -136,6 +139,7 @@ def handle_library(lib, payload):
                 item_count=len(section.items),
                 suits=list(section.suits),
                 merged=section.merged,
+                has_lora=any(i.data and i.data.get("lora") for i in section.items),
             )
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))

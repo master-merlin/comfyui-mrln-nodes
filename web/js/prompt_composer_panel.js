@@ -1207,7 +1207,11 @@ export function createComposerPanel(root, ctx) {
     itemSelect.append(el("option", { value: "random" }, "🎲 random"));
     const defaultItem = parseToken(slot.default ?? "random").item;
     for (const item of pool) {
-      const marks = [item.name === defaultItem ? "•" : "", item.tier === "user" ? "(user)" : ""]
+      const marks = [
+        item.name === defaultItem ? "•" : "",
+        item.lora ? "(LoRA)" : "",
+        item.tier === "user" ? "(user)" : "",
+      ]
         .filter(Boolean)
         .join(" ");
       itemSelect.append(
@@ -1238,6 +1242,19 @@ export function createComposerPanel(root, ctx) {
     const chips = [];
     if (isVariantSlot) chips.push(el("span", { class: "mrln-chip" }, state.variant));
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
+    if (pool.some((p) => p.lora)) {
+      chips.push(
+        el(
+          "span",
+          {
+            class: "mrln-chip mrln-user",
+            title: "This section carries LoRA blocks — a drawn block loads its "
+              + "file via the template node's loras output → LoRA Apply (MRLN)",
+          },
+          "LoRA"
+        )
+      );
+    }
     const wrapperText = `${state.rawData?.prefix ?? ""}\n${state.rawData?.suffix ?? ""}`;
     if (wrapperText.includes(`{${slot.id}}`)) {
       chips.push(
@@ -1411,6 +1428,7 @@ export function createComposerPanel(root, ctx) {
       label:
         s.slug +
         ((s.suits ?? []).length ? `  [${s.suits.join(",")}]` : "") +
+        (s.has_lora ? " [LoRA]" : "") +
         (s.merged ? " ⊕" : ""),
       match: matches(s.suits),
     }));
@@ -1925,6 +1943,17 @@ export function createComposerPanel(root, ctx) {
         { class: "mrln-slug" },
         `${section.slug} · ${section.item_count ?? "?"} items`
       ),
+      section.has_lora
+        ? el(
+            "span",
+            {
+              class: "mrln-chip mrln-user",
+              title: "Carries LoRA blocks — drawn items load their file via "
+                + "the template node's loras output → LoRA Apply (MRLN)",
+            },
+            "LoRA"
+          )
+        : null,
       section.merged
         ? el(
             "span",

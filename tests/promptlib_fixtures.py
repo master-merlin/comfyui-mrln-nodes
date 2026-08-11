@@ -188,6 +188,19 @@ def build_roots(tmp_path: Path):
             "items": [{"name": "epic", "text": "epic composition"}],
         },
     )
+    _write(
+        user,
+        "sections/lora/kits.json",
+        {
+            "items": [
+                {
+                    "name": "bodykit",
+                    "text": "HycadeBodykit",
+                    "data": {"lora": "kits\\hycade.safetensors", "strength_model": 0.87},
+                }
+            ],
+        },
+    )
     return factory, user
 
 
