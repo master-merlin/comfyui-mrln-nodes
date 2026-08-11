@@ -1,8 +1,11 @@
 """Trigger words from LoRA file metadata — safetensors header only, no
 torch. The header is 8 bytes little-endian length + that many bytes of
-JSON; trainers stash their metadata under "__metadata__". Direct phrase
-keys (modelspec/ai-toolkit style) win; kohya-style trainers (incl. the
-Civitai on-site trainer) get the most frequent dataset tag instead."""
+JSON; trainers stash their metadata under "__metadata__". Source
+priority: direct phrase keys (modelspec/ai-toolkit style), then a
+trigger-looking ss_training_comment (kohya --training_comment, the
+common place hands-on trainers put the word — filtered because it is
+free text and kohya writes literal 'None' when unset), then the most
+frequent ss_tag_frequency dataset tag."""
 
 import json
 import struct
@@ -36,14 +39,35 @@ def read_safetensors_metadata(path):
     return meta if isinstance(meta, dict) else {}
 
 
+def _comment_trigger(meta):
+    """ss_training_comment when it plausibly IS a trigger: short, no
+    sentence punctuation, not kohya's literal 'None' placeholder."""
+    raw = str(meta.get("ss_training_comment") or "").strip()
+    for prefix in ("trigger words:", "trigger word:", "trigger:"):
+        if raw.lower().startswith(prefix):
+            raw = raw[len(prefix) :].strip()
+            break
+    if not raw or raw.lower() == "none":
+        return None
+    if len(raw) > 60 or "\n" in raw or "http" in raw.lower():
+        return None
+    if ":" in raw or ";" in raw or len(raw.split()) > 4:
+        return None
+    return raw
+
+
 def trigger_from_metadata(meta):
-    """-> (trigger, source_key) or (None, None). Phrase keys beat tag
-    frequency; within ss_tag_frequency all datasets merge and the most
-    frequent tag wins (the training-caption convention)."""
+    """-> (trigger, source_key) or (None, None). Phrase keys beat the
+    training comment, which beats tag frequency; within ss_tag_frequency
+    all datasets merge and the most frequent tag wins (the
+    training-caption convention)."""
     for key in _PHRASE_KEYS:
         value = str(meta.get(key) or "").strip()
         if value:
             return value, key
+    comment = _comment_trigger(meta)
+    if comment:
+        return comment, "ss_training_comment"
     freq_raw = meta.get("ss_tag_frequency")
     if freq_raw:
         try:

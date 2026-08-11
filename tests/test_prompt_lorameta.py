@@ -42,10 +42,45 @@ def test_tag_frequency_merges_datasets_and_picks_top():
     assert trigger_from_metadata(meta) == ("bmwm4cs", "ss_tag_frequency")
 
 
+def test_training_comment_as_trigger():
+    # the Arcane Tuner / hands-on kohya convention: bare token in the comment
+    assert trigger_from_metadata({"ss_training_comment": "FerrariF40"}) == (
+        "FerrariF40",
+        "ss_training_comment",
+    )
+    # 'trigger words:' prefix styles are stripped
+    assert trigger_from_metadata({"ss_training_comment": "trigger words: 911T4rga"}) == (
+        "911T4rga",
+        "ss_training_comment",
+    )
+    # explicit comment beats the derived tag frequency
+    both = {
+        "ss_training_comment": "RBOctavia",
+        "ss_tag_frequency": json.dumps({"10_car": {"other": 99}}),
+    }
+    assert trigger_from_metadata(both) == ("RBOctavia", "ss_training_comment")
+
+
+def test_training_comment_junk_rejected():
+    freq = {"ss_tag_frequency": json.dumps({"10_x": {"fallback": 5}})}
+    for junk in (
+        "None",
+        "none",
+        "Dynamic resize with sv_fro: 0.9 from 384;",
+        "see https://example.com for usage",
+        "a very long sentence that keeps going and clearly is not a trigger word",
+    ):
+        assert trigger_from_metadata({"ss_training_comment": junk, **freq}) == (
+            "fallback",
+            "ss_tag_frequency",
+        )
+
+
 def test_no_trigger_sources_yields_none():
     assert trigger_from_metadata({}) == (None, None)
     assert trigger_from_metadata({"ss_tag_frequency": "{broken"}) == (None, None)
     assert trigger_from_metadata({"trigger_phrase": "   "}) == (None, None)
+    assert trigger_from_metadata({"ss_training_comment": "None"}) == (None, None)
 
 
 def test_non_safetensors_and_corrupt_files_raise(tmp_path):
