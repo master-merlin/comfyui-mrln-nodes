@@ -2320,55 +2320,120 @@ export function createComposerPanel(root, ctx) {
   }
 
   function loraPicker(current) {
-    // One dropdown for everything, ComfyUI-native style: folders appear
-    // inline as group headers, no pre-navigation. The substring filter
-    // narrows the list for big libraries.
-    const file = el("select", { title: "LoRA file (from ComfyUI's models/loras)" });
+    // A drill-down browser in dropdown clothes: the list shows the current
+    // folder's subfolders + files, clicking a folder descends IN PLACE
+    // (native selects close on click, so this is a custom menu), '..' goes
+    // up a level. The filter searches flat across all folders.
+    const value = el("input", { type: "hidden", value: current ?? "" });
+    const baseOf = (name) => name.slice(Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\")) + 1);
+    const dirOf = (name) => {
+      const cut = Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\"));
+      return cut === -1 ? "" : name.slice(0, cut).replace(/\\/g, "/");
+    };
+    const control = el(
+      "button",
+      { type: "button", class: "mrln-btn mrln-lora-current", title: current || "" },
+      current ? baseOf(current) : "— choose LoRA —"
+    );
+    const menu = el("div", { class: "mrln-brace-menu mrln-lora-menu", style: "display:none" });
+    const wrap = el("span", { class: "mrln-assist" }, control, menu, value);
     const filter = el("input", {
       type: "text",
       class: "mrln-lora-filter",
       placeholder: "filter…",
-      title: "Substring filter over the file names",
+      title: "Substring filter across all folders",
     });
-    const dirOf = (name) => {
-      const cut = Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\"));
-      return cut === -1 ? "." : name.slice(0, cut);
-    };
     let names = current ? [current] : [];
-    const rebuild = () => {
-      const chosen = file.value;
-      const needle = filter.value.trim().toLowerCase();
-      const pool = needle ? names.filter((n) => n.toLowerCase().includes(needle)) : names;
-      file.replaceChildren(el("option", { value: "" }, "— choose LoRA —"));
-      const groups = new Map();
-      for (const name of pool) {
-        const d = dirOf(name);
-        if (!groups.has(d)) groups.set(d, []);
-        groups.get(d).push(name);
-      }
-      for (const d of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
-        const options = groups
-          .get(d)
-          .map((name) => el("option", { value: name }, d === "." ? name : name.slice(d.length + 1)));
-        if (d === ".") file.append(...options);
-        else file.append(el("optgroup", { label: `📁 ${d}` }, ...options));
-      }
-      if (chosen && !pool.includes(chosen)) {
-        // keep the selection visible when the filter hides it — the warning
-        // is reserved for files truly absent from disk
-        const installed = names.includes(chosen);
-        file.append(el("option", { value: chosen }, installed ? chosen : `⚠ not installed: ${chosen}`));
-      }
-      file.value = chosen;
+    let cwd = current ? dirOf(current) : "";
+    let open = false;
+    const hide = () => {
+      open = false;
+      menu.style.display = "none";
     };
+    const choose = (name) => {
+      value.value = name;
+      control.textContent = baseOf(name);
+      control.title = name;
+      hide();
+      value.dispatchEvent(new Event("change"));
+    };
+    const entry = (cls, text, action) =>
+      el(
+        "div",
+        {
+          class: `mrln-brace-item${cls ? ` ${cls}` : ""}`,
+          onmousedown: (e) => {
+            e.preventDefault(); // keep focus → no blur-close before the click
+            action();
+          },
+        },
+        text
+      );
+    const render = () => {
+      const needle = filter.value.trim().toLowerCase();
+      const out = [];
+      if (needle) {
+        const hits = names.filter((n) => n.toLowerCase().includes(needle));
+        for (const name of hits.slice(0, 200)) {
+          out.push(entry(name === value.value ? "mrln-lora-sel" : "", name.replace(/\\/g, "/"), () => choose(name)));
+        }
+        if (!out.length) out.push(el("div", { class: "mrln-note", style: "padding:3px 6px" }, "no matches"));
+      } else {
+        if (cwd) {
+          out.push(el("div", { class: "mrln-note", style: "padding:2px 6px" }, `📁 ${cwd}/`));
+          out.push(
+            entry("mrln-lora-dir", "📁 ..", () => {
+              cwd = cwd.includes("/") ? cwd.slice(0, cwd.lastIndexOf("/")) : "";
+              render();
+            })
+          );
+        }
+        const prefix = cwd ? `${cwd}/` : "";
+        const subdirs = new Set();
+        const files = [];
+        for (const name of names) {
+          const norm = name.replace(/\\/g, "/");
+          if (!norm.startsWith(prefix)) continue;
+          const rest = norm.slice(prefix.length);
+          const slash = rest.indexOf("/");
+          if (slash === -1) files.push(name);
+          else subdirs.add(rest.slice(0, slash));
+        }
+        for (const d of [...subdirs].sort((a, b) => a.localeCompare(b))) {
+          out.push(
+            entry("mrln-lora-dir", `📁 ${d}/`, () => {
+              cwd = prefix + d;
+              render();
+            })
+          );
+        }
+        for (const name of files.sort((a, b) => baseOf(a).localeCompare(baseOf(b)))) {
+          out.push(entry(name === value.value ? "mrln-lora-sel" : "", baseOf(name), () => choose(name)));
+        }
+      }
+      menu.replaceChildren(...out);
+      menu.style.display = "";
+      open = true;
+    };
+    control.addEventListener("click", () => {
+      if (open) {
+        hide();
+        return;
+      }
+      cwd = value.value ? dirOf(value.value) : cwd;
+      render();
+    });
+    control.addEventListener("blur", () => setTimeout(hide, 150));
+    filter.addEventListener("input", render);
+    filter.addEventListener("blur", () => setTimeout(hide, 150));
     installedLoras().then((list) => {
       if (list.length) names = list;
-      rebuild();
+      if (value.value && !names.includes(value.value)) {
+        control.textContent = `⚠ ${baseOf(value.value)}`;
+        control.title = `${value.value} — not installed`;
+      }
     });
-    filter.addEventListener("input", rebuild);
-    file.append(el("option", { value: current ?? "" }, current || "— choose LoRA —"));
-    file.value = current ?? "";
-    return { file, filter };
+    return { file: value, filter, control: wrap };
   }
 
   function openSectionForm(slug, body) {
@@ -2485,6 +2550,7 @@ export function createComposerPanel(root, ctx) {
         const picker = loraPicker(item.data.lora ?? "");
         row.lora = picker.file;
         row.loraFilter = picker.filter;
+        row.loraControl = picker.control;
         row.sm = el("input", {
           type: "text",
           inputmode: "decimal",
@@ -2570,7 +2636,7 @@ export function createComposerPanel(root, ctx) {
             "tr",
             { class: "mrln-lora-row" },
             el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
-            el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.lora)),
+            el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.loraControl)),
             el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
             el("td", { class: "mrln-w-act" })
           ),

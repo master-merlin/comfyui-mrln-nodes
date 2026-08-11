@@ -256,6 +256,18 @@ textarea.mrln-auto {
 }
 .mrln-brace-item { padding: 3px 6px; cursor: pointer; font-size: 11px; }
 .mrln-brace-item:hover { background: var(--comfy-input-bg, #1a1a1a); }
+
+/* LoRA drill-down picker */
+.mrln-composer button.mrln-lora-current {
+  width: 100%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mrln-lora-menu { max-height: 260px; }
+.mrln-brace-item.mrln-lora-dir { font-weight: bold; color: #6ca; }
+.mrln-brace-item.mrln-lora-sel { border-left: 2px solid #4a8; background: var(--comfy-input-bg, #1a1a1a); }
 .mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
 .mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
 .mrln-items-table .mrln-w-origin { width: 24px; }
