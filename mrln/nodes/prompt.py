@@ -542,6 +542,23 @@ def _strip_thinking(text):
 
 _ENHANCE_CACHE = {}  # (backend, model, system, prompt, seed, temp, max_tokens) -> text
 
+# When no profile system prompt rides the wire ('standard' profile, or a bare
+# prompt input), the enhancer still works under this generic contract —
+# model-agnostic, so it only carries the rules every target shares.
+_GENERIC_SYSTEM = (
+    "You refine image-generation prompts. Rewrite the input for clarity and "
+    "flow while keeping its nature: a tag list stays a tag list, prose stays "
+    "prose. FIDELITY: every subject, element, color, material and light the "
+    "input names must appear in your rewrite, and you may add NONE it does "
+    "not name — no new objects, no palette shifts, no generic embellishments. "
+    "STYLE LOCK: the medium and art style the input states are facts — keep "
+    "their exact words and never shift the prompt toward a different medium "
+    "or realism level; if the input names no medium, do not introduce one. "
+    "Keep trigger words and (weighted:1.2) spans verbatim. NEVER summarize: "
+    "your rewrite carries at least the input's level of detail. Answer with "
+    "the rewritten prompt only — no preamble, no quotes, no explanations."
+)
+
 
 class PromptEnhance:
     """Rewrite a prompt with an LLM under a target-model system prompt.
@@ -725,12 +742,12 @@ class PromptEnhance:
                 "llm output (it carries the prompt), or the prompt input",
             )
         system_text = system.strip() or str(spec.get("system") or "").strip()
-        if not system_text:
-            return (
-                prompt,
-                "pass-through: no system prompt — select a profile on the Template node "
-                "and wire its llm output, or type a system override",
-            )
+        # 'standard' (and any profile without an llm block) used to silently
+        # pass through here — the enhancer must always work, so a generic
+        # fidelity-contract system prompt fills the gap.
+        generic = not system_text
+        if generic:
+            system_text = _GENERIC_SYSTEM
         # LoRA trigger words must survive the rewrite EXACTLY — most LLMs
         # happily "improve" them, which silently kills the LoRA. Spans come
         # from the llm wire; only those actually present in the source count
@@ -795,10 +812,16 @@ class PromptEnhance:
             if effective_max > max_tokens
             else ""
         )
+        fallback = (
+            " · generic system prompt (no profile system on the wire — pick a "
+            "profile on the Template node for model-tuned rewriting)"
+            if generic
+            else ""
+        )
         return (
             text,
             f"enhanced via {backend}:{model or 'default'} seed {seed} "
-            f"temp {temperature:g} ({vram}){guarded}{raised}",
+            f"temp {temperature:g} ({vram}){guarded}{raised}{fallback}",
         )
 
 

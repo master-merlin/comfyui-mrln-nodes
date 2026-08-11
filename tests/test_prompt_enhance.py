@@ -59,11 +59,22 @@ def test_registered_with_tooltips(classes):
             assert len(spec) == 2 and "tooltip" in spec[1], name
 
 
-def test_passthrough_without_system(classes):
-    node = classes["MRLN_PromptEnhance"]()
-    prompt, report = _run(node)
-    assert prompt == "a bright red car"
-    assert "no system prompt" in report
+def test_missing_system_uses_generic_contract(classes, monkeypatch):
+    # 'standard' used to bypass the enhancer entirely — now a generic
+    # fidelity/style-lock system prompt fills the gap and the report says so
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "a gleaming bright red car")
+    prompt, report = _run(cls())
+    assert prompt == "a gleaming bright red car"
+    assert "generic system prompt" in report
+    assert "FIDELITY" in calls[0]["system"] and "STYLE LOCK" in calls[0]["system"]
+
+
+def test_explicit_system_beats_generic(classes, monkeypatch):
+    cls = classes["MRLN_PromptEnhance"]
+    calls = _fake_chat(monkeypatch, cls, "rewritten")
+    _run(cls(), system="MY CONTRACT")
+    assert calls[0]["system"] == "MY CONTRACT"
 
 
 def test_single_wire_llm_carries_prompt(classes, tmp_path):
