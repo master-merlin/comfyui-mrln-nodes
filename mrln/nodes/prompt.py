@@ -743,7 +743,10 @@ class PromptEnhance:
         if cached is not None:
             return (cached, f"enhanced via {backend}:{model or 'default'} (cached) seed {seed}")
 
-        from mrln import promptapi
+        # RELATIVE import: inside ComfyUI the pack is not a top-level module
+        # (custom nodes load under the loader's package path) — absolute
+        # 'from mrln import …' only resolves in pytest
+        from .. import promptapi
 
         try:
             text = promptapi.llm_chat(

@@ -24,6 +24,25 @@ def template_node(classes):
     return classes["MRLN_PromptTemplate"]()
 
 
+def test_no_absolute_self_imports():
+    """Inside ComfyUI the pack is NOT importable as top-level 'mrln' —
+    custom nodes load under the loader's package path, so an absolute
+    'from mrln import …' resolves in pytest but explodes at execute time
+    (UAT-caught: ModuleNotFoundError in Prompt Enhance). Everything
+    package-internal must import relatively."""
+    import re
+    from pathlib import Path
+
+    package = Path(support.ROOT) / "mrln"
+    pattern = re.compile(r"^\s*(?:from mrln[.\s]|import mrln\b)", re.MULTILINE)
+    offenders = [
+        str(path.relative_to(package))
+        for path in package.rglob("*.py")
+        if pattern.search(path.read_text(encoding="utf-8"))
+    ]
+    assert offenders == []
+
+
 @pytest.fixture()
 def section_node(classes):
     return classes["MRLN_PromptSection"]()
