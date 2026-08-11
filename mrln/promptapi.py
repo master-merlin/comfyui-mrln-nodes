@@ -336,6 +336,7 @@ def _resolved_slot_json(s):
         "omitted": s.item_name is None,
         "missing": s.missing,
         "inline": s.inline,
+        "stale_note": s.stale_note,
         "children": [_resolved_slot_json(c) for c in s.children],
     }
 
@@ -347,9 +348,75 @@ def _save(lib, payload, kind):
     return 200, {"ok": True, "slug": slug, "tier": "user", "overrides_factory": overrides}
 
 
+def _retarget_default(default, section_slug, ref, renames):
+    """New default token if `default` names a renamed item of `section_slug`
+    as seen through a slot ref (leaf or folder scope), else None."""
+    if not isinstance(default, str) or not default:
+        return None
+    if ref == section_slug:
+        rel = ""
+    elif section_slug.startswith(ref + "/"):
+        rel = section_slug[len(ref) + 1 :] + "/"
+    else:
+        return None
+    for old, new in renames.items():
+        for prefix in (rel, f"{ref}/{rel}"):  # scope-relative and fully-qualified
+            if default == f"{prefix}{old}":
+                return f"{prefix}{new}"
+    return None
+
+
+def _propagate_item_renames(lib, section_slug, renames):
+    """Rewrite USER-tier template slot defaults referencing renamed items.
+    Factory templates are read-only; workflow selections are healed at
+    resolve time by the stale-pick fallback instead."""
+    rewritten = 0
+    for entry in lib._scan("templates").values():
+        if entry.tier != "user":
+            continue
+        try:
+            with open(entry.path, encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (OSError, json.JSONDecodeError):
+            continue
+        changed = False
+        slot_lists = [data.get("slots") or []]
+        slot_lists.extend((v.get("slots") or []) for v in data.get("variants") or [])
+        for slots in slot_lists:
+            for slot in slots:
+                if not isinstance(slot, dict):
+                    continue
+                new_default = _retarget_default(
+                    slot.get("default"), section_slug, str(slot.get("ref") or ""), renames
+                )
+                if new_default is not None:
+                    slot["default"] = new_default
+                    changed = True
+        if changed:
+            with open(entry.path, "w", encoding="utf-8") as fh:
+                json.dump(data, fh, ensure_ascii=False, indent=2)
+                fh.write("\n")
+            rewritten += 1
+    if rewritten:
+        lib.invalidate()
+    return rewritten
+
+
 @_guarded
 def handle_save_section(lib, payload):
-    return _save(lib, payload, "sections")
+    status, body = _save(lib, payload, "sections")
+    if status == 200:
+        renames = payload.get("renames") or {}
+        if isinstance(renames, dict) and renames:
+            clean = {
+                str(old): str(new)
+                for old, new in renames.items()
+                if old and new and str(old) != str(new)
+            }
+            body["templates_rewritten"] = (
+                _propagate_item_renames(lib, body["slug"], clean) if clean else 0
+            )
+    return status, body
 
 
 @_guarded

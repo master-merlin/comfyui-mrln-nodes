@@ -295,3 +295,85 @@ def test_merged_section_roundtrips(lib, tmp_path):
     assert next(i for i in dumped["items"] if i["name"] == "gold")["hidden"] is True
     assert "origin" not in json.dumps(dumped)  # runtime provenance never serialized
     assert parse_section(dumped, "color", "mem") == merged  # compare=False runtime fields
+
+
+# -- item renames: heal, never break ------------------------------------------
+
+
+def _rename_lib(tmp_path):
+    factory = tmp_path / "f"
+    user = tmp_path / "u"
+    _write(
+        factory,
+        "sections/color.json",
+        {"items": [{"name": "red", "text": "bright red"}, {"name": "blue", "text": "ocean blue"}]},
+    )
+    _write(
+        factory,
+        "sections/location/urban.json",
+        {"items": [{"name": "shibuya", "text": "Shibuya Crossing"}]},
+    )
+    _write(
+        user,
+        "templates/mine.json",
+        {
+            "slots": [
+                {"id": "paint", "ref": "color", "default": "redd"},
+                {"id": "place", "ref": "location", "default": "urban/shibuya"},
+            ]
+        },
+    )
+    return Library(factory, user)
+
+
+def test_stale_item_pick_falls_back_to_seeded_random(tmp_path):
+    lib = _rename_lib(tmp_path)
+    tpl = lib.load_template("mine")
+    resolved = resolve_template(lib, tpl, seed=7, mode="as configured", selection={}, variables={})
+    paint = next(s for s in resolved.slots if s.id == "paint")
+    assert paint.item_name in ("red", "blue")  # drew instead of dying
+    assert paint.random is True
+    assert "'redd' is not in 'color'" in paint.stale_note
+    assert "did you mean 'red'" in paint.stale_note
+    out = render(resolved, "string", tpl.render)
+    assert "⚠ paint:" in out.choices
+    again = resolve_template(lib, tpl, seed=7, mode="as configured", selection={}, variables={})
+    assert next(s for s in again.slots if s.id == "paint").item_name == paint.item_name
+
+
+def test_section_node_stays_strict_on_stale_item(tmp_path):
+    lib = _rename_lib(tmp_path)
+    with pytest.raises(ItemNotFoundError):
+        resolve_section(lib, "color", "redd", seed=0)
+
+
+def test_save_section_renames_repoint_user_templates(tmp_path):
+    lib = _rename_lib(tmp_path)
+    status, body = promptapi.handle_save_section(
+        lib,
+        {
+            "slug": "color",
+            "data": {"items": [{"name": "crimson", "text": "bright red"}]},
+            "renames": {"redd": "crimson"},
+        },
+    )
+    assert status == 200, body
+    assert body["templates_rewritten"] == 1
+    assert lib.load_template("mine").slots[0].default == "crimson"
+    # folder-scoped defaults rewrite their qualified tail
+    status, body = promptapi.handle_save_section(
+        lib,
+        {
+            "slug": "location/urban",
+            "data": {"items": [{"name": "shinjuku", "text": "Shinjuku"}]},
+            "renames": {"shibuya": "shinjuku"},
+        },
+    )
+    assert status == 200 and body["templates_rewritten"] == 1
+    assert lib.load_template("mine").slots[1].default == "urban/shinjuku"
+    # no-op renames report zero rewrites
+    status, body = promptapi.handle_save_section(
+        lib,
+        {"slug": "color", "data": {"items": [{"name": "x", "text": "y"}]}, "renames": {"a": "a"}},
+    )
+    assert status == 200 and body["templates_rewritten"] == 0

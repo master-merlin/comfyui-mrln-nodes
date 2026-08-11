@@ -76,9 +76,13 @@ def test_ref_qualified_selection_accepted(lib):
     assert slot(resolved, "location").item_name == "nature/alpine-pass"
 
 
-def test_unknown_item_error(lib):
-    with pytest.raises(ItemNotFoundError, match="crimson"):
-        rt(lib, selection={"paint": "crimson"})
+def test_unknown_item_falls_back_to_random(lib):
+    # item-level resilience: a stale pick (renamed/removed item) draws
+    # randomly with a loud note instead of killing the prompt
+    resolved = rt(lib, selection={"paint": "crimson"})
+    paint = next(s for s in resolved.slots if s.id == "paint")
+    assert paint.item_name is not None and paint.random is True
+    assert "'crimson' is not in" in paint.stale_note
 
 
 def test_unknown_slot_error(lib):

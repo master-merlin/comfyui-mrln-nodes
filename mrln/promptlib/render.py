@@ -197,6 +197,8 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
         if slot.inline:
             line += "  (inline)"
         lines.append(line)
+        if slot.stale_note:
+            lines.append(f"{indent}⚠ {slot.id}: {slot.stale_note}")
 
     for tag in lora_tags(resolved):
         lines.append(f"lora: {tag}")

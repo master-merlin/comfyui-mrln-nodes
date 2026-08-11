@@ -277,6 +277,58 @@ export function createComposerPanel(root, ctx) {
     if (state.tab === "library") renderLibraryTab();
   }
 
+  async function refreshDetail() {
+    // Library edits change pools/defaults under the loaded template —
+    // re-fetch the actual data without nuking the user's current picks.
+    if (!state.slug) return;
+    try {
+      state.detail = await ctx.apiJson(
+        `/mrln/prompt/template?slug=${encodeURIComponent(state.slug)}`
+      );
+      if (!state.modified) {
+        state.rawData = structuredClone(state.detail.raw);
+        state.loadedLabel = state.rawData.label ?? null;
+        state.orderIds = syncOrderIds();
+      }
+      renderComposeTab();
+      schedulePreview();
+    } catch {
+      schedulePreview(); // stale detail is survivable; the preview shows truth
+    }
+  }
+
+  function applyItemRenames(sectionSlug, renames) {
+    // Mirror of the server-side rewrite, applied to the loaded draft and
+    // the current picks so the compose tab follows the rename live.
+    if (!Object.keys(renames).length || !state.rawData) return;
+    const fix = (ref, token) => {
+      if (!token || !ref) return null;
+      let rel = null;
+      if (ref === sectionSlug) rel = "";
+      else if (sectionSlug.startsWith(ref + "/")) rel = sectionSlug.slice(ref.length + 1) + "/";
+      else return null;
+      for (const [oldName, newName] of Object.entries(renames)) {
+        for (const prefix of [rel, `${ref}/${rel}`]) {
+          if (token === `${prefix}${oldName}`) return `${prefix}${newName}`;
+        }
+      }
+      return null;
+    };
+    const allSlots = [
+      ...(state.rawData.slots ?? []),
+      ...(state.rawData.variants ?? []).flatMap((v) => v.slots ?? []),
+    ];
+    for (const slot of allSlots) {
+      const fixedDefault = fix(slot.ref, slot.default);
+      if (fixedDefault) slot.default = fixedDefault; // disk already matches
+      const row = state.rows.get(slot.id);
+      if (row && !row.random) {
+        const fixedPick = fix(slot.ref, row.item);
+        if (fixedPick) row.item = fixedPick;
+      }
+    }
+  }
+
   async function selectTemplate(slug) {
     state.slug = slug;
     if (!state.detail) {
@@ -2826,10 +2878,21 @@ export function createComposerPanel(root, ctx) {
           .map(cleanedItem);
         if (saveMode === "replace") data.replaces = true;
       }
+      // renames of YOUR items re-point every user-tier template default
+      // server-side; factory-origin rows are copies, not renames
+      const renames = {};
+      for (const row of itemRows) {
+        const oldName = (row.orig.name ?? "").trim();
+        const newName = row.name.value.trim();
+        if (oldName && newName && oldName !== newName && row.orig.origin !== "factory") {
+          renames[oldName] = newName;
+        }
+      }
+      let saved;
       try {
-        await ctx.apiJson("/mrln/prompt/save-section", {
+        saved = await ctx.apiJson("/mrln/prompt/save-section", {
           method: "POST",
-          body: { slug: targetSlug, data },
+          body: { slug: targetSlug, data, renames },
         });
       } catch (err) {
         ctx.toast("error", "Save failed", err.message);
@@ -2840,13 +2903,19 @@ export function createComposerPanel(root, ctx) {
         : saveMode === "replace"
           ? "replaces factory entirely"
           : "user library";
-      ctx.toast("success", "Section saved", `${targetSlug} (${how})`);
+      const repointed = saved?.templates_rewritten
+        ? ` — ${saved.templates_rewritten} template file(s) re-pointed to renamed items`
+        : "";
+      ctx.toast("success", "Section saved", `${targetSlug} (${how})${repointed}`);
       state.libGroups.add("sections:@block"); // reveal where it landed
       state.libGroups.add(`sections:${targetSlug.split("/")[0]}`);
       ctx.refreshCombos();
       await loadLibrary();
       openSectionEditor(targetSlug);
-      if (state.slug) schedulePreview(); // active template may draw this section
+      if (state.slug) {
+        applyItemRenames(targetSlug, renames);
+        await refreshDetail(); // the loaded template may draw this section
+      }
     }
 
     const modeSelect = el("select", {
@@ -3029,6 +3098,7 @@ export function createComposerPanel(root, ctx) {
     editorBox.replaceChildren();
     ctx.refreshCombos();
     await loadLibrary();
+    if (state.slug) await refreshDetail(); // pools may have reverted to factory
   }
 
   // ---- boot ----------------------------------------------------------------

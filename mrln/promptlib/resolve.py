@@ -42,6 +42,7 @@ class ResolvedSlot:
     children: tuple = ()  # nested ResolvedSlots (dotted ids)
     missing: bool = False  # ref points at no section: skipped, ⚠ in choices
     inline: bool = False  # woven into prefix/suffix via {slot-id}; leaves the body
+    stale_note: str = ""  # fixed pick named a missing item: fell back to random
 
 
 def walk_slots(slots):
@@ -127,7 +128,7 @@ def _filtered_pool(pool, slot, template_type):
     return result
 
 
-def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type=()):
+def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type=(), strict=False):
     token_src = selection.get(slot.id, slot.default or RANDOM_TOKEN)
     kind, value = _parse_token(str(token_src), f"{slot.id}={token_src}")
     fixed_first = False
@@ -200,6 +201,28 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
             None,
         )
 
+    stale_note = ""
+    if kind == "fixed" and not fixed_first:
+        # Item-level resilience: a pick naming a renamed/deleted item must
+        # not kill the prompt (stale template default or a selection saved
+        # in a workflow). Fall back to a seeded random draw with a loud
+        # note; the strict path (Section node) re-raises via `strict`.
+        try:
+            _find_item(pool, slot.ref, value)
+        except ItemNotFoundError:
+            if strict:
+                raise
+            import difflib
+
+            names = [q for q, _, _ in pool]
+            close = difflib.get_close_matches(str(value), names, 1, 0.5)
+            hint = f" — did you mean '{close[0]}'?" if close else ""
+            stale_note = (
+                f"item '{value}' is not in '{slot.ref}' (renamed or removed){hint} "
+                "— drew randomly instead; fix the pick in the Composer"
+            )
+            kind, value = "random", None
+
     if kind == "random":
         if not draw_pool:
             raise SelectionError(
@@ -227,6 +250,7 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
                     fixed_first=False,
                     emphasis=slot.emphasis,
                     data=None,
+                    stale_note=stale_note,
                     tier="",
                     seed_used=seed_used,
                 ),
@@ -257,6 +281,7 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
         fixed_first=fixed_first,
         emphasis=slot.emphasis,
         data=item.data,
+        stale_note=stale_note,
         tier=item.origin or lib.tier_of("sections", section.slug),
         seed_used=seed_used,
         tags=tuple(sorted(set(item.tags) | set(section.tags))),
@@ -497,8 +522,10 @@ def resolve_section(lib, section_ref, item_token, *, seed, allow_empty=False):
     slot = Slot(id="section", ref=section_ref, allow_empty=allow_empty)
     key = f"@section:{section_ref}"
     selection = {"section": str(item_token)}
+    # strict: the standalone Section node IS its pick — a stale item name
+    # stays a hard, actionable error here (no template to heal it in)
     resolved, rng, item = _resolve_slot(
-        lib, slot, key, master_seed=seed, mode="as configured", selection=selection
+        lib, slot, key, master_seed=seed, mode="as configured", selection=selection, strict=True
     )
     if resolved.missing:
         # The standalone Section node IS its section — there is nothing to
