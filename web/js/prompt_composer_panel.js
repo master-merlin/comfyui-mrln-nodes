@@ -2245,11 +2245,34 @@ export function createComposerPanel(root, ctx) {
           value: item.data.strength_clip ?? item.data.strength_model ?? 1.0,
           title: "strength_clip",
         });
-        row.lora.addEventListener("change", () => {
+        let loraMetaReq = 0;
+        row.lora.addEventListener("change", async () => {
           if (!row.name.value.trim()) {
             const stem = row.lora.value.split(/[\\/]/).pop().replace(/\.\w+$/, "");
             row.name.value = stem.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
           }
+          // switching files switches the trigger: read it from the LoRA's
+          // own metadata; when it has none, flag the TEXT for manual entry
+          const file = row.lora.value;
+          row.text.classList.remove("mrln-input-error");
+          if (!file) return;
+          const req = ++loraMetaReq;
+          try {
+            const meta = await ctx.apiJson(
+              `/mrln/prompt/lora-meta?name=${encodeURIComponent(file)}`
+            );
+            if (req !== loraMetaReq) return; // superseded by a newer switch
+            row.text.value = meta.trigger;
+            row.text.title = `trigger word from LoRA metadata (${meta.source})`;
+          } catch (err) {
+            if (req !== loraMetaReq) return;
+            row.text.value = "";
+            row.text.classList.add("mrln-input-error");
+            row.text.title = `${err.message} — type the trigger word / catchword yourself`;
+          }
+        });
+        row.text.addEventListener("input", () => {
+          row.text.classList.remove("mrln-input-error");
         });
         table.append(
           el(
@@ -2375,6 +2398,7 @@ export function createComposerPanel(root, ctx) {
       ctx.refreshCombos();
       await loadLibrary();
       openSectionEditor(targetSlug);
+      if (state.slug) schedulePreview(); // active template may draw this section
     }
 
     const modeSelect = el("select", {

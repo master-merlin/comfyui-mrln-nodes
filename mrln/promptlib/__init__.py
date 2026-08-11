@@ -17,6 +17,7 @@ from .errors import (
     WildcardSyntaxError,
 )
 from .library import Library, default_roots, open_library, validate_slug
+from .lorameta import read_safetensors_metadata, trigger_from_metadata
 from .render import CONFLICT_POLICIES, FORMATS, Rendered, lora_entries, lora_tags, render
 from .resolve import (
     MODES,
@@ -79,8 +80,10 @@ __all__ = [
     "parse_kv_lines",
     "parse_section",
     "parse_template",
+    "read_safetensors_metadata",
     "render",
     "resolve_section",
     "resolve_template",
+    "trigger_from_metadata",
     "validate_slug",
 ]

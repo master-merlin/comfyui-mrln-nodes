@@ -374,11 +374,50 @@ def handle_decompose(lib, payload):
     return 200, report
 
 
+@_guarded
+def handle_lora_meta(lib, payload):
+    """Trigger word from an installed LoRA's own metadata. Names come from
+    the /models/loras list; resolution goes through folder_paths only, so
+    no request string touches the filesystem directly."""
+    name = _require_str(payload, "name")
+    try:
+        import folder_paths
+    except ImportError:
+        return 400, {
+            "error": "LoRA metadata is only readable inside a running ComfyUI",
+            "remediation": "type the catchword manually",
+        }
+    available = folder_paths.get_filename_list("loras")
+    norm = lambda n: n.replace("\\", "/").lower()  # noqa: E731 — two uses below
+    real = next((c for c in available if c == name), None) or next(
+        (c for c in available if norm(c) == norm(name)), None
+    )
+    if real is None:
+        return 404, {
+            "error": f"LoRA '{name}' not found in your loras folder",
+            "remediation": "refresh the list or pick another file",
+        }
+    path = folder_paths.get_full_path("loras", real)
+    try:
+        meta = pl.read_safetensors_metadata(path)
+    except ValueError as exc:
+        return 400, {"error": str(exc), "remediation": "type the catchword manually"}
+    trigger, source = pl.trigger_from_metadata(meta)
+    if not trigger:
+        return 404, {
+            "error": f"no trigger word in the metadata of '{real}'",
+            "remediation": "type the catchword manually — trainers embed triggers as "
+            "modelspec.trigger_phrase or kohya ss_tag_frequency",
+        }
+    return 200, {"trigger": trigger, "source": source, "name": real}
+
+
 ROUTES = (
     ("get", "/mrln/prompt/library", handle_library, False),
     ("get", "/mrln/prompt/template", handle_template, False),
     ("get", "/mrln/prompt/section", handle_section, False),
     ("get", "/mrln/prompt/items", handle_items, False),
+    ("get", "/mrln/prompt/lora-meta", handle_lora_meta, False),
     ("post", "/mrln/prompt/preview", handle_preview, True),
     ("post", "/mrln/prompt/save-section", handle_save_section, True),
     ("post", "/mrln/prompt/save-template", handle_save_template, True),

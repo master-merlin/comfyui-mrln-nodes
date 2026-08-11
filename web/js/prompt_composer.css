@@ -231,6 +231,10 @@ textarea.mrln-auto {
   border-bottom: 1px solid var(--border-color, #333);
 }
 .mrln-items-table tr.mrln-lora-row .mrln-inline input { min-width: 34px; }
+.mrln-composer input.mrln-input-error {
+  border-color: #e66;
+  box-shadow: 0 0 0 1px #e66;
+}
 .mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
 .mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
 .mrln-items-table .mrln-w-origin { width: 24px; }
