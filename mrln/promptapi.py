@@ -583,12 +583,14 @@ def handle_settings(lib, payload):
     # backend URLs are not secrets and round-trip for the settings UI
     settings = _read_settings(lib)
     llm = _llm_settings(settings)
+    keys = settings.get("llm_api_keys") or {}
     return 200, {
         "civitai_key_set": bool(settings.get("civitai_api_key")),
         "llm": {
             "ollama_url": llm.get("ollama_url") or DEFAULT_OLLAMA_URL,
             "lmstudio_url": llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL,
         },
+        "llm_keys_set": {p: bool(keys.get(p)) for p in CLOUD_PROVIDERS},
     }
 
 
@@ -624,10 +626,33 @@ def handle_save_settings(lib, payload):
                 else:
                     llm.pop(key, None)  # empty reverts to the default
         settings["llm"] = llm
+    if "llm_api_keys" in payload:
+        raw_keys = payload.get("llm_api_keys")
+        if not isinstance(raw_keys, dict):
+            raise ApiError("'llm_api_keys' must be an object of provider -> key")
+        keys = settings.get("llm_api_keys")
+        keys = keys if isinstance(keys, dict) else {}
+        for provider, value in raw_keys.items():
+            if provider not in CLOUD_PROVIDERS:
+                raise ApiError(
+                    f"unknown provider '{provider}' (have: {', '.join(CLOUD_PROVIDERS)})"
+                )
+            if not isinstance(value, str):
+                raise ApiError(f"'llm_api_keys.{provider}' must be a string")
+            if value.strip():
+                keys[provider] = value.strip()
+            else:
+                keys.pop(provider, None)  # empty clears, like the Civitai key
+        settings["llm_api_keys"] = keys
     lib.user_root.mkdir(parents=True, exist_ok=True)
     with open(_settings_path(lib), "w", encoding="utf-8") as fh:
         json.dump(settings, fh, indent=2)
-    return 200, {"ok": True, "civitai_key_set": bool(settings.get("civitai_api_key"))}
+    keys = settings.get("llm_api_keys") or {}
+    return 200, {
+        "ok": True,
+        "civitai_key_set": bool(settings.get("civitai_api_key")),
+        "llm_keys_set": {p: bool(keys.get(p)) for p in CLOUD_PROVIDERS},
+    }
 
 
 # Curated pull suggestions for the Enhance node's model dropdown — small
@@ -842,6 +867,154 @@ def handle_lora_civitai(lib, payload):
     out = _civitai_summary(data)
     out["name"] = real
     return 200, out
+
+
+# -- LLM backends (shared by the Enhance node and the LLM de-composer) -------
+
+CLOUD_PROVIDERS = ("anthropic", "openai", "gemini", "openrouter")
+
+# editable defaults — used when the model widget is empty on a cloud backend
+DEFAULT_CLOUD_MODELS = {
+    "anthropic": "claude-haiku-4-5-20251001",
+    "openai": "gpt-4o-mini",
+    "gemini": "gemini-2.5-flash",
+    "openrouter": "",  # a router needs an explicit model choice
+}
+
+
+def _post_json(url, payload, timeout, headers=None):
+    import urllib.request
+
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent": "ComfyUI-MRLN-Nodes",
+            **(headers or {}),
+        },
+    )
+    with urllib.request.urlopen(request, timeout=timeout) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def _cloud_request(backend, key, model, system, prompt, temperature, seed, max_tokens):
+    """(url, headers, payload, extract) for a cloud chat call — pure, so
+    tests cover the request shapes without any network."""
+    if backend == "anthropic":
+        return (
+            "https://api.anthropic.com/v1/messages",
+            {"x-api-key": key, "anthropic-version": "2023-06-01"},
+            {
+                "model": model,
+                "max_tokens": max_tokens,
+                "temperature": min(float(temperature), 1.0),  # anthropic range is 0..1
+                "system": system,
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            lambda d: "".join(
+                b.get("text", "") for b in d.get("content") or [] if b.get("type") == "text"
+            ),
+        )
+    if backend == "gemini":
+        return (
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+            {"x-goog-api-key": key},
+            {
+                "system_instruction": {"parts": [{"text": system}]},
+                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                "generationConfig": {
+                    "temperature": float(temperature),
+                    "maxOutputTokens": max_tokens,
+                    "seed": seed,
+                },
+            },
+            lambda d: "".join(
+                p.get("text", "")
+                for c in (d.get("candidates") or [])[:1]
+                for p in ((c.get("content") or {}).get("parts") or [])
+            ),
+        )
+    base = (
+        "https://openrouter.ai/api/v1" if backend == "openrouter" else "https://api.openai.com/v1"
+    )
+    return (
+        f"{base}/chat/completions",
+        {"Authorization": f"Bearer {key}"},
+        {
+            "model": model,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": float(temperature),
+            "seed": seed,
+            "max_tokens": max_tokens,
+            "stream": False,
+        },
+        lambda d: str(((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""),
+    )
+
+
+def llm_chat(
+    lib,
+    *,
+    backend,
+    model,
+    system,
+    prompt,
+    temperature,
+    seed,
+    max_tokens,
+    timeout,
+    free_vram="after call",
+):
+    """One entry point for every LLM backend, local and cloud. Returns the
+    raw completion text; raises RuntimeError with an actionable message on
+    any failure (callers decide pass-through vs raise). Keys live in the
+    user tier's settings.json and are never echoed anywhere."""
+    settings = _read_settings(lib)
+    llm = _llm_settings(settings)
+    model = str(model or "").strip()
+    if backend == "ollama":
+        if not model:
+            raise RuntimeError(
+                "Ollama needs a model name — the node's dropdown lists installed models"
+            )
+        url = llm.get("ollama_url") or DEFAULT_OLLAMA_URL
+        data = _post_json(
+            f"{url}/api/chat",
+            {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": prompt},
+                ],
+                "stream": False,
+                "keep_alive": 0 if free_vram == "after call" else "5m",
+                "options": {"temperature": temperature, "seed": seed, "num_predict": max_tokens},
+            },
+            timeout,
+        )
+        return str((data.get("message") or {}).get("content") or "")
+    if backend == "lm studio":
+        url = llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL
+        _, _, payload, extract = _cloud_request(
+            "openai", "", model or "local-model", system, prompt, temperature, seed, max_tokens
+        )
+        return extract(_post_json(f"{url}/v1/chat/completions", payload, timeout))
+    if backend not in CLOUD_PROVIDERS:
+        raise RuntimeError(f"unknown backend '{backend}'")
+    key = str((settings.get("llm_api_keys") or {}).get(backend) or "")
+    if not key:
+        raise RuntimeError(f"no {backend} API key stored — add it in the Composer's Settings tab")
+    model = model or DEFAULT_CLOUD_MODELS.get(backend, "")
+    if not model:
+        raise RuntimeError(f"{backend} needs a model name — set the model widget")
+    url, headers, payload, extract = _cloud_request(
+        backend, key, model, system, prompt, temperature, seed, max_tokens
+    )
+    return extract(_post_json(url, payload, timeout, headers))
 
 
 # -- LoRA download by AIR (heal missing files) -------------------------------

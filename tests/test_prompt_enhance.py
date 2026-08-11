@@ -145,6 +145,75 @@ def test_llm_pull_endpoint(tmp_path):
     assert all(":" in m for m in promptapi.SUGGESTED_OLLAMA_MODELS)
 
 
+def test_cloud_request_shapes():
+    # pure builders — request shapes verified without any network
+    from mrln.promptapi import _cloud_request
+
+    url, headers, payload, extract = _cloud_request(
+        "anthropic", "K", "claude-x", "SYS", "P", 1.5, 7, 128
+    )
+    assert url.endswith("/v1/messages") and headers["x-api-key"] == "K"
+    assert "anthropic-version" in headers
+    assert payload["temperature"] == 1.0  # anthropic caps at 1
+    assert payload["system"] == "SYS" and payload["max_tokens"] == 128
+    canned = {"content": [{"type": "text", "text": "a"}, {"type": "text", "text": "b"}]}
+    assert extract(canned) == "ab"
+
+    url, headers, payload, extract = _cloud_request(
+        "gemini", "K", "gemini-x", "SYS", "P", 0.3, 7, 128
+    )
+    assert "gemini-x:generateContent" in url and headers["x-goog-api-key"] == "K"
+    assert payload["generationConfig"]["seed"] == 7
+    assert extract({"candidates": [{"content": {"parts": [{"text": "hi"}]}}]}) == "hi"
+
+    url, headers, _payload, _ = _cloud_request("openrouter", "K", "m", "SYS", "P", 0.3, 7, 128)
+    assert url.startswith("https://openrouter.ai/") and headers["Authorization"] == "Bearer K"
+    url, _, payload, extract = _cloud_request("openai", "K", "m", "SYS", "P", 0.3, 7, 128)
+    assert url.startswith("https://api.openai.com/")
+    assert payload["messages"][0] == {"role": "system", "content": "SYS"}
+    assert extract({"choices": [{"message": {"content": "out"}}]}) == "out"
+
+
+def test_cloud_backend_requires_key(classes):
+    node = classes["MRLN_PromptEnhance"]()
+    prompt, report = _run(node, backend="anthropic", system="rewrite")
+    assert prompt == "a bright red car"
+    assert "pass-through" in report and "API key" in report
+    with pytest.raises(RuntimeError, match="API key"):
+        _run(node, backend="gemini", system="rewrite", on_error="raise")
+
+
+def test_llm_chat_unknown_backend(tmp_path):
+    lib = build_library(tmp_path)
+    with pytest.raises(RuntimeError, match="unknown backend"):
+        promptapi.llm_chat(
+            lib,
+            backend="bogus",
+            model="",
+            system="s",
+            prompt="p",
+            temperature=0.2,
+            seed=1,
+            max_tokens=10,
+            timeout=5,
+        )
+
+
+def test_llm_keys_roundtrip_never_echoed(tmp_path):
+    lib = build_library(tmp_path)
+    status, body = promptapi.handle_save_settings(lib, {"llm_api_keys": {"anthropic": "sk-SECRET"}})
+    assert status == 200 and body["llm_keys_set"]["anthropic"] is True
+    assert "sk-SECRET" not in json.dumps(body)
+    status, body = promptapi.handle_settings(lib, {})
+    assert body["llm_keys_set"]["anthropic"] is True
+    assert body["llm_keys_set"]["openai"] is False
+    assert "sk-SECRET" not in json.dumps(body)  # keys are NEVER echoed
+    status, body = promptapi.handle_save_settings(lib, {"llm_api_keys": {"anthropic": ""}})
+    assert status == 200 and body["llm_keys_set"]["anthropic"] is False
+    assert promptapi.handle_save_settings(lib, {"llm_api_keys": {"bogus": "x"}})[0] == 400
+    assert promptapi.handle_save_settings(lib, {"llm_api_keys": "nope"})[0] == 400
+
+
 def test_settings_roundtrip_llm_urls(tmp_path):
     lib = build_library(tmp_path)
     status, body = promptapi.handle_save_settings(

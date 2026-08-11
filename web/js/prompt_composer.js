@@ -79,7 +79,9 @@ function getWidget(node, name) {
 // the backend's installed models plus curated "⬇ pull" suggestions that
 // Ollama downloads in the background when picked.
 const PULL_PREFIX = "⬇ pull ";
+const CLOUD_BACKENDS = ["anthropic", "openai", "gemini", "openrouter"];
 const llmModels = {}; // provider -> {models, suggested, fetchedAt, error}
+let llmKeysSet = { fetchedAt: 0, keys: {} }; // which cloud backends hold a key
 
 async function refreshLlmModels(provider) {
   try {
@@ -101,9 +103,25 @@ async function refreshLlmModels(provider) {
   return llmModels[provider];
 }
 
+async function refreshLlmKeys() {
+  try {
+    const body = await apiJson("/mrln/prompt/settings");
+    llmKeysSet = { fetchedAt: Date.now(), keys: body.llm_keys_set ?? {} };
+  } catch {
+    llmKeysSet = { fetchedAt: Date.now(), keys: llmKeysSet.keys };
+  }
+  return llmKeysSet;
+}
+
+function backendValue(node) {
+  return (node.widgets ?? []).find((w) => w.name === "backend")?.value ?? "ollama";
+}
+
 function enhanceProvider(node) {
-  const backend = (node.widgets ?? []).find((w) => w.name === "backend")?.value ?? "ollama";
-  return backend === "lm studio" ? "lmstudio" : "ollama";
+  const backend = backendValue(node);
+  if (backend === "lm studio") return "lmstudio";
+  if (backend === "ollama") return "ollama";
+  return backend; // cloud backends carry their own name
 }
 
 function watchPull(provider, model) {
@@ -133,7 +151,12 @@ function watchPull(provider, model) {
 function enhanceModelDropdown(node) {
   const widget = (node.widgets ?? []).find((w) => w.name === "model");
   if (!widget || widget.type === "combo") return;
-  widget.type = "combo";
+  const isCloud = () => CLOUD_BACKENDS.includes(backendValue(node));
+  const syncModelType = () => {
+    // clouds have no listing endpoint here — keep the model free-typed;
+    // locals get the installed-models dropdown (type is read at draw time)
+    widget.type = isCloud() ? "text" : "combo";
+  };
   widget.options = widget.options ?? {};
   widget.options.values = () => {
     const provider = enhanceProvider(node);
@@ -165,16 +188,32 @@ function enhanceModelDropdown(node) {
     }
     return prevCallback?.call(this, value, ...rest);
   };
-  refreshLlmModels(enhanceProvider(node));
   const backendWidget = (node.widgets ?? []).find((w) => w.name === "backend");
   if (backendWidget) {
+    // only keyed cloud backends are offered (locals always); the node's
+    // current value stays listed so foreign workflows load intact
+    backendWidget.options = backendWidget.options ?? {};
+    backendWidget.options.values = () => {
+      if (Date.now() - llmKeysSet.fetchedAt > 30000) refreshLlmKeys();
+      const values = ["ollama", "lm studio"];
+      for (const cloud of CLOUD_BACKENDS) {
+        if (llmKeysSet.keys[cloud]) values.push(cloud);
+      }
+      const current = String(backendWidget.value ?? "");
+      if (current && !values.includes(current)) values.push(current);
+      return values;
+    };
     const backendCallback = backendWidget.callback;
     backendWidget.callback = function (...args) {
       const result = backendCallback?.apply(this, args);
-      refreshLlmModels(enhanceProvider(node));
+      syncModelType();
+      if (!isCloud()) refreshLlmModels(enhanceProvider(node));
       return result;
     };
   }
+  syncModelType();
+  refreshLlmKeys();
+  if (!isCloud()) refreshLlmModels(enhanceProvider(node));
 }
 
 app.registerExtension({

@@ -376,6 +376,7 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
   gap: 6px;
   margin-top: 3px;
 }
+.mrln-cloud-label { flex: 0 0 76px; opacity: 0.8; }
 
 .mrln-items-table { width: 100%; border-collapse: collapse; }
 .mrln-items-table td { padding: 2px; vertical-align: top; }

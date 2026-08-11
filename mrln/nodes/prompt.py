@@ -527,9 +527,10 @@ class PromptEnhance:
     rendered prompt plus the selected profile's system prompt, which tells
     the LLM how the TARGET image model wants its prompts (prose for
     KREA/FLUX, tags for SDXL/Pony, ...). The optional prompt input enhances
-    any other STRING instead and wins when both are wired. Runs against
-    local Ollama or LM Studio (URLs in the Composer's Settings tab, where
-    Validate also lists installed models). Deterministic per seed where the
+    any other STRING instead and wins when both are wired. Backends: local
+    Ollama / LM Studio (URLs in the Composer's Settings tab) or cloud
+    Anthropic / OpenAI / Gemini / OpenRouter (API keys stored there,
+    server-side only — never in widgets). Deterministic per seed where the
     backend supports it, cached per input so re-queues never re-call, and a
     failing backend passes the original prompt through instead of killing
     the render (switchable). Ollama frees its VRAM right after the call by
@@ -551,10 +552,11 @@ class PromptEnhance:
         return {
             "required": {
                 "backend": (
-                    ["ollama", "lm studio"],
+                    ["ollama", "lm studio", "anthropic", "openai", "gemini", "openrouter"],
                     {
-                        "tooltip": "Local LLM backend. URLs are configured in the Composer's "
-                        "Settings tab; Validate there lists the installed models.",
+                        "tooltip": "LLM backend. Local: Ollama / LM Studio (URLs in the "
+                        "Composer's Settings tab). Cloud backends need an API key "
+                        "stored there — in the browser only keyed ones are listed.",
                     },
                 ),
                 "model": (
@@ -563,9 +565,9 @@ class PromptEnhance:
                         "default": "",
                         "tooltip": "Model name, e.g. 'gemma3:12b' (Ollama) or an LM Studio "
                         "model id. Required for Ollama; LM Studio falls back to its "
-                        "loaded model. In the browser this becomes a dropdown of "
-                        "installed models plus pull suggestions Ollama downloads on "
-                        "pick.",
+                        "loaded model; cloud backends fall back to a sensible default. "
+                        "In the browser this becomes a dropdown of installed models "
+                        "plus pull suggestions Ollama downloads on pick.",
                     },
                 ),
                 "temperature": (
@@ -707,38 +709,19 @@ class PromptEnhance:
 
         from mrln import promptapi
 
-        llm_settings = promptapi.read_settings(pl.open_library()).get("llm") or {}
         try:
-            if backend == "ollama":
-                if not model.strip():
-                    raise RuntimeError(
-                        "Ollama needs a model name — set the model widget "
-                        "(the Composer settings' Validate lists installed models)"
-                    )
-                url = llm_settings.get("ollama_url") or promptapi.DEFAULT_OLLAMA_URL
-                text = self._ollama(
-                    url,
-                    model,
-                    system_text,
-                    prompt,
-                    temperature,
-                    seed,
-                    max_tokens,
-                    timeout,
-                    free_vram,
-                )
-            else:
-                url = llm_settings.get("lmstudio_url") or promptapi.DEFAULT_LMSTUDIO_URL
-                text = self._openai_compatible(
-                    f"{url}/v1/chat/completions",
-                    model,
-                    system_text,
-                    prompt,
-                    temperature,
-                    seed,
-                    max_tokens,
-                    timeout,
-                )
+            text = promptapi.llm_chat(
+                pl.open_library(),
+                backend=backend,
+                model=model,
+                system=system_text,
+                prompt=prompt,
+                temperature=temperature,
+                seed=seed,
+                max_tokens=max_tokens,
+                timeout=timeout,
+                free_vram=free_vram,
+            )
         except Exception as exc:
             if on_error == "raise":
                 raise RuntimeError(f"LLM enhance failed via {backend}: {exc}") from exc
@@ -753,58 +736,6 @@ class PromptEnhance:
             f"enhanced via {backend}:{model or 'default'} seed {seed} "
             f"temp {temperature:g} ({vram})",
         )
-
-    @staticmethod
-    def _post_json(url, payload, timeout):
-        import urllib.request
-
-        request = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json", "User-Agent": "ComfyUI-MRLN-Nodes"},
-        )
-        with urllib.request.urlopen(request, timeout=timeout) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-
-    @classmethod
-    def _ollama(cls, url, model, system, prompt, temperature, seed, max_tokens, timeout, free_vram):
-        data = cls._post_json(
-            f"{url}/api/chat",
-            {
-                "model": model,
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": prompt},
-                ],
-                "stream": False,
-                "keep_alive": 0 if free_vram == "after call" else "5m",
-                "options": {"temperature": temperature, "seed": seed, "num_predict": max_tokens},
-            },
-            timeout,
-        )
-        return str((data.get("message") or {}).get("content") or "")
-
-    @classmethod
-    def _openai_compatible(cls, url, model, system, prompt, temperature, seed, max_tokens, timeout):
-        data = cls._post_json(
-            url,
-            {
-                "model": model or "local-model",
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": prompt},
-                ],
-                "temperature": temperature,
-                "seed": seed,
-                "max_tokens": max_tokens,
-                "stream": False,
-            },
-            timeout,
-        )
-        choices = data.get("choices") or []
-        if not choices:
-            return ""
-        return str((choices[0].get("message") or {}).get("content") or "")
 
 
 NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = build_mappings(

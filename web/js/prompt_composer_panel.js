@@ -2759,14 +2759,16 @@ export function createComposerPanel(root, ctx) {
         placeholder: `${label} URL`,
         title: `${label} endpoint used by the Prompt Enhance (MRLN) node`,
       });
-      const rowStatus = el("span", { class: "mrln-note" }, "not validated");
-      const validate = async () => {
+      const rowStatus = el("span", { class: "mrln-note" }, "checking…");
+      const check = async (persist = false) => {
         rowStatus.textContent = "…";
         try {
-          await ctx.apiJson("/mrln/prompt/save-settings", {
-            method: "POST",
-            body: { llm: { [key]: urlInput.value } },
-          });
+          if (persist) {
+            await ctx.apiJson("/mrln/prompt/save-settings", {
+              method: "POST",
+              body: { llm: { [key]: urlInput.value } },
+            });
+          }
           const body = await ctx.apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
           rowStatus.textContent = `✓ ${body.models.length} model(s): ${body.models
             .slice(0, 3)
@@ -2783,12 +2785,64 @@ export function createComposerPanel(root, ctx) {
         "div",
         { class: "mrln-inline" },
         urlInput,
-        el("button", { class: "mrln-btn", onclick: validate }, "Validate")
+        el("button", { class: "mrln-btn", onclick: () => check(true) }, "Validate")
       );
-      return { row, rowStatus, urlInput };
+      return { row, rowStatus, urlInput, check };
     };
     const ollama = backendRow("Ollama", "ollama_url", "ollama");
     const lmstudio = backendRow("LM Studio", "lmstudio_url", "lmstudio");
+    // Cloud keys: stored server-side (user tier settings.json), NEVER echoed
+    // back — the response only says whether one exists (green check).
+    const cloudRow = (label, provider) => {
+      const input = el("input", {
+        type: "password",
+        autocomplete: "off",
+        placeholder: `${label} API key`,
+      });
+      const mark = el("span", { class: "mrln-note" }, "");
+      const setMark = (isSet) => {
+        mark.textContent = isSet ? "✓ key stored" : "no key";
+        mark.style.color = isSet ? "#6ca" : "";
+      };
+      const push = async (value) => {
+        try {
+          const body = await ctx.apiJson("/mrln/prompt/save-settings", {
+            method: "POST",
+            body: { llm_api_keys: { [provider]: value } },
+          });
+          input.value = "";
+          setMark(body.llm_keys_set?.[provider]);
+          ctx.toast("success", "Settings saved", `${label} key ${value ? "stored" : "cleared"}`);
+        } catch (err) {
+          ctx.toast("error", "Settings save failed", err.message);
+        }
+      };
+      const row = el(
+        "div",
+        { class: "mrln-inline" },
+        el("span", { class: "mrln-cloud-label" }, label),
+        input,
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            onclick: () => {
+              if (input.value.trim()) push(input.value.trim());
+            },
+          },
+          "Save"
+        ),
+        el("button", { class: "mrln-btn", onclick: () => push("") }, "Clear"),
+        mark
+      );
+      return { row, setMark };
+    };
+    const clouds = [
+      ["anthropic", cloudRow("Anthropic", "anthropic")],
+      ["openai", cloudRow("OpenAI", "openai")],
+      ["gemini", cloudRow("Gemini", "gemini")],
+      ["openrouter", cloudRow("OpenRouter", "openrouter")],
+    ];
     const refresh = async () => {
       try {
         const body = await ctx.apiJson("/mrln/prompt/settings");
@@ -2798,9 +2852,13 @@ export function createComposerPanel(root, ctx) {
           : "no key stored — public models still resolve by hash";
         ollama.urlInput.value = body.llm?.ollama_url ?? "";
         lmstudio.urlInput.value = body.llm?.lmstudio_url ?? "";
+        for (const [provider, cloud] of clouds) cloud.setMark(body.llm_keys_set?.[provider]);
       } catch {
         status.textContent = "";
       }
+      // auto-check the local backends — green marks without a click
+      ollama.check();
+      lmstudio.check();
     };
     refresh();
     const save = async (clear) => {
@@ -2851,13 +2909,24 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-note" },
-        "Used by the Prompt Enhance (MRLN) node — Validate saves the URL and "
-          + "lists installed models (they feed the node's model dropdown)."
+        "Used by the Prompt Enhance (MRLN) node — checked automatically on "
+          + "open; Validate saves an edited URL and re-checks. The model list "
+          + "feeds the node's dropdown."
       ),
       ollama.row,
       ollama.rowStatus,
       lmstudio.row,
-      lmstudio.rowStatus
+      lmstudio.rowStatus,
+      el("hr", { class: "mrln-sep" }),
+      el("div", { class: "mrln-tree-head" }, "Cloud LLM API keys"),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Unlock the cloud backends of Prompt Enhance and the LLM de-composer. "
+          + "Keys are stored server-side in your user tier, never echoed back "
+          + "and never in a node widget (widgets persist into workflow PNGs)."
+      ),
+      ...clouds.flatMap(([, cloud]) => [cloud.row])
     );
   }
 
