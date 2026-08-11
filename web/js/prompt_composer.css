@@ -256,6 +256,11 @@ textarea.mrln-auto {
 }
 .mrln-brace-item { padding: 3px 6px; cursor: pointer; font-size: 11px; }
 .mrln-brace-item:hover { background: var(--comfy-input-bg, #1a1a1a); }
+.mrln-brace-menu.mrln-menu-up {
+  top: auto;
+  bottom: 100%;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
+}
 
 /* LoRA drill-down picker */
 .mrln-composer button.mrln-lora-current {

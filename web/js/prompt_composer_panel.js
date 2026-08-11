@@ -37,6 +37,17 @@ function parseToken(token) {
 
 const REF_RE = /(?<!\{)\{([A-Za-z_][A-Za-z0-9_-]*)\}(?!\})/g;
 
+function placeMenu(anchor, menu) {
+  // flip above the anchor when the panel's bottom would cut the menu,
+  // and never demand more height than the visible space offers
+  const rect = anchor.getBoundingClientRect();
+  const below = window.innerHeight - rect.bottom;
+  const above = rect.top;
+  const flipUp = below < 200 && above > below;
+  menu.classList.toggle("mrln-menu-up", flipUp);
+  menu.style.maxHeight = `${Math.max(120, (flipUp ? above : below) - 16)}px`;
+}
+
 function validateRefs(field, knownNames) {
   // red border when the text references a {name} that nothing provides
   const unknown = [...new Set([...field.value.matchAll(REF_RE)].map((m) => m[1]))].filter(
@@ -109,6 +120,7 @@ function braceAssist(field, getOptions, onPick) {
       )
     );
     menu.style.display = "";
+    placeMenu(field, menu);
   };
   field.addEventListener("input", refresh);
   field.addEventListener("click", refresh);
@@ -2413,6 +2425,7 @@ export function createComposerPanel(root, ctx) {
       }
       menu.replaceChildren(...out);
       menu.style.display = "";
+      placeMenu(control, menu);
       open = true;
     };
     control.addEventListener("click", () => {
