@@ -2312,9 +2312,208 @@ export function createComposerPanel(root, ctx) {
       filterInput,
       treeBlock("sections", "Sections", lib.sections, sectionLi),
       treeBlock("templates", "Templates", lib.templates, templateLi),
+      profilesBlock(),
       settingsBlock(),
       el("hr", { class: "mrln-sep" }),
       editorBox
+    );
+  }
+
+  function profilesBlock() {
+    const rows = (state.library.profiles ?? []).map((p) =>
+      el(
+        "li",
+        { onclick: () => openProfileEditor(p.name) },
+        p.name,
+        el("span", { class: "mrln-slug" }, " target-model profile"),
+        el(
+          "span",
+          {
+            class: `mrln-chip${p.tier === "factory" ? " mrln-factory" : " mrln-user"}`,
+            title: p.tier === "factory+user"
+              ? "Factory entry with your user-tier overlay"
+              : p.tier === "user"
+                ? "Your user-tier profile"
+                : "Factory profile — saving creates a user overlay",
+          },
+          p.tier === "factory+user" ? "F+U" : p.tier === "user" ? "U" : "F"
+        )
+      )
+    );
+    const stateKey = "profiles:@block";
+    return el(
+      "details",
+      {
+        class: "mrln-fold mrln-tree-block",
+        open: state.libGroups.has(stateKey) ? "" : null,
+        ontoggle: (e) => {
+          if (e.target.open) state.libGroups.add(stateKey);
+          else state.libGroups.delete(stateKey);
+        },
+      },
+      el(
+        "summary",
+        { class: "mrln-tree-head" },
+        "Profiles (target models)",
+        el("span", { class: "mrln-slug" }, ` ${rows.length}`)
+      ),
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el("button", { class: "mrln-btn", onclick: () => openProfileEditor(null) }, "New profile…")
+      ),
+      el("ul", { class: "mrln-tree" }, rows)
+    );
+  }
+
+  async function openProfileEditor(name) {
+    let body = { name: "", merged: {}, factory: null, user: null };
+    if (name) {
+      try {
+        body = await ctx.apiJson(`/mrln/prompt/profile?name=${encodeURIComponent(name)}`);
+      } catch (err) {
+        editorBox.replaceChildren(el("div", { class: "mrln-error" }, err.message));
+        return;
+      }
+    }
+    const merged = body.merged ?? {};
+    const nameInput = el("input", {
+      type: "text",
+      value: body.name ?? "",
+      placeholder: "e.g. my-model (lowercase-kebab)",
+    });
+    const systemArea = autoArea(
+      { placeholder: "System prompt the LLM enhancer uses for this target model" },
+      merged.llm?.system ?? ""
+    );
+    const formatSelect = el("select", {
+      title: "Render format this profile applies (explicit node widget still wins)",
+    });
+    for (const fmt of ["(inherit)", "string", "string_labeled", "json", "json_flat"]) {
+      formatSelect.append(el("option", { value: fmt }, fmt));
+    }
+    formatSelect.value = merged.render?.format ?? "(inherit)";
+    const lengthSelect = el("select", { title: "Item text length this profile applies" });
+    for (const length of ["(inherit)", "long", "short"]) {
+      lengthSelect.append(el("option", { value: length }, length));
+    }
+    lengthSelect.value = merged.render?.text_length ?? "(inherit)";
+    const paramsArea = autoArea(
+      { placeholder: '{"max_words": 220} — free JSON handed to the enhancer' },
+      merged.llm?.params ? JSON.stringify(merged.llm.params, null, 2) : ""
+    );
+    const scaffoldArea = autoArea(
+      { placeholder: 'optional json_template — e.g. {"prompt": "{positive}", "negative_prompt": "{negative}"}' },
+      merged.json_template ? JSON.stringify(merged.json_template, null, 2) : ""
+    );
+    const errorLine = el("div", { class: "mrln-error" });
+
+    async function save() {
+      const target = nameInput.value.trim();
+      const data = {};
+      const render = {};
+      if (formatSelect.value !== "(inherit)") render.format = formatSelect.value;
+      if (lengthSelect.value !== "(inherit)") render.text_length = lengthSelect.value;
+      if (Object.keys(render).length) data.render = render;
+      const llm = {};
+      if (systemArea.value.trim()) llm.system = systemArea.value.trim();
+      if (paramsArea.value.trim()) {
+        try {
+          llm.params = JSON.parse(paramsArea.value);
+        } catch (err) {
+          errorLine.textContent = `params: ${err.message}`;
+          return;
+        }
+      }
+      if (Object.keys(llm).length) data.llm = llm;
+      if (scaffoldArea.value.trim()) {
+        try {
+          data.json_template = JSON.parse(scaffoldArea.value);
+        } catch (err) {
+          errorLine.textContent = `json_template: ${err.message}`;
+          return;
+        }
+      }
+      try {
+        await ctx.apiJson("/mrln/prompt/save-profile", {
+          method: "POST",
+          body: { name: target, data },
+        });
+      } catch (err) {
+        errorLine.textContent = err.message;
+        return;
+      }
+      errorLine.textContent = "";
+      ctx.toast("success", "Profile saved", `${target} (user tier — overlays factory)`);
+      ctx.refreshCombos(); // the node's profile combo picks it up
+      await loadLibrary();
+      if (state.slug) await refreshDetail();
+      openProfileEditor(target);
+    }
+
+    const actions = [
+      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user tier"),
+    ];
+    if (body.user) {
+      actions.push(
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            title: "Remove your user-tier entry — factory content (if any) shows through again",
+            onclick: async () => {
+              try {
+                await ctx.apiJson("/mrln/prompt/save-profile", {
+                  method: "POST",
+                  body: { name: body.name, data: null },
+                });
+              } catch (err) {
+                ctx.toast("error", "Delete failed", err.message);
+                return;
+              }
+              ctx.toast("success", "User entry deleted", body.name);
+              ctx.refreshCombos();
+              await loadLibrary();
+              if (state.slug) await refreshDetail();
+              editorBox.replaceChildren();
+            },
+          },
+          "Delete user entry"
+        )
+      );
+    }
+
+    editorBox.replaceChildren(
+      el(
+        "div",
+        { class: "mrln-tree-head" },
+        name ? `Profile: ${name}` : "New profile",
+        body.user
+          ? el("span", { class: "mrln-chip mrln-user" }, body.factory ? "factory+user" : "user")
+          : name
+            ? el("span", { class: "mrln-chip mrln-factory" }, "factory")
+            : null
+      ),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Explicit per-model guidance: each target model gets its own entry even "
+          + "when instructions overlap. Saving writes your USER tier, overlaying "
+          + "the factory entry field by field; templates can extend further and "
+          + "the node's profile widget selects (template guides, user decides)."
+      ),
+      field("Name", nameInput),
+      field("System prompt (LLM enhancer)", systemArea),
+      el(
+        "div",
+        { class: "mrln-grid2" },
+        field("Render format", formatSelect),
+        field("Text length", lengthSelect)
+      ),
+      field("Params (JSON)", paramsArea),
+      field("json_template scaffold (optional)", scaffoldArea),
+      errorLine,
+      el("div", { class: "mrln-actions" }, ...actions)
     );
   }
 
@@ -2330,6 +2529,42 @@ export function createComposerPanel(root, ctx) {
       autocomplete: "off",
     });
     const status = el("span", { class: "mrln-note" });
+    const backendRow = (label, key, provider) => {
+      const urlInput = el("input", {
+        type: "text",
+        placeholder: `${label} URL`,
+        title: `${label} endpoint used by the Prompt Enhance (MRLN) node`,
+      });
+      const rowStatus = el("span", { class: "mrln-note" }, "not validated");
+      const validate = async () => {
+        rowStatus.textContent = "…";
+        try {
+          await ctx.apiJson("/mrln/prompt/save-settings", {
+            method: "POST",
+            body: { llm: { [key]: urlInput.value } },
+          });
+          const body = await ctx.apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
+          rowStatus.textContent = `✓ ${body.models.length} model(s): ${body.models
+            .slice(0, 3)
+            .join(", ")}${body.models.length > 3 ? ", …" : ""}`;
+          rowStatus.style.color = "#6ca";
+          rowStatus.title = body.models.join("\n");
+        } catch (err) {
+          rowStatus.textContent = `✗ ${err.message}`;
+          rowStatus.style.color = "#e88";
+          rowStatus.title = "";
+        }
+      };
+      const row = el(
+        "div",
+        { class: "mrln-inline" },
+        urlInput,
+        el("button", { class: "mrln-btn", onclick: validate }, "Validate")
+      );
+      return { row, rowStatus, urlInput };
+    };
+    const ollama = backendRow("Ollama", "ollama_url", "ollama");
+    const lmstudio = backendRow("LM Studio", "lmstudio_url", "lmstudio");
     const refresh = async () => {
       try {
         const body = await ctx.apiJson("/mrln/prompt/settings");
@@ -2337,6 +2572,8 @@ export function createComposerPanel(root, ctx) {
         status.textContent = body.civitai_key_set
           ? "key stored (server-side, user tier)"
           : "no key stored — public models still resolve by hash";
+        ollama.urlInput.value = body.llm?.ollama_url ?? "";
+        lmstudio.urlInput.value = body.llm?.lmstudio_url ?? "";
       } catch {
         status.textContent = "";
       }
@@ -2363,11 +2600,11 @@ export function createComposerPanel(root, ctx) {
     return el(
       "details",
       { class: "mrln-fold" },
-      el("summary", {}, "Settings (Civitai)"),
+      el("summary", {}, "Settings (Civitai · local LLM backends)"),
       el(
         "div",
         { class: "mrln-note" },
-        "Used by LoRA blocks to look up trigger words + AIR tags by file hash."
+        "Civitai: used by LoRA blocks to look up trigger words + AIR tags by file hash."
       ),
       el(
         "div",
@@ -2385,7 +2622,17 @@ export function createComposerPanel(root, ctx) {
         ),
         el("button", { class: "mrln-btn", onclick: () => save(true) }, "Clear")
       ),
-      status
+      status,
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Local LLM backends for the Prompt Enhance (MRLN) node — Validate saves "
+          + "the URL and lists installed models."
+      ),
+      ollama.row,
+      ollama.rowStatus,
+      lmstudio.row,
+      lmstudio.rowStatus
     );
   }
 

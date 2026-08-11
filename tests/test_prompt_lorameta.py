@@ -156,11 +156,12 @@ def test_settings_roundtrip_never_echoes_key(tmp_path):
 
     lib = build_library(tmp_path)
     status, body = promptapi.handle_settings(lib, {})
-    assert status == 200 and body == {"civitai_key_set": False}
+    assert status == 200 and body["civitai_key_set"] is False
+    assert body["llm"]["ollama_url"]  # backend URLs round-trip (not secrets)
     status, body = promptapi.handle_save_settings(lib, {"civitai_api_key": "secret-123"})
     assert status == 200 and body["civitai_key_set"] is True
     status, body = promptapi.handle_settings(lib, {})
-    assert body == {"civitai_key_set": True}  # the key itself never leaves the server
+    assert body["civitai_key_set"] is True  # the key itself never leaves the server
     assert "secret-123" not in json.dumps(body)
     # stored server-side in the user tier
     stored = json.loads((lib.user_root / "settings.json").read_text(encoding="utf-8"))

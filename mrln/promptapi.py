@@ -15,6 +15,7 @@ filesystem any other way. JSON in, JSON out; errors are
 
 import asyncio
 import json
+import re
 import threading
 import traceback
 
@@ -144,11 +145,23 @@ def handle_library(lib, payload):
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))
         sections.append(entry)
+    factory_profiles = set(_profiles_file(lib.factory_root))
+    user_profiles = set(_profiles_file(lib.user_root))
+    profiles = [
+        {
+            "name": name,
+            "tier": "factory+user"
+            if name in factory_profiles and name in user_profiles
+            else ("user" if name in user_profiles else "factory"),
+        }
+        for name in sorted(lib.pack_profiles())
+    ]
     return 200, {
         "fingerprint": lib.fingerprint(),
         "templates": templates,
         "sections": sections,
         "folders": lib.section_folders(),
+        "profiles": profiles,
     }
 
 
@@ -450,6 +463,87 @@ def handle_decompose(lib, payload):
     return 200, report
 
 
+def _profiles_file(root):
+    """Raw 'profiles' map of one tier's profiles.json ({} if absent/broken)."""
+    if not root:
+        return {}
+    path = root / "profiles.json"
+    if not path.is_file():
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        profiles = data.get("profiles")
+        return profiles if isinstance(profiles, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+@_guarded
+def handle_profile(lib, payload):
+    name = _require_str(payload, "name")
+    factory = _profiles_file(lib.factory_root).get(name)
+    user = _profiles_file(lib.user_root).get(name)
+    merged = lib.pack_profiles().get(name)
+    if merged is None and factory is None and user is None:
+        return 404, {
+            "error": f"profile '{name}' not found",
+            "remediation": "list names via GET /mrln/prompt/library",
+        }
+    return 200, {"name": name, "merged": merged or {}, "factory": factory, "user": user}
+
+
+@_guarded
+def handle_save_profile(lib, payload):
+    """Write (or with data=null delete) a USER-tier profile entry — the
+    overlay above factory profiles.json. The Composer's Profiles editor
+    calls this; users need their own system prompts per target model."""
+    if lib.user_root is None:
+        return 400, {
+            "error": "no user library root configured",
+            "remediation": "set MRLN_PROMPT_DIR or run inside ComfyUI",
+        }
+    name = _require_str(payload, "name")
+    if name == pl.STANDARD or not re.fullmatch(r"[a-z0-9][a-z0-9-]*", name):
+        raise ApiError(
+            f"profile name '{name}' must be lowercase-kebab and not 'standard' (reserved)"
+        )
+    data = payload.get("data")
+    user_profiles = dict(_profiles_file(lib.user_root))
+    if data is None:
+        if name not in user_profiles:
+            return 404, {
+                "error": f"no user-tier entry for profile '{name}'",
+                "remediation": "only user-tier entries can be deleted; factory "
+                "profiles are read-only",
+            }
+        user_profiles.pop(name)
+        action = "deleted"
+    else:
+        if not isinstance(data, dict):
+            raise ApiError("'data' must be an object (or null to delete the user entry)")
+        render_over = data.get("render") or {}
+        if not isinstance(render_over, dict):
+            raise ApiError("'render' must be an object")
+        if "format" in render_over and render_over["format"] not in pl.FORMATS:
+            raise ApiError(f"unknown render format '{render_over['format']}'")
+        if "text_length" in render_over and render_over["text_length"] not in pl.TEXT_LENGTHS:
+            raise ApiError("unknown text_length (lengths: long, short)")
+        user_profiles[name] = data
+        action = "saved"
+    lib.user_root.mkdir(parents=True, exist_ok=True)
+    with open(lib.user_root / "profiles.json", "w", encoding="utf-8") as fh:
+        json.dump({"profiles": user_profiles}, fh, ensure_ascii=False, indent=2)
+        fh.write("\n")
+    lib.invalidate()
+    return 200, {
+        "ok": True,
+        "name": name,
+        "action": action,
+        "profiles": sorted(lib.pack_profiles()),
+    }
+
+
 def _settings_path(lib):
     return lib.user_root / "settings.json"
 
@@ -468,10 +562,34 @@ def _read_settings(lib):
         return {}
 
 
+DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434"
+DEFAULT_LMSTUDIO_URL = "http://127.0.0.1:1234"
+
+
+def read_settings(lib):
+    """Public settings reader (keys stay server-side; callers must never
+    echo secrets)."""
+    return _read_settings(lib)
+
+
+def _llm_settings(settings):
+    llm = settings.get("llm")
+    return llm if isinstance(llm, dict) else {}
+
+
 @_guarded
 def handle_settings(lib, payload):
-    # the key itself is NEVER echoed back — only whether one is stored
-    return 200, {"civitai_key_set": bool(_read_settings(lib).get("civitai_api_key"))}
+    # secrets are NEVER echoed back — only whether one is stored; local
+    # backend URLs are not secrets and round-trip for the settings UI
+    settings = _read_settings(lib)
+    llm = _llm_settings(settings)
+    return 200, {
+        "civitai_key_set": bool(settings.get("civitai_api_key")),
+        "llm": {
+            "ollama_url": llm.get("ollama_url") or DEFAULT_OLLAMA_URL,
+            "lmstudio_url": llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL,
+        },
+    }
 
 
 @_guarded
@@ -490,10 +608,57 @@ def handle_save_settings(lib, payload):
             settings["civitai_api_key"] = raw.strip()
         else:
             settings.pop("civitai_api_key", None)  # empty clears
+    if "llm" in payload:
+        raw_llm = payload.get("llm")
+        if not isinstance(raw_llm, dict):
+            raise ApiError("'llm' must be an object")
+        llm = _llm_settings(settings)
+        for key in ("ollama_url", "lmstudio_url"):
+            if key in raw_llm:
+                value = raw_llm[key]
+                if not isinstance(value, str):
+                    raise ApiError(f"'llm.{key}' must be a string")
+                value = value.strip().rstrip("/")
+                if value:
+                    llm[key] = value
+                else:
+                    llm.pop(key, None)  # empty reverts to the default
+        settings["llm"] = llm
     lib.user_root.mkdir(parents=True, exist_ok=True)
     with open(_settings_path(lib), "w", encoding="utf-8") as fh:
         json.dump(settings, fh, indent=2)
     return 200, {"ok": True, "civitai_key_set": bool(settings.get("civitai_api_key"))}
+
+
+@_guarded
+def handle_llm_validate(lib, payload):
+    """Ping a local LLM backend and list its models — powers the green
+    checkmarks in the Composer settings."""
+    provider = _require_str(payload, "provider")
+    llm = _llm_settings(_read_settings(lib))
+    import urllib.error
+    import urllib.request
+
+    if provider == "ollama":
+        url = f"{llm.get('ollama_url') or DEFAULT_OLLAMA_URL}/api/tags"
+    elif provider == "lmstudio":
+        url = f"{llm.get('lmstudio_url') or DEFAULT_LMSTUDIO_URL}/v1/models"
+    else:
+        raise ApiError(f"unknown provider '{provider}' (have: ollama, lmstudio)")
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": "ComfyUI-MRLN-Nodes"})
+        with urllib.request.urlopen(request, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:  # URLError / timeout / bad JSON — all mean "not reachable"
+        return 502, {
+            "error": f"{provider} unreachable at {url}: {exc}",
+            "remediation": "start the server or fix the URL, then Validate again",
+        }
+    if provider == "ollama":
+        models = sorted(m.get("name", "") for m in data.get("models") or [] if m.get("name"))
+    else:
+        models = sorted(m.get("id", "") for m in data.get("data") or [] if m.get("id"))
+    return 200, {"state": "ok", "provider": provider, "models": models}
 
 
 _ECO_MAP = (
@@ -661,6 +826,9 @@ ROUTES = (
     ("get", "/mrln/prompt/lora-civitai", handle_lora_civitai, False),
     ("get", "/mrln/prompt/settings", handle_settings, False),
     ("post", "/mrln/prompt/save-settings", handle_save_settings, True),
+    ("get", "/mrln/prompt/profile", handle_profile, False),
+    ("post", "/mrln/prompt/save-profile", handle_save_profile, True),
+    ("get", "/mrln/prompt/llm-validate", handle_llm_validate, False),
     ("post", "/mrln/prompt/preview", handle_preview, True),
     ("post", "/mrln/prompt/save-section", handle_save_section, True),
     ("post", "/mrln/prompt/save-template", handle_save_template, True),

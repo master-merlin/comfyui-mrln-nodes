@@ -22,7 +22,7 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 
 | Domain | Nodes |
 | ------ | ----- |
-| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, `loras` output describing drawn LoRA blocks); **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it) |
+| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector, `loras` + `llm` outputs); **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local LLM (Ollama / LM Studio) under the selected profile's per-model system prompt, deterministic per seed, VRAM freed after the call, pass-through on backend failure |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: a multiverse of factory content ships

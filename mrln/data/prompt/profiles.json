@@ -1,11 +1,32 @@
 {
-  "_comment": "Pack-level target-model profiles. A template's own 'profiles' extend these by name; the user tier's profiles.json overlays this file. 'standard' is reserved and means the template's plain render. The 'llm' block travels on the Prompt Template node's llm output for the (planned) Prompt Enhance node — until that node exists it is informational.",
+  "_comment": "Pack-level target-model profiles, one EXPLICIT entry per model family (users should never need to know which models share conventions). A template's own 'profiles' extend these by name; the user tier's profiles.json overlays this file; the Composer's Profiles editor writes that user tier. 'standard' is reserved and means the template's plain render. The 'llm' block travels on the Prompt Template node's llm output into the Prompt Enhance (MRLN) node.",
   "profiles": {
     "krea2": {
       "render": { "format": "string_labeled", "text_length": "long" },
       "llm": {
         "system": "You refine image prompts for KREA 2, which rewards flowing cinematic prose and strong prompt adherence. Rewrite the prompt as connected sentences that keep every concrete fact (subject, setting, lighting, camera, colors, trigger words and (weighted:1.2) spans verbatim). Deepen material and light description, keep one paragraph per labeled block, never invent people, brands or text overlays, and stay under 220 words.",
         "params": { "max_words": 220 }
+      }
+    },
+    "flux": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for FLUX, which parses natural language well but rewards explicit spatial relations. Rewrite as clear declarative sentences, stating where each element sits in the frame and how the light falls. Keep every concrete fact and trigger word verbatim, avoid tag soup and purple prose, stay under 120 words.",
+        "params": { "max_words": 120 }
+      }
+    },
+    "qwen-image": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for Qwen-Image, which excels at layout control and rendering text inside images. Rewrite as precise natural-language sentences: state the spatial arrangement explicitly, and put any text that should appear in the image in double quotes exactly as it must render. Keep every concrete fact and trigger word verbatim, stay under 150 words.",
+        "params": { "max_words": 150 }
+      }
+    },
+    "hidream": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for HiDream, which responds to rich natural language with strong aesthetic vocabulary. Rewrite as vivid, well-structured sentences emphasizing mood, palette and material quality. Keep every concrete fact and trigger word verbatim, no lists, stay under 150 words.",
+        "params": { "max_words": 150 }
       }
     },
     "sdxl": {
@@ -15,11 +36,25 @@
         "params": { "max_tokens": 75 }
       }
     },
-    "flux": {
-      "render": { "format": "string", "text_length": "long" },
+    "sd15": {
+      "render": { "format": "string", "text_length": "short" },
       "llm": {
-        "system": "You refine image prompts for FLUX, which parses natural language well but rewards explicit spatial relations. Rewrite as clear declarative sentences, stating where each element sits in the frame and how the light falls. Keep every concrete fact and trigger word verbatim, avoid tag soup and purple prose, stay under 120 words.",
-        "params": { "max_words": 120 }
+        "system": "You compress image prompts for Stable Diffusion 1.5, which needs short keyword prompts and benefits from classic quality tags. Rewrite as comma-separated keywords, subject first, then a few strong style and quality tags (masterpiece, best quality, highly detailed). Keep trigger words and (weighted:1.2) spans exactly as written, stay under 60 tokens.",
+        "params": { "max_tokens": 60 }
+      }
+    },
+    "pony": {
+      "render": { "format": "string", "text_length": "short" },
+      "llm": {
+        "system": "You rewrite image prompts for Pony Diffusion, which expects booru-style tags with score prefixes. Start with 'score_9, score_8_up, score_7_up', then rating tag, then the subject and scene as underscore_joined booru tags. Keep trigger words and (weighted:1.2) spans exactly as written, no sentences, no artist names, stay under 75 tokens.",
+        "params": { "max_tokens": 75 }
+      }
+    },
+    "illustrious": {
+      "render": { "format": "string", "text_length": "short" },
+      "llm": {
+        "system": "You rewrite image prompts for Illustrious-XL, an anime model expecting booru tags. Order: character count tags first (1girl, 1boy, solo), then character and subject tags, then scene, pose, clothing, lighting, and finish with quality tags (masterpiece, best quality, very aesthetic). Underscore_joined booru tags, keep trigger words verbatim, no artist names, stay under 75 tokens.",
+        "params": { "max_tokens": 75 }
       }
     }
   }

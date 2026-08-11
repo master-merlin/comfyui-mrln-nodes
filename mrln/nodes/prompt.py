@@ -3,6 +3,7 @@ JSON library (see mrln/promptlib). Nodes are thin runtime anchors — all
 logic lives in the engine; combos are rebuilt on every INPUT_TYPES call so
 'Refresh node definitions' picks up new library files."""
 
+import hashlib
 import json
 from inspect import cleandoc
 
@@ -488,10 +489,311 @@ class LoraApply:
         return (model, clip)
 
 
+def parse_llm_spec(llm):
+    """'llm' JSON from the Template node -> dict ({} for empty/standard)."""
+    if not isinstance(llm, str) or not llm.strip():
+        return {}
+    try:
+        data = json.loads(llm)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"'llm' is not valid JSON ({exc}) — wire it from the Prompt Template node's llm output"
+        ) from None
+    if not isinstance(data, dict):
+        raise ValueError("'llm' must be a JSON object")
+    return data
+
+
+def _strip_thinking(text):
+    """Remove <think>…</think> blocks that reasoning models prepend."""
+    import re as _re
+
+    return _re.sub(r"<think>.*?</think>", "", text, flags=_re.DOTALL)
+
+
+_ENHANCE_CACHE = {}  # (backend, model, system, prompt, seed, temp, max_tokens) -> text
+
+
+class PromptEnhance:
+    """Rewrite a prompt with an LLM under a target-model system prompt.
+
+    Wire the Prompt Template node's prompt and llm outputs in: the selected
+    profile's system prompt tells the LLM how the TARGET image model wants
+    its prompts (prose for KREA/FLUX, tags for SDXL/Pony, ...). Runs against
+    local Ollama or LM Studio (URLs in the Composer's Settings fold, where
+    Validate also lists installed models). Deterministic per seed where the
+    backend supports it, cached per input so re-queues never re-call, and a
+    failing backend passes the original prompt through instead of killing
+    the render (switchable). Ollama frees its VRAM right after the call by
+    default so the sampler gets the GPU back.
+    """
+
+    CATEGORY = category("prompt")
+    DESCRIPTION = cleandoc(__doc__)
+    FUNCTION = "execute"
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("prompt", "report")
+    OUTPUT_TOOLTIPS = (
+        "The enhanced prompt (or the original on pass-through).",
+        "What happened: backend, model, seed, cache/VRAM state, or the pass-through reason.",
+    )
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "prompt": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "The prompt to enhance — usually the Prompt Template "
+                        "node's prompt output (any STRING works).",
+                    },
+                ),
+                "backend": (
+                    ["ollama", "lm studio"],
+                    {
+                        "tooltip": "Local LLM backend. URLs are configured in the Composer's "
+                        "Settings fold; Validate there lists the installed models.",
+                    },
+                ),
+                "model": (
+                    "STRING",
+                    {
+                        "default": "",
+                        "tooltip": "Model name, e.g. 'gemma3:12b' (Ollama) or an LM Studio "
+                        "model id. Required for Ollama; LM Studio falls back to its "
+                        "loaded model. The Composer settings' Validate button lists "
+                        "what is installed.",
+                    },
+                ),
+                "temperature": (
+                    "FLOAT",
+                    {
+                        "default": 0.2,
+                        "min": 0.0,
+                        "max": 2.0,
+                        "step": 0.05,
+                        "tooltip": "Sampling temperature — keep low for faithful rewrites.",
+                    },
+                ),
+                "seed": (
+                    "INT",
+                    {
+                        "default": 0,
+                        "min": 0,
+                        "max": 0xFFFFFFFFFFFFFFFF,
+                        "tooltip": "LLM seed for reproducible rewrites (where the backend "
+                        "supports it). 0 derives a stable seed from the prompt + system "
+                        "text, so identical inputs enhance identically.",
+                    },
+                ),
+                "max_tokens": (
+                    "INT",
+                    {
+                        "default": 512,
+                        "min": 16,
+                        "max": 8192,
+                        "tooltip": "Generation cap for the rewrite.",
+                    },
+                ),
+                "timeout": (
+                    "INT",
+                    {
+                        "default": 60,
+                        "min": 5,
+                        "max": 600,
+                        "tooltip": "Seconds to wait for the backend before giving up.",
+                    },
+                ),
+                "free_vram": (
+                    ["after call", "keep 5m"],
+                    {
+                        "tooltip": "Ollama keep_alive: 'after call' unloads the LLM "
+                        "immediately so the diffusion model gets the VRAM back "
+                        "(recommended on one GPU); 'keep 5m' keeps it warm for rapid "
+                        "iteration. LM Studio manages its own lifetime.",
+                    },
+                ),
+                "on_error": (
+                    ["pass through", "raise"],
+                    {
+                        "tooltip": "When the backend is unreachable or errors: pass the "
+                        "ORIGINAL prompt through (render never dies, report says why) "
+                        "or raise and stop the queue.",
+                    },
+                ),
+            },
+            "optional": {
+                "llm": (
+                    "STRING",
+                    {
+                        "forceInput": True,
+                        "tooltip": "The Prompt Template node's llm output: the selected "
+                        "profile's {target, system, params}. Without it, the system "
+                        "override below is used.",
+                    },
+                ),
+                "system": (
+                    "STRING",
+                    {
+                        "multiline": True,
+                        "default": "",
+                        "tooltip": "System prompt override. Empty = use the llm input's "
+                        "system prompt; set both and this one wins (template guides, "
+                        "user decides).",
+                    },
+                ),
+            },
+        }
+
+    @classmethod
+    def VALIDATE_INPUTS(cls, llm=None):
+        if llm in (None, ""):
+            return True
+        try:
+            parse_llm_spec(llm)
+        except ValueError as exc:
+            return str(exc)
+        return True
+
+    def execute(
+        self,
+        prompt,
+        backend,
+        model,
+        temperature,
+        seed,
+        max_tokens,
+        timeout,
+        free_vram,
+        on_error,
+        llm="",
+        system="",
+    ):
+        spec = parse_llm_spec(llm)
+        system_text = system.strip() or str(spec.get("system") or "").strip()
+        if not system_text:
+            return (
+                prompt,
+                "pass-through: no system prompt — select a profile on the Template node "
+                "and wire its llm output, or type a system override",
+            )
+        if seed == 0:
+            digest = hashlib.sha256(f"{system_text}\n{prompt}".encode()).digest()
+            seed = int.from_bytes(digest[:8], "big") & 0x7FFFFFFF
+        cache_key = (backend, model, system_text, prompt, seed, round(temperature, 4), max_tokens)
+        cached = _ENHANCE_CACHE.get(cache_key)
+        if cached is not None:
+            return (cached, f"enhanced via {backend}:{model or 'default'} (cached) seed {seed}")
+
+        from mrln import promptapi
+
+        llm_settings = promptapi.read_settings(pl.open_library()).get("llm") or {}
+        try:
+            if backend == "ollama":
+                if not model.strip():
+                    raise RuntimeError(
+                        "Ollama needs a model name — set the model widget "
+                        "(the Composer settings' Validate lists installed models)"
+                    )
+                url = llm_settings.get("ollama_url") or promptapi.DEFAULT_OLLAMA_URL
+                text = self._ollama(
+                    url,
+                    model,
+                    system_text,
+                    prompt,
+                    temperature,
+                    seed,
+                    max_tokens,
+                    timeout,
+                    free_vram,
+                )
+            else:
+                url = llm_settings.get("lmstudio_url") or promptapi.DEFAULT_LMSTUDIO_URL
+                text = self._openai_compatible(
+                    f"{url}/v1/chat/completions",
+                    model,
+                    system_text,
+                    prompt,
+                    temperature,
+                    seed,
+                    max_tokens,
+                    timeout,
+                )
+        except Exception as exc:
+            if on_error == "raise":
+                raise RuntimeError(f"LLM enhance failed via {backend}: {exc}") from exc
+            return (prompt, f"pass-through: {backend} failed ({exc}) — original prompt kept")
+        text = _strip_thinking(text).strip()
+        if not text:
+            return (prompt, f"pass-through: {backend} returned empty text — original kept")
+        _ENHANCE_CACHE[cache_key] = text
+        vram = "vram freed" if (backend == "ollama" and free_vram == "after call") else "vram kept"
+        return (
+            text,
+            f"enhanced via {backend}:{model or 'default'} seed {seed} "
+            f"temp {temperature:g} ({vram})",
+        )
+
+    @staticmethod
+    def _post_json(url, payload, timeout):
+        import urllib.request
+
+        request = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json", "User-Agent": "ComfyUI-MRLN-Nodes"},
+        )
+        with urllib.request.urlopen(request, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+
+    @classmethod
+    def _ollama(cls, url, model, system, prompt, temperature, seed, max_tokens, timeout, free_vram):
+        data = cls._post_json(
+            f"{url}/api/chat",
+            {
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": prompt},
+                ],
+                "stream": False,
+                "keep_alive": 0 if free_vram == "after call" else "5m",
+                "options": {"temperature": temperature, "seed": seed, "num_predict": max_tokens},
+            },
+            timeout,
+        )
+        return str((data.get("message") or {}).get("content") or "")
+
+    @classmethod
+    def _openai_compatible(cls, url, model, system, prompt, temperature, seed, max_tokens, timeout):
+        data = cls._post_json(
+            url,
+            {
+                "model": model or "local-model",
+                "messages": [
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": temperature,
+                "seed": seed,
+                "max_tokens": max_tokens,
+                "stream": False,
+            },
+            timeout,
+        )
+        choices = data.get("choices") or []
+        if not choices:
+            return ""
+        return str((choices[0].get("message") or {}).get("content") or "")
+
+
 NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = build_mappings(
     {
         "PromptTemplate": PromptTemplate,
         "PromptSection": PromptSection,
         "LoraApply": LoraApply,
+        "PromptEnhance": PromptEnhance,
     }
 )

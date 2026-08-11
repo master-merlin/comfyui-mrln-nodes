@@ -179,6 +179,44 @@ def test_fingerprint_reacts_to_profiles_file(lib, tmp_path):
     assert lib.fingerprint() != before
 
 
+# -- profile editing API -----------------------------------------------------
+
+
+def test_profile_detail_shows_tiers(lib):
+    status, body = promptapi.handle_profile(lib, {"name": "krea2"})
+    assert status == 200
+    assert body["factory"]["llm"]["system"] == "FACTORY-KREA"
+    assert body["user"]["llm"]["system"] == "USER-KREA"
+    assert body["merged"]["llm"]["system"] == "USER-KREA"
+    assert promptapi.handle_profile(lib, {"name": "nope"})[0] == 404
+
+
+def test_save_profile_roundtrip_and_delete(lib):
+    status, body = promptapi.handle_save_profile(
+        lib, {"name": "my-model", "data": {"llm": {"system": "S"}}}
+    )
+    assert status == 200 and "my-model" in body["profiles"]
+    assert lib.pack_profiles()["my-model"]["llm"]["system"] == "S"
+    listing = promptapi.handle_library(lib, {})[1]["profiles"]
+    tiers = {p["name"]: p["tier"] for p in listing}
+    assert tiers["my-model"] == "user" and tiers["krea2"] == "factory+user"
+    assert tiers["sdxl"] == "factory"
+    # deleting the user entry reverts krea2 to pure factory
+    status, _ = promptapi.handle_save_profile(lib, {"name": "krea2", "data": None})
+    assert status == 200
+    assert lib.pack_profiles()["krea2"]["llm"]["system"] == "FACTORY-KREA"
+
+
+def test_save_profile_validation(lib):
+    assert promptapi.handle_save_profile(lib, {"name": "standard", "data": {}})[0] == 400
+    assert promptapi.handle_save_profile(lib, {"name": "Bad Name", "data": {}})[0] == 400
+    status, body = promptapi.handle_save_profile(
+        lib, {"name": "x", "data": {"render": {"format": "yaml"}}}
+    )
+    assert status == 400 and "format" in body["error"]
+    assert promptapi.handle_save_profile(lib, {"name": "ghost", "data": None})[0] == 404
+
+
 # -- node integration --------------------------------------------------------
 
 
@@ -189,13 +227,18 @@ def node_env(tmp_path, monkeypatch):
     return pack.NODE_CLASS_MAPPINGS["MRLN_PromptTemplate"]
 
 
+FACTORY_PROFILES = {"krea2", "flux", "qwen-image", "hidream", "sdxl", "sd15", "pony", "illustrious"}
+
+
 def test_profile_widget_is_last_and_lists_factory_profiles(node_env):
     inputs = node_env.INPUT_TYPES()
     all_names = [*inputs["required"], *inputs.get("optional", {})]
     assert all_names[-1] == "profile"  # positional widgets_values append-only
     options = inputs["optional"]["profile"][0]
     assert options[0] == "standard"
-    assert {"krea2", "sdxl", "flux"} <= set(options)  # factory profiles.json
+    # one EXPLICIT entry per model family — users must not need to know
+    # which models share prompting conventions
+    assert set(options) >= FACTORY_PROFILES
 
 
 def test_node_llm_output_and_profile_render(node_env):
