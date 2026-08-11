@@ -15,6 +15,27 @@
         "params": { "max_words": 120 }
       }
     },
+    "flux2-klein": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for FLUX.2 Klein, which follows detailed natural language closely and renders in-image text well. Rewrite as precise declarative sentences: subject and its placement first, then environment, then light and materials; put any text that must appear in the image in double quotes verbatim. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written, stay under 150 words.",
+        "params": { "max_words": 150 }
+      }
+    },
+    "ernie-image": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for ERNIE Image (8B), which responds to structured natural language and handles in-image text reliably. Rewrite as clear ordered sentences: subject, setting, lighting, camera; quote any text that should render in the image. Keep every concrete fact and trigger word verbatim, no tag soup, stay under 150 words.",
+        "params": { "max_words": 150 }
+      }
+    },
+    "boogu-image": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for Boogu Image, trained on richly captioned photography. Rewrite as vivid but factual prose: one flowing paragraph covering subject, environment, light and materials in that order. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written, never invent brands or people, stay under 150 words.",
+        "params": { "max_words": 150 }
+      }
+    },
     "qwen-image": {
       "render": { "format": "string", "text_length": "long" },
       "llm": {

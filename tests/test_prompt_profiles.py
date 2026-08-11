@@ -227,7 +227,19 @@ def node_env(tmp_path, monkeypatch):
     return pack.NODE_CLASS_MAPPINGS["MRLN_PromptTemplate"]
 
 
-FACTORY_PROFILES = {"krea2", "flux", "qwen-image", "hidream", "sdxl", "sd15", "pony", "illustrious"}
+FACTORY_PROFILES = {
+    "krea2",
+    "flux",
+    "flux2-klein",
+    "ernie-image",
+    "boogu-image",
+    "qwen-image",
+    "hidream",
+    "sdxl",
+    "sd15",
+    "pony",
+    "illustrious",
+}
 
 
 def test_profile_widget_is_last_and_lists_factory_profiles(node_env):
