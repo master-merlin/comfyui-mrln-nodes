@@ -28,6 +28,11 @@
     {
       "name": "hard-spotlight",
       "text": "A dramatic, single, hard-edged spotlight in an otherwise dark studio."
+    },
+    {
+      "name": "storm-shafts",
+      "text": "Gathering storm clouds stacked dark overhead, intense shafts of light breaking through onto the scene in high-contrast pools.",
+      "text_short": "storm-cloud light shafts"
     }
   ]
 }

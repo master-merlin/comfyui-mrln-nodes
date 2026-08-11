@@ -32,6 +32,16 @@
     {
       "name": "storm-light-break",
       "text": "A moody, atmospheric scene under dark, heavy storm clouds, with dramatic, directional light breaking through a small gap."
+    },
+    {
+      "name": "sodium-vapor",
+      "text": "The characteristic warm orange wash of sodium-vapor streetlights, heavy color cast pooling beneath each mast with deep shadow between.",
+      "text_short": "sodium-vapor streetlight glow"
+    },
+    {
+      "name": "led-street",
+      "text": "Crisp cool-white LED streetlighting, clean hard-edged pools of illumination and modern, slightly clinical contrast.",
+      "text_short": "cool LED streetlight pools"
     }
   ]
 }

@@ -2,7 +2,11 @@
   "version": 1,
   "label": "Aero Add-on",
   "description": "Optional aero features; use allow_empty on the slot.",
-  "suits": ["object", "vehicle", "car"],
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
   "items": [
     {
       "name": "vented-hood",
@@ -43,6 +47,16 @@
       "name": "fender-vents",
       "text": "sculpted fender vents exhaling air behind each wheel",
       "text_short": "sculpted fender vents"
+    },
+    {
+      "name": "twin-exhaust",
+      "text": "An upgraded twin exhaust system, two polished tips set into the rear diffuser.",
+      "text_short": "twin exhaust tips"
+    },
+    {
+      "name": "quad-exhaust",
+      "text": "An upgraded quad exhaust system, four polished tips paired into the rear valance.",
+      "text_short": "quad exhaust tips"
     }
   ]
 }

@@ -2,7 +2,11 @@
   "version": 1,
   "label": "Detail",
   "description": "Small story-carrying details on and around the car.",
-  "suits": ["object", "vehicle", "car"],
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
   "items": [
     {
       "name": "overdrive-plate",
@@ -18,7 +22,9 @@
       "name": "brake-glow",
       "text": "carbon-ceramic discs still glowing faint orange behind the spokes from hard driving",
       "text_short": "glowing brake discs",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "heat-haze-exhaust",
@@ -44,6 +50,16 @@
       "name": "puddle-mirror",
       "text": "a ground puddle mirroring the car's stance in perfect symmetry",
       "text_short": "puddle mirror reflection"
+    },
+    {
+      "name": "tire-marks-ground",
+      "text": "Subtle tire marks and rubber residue laid onto the ground around the car.",
+      "text_short": "tire marks on the ground"
+    },
+    {
+      "name": "environment-reflections",
+      "text": "The surrounding environment mirrored crisply along the bodywork, reflections tracing every character line.",
+      "text_short": "environment mirrored on body"
     }
   ]
 }

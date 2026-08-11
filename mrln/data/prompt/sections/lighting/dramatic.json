@@ -12,13 +12,18 @@
       "name": "neon-rim",
       "text": "electric neon rim light in magenta and cyan outlining the subject against darkness",
       "text_short": "neon rim light",
-      "tags": ["night", "neon"]
+      "tags": [
+        "night",
+        "neon"
+      ]
     },
     {
       "name": "single-practical",
       "text": "one bare practical bulb overhead, harsh pool of light, hard-edged noir shadows",
       "text_short": "bare bulb noir light",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "volumetric-shafts",
@@ -34,7 +39,9 @@
       "name": "police-strobe",
       "text": "alternating red and blue emergency strobes sweeping the scene, hard color contrast",
       "text_short": "red-blue strobe light",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "lightning-flash",
@@ -55,6 +62,11 @@
       "name": "split-lighting",
       "text": "hard split lighting, one half of the subject lit, the other in full shadow",
       "text_short": "hard split light"
+    },
+    {
+      "name": "ground-mist",
+      "text": "Ethereal mist clinging to the ground, soft diffused glow and low volumetric beams drifting knee-high, quietly mysterious.",
+      "text_short": "ethereal ground mist"
     }
   ]
 }

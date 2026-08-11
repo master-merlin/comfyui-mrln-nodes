@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "label": "Wheel Stance",
+  "description": "How the front wheels sit: steering pose and camber attitude — composes with any viewing angle.",
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
+  "items": [
+    {
+      "name": "straight-aligned",
+      "text": "Front wheels aligned dead straight, a clean, planted, factory-precise stance.",
+      "text_short": "wheels dead straight"
+    },
+    {
+      "name": "toe-in-aggressive",
+      "text": "Front wheels turned slightly inward, coiled and aggressive, as if set for a corner entry.",
+      "text_short": "wheels turned slightly in"
+    },
+    {
+      "name": "toe-out-wide",
+      "text": "Front wheels angled slightly outward, widening the stance and squaring the shoulders of the car.",
+      "text_short": "wheels turned slightly out"
+    },
+    {
+      "name": "negative-camber",
+      "text": "Visible negative camber leaning the wheel tops inward, performance-set suspension geometry.",
+      "text_short": "negative camber set"
+    },
+    {
+      "name": "steering-full-lock",
+      "text": "Front wheels at full steering lock, rim faces presented to the camera in show-stance drama.",
+      "text_short": "full steering lock"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "label": "Car Close-Up",
+  "description": "Car-part hero shots: grille, wheel, diffuser and spoiler details.",
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
+  "items": [
+    {
+      "name": "grille-closeup",
+      "text": "An extreme close-up on the front grille, badge and mesh detail carved out by controlled shadows.",
+      "text_short": "front grille close-up"
+    },
+    {
+      "name": "wheel-closeup",
+      "text": "A tight close-up on a front wheel, rim spokes, caliper and tire lettering filling the frame.",
+      "text_short": "front wheel close-up"
+    },
+    {
+      "name": "diffuser-closeup",
+      "text": "A low rear close-up on the diffuser, fins and exhaust tips picked out in ambient light.",
+      "text_short": "rear diffuser close-up"
+    },
+    {
+      "name": "spoiler-closeup",
+      "text": "An extreme close-up along the rear spoiler edge, its aero profile knifing across the frame.",
+      "text_short": "rear spoiler close-up"
+    }
+  ]
+}

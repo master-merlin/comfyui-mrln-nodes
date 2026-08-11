@@ -18,19 +18,26 @@
       "name": "pastel-softness",
       "text": "soft pastel palette, powdered pinks, mints and baby blues",
       "text_short": "soft pastels",
-      "tags": ["pale"]
+      "tags": [
+        "pale"
+      ]
     },
     {
       "name": "neon-electric",
       "text": "electric neon palette, saturated magenta, cyan and acid green on darkness",
       "text_short": "electric neon",
-      "tags": ["neon", "night"]
+      "tags": [
+        "neon",
+        "night"
+      ]
     },
     {
       "name": "earthy-organic",
       "text": "earthy organic palette, terracotta, moss, ochre and warm browns",
       "text_short": "earthy tones",
-      "tags": ["warm"]
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "jewel-tones",
@@ -41,7 +48,9 @@
       "name": "teal-orange",
       "text": "cinematic teal-and-orange grade, cool shadows against warm skin and highlights",
       "text_short": "teal and orange",
-      "tags": ["warm"]
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "duotone-graphic",
@@ -52,24 +61,61 @@
       "name": "sepia-heritage",
       "text": "sepia heritage tones, faded amber warmth of an old archive",
       "text_short": "sepia archive",
-      "tags": ["warm", "historical"]
+      "tags": [
+        "warm",
+        "historical"
+      ]
     },
     {
       "name": "muted-nordic",
       "text": "muted Nordic palette, desaturated greys, milk white and cold blue-green",
       "text_short": "muted Nordic",
-      "tags": ["pale"]
+      "tags": [
+        "pale"
+      ]
     },
     {
       "name": "golden-warmth",
       "text": "golden warm palette, honey, amber and candle-glow tones throughout",
       "text_short": "golden warmth",
-      "tags": ["warm"]
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "iridescent-holo",
       "text": "iridescent holographic palette, oil-slick shifts of violet, teal and pearl",
       "text_short": "holographic iridescence"
+    },
+    {
+      "name": "bold-metallic",
+      "text": "A bold metallic palette, deep lustrous foils and machined brightwork carrying the color story.",
+      "text_short": "bold metallic palette"
+    },
+    {
+      "name": "chrome-interplay",
+      "text": "Subtle chrome interplay, mirror accents threading through restrained body color.",
+      "text_short": "subtle chrome interplay"
+    },
+    {
+      "name": "complementary-contrast",
+      "text": "A high-contrast complementary scheme, opposing hues tensioned against each other.",
+      "text_short": "complementary contrast scheme"
+    },
+    {
+      "name": "analogous-cool",
+      "text": "An analogous cool palette, neighboring blues, teals and violets in quiet gradation.",
+      "text_short": "analogous cool palette"
+    },
+    {
+      "name": "analogous-warm",
+      "text": "An analogous warm palette, neighboring ambers, oranges and reds in rich gradation.",
+      "text_short": "analogous warm palette"
+    },
+    {
+      "name": "triadic-scheme",
+      "text": "A balanced triadic color scheme, three evenly spaced hues in deliberate proportion.",
+      "text_short": "triadic color scheme"
     }
   ]
 }
