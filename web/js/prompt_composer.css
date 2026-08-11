@@ -146,6 +146,9 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
   border-color: var(--border-color, #444);
 }
 .mrln-ms .mrln-mini:hover { opacity: 1; }
+.mrln-mini.mrln-new-tpl { color: #77FF00; font-weight: bold; }
+.mrln-import-plan { margin: 4px 0; padding-left: 16px; }
+.mrln-import-plan li { margin: 2px 0; }
 .mrln-mini.mrln-m-on { opacity: 1 !important; color: #e77; border-color: #e77 !important; }
 .mrln-mini.mrln-s-on { opacity: 1 !important; color: #dc5; border-color: #dc5 !important; }
 .mrln-slot.mrln-muted { opacity: 0.45; }

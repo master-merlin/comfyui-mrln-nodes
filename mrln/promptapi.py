@@ -437,6 +437,41 @@ def handle_save_template(lib, payload):
     return _save(lib, payload, "templates")
 
 
+_BUNDLE_KINDS = {"template": "templates", "section": "sections"}
+
+
+@_guarded
+def handle_export(lib, payload):
+    """A shareable bundle for one template (embedding every user-tier
+    section it draws from, transitively) or one section. The Composer
+    offers it as a .json download."""
+    kind = _require_str(payload, "kind")
+    if kind not in _BUNDLE_KINDS:
+        raise ApiError("'kind' must be 'template' or 'section'")
+    slug = _require_str(payload, "slug")
+    return 200, pl.export_bundle(lib, _BUNDLE_KINDS[kind], slug)
+
+
+@_guarded
+def handle_import(lib, payload):
+    """Import a bundle into the user tier. dry_run=true returns the exact
+    write/skip plan for the Composer's confirm card; overwrite=true
+    replaces existing user-tier files the bundle collides with."""
+    bundle = payload.get("bundle")
+    if not isinstance(bundle, dict):
+        raise ApiError("missing 'bundle' object (the content of an exported bundle file)")
+    slug = payload.get("slug")
+    report = pl.import_bundle(
+        lib,
+        bundle,
+        slug=slug.strip() if isinstance(slug, str) and slug.strip() else None,
+        overwrite=bool(payload.get("overwrite")),
+        dry_run=bool(payload.get("dry_run")),
+    )
+    report["fingerprint"] = lib.fingerprint()
+    return 200, report
+
+
 @_guarded
 def handle_delete(lib, payload):
     kind = _require_str(payload, "kind")
@@ -1443,6 +1478,8 @@ ROUTES = (
     ("post", "/mrln/prompt/save-template", handle_save_template, True),
     ("post", "/mrln/prompt/delete", handle_delete, True),
     ("post", "/mrln/prompt/decompose", handle_decompose, True),
+    ("get", "/mrln/prompt/export", handle_export, False),
+    ("post", "/mrln/prompt/import", handle_import, True),
 )
 
 

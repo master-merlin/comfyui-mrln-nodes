@@ -3,6 +3,7 @@ selection, and format-aware rendering. Pure Python, zero dependencies,
 fully importable without ComfyUI.
 """
 
+from .bundle import export_bundle, import_bundle, section_closure
 from .decompose import ENGINES, decompose, score_match
 from .errors import (
     ItemNotFoundError,
@@ -88,7 +89,9 @@ __all__ = [
     "dump_item",
     "dump_section",
     "dump_template",
+    "export_bundle",
     "fill_json_template",
+    "import_bundle",
     "lora_entries",
     "lora_tags",
     "merged_profiles",
@@ -102,6 +105,7 @@ __all__ = [
     "resolve_section",
     "resolve_template",
     "score_match",
+    "section_closure",
     "trigger_from_metadata",
     "validate_slug",
 ]
