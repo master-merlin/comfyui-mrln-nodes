@@ -76,6 +76,26 @@
       "requires": [
         "night"
       ]
+    },
+    {
+      "name": "vineyard-road",
+      "text": "A lush vineyard road, rows of grapevines combing the rolling hills to the horizon.",
+      "text_short": "vineyard road"
+    },
+    {
+      "name": "foggy-rolling-hills",
+      "text": "Rolling hills sunk in thick fog, hedgerows and lone trees fading into layered grey.",
+      "text_short": "fog-sunk rolling hills"
+    },
+    {
+      "name": "farmland-lane",
+      "text": "A quiet farmland lane, a solitary farmhouse and silo on the distant field line.",
+      "text_short": "quiet farmland lane"
+    },
+    {
+      "name": "valley-viaduct",
+      "text": "A sky-high concrete viaduct spanning a forested valley, piers dropping away into the green below.",
+      "text_short": "valley-spanning viaduct"
     }
   ]
 }

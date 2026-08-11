@@ -94,6 +94,26 @@
         "night"
       ],
       "negative": "daylight"
+    },
+    {
+      "name": "old-town-square",
+      "text": "An empty paved square in a historic old town, arcaded facades and a worn fountain at its centre.",
+      "text_short": "historic old-town square"
+    },
+    {
+      "name": "modern-road-tunnel",
+      "text": "Inside a modern road tunnel, repeating overhead light bars and clean segmented walls curving away.",
+      "text_short": "modern road tunnel"
+    },
+    {
+      "name": "highway-underpass",
+      "text": "Beneath a massive concrete highway underpass, stacked geometry of piers and beams framing the space.",
+      "text_short": "concrete highway underpass"
+    },
+    {
+      "name": "streetlamp-avenue",
+      "text": "A deserted avenue under warm streetlamps, pools of light marching down the empty sidewalks.",
+      "text_short": "streetlamp-lit avenue"
     }
   ]
 }

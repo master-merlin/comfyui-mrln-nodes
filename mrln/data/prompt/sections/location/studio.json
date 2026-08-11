@@ -32,8 +32,12 @@
       "name": "daylight-studio",
       "text": "A converted daylight studio, huge north-facing industrial windows and white-washed brick.",
       "text_short": "north-light daylight studio",
-      "tags": ["day"],
-      "requires": ["day"]
+      "tags": [
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
     },
     {
       "name": "mirror-floor-stage",
@@ -44,6 +48,21 @@
       "name": "scrim-tunnel",
       "text": "A wrap-around scrim tunnel glowing from behind, the subject bathed in enormous soft gradient light.",
       "text_short": "glowing scrim tunnel"
+    },
+    {
+      "name": "concrete-wall",
+      "text": "Parked against a clean, expansive cast-concrete wall, minimal shadow play across its raw surface.",
+      "text_short": "bare concrete wall"
+    },
+    {
+      "name": "brick-wall",
+      "text": "Before a weathered, deep-textured brick wall, mortar lines and patina giving the backdrop quiet character.",
+      "text_short": "weathered brick wall"
+    },
+    {
+      "name": "corrugated-siding",
+      "text": "Against rhythmic corrugated metal siding, its ribbed shadows striping the composition.",
+      "text_short": "corrugated metal siding"
     }
   ]
 }

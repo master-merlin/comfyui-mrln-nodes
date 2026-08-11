@@ -44,6 +44,16 @@
       "tags": [
         "night"
       ]
+    },
+    {
+      "name": "derelict-warehouse",
+      "text": "A derelict warehouse interior, shattered skylights, ivy in the brickwork and dust sheeting through still air.",
+      "text_short": "derelict warehouse interior"
+    },
+    {
+      "name": "abandoned-factory-floor",
+      "text": "An abandoned factory floor, rusted beams, broken glass and silent machinery under a high sawtooth roof.",
+      "text_short": "abandoned factory floor"
     }
   ]
 }

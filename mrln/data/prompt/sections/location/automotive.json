@@ -73,6 +73,151 @@
       "name": "amalfi-corniche",
       "text": "A cliff-hugging Amalfi corniche, pastel villages tumbling to a glittering sea below the guardrail.",
       "text_short": "Amalfi cliff corniche"
+    },
+    {
+      "name": "maranello-gates",
+      "text": "The historic factory gates of Maranello, ochre walls and the archway of the old entrance framing decades of scarlet legend.",
+      "text_short": "Maranello factory gates"
+    },
+    {
+      "name": "fiorano-circuit",
+      "text": "The private Fiorano test circuit, worn apex curbs, telemetry masts and a lone timing hut beside the pit exit.",
+      "text_short": "Fiorano test circuit"
+    },
+    {
+      "name": "mugello-circuit",
+      "text": "The Mugello circuit flowing through a Tuscan hill amphitheater, red-and-white curbs rising and falling with the terrain.",
+      "text_short": "Mugello circuit curbs"
+    },
+    {
+      "name": "monza-banking",
+      "text": "The abandoned historic Monza banking, moss-streaked concrete wall of speed curving away between the pines.",
+      "text_short": "old Monza banking"
+    },
+    {
+      "name": "sant-agata-gates",
+      "text": "The flat Emilian road past Sant'Agata's factory gates, poplar rows and hexagon-patterned architecture behind the fence.",
+      "text_short": "Sant'Agata factory road"
+    },
+    {
+      "name": "targa-florio-village",
+      "text": "A Sicilian mountain village street of the old Targa Florio route, faded racing paint on stone walls and tight balconied corners.",
+      "text_short": "Targa Florio village street"
+    },
+    {
+      "name": "stuttgart-zuffenhausen",
+      "text": "The cobbled works yard of Zuffenhausen, brick factory halls and the museum's floating monolith beyond the gate.",
+      "text_short": "Zuffenhausen works yard"
+    },
+    {
+      "name": "weissach-proving",
+      "text": "A development-centre proving ground near Weissach, painted calibration circles, cone gates and low camera rigs on tripods.",
+      "text_short": "Weissach proving ground"
+    },
+    {
+      "name": "bmw-welt-plaza",
+      "text": "The sweeping plaza before BMW Welt in Munich, double-cone glass architecture spiraling beside the four-cylinder tower.",
+      "text_short": "BMW Welt plaza"
+    },
+    {
+      "name": "bavarian-alpenstrasse",
+      "text": "A sweep of the German Alpine Road in Bavaria, flower meadows, an onion-dome chapel and limestone peaks over the guardrail.",
+      "text_short": "Bavarian alpine road"
+    },
+    {
+      "name": "affalterbach-works",
+      "text": "The performance works of Affalterbach, black-clad engineering halls and a row of camouflaged prototypes across the lot.",
+      "text_short": "Affalterbach works lot"
+    },
+    {
+      "name": "nurburgring-karussell",
+      "text": "The banked concrete plates of the Karussell, graffiti-painted curbing wrapped by dark Eifel pines.",
+      "text_short": "Nürburgring Karussell"
+    },
+    {
+      "name": "autobahn-sweep",
+      "text": "A derestricted autobahn sweep, immaculate tarmac, blue distance boards and the round de-restriction sign blurring past.",
+      "text_short": "derestricted autobahn"
+    },
+    {
+      "name": "woking-mtc-lake",
+      "text": "The curved glass facade of a Woking technology centre reflected in its formal lake, manicured berms rolling to the water.",
+      "text_short": "Woking tech-centre lake"
+    },
+    {
+      "name": "cotswold-lane",
+      "text": "A Cotswold village lane between honey-stone cottages and dry-stone walls, hedgerow England at its most cinematic.",
+      "text_short": "Cotswold stone lane"
+    },
+    {
+      "name": "le-mans-mulsanne",
+      "text": "The endless tree-lined Mulsanne straight, rumble strips, marshal posts and kilometer boards shrinking to a vanishing point.",
+      "text_short": "Mulsanne straight"
+    },
+    {
+      "name": "col-de-turini",
+      "text": "The stacked hairpins of Col de Turini, stone kilometer markers and rock walls scarred by rally history.",
+      "text_short": "Col de Turini hairpins"
+    },
+    {
+      "name": "molsheim-chateau",
+      "text": "A raked gravel château forecourt in Molsheim, clipped hedges and wrought-iron gates worthy of coachbuilt royalty.",
+      "text_short": "Molsheim château forecourt"
+    },
+    {
+      "name": "angelholm-runway",
+      "text": "A Swedish airfield runway at Ängelholm, hangar doors open behind painted threshold stripes and a long heat-shimmered centreline.",
+      "text_short": "Ängelholm airfield runway"
+    },
+    {
+      "name": "hakone-turnpike",
+      "text": "The Hakone Turnpike climbing through cedar forest, vermilion guardrails and a distant cone of Mount Fuji over the crest.",
+      "text_short": "Hakone Turnpike climb"
+    },
+    {
+      "name": "wangan-expressway",
+      "text": "The elevated Bayshore expressway over Tokyo harbor, lane markers strobing past gantries and container cranes.",
+      "text_short": "Tokyo Bayshore expressway"
+    },
+    {
+      "name": "daikoku-parking",
+      "text": "The looping ramps above Daikoku parking area, concrete pillars and painted bays under the elevated interchange.",
+      "text_short": "Daikoku parking loops"
+    },
+    {
+      "name": "suzuka-esses",
+      "text": "The flowing esses of Suzuka, blue-and-white curbs threading between grandstands and the ferris wheel on the skyline.",
+      "text_short": "Suzuka esses"
+    },
+    {
+      "name": "fuji-straight",
+      "text": "The kilometer-long main straight of Fuji Speedway, pit buildings on one side and Mount Fuji filling the horizon.",
+      "text_short": "Fuji Speedway straight"
+    },
+    {
+      "name": "woodward-avenue",
+      "text": "Wide lanes of Woodward Avenue, drive-in signage, brick storefronts and the boulevard heritage of American muscle.",
+      "text_short": "Woodward Avenue cruise"
+    },
+    {
+      "name": "laguna-seca-corkscrew",
+      "text": "The crest of the Corkscrew at Laguna Seca, curbing dropping away into dusty golden hills and scrub oak.",
+      "text_short": "Laguna Seca Corkscrew"
+    },
+    {
+      "name": "mulholland-overlook",
+      "text": "A Mulholland Drive overlook, canyon guardrail and the endless grid of Los Angeles spread out far below.",
+      "text_short": "Mulholland overlook"
+    },
+    {
+      "name": "pit-lane",
+      "text": "A modern circuit pit lane, painted working bays, air hoses coiled by the wall and gantry lights over the boxes.",
+      "text_short": "circuit pit lane"
+    },
+    {
+      "name": "start-finish-grid",
+      "text": "The start-finish grid of a grand prix circuit, painted grid slots, rubbered-in tire marks and the lights gantry overhead.",
+      "text_short": "start-finish grid"
     }
   ]
 }

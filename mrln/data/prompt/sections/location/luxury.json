@@ -41,8 +41,47 @@
       "name": "alpine-lodge-drive",
       "text": "The snow-banked drive of an exclusive alpine lodge, warm windows glowing against dusk-blue peaks.",
       "text_short": "alpine lodge drive",
-      "tags": ["night"],
-      "requires": ["night"]
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "winery-estate",
+      "text": "A vineyard estate forecourt, modern winery architecture rising from rows of vines on rolling hills.",
+      "text_short": "winery estate forecourt"
+    },
+    {
+      "name": "gated-entrance",
+      "text": "Monumental wrought-iron estate gates between stone piers, clipped topiary and a curving drive beyond.",
+      "text_short": "wrought-iron estate gates"
+    },
+    {
+      "name": "cliff-glass-house",
+      "text": "A minimalist glass house cantilevered over a cliff edge, ocean horizon running the full width of the facade.",
+      "text_short": "cliff-edge glass house"
+    },
+    {
+      "name": "stone-farmhouse-court",
+      "text": "The gravel court of a restored stone farmhouse, lavender borders and weathered oak shutters.",
+      "text_short": "stone farmhouse court"
+    },
+    {
+      "name": "manor-circular-driveway",
+      "text": "An old-world manor with a grand circular driveway, marble statuary and sculpted hedges ringing the fountain.",
+      "text_short": "manor circular driveway"
+    },
+    {
+      "name": "lakeside-estate-dock",
+      "text": "A private lakeside estate dock, contemporary mansion and shoreline trees doubled in still water.",
+      "text_short": "lakeside estate dock"
+    },
+    {
+      "name": "beachfront-villa",
+      "text": "A lavish beachfront villa forecourt, palm shadows across pale stone and turquoise water beyond the dunes.",
+      "text_short": "beachfront villa forecourt"
     }
   ]
 }

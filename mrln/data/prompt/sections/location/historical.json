@@ -2,7 +2,9 @@
   "version": 1,
   "label": "Historical Location",
   "description": "Period settings from medieval to mid-century. Tagged 'historical' for genre-filtered templates.",
-  "tags": ["historical"],
+  "tags": [
+    "historical"
+  ],
   "items": [
     {
       "name": "medieval-market",
@@ -53,6 +55,11 @@
       "name": "fifties-diner",
       "text": "A chrome-and-neon 1950s American diner, checkerboard floor, red vinyl booths and a long counter with stools.",
       "text_short": "1950s chrome diner"
+    },
+    {
+      "name": "ruined-city-road",
+      "text": "A crumbling ancient stone road weaving through the ruins of a forgotten city, ivy and moss reclaiming the fallen columns.",
+      "text_short": "ancient ruined-city road"
     }
   ]
 }
