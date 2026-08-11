@@ -2,7 +2,9 @@
 
 A multi-domain collection of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
 
-> **Status: early scaffolding.** The pack architecture is in place; node domains are added incrementally.
+> **Status: first release.** The prompt domain ships complete — engine, factory
+> library, Composer sidebar, LoRA integration and LLM tooling; further node
+> domains are added incrementally.
 
 ## Install
 
@@ -22,7 +24,7 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 
 | Domain | Nodes |
 | ------ | ----- |
-| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template, `loras` + `llm` outputs); **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure |
+| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template, `loras` + `llm` outputs); **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: a multiverse of factory content ships
@@ -84,7 +86,9 @@ Prompt Template node, so workflows stay fully shareable and headless-safe.
 The Library tab edits sections with a form — merged factory+user views mark
 each item's tier (F/U), factory items can be hidden/restored, and saving
 defaults to a thin "extend factory" diff that survives pack updates (full
-replace available per save) — and templates as validated raw JSON. The
+replace available per save) — and templates as validated raw JSON;
+**New section…** and **New template…** start net-new compositions from a
+blank slate (the green ＋ next to the template picker does the same). The
 De-compose tab works the other way around: paste a finished prompt and it
 is decomposed against your library — matched fragments become slots pinned
 to their items, the residue becomes new items, new sections, or
@@ -94,8 +98,21 @@ local or cloud backend splits and maps against the library catalog) and
 `hybrid` (the programmatic result rides in the LLM system prompt as
 suggestions to verify or correct); every LLM assignment is validated
 against the real library, and a failing backend falls back to the
-programmatic result instead of erroring. On frontends without the API the
-panel simply doesn't appear — the nodes work identically without it.
+programmatic result instead of erroring. The Settings tab holds the local
+backend URLs (Ollama / LM Studio, auto-validated with installed-model
+lists) and the cloud API keys — stored server-side in your user tier,
+never echoed back and never written into workflows. On frontends without
+the API the panel simply doesn't appear — the nodes work identically
+without it.
+
+Templates and sections travel: every template/section row offers **⤓
+Export**, which bundles the template together with all your user-tier
+sections it draws from (factory content resolves on the other install)
+plus the Civitai AIR links of any LoRAs involved. **Import…** dry-runs the
+bundle first — you see exactly what will be written, colliding files are
+kept unless you opt into overwrite — and opening the imported template
+offers to auto-download missing LoRA files. Share the bundle next to your
+workflow and the recipient rebuilds your renders end to end.
 
 The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per
@@ -130,7 +147,7 @@ mrln/
   registry.py        # domain activation + fault-tolerant aggregation
   promptapi.py       # /mrln/prompt/* endpoints (soft-fails outside ComfyUI)
   promptlib/         # prompt engine (pure Python, zero dependencies)
-  nodes/             # one module per domain (image.py, mask.py, ...)
+  nodes/             # one module per domain (prompt.py, text.py, ...)
   data/prompt/       # factory prompt library (sections + templates)
 web/js/              # Prompt Composer sidebar panel (progressive enhancement)
 ```
