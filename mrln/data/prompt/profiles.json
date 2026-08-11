@@ -1,0 +1,26 @@
+{
+  "_comment": "Pack-level target-model profiles. A template's own 'profiles' extend these by name; the user tier's profiles.json overlays this file. 'standard' is reserved and means the template's plain render. The 'llm' block travels on the Prompt Template node's llm output for the (planned) Prompt Enhance node — until that node exists it is informational.",
+  "profiles": {
+    "krea2": {
+      "render": { "format": "string_labeled", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for KREA 2, which rewards flowing cinematic prose and strong prompt adherence. Rewrite the prompt as connected sentences that keep every concrete fact (subject, setting, lighting, camera, colors, trigger words and (weighted:1.2) spans verbatim). Deepen material and light description, keep one paragraph per labeled block, never invent people, brands or text overlays, and stay under 220 words.",
+        "params": { "max_words": 220 }
+      }
+    },
+    "sdxl": {
+      "render": { "format": "string", "text_length": "short" },
+      "llm": {
+        "system": "You compress image prompts for SDXL, which favors dense comma-separated tags inside a tight token budget. Rewrite as a front-loaded tag sequence: subject first, then setting, lighting, style. Keep trigger words and (weighted:1.2) spans exactly as written, drop filler words and articles, no full sentences, stay under 75 tokens.",
+        "params": { "max_tokens": 75 }
+      }
+    },
+    "flux": {
+      "render": { "format": "string", "text_length": "long" },
+      "llm": {
+        "system": "You refine image prompts for FLUX, which parses natural language well but rewards explicit spatial relations. Rewrite as clear declarative sentences, stating where each element sits in the frame and how the light falls. Keep every concrete fact and trigger word verbatim, avoid tag soup and purple prose, stay under 120 words.",
+        "params": { "max_words": 120 }
+      }
+    }
+  }
+}

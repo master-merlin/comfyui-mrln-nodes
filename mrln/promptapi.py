@@ -180,6 +180,7 @@ def handle_template(lib, payload):
         "variables": [
             {"name": v.name, "label": v.label, "default": v.default} for v in tpl.variables
         ],
+        "profiles": pl.merged_profiles(lib, tpl),
         "slots": [_slot_detail(slot, missing_refs) for slot in tpl.slots],
         "variants": [
             {
@@ -282,30 +283,34 @@ def handle_preview(lib, payload):
     if isinstance(trigger, str) and trigger:
         variables["trigger"] = trigger
     fmt = payload.get("format") or "template default"
-    if fmt == "template default":
-        fmt = tpl.render.format
-    if fmt not in pl.FORMATS:
+    if fmt != "template default" and fmt not in pl.FORMATS:
         raise ApiError(f"unknown format '{fmt}' (formats: {', '.join(pl.FORMATS)})")
     policy = payload.get("conflict_policy") or "negative prevails"
     if policy not in pl.CONFLICT_POLICIES:
         raise ApiError(
             f"unknown conflict_policy '{policy}' (policies: {', '.join(pl.CONFLICT_POLICIES)})"
         )
-    resolved = pl.resolve_template(
+    composed = pl.compose(
         lib,
         tpl,
         seed=seed,
         mode=mode,
         selection=selection,
         variables=variables,
+        profile=payload.get("profile") or pl.STANDARD,
+        format=fmt,
         text_length=payload.get("text_length") or "template default",
+        conflict_policy=policy,
     )
-    out = pl.render(resolved, fmt, tpl.render, conflict_policy=policy)
+    out = composed.rendered
+    resolved = composed.resolved
     return 200, {
         "positive": out.positive,
         "negative": out.negative,
         "choices": out.choices,
-        "format": fmt,
+        "format": composed.format,
+        "profile": composed.profile,
+        "llm": composed.llm,
         "variant": resolved.variant,
         "variant_random": resolved.variant_random,
         "slots": [_resolved_slot_json(s) for s in resolved.slots],

@@ -295,6 +295,7 @@ export function createComposerPanel(root, ctx) {
     state.rawData = structuredClone(state.detail.raw);
     state.loadedLabel = state.rawData.label ?? null;
     state.modified = false;
+    state.profile = "standard"; // profiles are per-template — reset on switch
     state.labelEdit = new Set();
     state.muted = new Set();
     state.soloed = new Set();
@@ -557,6 +558,7 @@ export function createComposerPanel(root, ctx) {
       format: state.format,
       conflict_policy: state.conflictPolicy,
       text_length: state.textLength,
+      profile: state.profile ?? "standard",
     };
     if (state.modified) body.template_data = buildDraftData();
     let preview;
@@ -1025,6 +1027,23 @@ export function createComposerPanel(root, ctx) {
     }
     lengthSelect.value = state.textLength;
 
+    const profileSelect = el("select", {
+      title: "Target-model profile: applies its render overrides (format/length) "
+        + "and carries its LLM system prompt on the node's llm output. Explicit "
+        + "Format/Text length choices here still win. Defined in profiles.json "
+        + "+ the template's own profiles.",
+      onchange: (e) => {
+        state.profile = e.target.value;
+        schedulePreview();
+      },
+    });
+    profileSelect.append(el("option", { value: "standard" }, "standard"));
+    for (const name of Object.keys(state.detail?.template?.profiles ?? {}).sort()) {
+      profileSelect.append(el("option", { value: name }, name));
+    }
+    profileSelect.value = state.profile ?? "standard";
+    if (profileSelect.value !== (state.profile ?? "standard")) profileSelect.value = "standard";
+
     parts.push(
       el("div", { class: "mrln-grid2" }, field("Mode", modeSelect), field("Format", formatSelect)),
       el(
@@ -1033,7 +1052,12 @@ export function createComposerPanel(root, ctx) {
         field("Conflicts", policySelect),
         field("Text length", lengthSelect)
       ),
-      field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll)),
+      el(
+        "div",
+        { class: "mrln-grid2" },
+        field("Target profile", profileSelect),
+        field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
+      ),
       metaPromptBlock(),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
       addSectionRow()
@@ -1729,6 +1753,7 @@ export function createComposerPanel(root, ctx) {
     ctx.setWidget(node, "text_length", state.textLength);
     ctx.setWidget(node, "trigger", state.trigger);
     ctx.setWidget(node, "variables", state.variables);
+    ctx.setWidget(node, "profile", state.profile ?? "standard");
     ctx.markDirty();
     ctx.toast(
       "success",
@@ -1759,6 +1784,7 @@ export function createComposerPanel(root, ctx) {
     state.textLength = ctx.getWidget(node, "text_length") ?? state.textLength;
     state.trigger = ctx.getWidget(node, "trigger") ?? "";
     state.variables = ctx.getWidget(node, "variables") ?? "";
+    state.profile = ctx.getWidget(node, "profile") ?? "standard";
     applyKvToRows(parseKvLines(ctx.getWidget(node, "selection") ?? ""));
     renderComposeTab();
     schedulePreview();

@@ -18,6 +18,14 @@ from .errors import (
 )
 from .library import Library, default_roots, open_library, validate_slug
 from .lorameta import read_safetensors_metadata, trigger_from_metadata
+from .profiles import (
+    STANDARD,
+    Composed,
+    compose,
+    fill_json_template,
+    merged_profiles,
+    overlay_profile,
+)
 from .render import CONFLICT_POLICIES, FORMATS, Rendered, lora_entries, lora_tags, render
 from .resolve import (
     MODES,
@@ -48,7 +56,9 @@ __all__ = [
     "FORMATS",
     "MODES",
     "RANDOM_TOKENS",
+    "STANDARD",
     "TEXT_LENGTHS",
+    "Composed",
     "ItemNotFoundError",
     "Library",
     "PromptLibError",
@@ -70,13 +80,17 @@ __all__ = [
     "Variable",
     "Variant",
     "WildcardSyntaxError",
+    "compose",
     "decompose",
     "default_roots",
     "dump_section",
     "dump_template",
+    "fill_json_template",
     "lora_entries",
     "lora_tags",
+    "merged_profiles",
     "open_library",
+    "overlay_profile",
     "parse_kv_lines",
     "parse_section",
     "parse_template",

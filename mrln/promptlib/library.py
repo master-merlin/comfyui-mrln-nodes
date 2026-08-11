@@ -124,6 +124,33 @@ class Library:
         self._scan_cache[kind] = entries
         return entries
 
+    def pack_profiles(self):
+        """Pack-level target-model profiles: <root>/profiles.json, factory
+        overlaid by the user tier, per profile name. Memoized with the scan
+        cache; malformed files are skipped with a warning."""
+        cached = self._scan_cache.get("@profiles")
+        if cached is not None:
+            return cached
+        from .profiles import overlay_profile
+
+        merged = {}
+        for root in (self.factory_root, self.user_root):
+            if not root:
+                continue
+            path = Path(root) / "profiles.json"
+            if not path.is_file():
+                continue
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception as exc:
+                _log.warning("ignoring malformed %s: %s", path, exc)
+                continue
+            for name, profile in (data.get("profiles") or {}).items():
+                if isinstance(profile, dict):
+                    merged[str(name)] = overlay_profile(merged.get(str(name), {}), profile)
+        self._scan_cache["@profiles"] = merged
+        return merged
+
     def section_slugs(self):
         return sorted(self._scan("sections"))
 
@@ -315,6 +342,15 @@ class Library:
         for kind in ("sections", "templates"):
             for entry in self._scan(kind).values():
                 lines.append(f"{kind}|{entry.tier}|{entry.slug}|{entry.mtime_ns}|{entry.size}")
+        # root-level config files change rendering too (profiles, aliases)
+        for tier, root in (("factory", self.factory_root), ("user", self.user_root)):
+            if not root:
+                continue
+            for fname in ("profiles.json", "aliases.json"):
+                path = Path(root) / fname
+                if path.is_file():
+                    stat = path.stat()
+                    lines.append(f"root|{tier}|{fname}|{stat.st_mtime_ns}|{stat.st_size}")
         return hashlib.sha256("\n".join(sorted(lines)).encode()).hexdigest()
 
 

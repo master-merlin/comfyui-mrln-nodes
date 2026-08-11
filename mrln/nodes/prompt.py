@@ -23,6 +23,21 @@ def _template_options():
     return options or [EMPTY_SENTINEL]
 
 
+def _profile_options():
+    try:
+        lib = pl.open_library()
+        names = set(lib.pack_profiles())
+        for slug in lib.template_slugs():
+            try:
+                names.update(lib.load_template(slug).profiles)
+            except pl.PromptLibError:
+                continue  # one broken template must not hide the combo
+        return [pl.STANDARD, *sorted(names)]
+    except Exception as exc:
+        logger.warning("MRLN prompt: profile listing failed: %s", exc)
+        return [pl.STANDARD]
+
+
 def _section_options():
     try:
         lib = pl.open_library()
@@ -70,8 +85,8 @@ class PromptTemplate:
     CATEGORY = category("prompt")
     DESCRIPTION = cleandoc(__doc__)
     FUNCTION = "execute"
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "negative", "choices", "loras")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("prompt", "negative", "choices", "loras", "llm")
     OUTPUT_TOOLTIPS = (
         "The rendered positive prompt in the chosen format.",
         "The joined negative prompt (template + section + item negatives), always a plain string.",
@@ -79,6 +94,8 @@ class PromptTemplate:
         "preview to see what was drawn.",
         "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
         "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
+        "JSON spec of the selected profile's LLM step ({target, system, params}; '{}' for "
+        "standard) — for the planned 'Prompt Enhance (MRLN)' node.",
     )
 
     @classmethod
@@ -182,11 +199,23 @@ class PromptTemplate:
                         "Composer view lists which variables it declares.",
                     },
                 ),
+                "profile": (
+                    _profile_options(),
+                    {
+                        "default": pl.STANDARD,
+                        "tooltip": "Target-model profile: applies that profile's render "
+                        "overrides (format/text length) and emits its LLM system prompt "
+                        "on the llm output. 'standard' = the template's plain render. "
+                        "Profiles come from profiles.json (factory + user tier) extended "
+                        "by the template's own; explicit format/text_length widget "
+                        "choices still win.",
+                    },
+                ),
             },
         }
 
     @classmethod
-    def VALIDATE_INPUTS(cls, template=None, selection=None):
+    def VALIDATE_INPUTS(cls, template=None, selection=None, profile=None):
         # Pre-queue check with execute()-quality messages: catches selection
         # lines left over from a different template (switching the combo on
         # the node) before the graph runs. Consuming 'template' replaces the
@@ -194,7 +223,8 @@ class PromptTemplate:
         if template in (None, "", EMPTY_SENTINEL) or selection is None:
             return True
         try:
-            tpl = pl.open_library().load_template(template)
+            lib = pl.open_library()
+            tpl = lib.load_template(template)
             selection_map = pl.parse_kv_lines(selection, what="selection")
         except pl.PromptLibError as exc:
             return str(exc)
@@ -209,6 +239,13 @@ class PromptTemplate:
                 f"selection references unknown slot(s) {', '.join(unknown)} for template "
                 f"'{template}' — remove those lines or re-apply from the Composer panel"
             )
+        if profile not in (None, "", pl.STANDARD):
+            names = pl.merged_profiles(lib, tpl)
+            if profile not in names:
+                return (
+                    f"unknown profile '{profile}' — have: "
+                    f"{', '.join([pl.STANDARD, *sorted(names)])}"
+                )
         return True
 
     @classmethod
@@ -228,6 +265,7 @@ class PromptTemplate:
         text_length="template default",
         trigger="",
         variables="",
+        profile=pl.STANDARD,
     ):
         if template == EMPTY_SENTINEL:
             raise pl.TemplateNotFoundError(template, [])
@@ -238,19 +276,21 @@ class PromptTemplate:
         variable_map = pl.parse_kv_lines(variables, what="variables")
         if trigger:
             variable_map["trigger"] = trigger
-        resolved = pl.resolve_template(
+        composed = pl.compose(
             lib,
             tpl,
             seed=seed,
             mode=selection_mode,
             selection=selection_map,
             variables=variable_map,
+            profile=profile,
+            format=format,
             text_length=text_length,
+            conflict_policy=conflict_policy,
         )
-        fmt = tpl.render.format if format == "template default" else format
-        out = pl.render(resolved, fmt, tpl.render, conflict_policy=conflict_policy)
-        loras = json.dumps(pl.lora_entries(resolved), ensure_ascii=False)
-        return (out.positive, out.negative, out.choices, loras)
+        out = composed.rendered
+        loras = json.dumps(pl.lora_entries(composed.resolved), ensure_ascii=False)
+        return (out.positive, out.negative, out.choices, loras, composed.llm)
 
 
 class PromptSection:

@@ -3,6 +3,7 @@ templates. The formats are frozen API — every v1 feature parses from day one
 even where rendering lands later. Unknown keys are ignored (forward compat).
 """
 
+import copy
 import re
 from dataclasses import dataclass, field
 
@@ -105,6 +106,9 @@ class Template:
     description: str = ""
     variables: tuple = ()
     render: RenderConfig = field(default_factory=RenderConfig)
+    # target-model profiles: name -> {render: {...}, llm: {...}, json_template: {...}}
+    # extending the pack-level profiles.json defaults by name
+    profiles: dict = field(default_factory=dict)
 
 
 def slugify(text, max_len=40):
@@ -340,6 +344,30 @@ def parse_template(data, slug, source):
             )
         )
 
+    profiles = {}
+    raw_profiles = data.get("profiles", {}) or {}
+    if not isinstance(raw_profiles, dict):
+        raise SchemaError(source, "'profiles' must be an object of name -> profile")
+    for raw_name, raw_profile in raw_profiles.items():
+        pname = str(raw_name).strip()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", pname):
+            raise SchemaError(source, f"profile name '{raw_name}' must be lowercase-kebab")
+        if pname == "standard":
+            raise SchemaError(source, "profile name 'standard' is reserved (unprofiled render)")
+        if not isinstance(raw_profile, dict):
+            raise SchemaError(source, f"profile '{pname}' must be an object")
+        prof_render = raw_profile.get("render", {}) or {}
+        if not isinstance(prof_render, dict):
+            raise SchemaError(source, f"profile '{pname}': 'render' must be an object")
+        if "format" in prof_render and prof_render["format"] not in FORMATS:
+            raise SchemaError(
+                source,
+                f"profile '{pname}': unknown render format '{prof_render['format']}'",
+            )
+        if "text_length" in prof_render and prof_render["text_length"] not in TEXT_LENGTHS:
+            raise SchemaError(source, f"profile '{pname}': unknown text_length")
+        profiles[pname] = copy.deepcopy(raw_profile)
+
     label = data.get("label") or slug.rsplit("/", 1)[-1].replace("-", " ").title()
     return Template(
         slug=slug,
@@ -355,4 +383,5 @@ def parse_template(data, slug, source):
         description=str(data.get("description", "") or ""),
         variables=tuple(variables),
         render=render,
+        profiles=profiles,
     )
