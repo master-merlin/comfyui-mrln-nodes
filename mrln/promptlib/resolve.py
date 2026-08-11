@@ -140,6 +140,8 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
         d_kind, d_value = _parse_token(slot.default or RANDOM_TOKEN, f"{slot.id}={slot.default}")
         if d_kind == "fixed":
             kind, value = "fixed", d_value
+        elif d_kind == "off":
+            kind, value = "off", None  # a default mute IS the default — stays muted
         else:
             kind, value = "fixed", None  # pin to first pool item
             fixed_first = True
@@ -315,8 +317,18 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=
         if mode == "randomize all":
             if kind != "off":  # a muted variant block survives 'randomize all'
                 kind = "random"
-        elif mode == "all fixed defaults" and kind in ("random", "off"):
-            kind, value = "fixed", tpl.variants[0].name
+        elif mode == "all fixed defaults":
+            # the mode forces the DEFAULT: a fixed name pins, a baked "off"
+            # stays muted (it IS the default), random/empty pins the first
+            d_kind, d_value = _parse_token(
+                str(tpl.variant_default or tpl.variants[0].name), "variant_default"
+            )
+            if d_kind == "fixed":
+                kind, value = "fixed", d_value
+            elif d_kind == "off":
+                kind, value = "off", None
+            else:
+                kind, value = "fixed", tpl.variants[0].name
         if kind == "off":
             variant_off = True
         elif kind == "random":

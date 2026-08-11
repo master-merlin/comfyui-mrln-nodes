@@ -58,7 +58,7 @@ class Slot:
     id: str
     ref: str
     label: str = ""  # empty -> section label at resolve time
-    default: str = RANDOM_TOKEN  # item name | "random" | "random@<seed>"
+    default: str = RANDOM_TOKEN  # item name | "random" | "random@<seed>" | "off" (muted)
     allow_empty: bool = False
     empty_weight: float = 1.0
     emphasis: float | None = None
@@ -98,7 +98,7 @@ class Template:
     type: tuple = ()  # template classifiers; empty = untyped (no filtering)
     slots: tuple = ()
     variants: tuple = ()
-    variant_default: str = ""  # "" -> first variant; may be "random"
+    variant_default: str = ""  # "" -> first variant; may be "random" or "off" (muted)
     order: tuple = ()  # slot ids + "@variant"; empty -> file order + variant last
     prefix: str = ""
     suffix: str = ""
@@ -293,7 +293,7 @@ def parse_template(data, slug, source):
     if (
         variant_default
         and variants
-        and variant_default != RANDOM_TOKEN
+        and variant_default not in (RANDOM_TOKEN, "off")  # "off": block muted by default
         and variant_default not in vnames
     ):
         raise SchemaError(

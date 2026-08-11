@@ -298,3 +298,57 @@ def test_variant_off(lib):
     resolved = rt(lib, "varianted", selection={"variant": "off"})
     assert resolved.variant is None and resolved.variant_off is True
     assert [s.id for s in resolved.slots] == ["paint"]  # backdrop slot gone
+
+
+# -- "off" as a DURABLE default (Apply bakes mutes into the file) ------------
+
+
+def test_off_default_mutes_slot_across_modes(lib):
+    tpl = parse_template(
+        {
+            "slots": [
+                {"id": "paint", "ref": "color", "default": "off"},
+                {"id": "mood", "ref": "lighting"},
+            ]
+        },
+        "off-default",
+        "test",
+    )
+    for mode in ("as configured", "randomize all", "all fixed defaults"):
+        resolved = resolve_template(lib, tpl, seed=0, mode=mode, selection={}, variables={})
+        muted = slot(resolved, "paint")
+        assert (muted.item_name, muted.text) == (None, ""), mode  # baked mute holds
+        assert slot(resolved, "mood").item_name is not None  # siblings draw
+    # an explicit selection un-mutes the baked default
+    resolved = resolve_template(
+        lib, tpl, seed=0, mode="as configured", selection={"paint": "red"}, variables={}
+    )
+    assert slot(resolved, "paint").item_name == "red"
+    resolved = resolve_template(
+        lib, tpl, seed=0, mode="as configured", selection={"paint": "random"}, variables={}
+    )
+    assert slot(resolved, "paint").item_name is not None
+
+
+def test_off_variant_default(lib):
+    raw = {
+        "slots": [{"id": "paint", "ref": "color", "default": "red"}],
+        "variants": [
+            {"name": "studio", "slots": [{"id": "backdrop", "ref": "lighting"}]},
+            {"name": "outdoor", "slots": [{"id": "sky", "ref": "lighting"}]},
+        ],
+        "variant_default": "off",
+    }
+    tpl = parse_template(raw, "off-variant", "test")
+    for mode in ("as configured", "randomize all", "all fixed defaults"):
+        resolved = resolve_template(lib, tpl, seed=0, mode=mode, selection={}, variables={})
+        assert resolved.variant is None and resolved.variant_off is True, mode
+    # an explicit selection un-mutes the block
+    resolved = resolve_template(
+        lib, tpl, seed=0, mode="as configured", selection={"variant": "studio"}, variables={}
+    )
+    assert resolved.variant == "studio"
+    # a bogus variant_default still fails parsing — only names/random/off pass
+    raw["variant_default"] = "ghost"
+    with pytest.raises(Exception, match="not a variant"):
+        parse_template(raw, "off-variant", "test")

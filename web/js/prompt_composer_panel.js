@@ -420,15 +420,9 @@ export function createComposerPanel(root, ctx) {
     // there are no unsaved edits (callers guard on state.modified).
     state.rawData = effectiveRaw(profileName);
     state.loadedLabel = state.rawData.label ?? null;
-    state.orderIds = syncOrderIds();
-    state.rows = new Map();
-    for (const slot of allSlots()) {
-      state.rows.set(slot.id, parseToken(slot.default ?? "random"));
-    }
-    const variants = state.rawData.variants ?? [];
-    state.variant = variants.length
-      ? state.rawData.variant_default || variants[0].name
-      : null;
+    state.muted = new Set();
+    state.soloed = new Set();
+    initRowsFromRaw();
   }
 
   function setTargetProfile(name) {
@@ -493,18 +487,36 @@ export function createComposerPanel(root, ctx) {
     state.labelEdit = new Set();
     state.muted = new Set();
     state.soloed = new Set();
-    const variants = state.rawData.variants ?? [];
-    state.variant = variants.length
-      ? state.rawData.variant_default || variants[0].name
-      : null;
-    state.orderIds = syncOrderIds();
-    state.rows = new Map();
-    for (const slot of allSlots()) {
-      state.rows.set(slot.id, parseToken(slot.default ?? "random"));
-    }
+    initRowsFromRaw();
     state.lastPreview = null;
     renderComposeTab();
     schedulePreview();
+  }
+
+  function initRowsFromRaw() {
+    // Rows + M/S from the FILE: Apply bakes mutes as default "off" (and a
+    // muted variant block as variant_default "off"), so the applied state
+    // survives any workflow-serialization loss — the file is the truth.
+    state.orderIds = syncOrderIds();
+    state.rows = new Map();
+    for (const slot of allSlots()) {
+      const token = slot.default ?? "random";
+      if (token === "off") {
+        state.muted.add(slot.id);
+        state.rows.set(slot.id, parseToken("random"));
+      } else {
+        state.rows.set(slot.id, parseToken(token));
+      }
+    }
+    const variants = state.rawData.variants ?? [];
+    if (!variants.length) {
+      state.variant = null;
+    } else if ((state.rawData.variant_default ?? "") === "off") {
+      state.muted.add("@variant");
+      state.variant = variants[0].name;
+    } else {
+      state.variant = state.rawData.variant_default || variants[0].name;
+    }
   }
 
   function syncOrderIds() {
@@ -617,18 +629,22 @@ export function createComposerPanel(root, ctx) {
     const variants = state.rawData.variants ?? [];
     const blockOff = audition && variants.length > 0 && !variantBlockAudible();
     if (variants.length) {
-      if (blockOff) lines.push("variant=off");
-      else {
-        const fallback = state.rawData.variant_default || variants[0].name;
-        if (state.variant !== fallback) lines.push(`variant=${state.variant}`);
+      const fileDefault = state.rawData.variant_default ?? "";
+      if (blockOff) {
+        if (fileDefault !== "off") lines.push("variant=off"); // baked default needs no line
+      } else {
+        const fallback = fileDefault && fileDefault !== "off" ? fileDefault : variants[0].name;
+        if (state.variant !== fallback || fileDefault === "off") {
+          lines.push(`variant=${state.variant}`); // an explicit pick un-mutes an off default
+        }
       }
     }
     for (const slot of activeSlots()) {
       const isVar = vids.has(slot.id);
       if (isVar && blockOff) continue; // variant=off already silences the block
       if (audition && !slotAudible(slot.id, isVar)) {
-        lines.push(`${slot.id}=off`);
-        continue;
+        if ((slot.default ?? "random") !== "off") lines.push(`${slot.id}=off`);
+        continue; // a baked off-default reproduces without a line
       }
       const token = rowToken(slot);
       if (token !== (slot.default ?? "random")) lines.push(`${slot.id}=${token}`);
@@ -682,19 +698,28 @@ export function createComposerPanel(root, ctx) {
 
   function buildSaveData() {
     const draft = structuredClone(state.rawData);
-    const bake = (slots) => {
+    const audition = auditionActive();
+    const hasVariants = (draft.variants ?? []).length > 0;
+    const blockOff = audition && hasVariants && !variantBlockAudible();
+    const bake = (slots, isVariant) => {
       for (const slot of slots ?? []) {
         if (!state.rows.has(slot.id)) continue;
-        const token = rowToken(slot);
-        if (token === "random") delete slot.default;
-        else slot.default = token;
+        // Apply persists what you SEE: a muted slot bakes as default "off"
+        // (a muted variant BLOCK rides variant_default instead)
+        if (audition && !slotAudible(slot.id, isVariant) && !(isVariant && blockOff)) {
+          slot.default = "off";
+        } else {
+          const token = rowToken(slot);
+          if (token === "random") delete slot.default;
+          else slot.default = token;
+        }
         if (!slot.label) delete slot.label;
       }
     };
-    bake(draft.slots);
-    for (const variant of draft.variants ?? []) bake(variant.slots);
-    if ((draft.variants ?? []).length && state.variant) {
-      draft.variant_default = state.variant;
+    bake(draft.slots, false);
+    for (const variant of draft.variants ?? []) bake(variant.slots, true);
+    if (hasVariants && (blockOff || state.variant)) {
+      draft.variant_default = blockOff ? "off" : state.variant;
     }
     const sharedIds = (draft.slots ?? []).map((s) => s.id);
     const synthesized = (draft.variants ?? []).length
@@ -2048,6 +2073,34 @@ export function createComposerPanel(root, ctx) {
 
   // ---- node interop --------------------------------------------------------
 
+  function appliedStateDiffers() {
+    // Apply's contract: the FILE carries what you see. Anything the bake
+    // would change (structure, picks, mutes, variant) forces a save, so the
+    // node reproduces the applied state from the library even when the
+    // workflow's widget values are lost (autosave off, stale workflow file,
+    // frontend serialization hiccups).
+    if (state.modified) return true;
+    const audition = auditionActive();
+    const variants = state.rawData.variants ?? [];
+    const vids = variantSlotIds();
+    const blockOff = audition && variants.length > 0 && !variantBlockAudible();
+    if (variants.length) {
+      const fileVariant = state.rawData.variant_default || variants[0].name;
+      const nowVariant = blockOff ? "off" : state.variant;
+      if (nowVariant !== fileVariant) return true;
+    }
+    for (const slot of allSlots()) {
+      if (!state.rows.has(slot.id)) continue;
+      const isVar = vids.has(slot.id);
+      const nowToken =
+        audition && !slotAudible(slot.id, isVar) && !(isVar && blockOff)
+          ? "off"
+          : rowToken(slot);
+      if (nowToken !== (slot.default ?? "random")) return true;
+    }
+    return false;
+  }
+
   async function applyToNode() {
     const node = ctx.selectedTemplateNode();
     if (!node) {
@@ -2058,14 +2111,15 @@ export function createComposerPanel(root, ctx) {
       );
       return;
     }
-    // The node reads the template from the LIBRARY, so unsaved draft edits
-    // can never reach it — save them first as part of the same gesture.
-    // Selection/audition lines are captured beforehand: the post-save reload
-    // resets mute/solo state.
+    // HARDENED Apply: everything you see is persisted to the user library
+    // (picks bake as defaults, mutes as "off" defaults) BEFORE the widgets
+    // are written — the widgets become a convenience view, not the only
+    // carrier. Selection/audition lines are captured beforehand: the
+    // post-save reload restores mute/solo from the baked file.
     const selectionLines = buildSelectionLines();
     const withAudition = auditionActive();
-    const wasModified = state.modified;
-    if (wasModified && !(await saveTemplate(state.slug))) {
+    const needsPersist = appliedStateDiffers();
+    if (needsPersist && !(await saveTemplate(state.slug))) {
       return; // save failed — its toast names the cause
     }
     ctx.setWidget(node, "template", state.slug);
@@ -2079,12 +2133,35 @@ export function createComposerPanel(root, ctx) {
     ctx.setWidget(node, "variables", state.variables);
     ctx.setWidget(node, "profile", state.profile ?? "standard");
     ctx.markDirty();
+    // Verify the writes actually landed in the node's serialized form —
+    // a silent widget-write failure must be LOUD, not a lost render later.
+    let persisted = false;
+    try {
+      const snapshot = node.serialize?.();
+      const values = snapshot?.widgets_values;
+      const flat = Array.isArray(values) ? values : values ? Object.values(values) : [];
+      persisted =
+        flat.includes(state.slug) &&
+        (selectionLines === "" || flat.includes(selectionLines));
+    } catch {
+      persisted = false;
+    }
+    if (!persisted) {
+      ctx.toast(
+        "warn",
+        "Widget write not confirmed",
+        "This frontend did not report the applied values in the node's serialized "
+          + "state. The applied state IS saved in your library, so the node still "
+          + "reproduces it — but check the node's widgets before relying on the "
+          + "workflow file."
+      );
+    }
     ctx.toast(
       "success",
       "Applied to node",
       `template: ${state.slug}` +
-        (wasModified ? " (edits saved to your user library)" : "") +
-        (withAudition ? " — mute/solo written as 'off' selection lines" : "")
+        (needsPersist ? " — applied state saved into your user library" : "") +
+        (withAudition ? " (mute/solo baked as 'off' defaults)" : "")
     );
   }
 
