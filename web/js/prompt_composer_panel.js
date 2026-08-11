@@ -770,6 +770,44 @@ export function createComposerPanel(root, ctx) {
     return window.prompt(`${title}\n${message}`, defaultValue);
   }
 
+  async function newTemplate() {
+    // Net-new composition: create a blank user-tier template and drop into
+    // the normal compose flow — '+ Add section' builds it up, Save persists.
+    const slug = await askString(
+      "New template",
+      "Slug for the new template (folder/name, lowercase-kebab — e.g. 'my/street-scene'):",
+      ""
+    );
+    if (!slug?.trim()) return;
+    const clean = slug.trim().toLowerCase().replace(/\s+/g, "-");
+    if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
+      ctx.toast(
+        "error",
+        "Template exists",
+        `'${clean}' is already in the library — pick another slug or edit it directly`
+      );
+      return;
+    }
+    try {
+      await ctx.apiJson("/mrln/prompt/save-template", {
+        method: "POST",
+        body: { slug: clean, data: { version: 1, slots: [] } },
+      });
+    } catch (err) {
+      ctx.toast("error", "Cannot create template", err.message);
+      return;
+    }
+    ctx.toast(
+      "success",
+      "Template created",
+      `${clean} — add sections below, set prefix/suffix, then Save`
+    );
+    ctx.refreshCombos();
+    await loadLibrary();
+    await selectTemplate(clean);
+    switchTab("compose");
+  }
+
   // ---- preview -------------------------------------------------------------
 
   function schedulePreview() {
@@ -1156,7 +1194,12 @@ export function createComposerPanel(root, ctx) {
         el(
           "div",
           { class: "mrln-note" },
-          "No templates in the library yet — create one in the Library tab."
+          "No templates in the library yet — start a new composition:"
+        ),
+        el(
+          "div",
+          { class: "mrln-actions" },
+          el("button", { class: "mrln-btn mrln-primary", onclick: newTemplate }, "New template…")
         )
       );
       return;
@@ -1229,7 +1272,13 @@ export function createComposerPanel(root, ctx) {
     const parts = [
       field(
         "Template",
-        el("div", { class: "mrln-inline" }, templateSelect, tierChip(state.detail.tier))
+        el(
+          "div",
+          { class: "mrln-inline" },
+          templateSelect,
+          tierChip(state.detail.tier),
+          smallBtn("Start a NEW empty template (net-new composition)", "＋", newTemplate)
+        )
       ),
     ];
     modifiedNote.style.display = state.modified ? "" : "none";
@@ -2531,6 +2580,7 @@ export function createComposerPanel(root, ctx) {
         "div",
         { class: "mrln-actions" },
         el("button", { class: "mrln-btn", onclick: () => newSection() }, "New section…"),
+        el("button", { class: "mrln-btn", onclick: () => newTemplate() }, "New template…"),
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload")
       ),
       filterInput,

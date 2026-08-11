@@ -191,6 +191,22 @@ def test_save_template(lib):
     assert body["ok"] and lib.load_template("mine").slots[0].ref == "color"
 
 
+def test_blank_template_roundtrip(lib):
+    # The Composer's "New template" button creates {"version":1,"slots":[]} —
+    # it must save, load, preview and render cleanly so a user can build a
+    # net-new composition from zero.
+    body = ok(
+        promptapi.handle_save_template(
+            lib, {"slug": "my/blank", "data": {"version": 1, "slots": []}}
+        )
+    )
+    assert body["ok"]
+    assert lib.load_template("my/blank").slots == ()
+    status, preview = promptapi.handle_preview(lib, {"template": "my/blank", "seed": 0})
+    assert status == 200, preview
+    assert preview["positive"] == ""
+
+
 def test_save_rejects_invalid(lib):
     # items must be a LIST ([] is legal: extend files may only retag)
     status, body = promptapi.handle_save_section(lib, {"slug": "bad", "data": {"items": "x"}})
