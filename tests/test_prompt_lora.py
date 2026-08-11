@@ -193,6 +193,32 @@ def test_parse_loras_json_roundtrip_and_errors():
         parse_loras_json('{"lora": "x"}')
 
 
+def test_llm_wire_carries_protected_triggers(lib):
+    from mrln.promptlib import compose
+
+    composed = compose(
+        lib,
+        lib.load_template("with-lora"),
+        seed=0,
+        mode="as configured",
+        selection={},
+        variables={"trigger": "EXTRA_TRIG"},
+    )
+    spec = json.loads(composed.llm)
+    # drawn LoRA trigger text first, then the {trigger} variable — the
+    # Enhance node enforces these verbatim
+    assert spec["protect"] == ["BMWM4CS_G82", "EXTRA_TRIG"]
+    muted = compose(
+        lib,
+        lib.load_template("with-lora"),
+        seed=0,
+        mode="as configured",
+        selection={"kit": "off"},
+        variables={},
+    )
+    assert "protect" not in json.loads(muted.llm)  # nothing drawn, nothing to guard
+
+
 # -- download-by-AIR healing --------------------------------------------------
 
 

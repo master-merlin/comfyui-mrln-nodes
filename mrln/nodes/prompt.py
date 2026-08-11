@@ -95,8 +95,9 @@ class PromptTemplate:
         "preview to see what was drawn.",
         "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
         "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
-        "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, system, params} — it "
-        "carries the rendered prompt plus the selected profile's LLM system prompt.",
+        "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, protect, system, params} "
+        "— the rendered prompt, the profile's LLM system prompt, and the LoRA trigger "
+        "words the enhancer must keep verbatim.",
     )
 
     @classmethod
@@ -510,6 +511,20 @@ def parse_llm_spec(llm):
     return data
 
 
+def _enforce_protected(text, protect):
+    """(repaired_text, missing) — every protected span must survive the
+    rewrite EXACTLY; spans the LLM dropped or mutated are re-appended so a
+    LoRA's activation can never be enhanced away."""
+    missing = [p for p in protect if p and p not in text]
+    if not missing:
+        return text, []
+    base = text.rstrip()
+    sep = " " if base.endswith((".", "!", "?")) else ", "
+    if not base:
+        sep = ""
+    return base + sep + ", ".join(missing), missing
+
+
 def _strip_thinking(text):
     """Remove <think>…</think> blocks that reasoning models prepend."""
     import re as _re
@@ -534,7 +549,10 @@ class PromptEnhance:
     backend supports it, cached per input so re-queues never re-call, and a
     failing backend passes the original prompt through instead of killing
     the render (switchable). Ollama frees its VRAM right after the call by
-    default so the sampler gets the GPU back.
+    default so the sampler gets the GPU back. LoRA trigger words riding the
+    llm wire are PROTECTED: they are demanded verbatim in the system prompt
+    and verified after the rewrite — any span the LLM dropped or mutated is
+    re-injected, so an enhancement can never disarm a LoRA.
     """
 
     CATEGORY = category("prompt")
@@ -610,12 +628,13 @@ class PromptEnhance:
                     },
                 ),
                 "free_vram": (
-                    ["after call", "keep 5m"],
+                    ["after call", "keep 5m", "always keep"],
                     {
                         "tooltip": "Ollama keep_alive: 'after call' unloads the LLM "
                         "immediately so the diffusion model gets the VRAM back "
                         "(recommended on one GPU); 'keep 5m' keeps it warm for rapid "
-                        "iteration. LM Studio manages its own lifetime.",
+                        "iteration; 'always keep' pins it loaded until Ollama stops "
+                        "(second GPU / big VRAM). LM Studio manages its own lifetime.",
                     },
                 ),
                 "on_error": (
@@ -633,8 +652,10 @@ class PromptEnhance:
                     {
                         "forceInput": True,
                         "tooltip": "The Prompt Template node's llm output — the single "
-                        "wire: {target, prompt, system, params}. It carries the "
-                        "rendered prompt AND the profile's system prompt.",
+                        "wire: {target, prompt, protect, system, params}. It carries "
+                        "the rendered prompt, the profile's system prompt, and the "
+                        "LoRA trigger words that are enforced verbatim (dropped ones "
+                        "are re-injected).",
                     },
                 ),
                 "prompt": (
@@ -699,6 +720,21 @@ class PromptEnhance:
                 "pass-through: no system prompt — select a profile on the Template node "
                 "and wire its llm output, or type a system override",
             )
+        # LoRA trigger words must survive the rewrite EXACTLY — most LLMs
+        # happily "improve" them, which silently kills the LoRA. Spans come
+        # from the llm wire; only those actually present in the source count
+        # (an overridden prompt may not contain them).
+        raw_protect = spec.get("protect")
+        protect = []
+        if isinstance(raw_protect, list):
+            protect = [str(p).strip() for p in raw_protect if str(p).strip()]
+            protect = [p for p in protect if p in prompt]
+        if protect:
+            system_text += (
+                "\n\nPROTECTED SPANS — reproduce each of these EXACTLY as written, "
+                "character for character, unchanged, somewhere in your rewrite: "
+                + "; ".join(f'"{p}"' for p in protect)
+            )
         if seed == 0:
             digest = hashlib.sha256(f"{system_text}\n{prompt}".encode()).digest()
             seed = int.from_bytes(digest[:8], "big") & 0x7FFFFFFF
@@ -729,12 +765,20 @@ class PromptEnhance:
         text = _strip_thinking(text).strip()
         if not text:
             return (prompt, f"pass-through: {backend} returned empty text — original kept")
+        text, missing = _enforce_protected(text, protect)
         _ENHANCE_CACHE[cache_key] = text
         vram = "vram freed" if (backend == "ollama" and free_vram == "after call") else "vram kept"
+        guarded = ""
+        if protect:
+            guarded = (
+                f" · re-injected {len(missing)} protected span(s): {', '.join(missing)}"
+                if missing
+                else f" · {len(protect)} protected span(s) verified"
+            )
         return (
             text,
             f"enhanced via {backend}:{model or 'default'} seed {seed} "
-            f"temp {temperature:g} ({vram})",
+            f"temp {temperature:g} ({vram}){guarded}",
         )
 
 

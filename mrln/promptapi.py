@@ -1147,7 +1147,8 @@ def llm_chat(
                     {"role": "user", "content": prompt},
                 ],
                 "stream": False,
-                "keep_alive": 0 if free_vram == "after call" else "5m",
+                # 0 unloads right after the call, -1 pins the model loaded
+                "keep_alive": {"after call": 0, "always keep": -1}.get(free_vram, "5m"),
                 "options": {"temperature": temperature, "seed": seed, "num_predict": max_tokens},
             },
             timeout,

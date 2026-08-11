@@ -13,7 +13,7 @@ from dataclasses import dataclass, replace
 
 from .errors import SelectionError
 from .render import render
-from .resolve import resolve_template
+from .resolve import resolve_template, walk_slots
 
 STANDARD = "standard"
 _RENDER_OVERRIDES = (
@@ -144,7 +144,7 @@ def fill_json_template(node, positive, negative, slot_texts):
 class Composed:
     resolved: object  # ResolvedPrompt
     rendered: object  # Rendered (positive may be a filled json_template)
-    llm: str  # JSON: {"target", "prompt", "system"?, "params"?} — one wire feeds Enhance
+    llm: str  # JSON: {"target", "prompt", "protect"?, "system"?, "params"?} — one Enhance wire
     format: str  # effective format after profile + widget precedence
     text_length: str
     profile: str
@@ -201,6 +201,21 @@ def compose(
     # a single wire feeds the Enhance node (its prompt input stays optional
     # for enhancing arbitrary strings)
     llm = {"target": name, "prompt": out.positive}
+    # protected spans: drawn LoRA trigger texts + the {trigger} value. The
+    # Enhance node hard-enforces these — LLMs love to "improve" trigger
+    # words, which silently kills the LoRA activation.
+    protect = []
+    for slot in walk_slots(resolved.slots):
+        data = slot.data or {}
+        if data.get("lora") and slot.item_name is not None:
+            text = (slot.text or "").strip()
+            if text and text not in protect:
+                protect.append(text)
+    trigger_value = str((variables or {}).get("trigger") or "").strip()
+    if trigger_value and trigger_value not in protect:
+        protect.append(trigger_value)
+    if protect:
+        llm["protect"] = protect
     if name != STANDARD:
         for key in ("system", "params"):
             value = (prof.get("llm") or {}).get(key)

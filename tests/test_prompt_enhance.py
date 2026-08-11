@@ -145,6 +145,25 @@ def test_llm_pull_endpoint(tmp_path):
     assert all(":" in m for m in promptapi.SUGGESTED_OLLAMA_MODELS)
 
 
+def test_enforce_protected_trigger_words():
+    from mrln.nodes.prompt import _enforce_protected
+
+    # survived verbatim -> untouched
+    text, missing = _enforce_protected("a sleek BMWM4CS_G82 at dusk", ["BMWM4CS_G82"])
+    assert missing == [] and text == "a sleek BMWM4CS_G82 at dusk"
+    # the LLM "improved" the trigger away -> re-injected, reported
+    text, missing = _enforce_protected("a sleek coupe at dusk.", ["BMWM4CS_G82"])
+    assert missing == ["BMWM4CS_G82"]
+    assert text == "a sleek coupe at dusk. BMWM4CS_G82"
+    # tag-flow output joins with a comma; several spans in order
+    text, missing = _enforce_protected("tag flow, sharp", ["TRIG_A", "TRIG_B"])
+    assert text == "tag flow, sharp, TRIG_A, TRIG_B" and missing == ["TRIG_A", "TRIG_B"]
+    # case mutation counts as dropped — exact characters or nothing
+    text, missing = _enforce_protected("a bmwm4cs_g82 side view", ["BMWM4CS_G82"])
+    assert missing == ["BMWM4CS_G82"] and text.endswith("BMWM4CS_G82")
+    assert _enforce_protected("", ["X"])[0] == "X"
+
+
 def test_cloud_request_shapes():
     # pure builders — request shapes verified without any network
     from mrln.promptapi import _cloud_request
