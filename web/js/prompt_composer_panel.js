@@ -2187,8 +2187,80 @@ export function createComposerPanel(root, ctx) {
       filterInput,
       treeBlock("sections", "Sections", lib.sections, sectionLi),
       treeBlock("templates", "Templates", lib.templates, templateLi),
+      settingsBlock(),
       el("hr", { class: "mrln-sep" }),
       editorBox
+    );
+  }
+
+  function settingsBlock() {
+    // The key is stored SERVER-side in your user tier (settings.json) and
+    // never echoed back — it must never live in a node widget, because
+    // widget values persist into workflow PNGs.
+    const keyInput = el("input", {
+      type: "password",
+      placeholder: state.civitaiKeySet
+        ? "•••••••• (key stored — enter a new one to replace, empty to keep)"
+        : "Civitai API key (optional — unlocks restricted models)",
+      autocomplete: "off",
+    });
+    const status = el("span", { class: "mrln-note" });
+    const refresh = async () => {
+      try {
+        const body = await ctx.apiJson("/mrln/prompt/settings");
+        state.civitaiKeySet = body.civitai_key_set;
+        status.textContent = body.civitai_key_set
+          ? "key stored (server-side, user tier)"
+          : "no key stored — public models still resolve by hash";
+      } catch {
+        status.textContent = "";
+      }
+    };
+    refresh();
+    const save = async (clear) => {
+      try {
+        const body = await ctx.apiJson("/mrln/prompt/save-settings", {
+          method: "POST",
+          body: { civitai_api_key: clear ? "" : keyInput.value },
+        });
+        state.civitaiKeySet = body.civitai_key_set;
+        keyInput.value = "";
+        ctx.toast(
+          "success",
+          "Composer settings saved",
+          body.civitai_key_set ? "Civitai key stored" : "Civitai key cleared"
+        );
+        refresh();
+      } catch (err) {
+        ctx.toast("error", "Settings save failed", err.message);
+      }
+    };
+    return el(
+      "details",
+      { class: "mrln-fold" },
+      el("summary", {}, "Settings (Civitai)"),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Used by LoRA blocks to look up trigger words + AIR tags by file hash."
+      ),
+      el(
+        "div",
+        { class: "mrln-inline" },
+        keyInput,
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            onclick: () => {
+              if (keyInput.value.trim()) save(false);
+            },
+          },
+          "Save key"
+        ),
+        el("button", { class: "mrln-btn", onclick: () => save(true) }, "Clear")
+      ),
+      status
     );
   }
 
@@ -2404,18 +2476,26 @@ export function createComposerPanel(root, ctx) {
           value: item.data.strength_clip ?? item.data.strength_model ?? 1.0,
           title: "strength_clip",
         });
+        row.comment = el("input", {
+          type: "text",
+          value: item.data.comment ?? "",
+          placeholder: "comment / AIR",
+          title: "Free comment stored with this LoRA block — the Civitai lookup "
+            + "fills in the model's AIR tag here",
+        });
         let loraMetaReq = 0;
         row.lora.addEventListener("change", async () => {
           if (!row.name.value.trim()) {
             const stem = row.lora.value.split(/[\\/]/).pop().replace(/\.\w+$/, "");
             row.name.value = stem.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
           }
-          // switching files switches the trigger: read it from the LoRA's
-          // own metadata; when it has none, flag the TEXT for manual entry
+          // switching files switches the trigger: file metadata first, then
+          // Civitai by file hash (trigger fallback + AIR tag for the comment)
           const file = row.lora.value;
           row.text.classList.remove("mrln-input-error");
           if (!file) return;
           const req = ++loraMetaReq;
+          let found = false;
           try {
             const meta = await ctx.apiJson(
               `/mrln/prompt/lora-meta?name=${encodeURIComponent(file)}`
@@ -2423,11 +2503,30 @@ export function createComposerPanel(root, ctx) {
             if (req !== loraMetaReq) return; // superseded by a newer switch
             row.text.value = meta.trigger;
             row.text.title = `trigger word from LoRA metadata (${meta.source})`;
-          } catch (err) {
+            found = true;
+          } catch {
             if (req !== loraMetaReq) return;
+          }
+          try {
+            const civ = await ctx.apiJson(
+              `/mrln/prompt/lora-civitai?name=${encodeURIComponent(file)}`
+            );
+            if (req !== loraMetaReq) return;
+            if (!found && civ.trigger) {
+              row.text.value = civ.trigger;
+              row.text.title = `trigger word from Civitai (${civ.model_name ?? "model"}`
+                + `${civ.trained_words?.length > 1 ? `; all: ${civ.trained_words.join(", ")}` : ""})`;
+              found = true;
+            }
+            if (civ.air && !row.comment.value.trim()) row.comment.value = civ.air;
+          } catch {
+            if (req !== loraMetaReq) return;
+          }
+          if (!found) {
             row.text.value = "";
             row.text.classList.add("mrln-input-error");
-            row.text.title = `${err.message} — type the trigger word / catchword yourself`;
+            row.text.title = "No trigger word found in file metadata or on Civitai — "
+              + "type the trigger word / catchword yourself";
           }
         });
         table.append(
@@ -2437,6 +2536,13 @@ export function createComposerPanel(root, ctx) {
             el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
             el("td", { colspan: 2 }, row.lora),
             el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
+            el("td", { class: "mrln-w-act" })
+          ),
+          el(
+            "tr",
+            { class: "mrln-lora-row" },
+            el("td", { class: "mrln-w-origin" }),
+            el("td", { colspan: 3 }, row.comment),
             el("td", { class: "mrln-w-act" })
           )
         );
@@ -2468,6 +2574,9 @@ export function createComposerPanel(root, ctx) {
             strength_model: Number.isNaN(sm) ? 1.0 : sm,
             strength_clip: Number.isNaN(sc) ? (Number.isNaN(sm) ? 1.0 : sm) : sc,
           };
+          const comment = row.comment?.value.trim();
+          if (comment) item.data.comment = comment;
+          else delete item.data.comment;
         } else if (item.data) {
           delete item.data.lora;
           delete item.data.strength_model;

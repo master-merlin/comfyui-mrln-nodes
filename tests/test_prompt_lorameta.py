@@ -115,3 +115,58 @@ def test_handler_requires_name_and_comfyui():
     # under pytest there is no folder_paths module: graceful refusal
     status, body = promptapi.handle_lora_meta(None, {"name": "x.safetensors"})
     assert status == 400 and "ComfyUI" in body["error"]
+    status, body = promptapi.handle_lora_civitai(None, {"name": "x.safetensors"})
+    assert status == 400 and "ComfyUI" in body["error"]
+
+
+# -- Civitai summary + settings ----------------------------------------------
+
+
+def test_civitai_summary_uses_response_air_and_words():
+    resp = {
+        "id": 789,
+        "modelId": 123,
+        "name": "v2.0",
+        "air": "urn:air:flux1:lora:civitai:123@789",
+        "trainedWords": [" BMWM4CS_G82 ", "m4 coupe"],
+        "model": {"name": "BMW M4 CS", "type": "LORA"},
+    }
+    out = promptapi._civitai_summary(resp)
+    assert out["trigger"] == "BMWM4CS_G82"
+    assert out["trained_words"] == ["BMWM4CS_G82", "m4 coupe"]
+    assert out["air"] == "urn:air:flux1:lora:civitai:123@789"
+    assert out["model_name"] == "BMW M4 CS" and out["version_name"] == "v2.0"
+
+
+def test_civitai_summary_constructs_air_when_absent():
+    resp = {
+        "id": 789,
+        "modelId": 123,
+        "baseModel": "Flux.1 D",
+        "trainedWords": [],
+        "model": {"type": "LORA"},
+    }
+    out = promptapi._civitai_summary(resp)
+    assert out["air"] == "urn:air:flux1:lora:civitai:123@789"
+    assert out["trigger"] is None
+
+
+def test_settings_roundtrip_never_echoes_key(tmp_path):
+    from promptlib_fixtures import build_library
+
+    lib = build_library(tmp_path)
+    status, body = promptapi.handle_settings(lib, {})
+    assert status == 200 and body == {"civitai_key_set": False}
+    status, body = promptapi.handle_save_settings(lib, {"civitai_api_key": "secret-123"})
+    assert status == 200 and body["civitai_key_set"] is True
+    status, body = promptapi.handle_settings(lib, {})
+    assert body == {"civitai_key_set": True}  # the key itself never leaves the server
+    assert "secret-123" not in json.dumps(body)
+    # stored server-side in the user tier
+    stored = json.loads((lib.user_root / "settings.json").read_text(encoding="utf-8"))
+    assert stored["civitai_api_key"] == "secret-123"
+    # empty clears
+    status, body = promptapi.handle_save_settings(lib, {"civitai_api_key": ""})
+    assert body["civitai_key_set"] is False
+    status, _ = promptapi.handle_save_settings(lib, {"civitai_api_key": 42})
+    assert status == 400

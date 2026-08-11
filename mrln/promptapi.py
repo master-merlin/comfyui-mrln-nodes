@@ -378,30 +378,194 @@ def handle_decompose(lib, payload):
     return 200, report
 
 
+def _settings_path(lib):
+    return lib.user_root / "settings.json"
+
+
+def _read_settings(lib):
+    if lib.user_root is None:
+        return {}
+    path = _settings_path(lib)
+    if not path.is_file():
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        return data if isinstance(data, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+@_guarded
+def handle_settings(lib, payload):
+    # the key itself is NEVER echoed back — only whether one is stored
+    return 200, {"civitai_key_set": bool(_read_settings(lib).get("civitai_api_key"))}
+
+
+@_guarded
+def handle_save_settings(lib, payload):
+    if lib.user_root is None:
+        return 400, {
+            "error": "no user library root configured",
+            "remediation": "set MRLN_PROMPT_DIR or run inside ComfyUI",
+        }
+    settings = _read_settings(lib)
+    if "civitai_api_key" in payload:
+        raw = payload.get("civitai_api_key")
+        if not isinstance(raw, str):
+            raise ApiError("'civitai_api_key' must be a string")
+        if raw.strip():
+            settings["civitai_api_key"] = raw.strip()
+        else:
+            settings.pop("civitai_api_key", None)  # empty clears
+    lib.user_root.mkdir(parents=True, exist_ok=True)
+    with open(_settings_path(lib), "w", encoding="utf-8") as fh:
+        json.dump(settings, fh, indent=2)
+    return 200, {"ok": True, "civitai_key_set": bool(settings.get("civitai_api_key"))}
+
+
+_ECO_MAP = (
+    ("flux", "flux1"),
+    ("sdxl", "sdxl"),
+    ("sd 3", "sd3"),
+    ("sd 2", "sd2"),
+    ("sd 1", "sd1"),
+    ("pony", "pony"),
+    ("illustrious", "illustrious"),
+    ("noobai", "noobai"),
+)
+
+
+def _civitai_summary(resp):
+    """Pure: pick trigger + AIR out of a Civitai model-version response."""
+    words = [str(w).strip() for w in resp.get("trainedWords") or [] if str(w).strip()]
+    air = resp.get("air")
+    if not air and resp.get("modelId") and resp.get("id"):
+        base = str(resp.get("baseModel") or "").lower()
+        eco = next((eco for frag, eco in _ECO_MAP if frag in base), None)
+        eco = eco or (base.split() or ["model"])[0] or "model"
+        mtype = str((resp.get("model") or {}).get("type") or "LORA").lower()
+        air = f"urn:air:{eco}:{mtype}:civitai:{resp['modelId']}@{resp['id']}"
+    return {
+        "trigger": words[0] if words else None,
+        "trained_words": words,
+        "air": air,
+        "model_name": (resp.get("model") or {}).get("name"),
+        "version_name": resp.get("name"),
+    }
+
+
+_HASH_CACHE = {}
+
+
+def _sha256_of(path):
+    import hashlib
+    import os
+
+    stat = os.stat(path)
+    key = (stat.st_mtime_ns, stat.st_size)
+    cached = _HASH_CACHE.get(str(path))
+    if cached and cached[0] == key:
+        return cached[1]
+    digest = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(chunk)
+    hexdigest = digest.hexdigest()
+    _HASH_CACHE[str(path)] = (key, hexdigest)
+    return hexdigest
+
+
+def _resolve_lora_file(name):
+    """(real_name, path) via folder_paths, tolerant of slash/case — or None
+    outside ComfyUI / for unknown names."""
+    try:
+        import folder_paths
+    except ImportError:
+        return None
+    available = folder_paths.get_filename_list("loras")
+
+    def norm(n):
+        return n.replace("\\", "/").lower()
+
+    real = next((c for c in available if c == name), None) or next(
+        (c for c in available if norm(c) == norm(name)), None
+    )
+    if real is None:
+        return ("", None)
+    return (real, folder_paths.get_full_path("loras", real))
+
+
+@_guarded
+def handle_lora_civitai(lib, payload):
+    """Trigger word + AIR from Civitai, keyed by the file's SHA256. Works
+    keyless for public models; the stored API key (user-tier settings.json,
+    never echoed) unlocks restricted ones."""
+    name = _require_str(payload, "name")
+    resolved = _resolve_lora_file(name)
+    if resolved is None:
+        return 400, {
+            "error": "Civitai lookup runs inside a running ComfyUI only",
+            "remediation": "type the catchword manually",
+        }
+    real, path = resolved
+    if path is None:
+        return 404, {
+            "error": f"LoRA '{name}' not found in your loras folder",
+            "remediation": "refresh the list or pick another file",
+        }
+    import urllib.error
+    import urllib.request
+
+    digest = _sha256_of(path)
+    headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
+    key = str(_read_settings(lib).get("civitai_api_key") or "")
+    if key:
+        headers["Authorization"] = f"Bearer {key}"
+    request = urllib.request.Request(
+        f"https://civitai.com/api/v1/model-versions/by-hash/{digest}", headers=headers
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return 404, {
+                "error": f"'{real}' is not on Civitai (hash {digest[:12]}…)",
+                "remediation": "type the catchword manually",
+            }
+        return 502, {
+            "error": f"Civitai answered HTTP {exc.code}",
+            "remediation": "check the API key in the Composer's Library tab, or retry later",
+        }
+    except Exception as exc:  # URLError / timeout / bad JSON
+        return 502, {
+            "error": f"Civitai unreachable: {exc}",
+            "remediation": "check your network and retry",
+        }
+    out = _civitai_summary(data)
+    out["name"] = real
+    return 200, out
+
+
 @_guarded
 def handle_lora_meta(lib, payload):
     """Trigger word from an installed LoRA's own metadata. Names come from
     the /models/loras list; resolution goes through folder_paths only, so
     no request string touches the filesystem directly."""
     name = _require_str(payload, "name")
-    try:
-        import folder_paths
-    except ImportError:
+    resolved = _resolve_lora_file(name)
+    if resolved is None:
         return 400, {
             "error": "LoRA metadata is only readable inside a running ComfyUI",
             "remediation": "type the catchword manually",
         }
-    available = folder_paths.get_filename_list("loras")
-    norm = lambda n: n.replace("\\", "/").lower()  # noqa: E731 — two uses below
-    real = next((c for c in available if c == name), None) or next(
-        (c for c in available if norm(c) == norm(name)), None
-    )
-    if real is None:
+    real, path = resolved
+    if path is None:
         return 404, {
             "error": f"LoRA '{name}' not found in your loras folder",
             "remediation": "refresh the list or pick another file",
         }
-    path = folder_paths.get_full_path("loras", real)
     try:
         meta = pl.read_safetensors_metadata(path)
     except ValueError as exc:
@@ -422,6 +586,9 @@ ROUTES = (
     ("get", "/mrln/prompt/section", handle_section, False),
     ("get", "/mrln/prompt/items", handle_items, False),
     ("get", "/mrln/prompt/lora-meta", handle_lora_meta, False),
+    ("get", "/mrln/prompt/lora-civitai", handle_lora_civitai, False),
+    ("get", "/mrln/prompt/settings", handle_settings, False),
+    ("post", "/mrln/prompt/save-settings", handle_save_settings, True),
     ("post", "/mrln/prompt/preview", handle_preview, True),
     ("post", "/mrln/prompt/save-section", handle_save_section, True),
     ("post", "/mrln/prompt/save-template", handle_save_template, True),
