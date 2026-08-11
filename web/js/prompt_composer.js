@@ -148,35 +148,32 @@ function watchPull(provider, model) {
   setTimeout(poll, 4000);
 }
 
+const CUSTOM_ENTRY = "✏ custom…";
+const CLOUD_MODEL_SUGGESTIONS = {
+  anthropic: ["claude-haiku-4-5-20251001", "claude-sonnet-5"],
+  openai: ["gpt-4o-mini", "gpt-4o"],
+  gemini: ["gemini-2.5-flash", "gemini-2.5-pro"],
+  openrouter: [],
+};
+
 function enhanceModelDropdown(node) {
-  const widget = (node.widgets ?? []).find((w) => w.name === "model");
-  if (!widget || widget.type === "combo") return;
+  // Mutating a text widget's `type` does NOT change its behavior — the
+  // click handler is bound to the widget instance (it kept opening the
+  // frontend's Value editor). Replace it with a REAL combo widget at the
+  // exact same index: widgets_values are positional and workflow loads
+  // assign them by index.
+  const old = (node.widgets ?? []).find((w) => w.name === "model");
+  if (!old || old.__mrlnCombo) return;
+  const index = node.widgets.indexOf(old);
   const isCloud = () => CLOUD_BACKENDS.includes(backendValue(node));
-  const syncModelType = () => {
-    // clouds have no listing endpoint here — keep the model free-typed;
-    // locals get the installed-models dropdown (type is read at draw time)
-    widget.type = isCloud() ? "text" : "combo";
-  };
-  widget.options = widget.options ?? {};
-  widget.options.values = () => {
-    const provider = enhanceProvider(node);
-    const entry = llmModels[provider];
-    // sync return from cache; kick an async refresh when stale so the NEXT
-    // open is current (litegraph needs the list immediately)
-    if (!entry || Date.now() - entry.fetchedAt > 30000) refreshLlmModels(provider);
-    const values = [...(entry?.models ?? [])];
-    const current = String(widget.value ?? "").trim();
-    if (current && !values.includes(current)) values.unshift(current);
-    if (provider === "ollama") {
-      values.push(...(entry?.suggested ?? []).map((m) => `${PULL_PREFIX}${m}`));
-    }
-    return values.length ? values : [current || ""];
-  };
-  const prevCallback = widget.callback;
-  widget.callback = function (value, ...rest) {
-    if (typeof value === "string" && value.startsWith(PULL_PREFIX)) {
+  let combo;
+  let lastReal = String(old.value ?? "");
+  const callback = (value) => {
+    if (typeof value !== "string") return;
+    if (value.startsWith(PULL_PREFIX)) {
       const model = value.slice(PULL_PREFIX.length);
-      widget.value = model; // widget is set now; the pull lands in the background
+      combo.value = model; // widget is set now; the pull lands in the background
+      lastReal = model;
       const provider = enhanceProvider(node);
       apiJson("/mrln/prompt/llm-pull", { method: "POST", body: { model, start: true } })
         .then(() => {
@@ -184,10 +181,46 @@ function enhanceModelDropdown(node) {
           watchPull(provider, model);
         })
         .catch((err) => toast("error", "Pull failed to start", err.message));
-      return prevCallback?.call(this, model, ...rest);
+      return;
     }
-    return prevCallback?.call(this, value, ...rest);
+    if (value === CUSTOM_ENTRY) {
+      const typed = window.prompt("Model name", lastReal);
+      combo.value = typed?.trim() ? typed.trim() : lastReal;
+      lastReal = combo.value;
+      return;
+    }
+    lastReal = value;
   };
+  combo = node.addWidget("combo", "model", lastReal, callback, {
+    values: () => {
+      const provider = enhanceProvider(node);
+      const current = String(combo.value ?? "").trim();
+      if (current && current !== CUSTOM_ENTRY) lastReal = current;
+      if (isCloud()) {
+        const values = current ? [current] : [];
+        for (const m of CLOUD_MODEL_SUGGESTIONS[provider] ?? []) {
+          if (!values.includes(m)) values.push(m);
+        }
+        values.push(CUSTOM_ENTRY);
+        return values;
+      }
+      // sync return from cache; kick an async refresh when stale so the
+      // NEXT open is current (the combo needs its list immediately)
+      const entry = llmModels[provider];
+      if (!entry || Date.now() - entry.fetchedAt > 30000) refreshLlmModels(provider);
+      const values = [...(entry?.models ?? [])];
+      if (current && !values.includes(current)) values.unshift(current);
+      if (provider === "ollama") {
+        values.push(...(entry?.suggested ?? []).map((m) => `${PULL_PREFIX}${m}`));
+      }
+      values.push(CUSTOM_ENTRY);
+      return values;
+    },
+  });
+  combo.__mrlnCombo = true;
+  if (old.tooltip) combo.tooltip = old.tooltip;
+  node.widgets.splice(node.widgets.indexOf(combo), 1);
+  node.widgets.splice(index, 1, combo);
   const backendWidget = (node.widgets ?? []).find((w) => w.name === "backend");
   if (backendWidget) {
     // only keyed cloud backends are offered (locals always); the node's
@@ -206,12 +239,10 @@ function enhanceModelDropdown(node) {
     const backendCallback = backendWidget.callback;
     backendWidget.callback = function (...args) {
       const result = backendCallback?.apply(this, args);
-      syncModelType();
       if (!isCloud()) refreshLlmModels(enhanceProvider(node));
       return result;
     };
   }
-  syncModelType();
   refreshLlmKeys();
   if (!isCloud()) refreshLlmModels(enhanceProvider(node));
 }
