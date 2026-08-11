@@ -109,7 +109,14 @@ app.registerExtension({
           selectedTemplateNode,
           setWidget,
           getWidget,
-          markDirty: () => app.graph?.setDirtyCanvas(true, true),
+          markDirty: () => {
+            // change() notifies the frontend's change tracker — without it,
+            // programmatic widget writes render live but never reach the
+            // serialized workflow, so a reload reverts them (setDirtyCanvas
+            // alone is only a redraw flag)
+            app.graph?.change?.();
+            app.graph?.setDirtyCanvas(true, true);
+          },
           refreshCombos: () => app.refreshComboInNodes?.(),
           dialog: app.extensionManager?.dialog,
         });
