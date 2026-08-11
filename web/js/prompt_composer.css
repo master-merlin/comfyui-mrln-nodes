@@ -254,7 +254,14 @@ textarea.mrln-auto {
   border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
-.mrln-brace-item { padding: 3px 6px; cursor: pointer; font-size: 11px; }
+.mrln-brace-item {
+  padding: 3px 6px;
+  cursor: pointer;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .mrln-brace-item:hover { background: var(--comfy-input-bg, #1a1a1a); }
 .mrln-brace-menu.mrln-menu-up {
   top: auto;

@@ -45,9 +45,20 @@ function placeMenu(anchor, menu) {
   const below = window.innerHeight - rect.bottom;
   const flipUp = below < 220 && rect.top > below;
   menu.style.position = "fixed";
-  menu.style.left = `${rect.left}px`;
-  menu.style.width = `${rect.width}px`;
-  menu.style.right = "auto";
+  // content-sized: at least as wide as the anchor, growing up to 560px —
+  // leftward when the panel hugs the window's right edge
+  menu.style.width = "max-content";
+  menu.style.minWidth = `${rect.width}px`;
+  const spaceRight = window.innerWidth - rect.left - 12;
+  if (spaceRight < 360) {
+    menu.style.left = "auto";
+    menu.style.right = `${window.innerWidth - rect.right}px`;
+    menu.style.maxWidth = `${Math.max(rect.width, Math.min(560, rect.right - 12))}px`;
+  } else {
+    menu.style.right = "auto";
+    menu.style.left = `${rect.left}px`;
+    menu.style.maxWidth = `${Math.max(rect.width, Math.min(560, spaceRight))}px`;
+  }
   if (flipUp) {
     menu.style.top = "auto";
     menu.style.bottom = `${window.innerHeight - rect.top}px`;
@@ -2402,6 +2413,7 @@ export function createComposerPanel(root, ctx) {
         "div",
         {
           class: `mrln-brace-item${cls ? ` ${cls}` : ""}`,
+          title: text, // ellipsised rows reveal their full name on hover
           onmousedown: (e) => {
             e.preventDefault(); // keep focus → no blur-close before the click
             action();
