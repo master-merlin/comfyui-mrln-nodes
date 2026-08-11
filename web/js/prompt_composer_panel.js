@@ -2319,37 +2319,71 @@ export function createComposerPanel(root, ctx) {
     return loraListCache;
   }
 
-  function loraSelect(current) {
-    // A real dropdown, not a datalist: datalists filter by the typed value,
-    // so a filled input "shows one entry". This always lists every installed
-    // file, grouped by subfolder like the template combo.
-    const sel = el("select", { title: "LoRA file (from ComfyUI's models/loras)" });
-    sel.append(el("option", { value: "" }, "— choose LoRA —"));
-    if (current) sel.append(el("option", { value: current }, current));
-    sel.value = current ?? "";
-    installedLoras().then((list) => {
-      const chosen = sel.value;
-      const groups = new Map();
-      for (const name of list) {
-        const cut = Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\"));
-        const folder = cut === -1 ? "" : name.slice(0, cut);
-        if (!groups.has(folder)) groups.set(folder, []);
-        groups.get(folder).push(name);
-      }
-      sel.replaceChildren(el("option", { value: "" }, "— choose LoRA —"));
-      for (const folder of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
-        const options = groups
-          .get(folder)
-          .map((name) => el("option", { value: name }, folder ? name.slice(folder.length + 1) : name));
-        if (folder) sel.append(el("optgroup", { label: folder }, ...options));
-        else sel.append(...options);
-      }
-      if (chosen && !list.includes(chosen)) {
-        sel.append(el("option", { value: chosen }, `⚠ not installed: ${chosen}`));
-      }
-      sel.value = chosen;
+  function loraPicker(current) {
+    // Folder-first picking for libraries with hundreds of files: a folder
+    // select narrows, a substring filter narrows further, the file select
+    // shows what remains. The current file's folder preselects, so a
+    // trainer-series switch starts among its siblings.
+    const file = el("select", { title: "LoRA file (from ComfyUI's models/loras)" });
+    const folder = el("select", { title: "Folder — narrows the file list" });
+    const filter = el("input", {
+      type: "text",
+      placeholder: "filter…",
+      title: "Substring filter over the file names",
     });
-    return sel;
+    const dirOf = (name) => {
+      const cut = Math.max(name.lastIndexOf("/"), name.lastIndexOf("\\"));
+      return cut === -1 ? "." : name.slice(0, cut);
+    };
+    let names = current ? [current] : [];
+    const rebuild = () => {
+      const chosen = file.value;
+      const dir = folder.value;
+      const needle = filter.value.trim().toLowerCase();
+      let pool = names;
+      if (dir) pool = pool.filter((n) => dirOf(n) === dir);
+      if (needle) pool = pool.filter((n) => n.toLowerCase().includes(needle));
+      file.replaceChildren(el("option", { value: "" }, "— choose LoRA —"));
+      if (dir) {
+        for (const name of pool) {
+          file.append(el("option", { value: name }, dir === "." ? name : name.slice(dir.length + 1)));
+        }
+      } else {
+        const groups = new Map();
+        for (const name of pool) {
+          const d = dirOf(name);
+          if (!groups.has(d)) groups.set(d, []);
+          groups.get(d).push(name);
+        }
+        for (const d of [...groups.keys()].sort((a, b) => a.localeCompare(b))) {
+          const options = groups
+            .get(d)
+            .map((name) => el("option", { value: name }, d === "." ? name : name.slice(d.length + 1)));
+          if (d === ".") file.append(...options);
+          else file.append(el("optgroup", { label: d }, ...options));
+        }
+      }
+      if (chosen && !pool.includes(chosen)) {
+        // keep the selection visible while narrowed away — or flag a file
+        // that is not installed at all
+        const installed = names.includes(chosen);
+        file.append(el("option", { value: chosen }, installed ? chosen : `⚠ not installed: ${chosen}`));
+      }
+      file.value = chosen;
+    };
+    installedLoras().then((list) => {
+      if (list.length) names = list;
+      const dirs = [...new Set(names.map(dirOf))].sort((a, b) => a.localeCompare(b));
+      folder.replaceChildren(el("option", { value: "" }, "📁 all"));
+      for (const d of dirs) folder.append(el("option", { value: d }, d === "." ? "(root)" : d));
+      if (current && dirs.includes(dirOf(current))) folder.value = dirOf(current);
+      rebuild();
+    });
+    folder.addEventListener("change", rebuild);
+    filter.addEventListener("input", rebuild);
+    file.append(el("option", { value: current ?? "" }, current || "— choose LoRA —"));
+    file.value = current ?? "";
+    return { file, folder, filter };
   }
 
   function openSectionForm(slug, body) {
@@ -2463,7 +2497,10 @@ export function createComposerPanel(root, ctx) {
       if (item.data?.lora !== undefined) {
         // LoRA block: an extra editor line for the loader metadata — the
         // text above stays the catchword that lands in the prompt.
-        row.lora = loraSelect(item.data.lora ?? "");
+        const picker = loraPicker(item.data.lora ?? "");
+        row.lora = picker.file;
+        row.loraFolder = picker.folder;
+        row.loraFilter = picker.filter;
         row.sm = el("input", {
           type: "text",
           inputmode: "decimal",
@@ -2549,13 +2586,24 @@ export function createComposerPanel(root, ctx) {
             "tr",
             { class: "mrln-lora-row" },
             el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
+            el(
+              "td",
+              { colspan: 3 },
+              el("div", { class: "mrln-inline" }, row.loraFolder, row.loraFilter)
+            ),
+            el("td", { class: "mrln-w-act" })
+          ),
+          el(
+            "tr",
+            { class: "mrln-lora-row" },
+            el("td", { class: "mrln-w-origin" }),
             el("td", { colspan: 2 }, row.lora),
             el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
             el("td", { class: "mrln-w-act" })
           ),
           el(
             "tr",
-            { class: "mrln-lora-row" },
+            { class: "mrln-lora-row mrln-lora-end" },
             el("td", { class: "mrln-w-origin" }),
             el("td", { colspan: 3 }, row.comment),
             el("td", { class: "mrln-w-act" })
