@@ -227,7 +227,10 @@ def node_env(tmp_path, monkeypatch):
     return pack.NODE_CLASS_MAPPINGS["MRLN_PromptTemplate"]
 
 
+# one entry per Arcane Tuner model family (D:\MRLN Arcane Tuner\backend\
+# app\engine\models\families) plus the classic public families
 FACTORY_PROFILES = {
+    # image
     "krea2",
     "flux",
     "flux2-klein",
@@ -239,6 +242,26 @@ FACTORY_PROFILES = {
     "sd15",
     "pony",
     "illustrious",
+    "microsoft-lens",
+    "zimage",
+    "chroma",
+    "lumina2",
+    "longcat-image",
+    "nucleus-image",
+    "dreamlite",
+    "omnigen2",
+    "ovis-image",
+    "prx",
+    "ideogram4",
+    # video
+    "ltx2",
+    "wan21",
+    "wan22",
+    "hunyuan-video15",
+    "kandinsky5",
+    "bernini-r",
+    # audio
+    "ace-step15",
 }
 
 
