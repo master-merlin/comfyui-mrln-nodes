@@ -2161,6 +2161,30 @@ export function createComposerPanel(root, ctx) {
     return { action: "skip", include: false };
   }
 
+  function watchDecomposePull(model) {
+    const started = Date.now();
+    const tick = async () => {
+      if (Date.now() - started > 45 * 60 * 1000) return; // stop polling silently
+      let body = null;
+      try {
+        body = await ctx.apiJson(`/mrln/prompt/llm-pull?model=${encodeURIComponent(model)}`);
+      } catch {
+        /* transient — keep polling */
+      }
+      if (body?.status === "done") {
+        ctx.toast("success", "Model pulled", `${model} is installed`);
+        if (state.tab === "decompose") renderDecomposeTab(); // list shows it now
+        return;
+      }
+      if (body?.status === "error") {
+        ctx.toast("error", `Pull failed: ${model}`, body.detail ?? "");
+        return;
+      }
+      setTimeout(tick, 4000);
+    };
+    setTimeout(tick, 4000);
+  }
+
   async function runDecompose() {
     const d = state.decompose;
     if (!d.text.trim()) {
@@ -2407,21 +2431,91 @@ export function createComposerPanel(root, ctx) {
         + "clouds the API key from the Settings tab",
       onchange: (e) => {
         d.backend = e.target.value;
+        renderDecomposeTab(); // the model dropdown follows the backend
       },
     });
     for (const backend of ["ollama", "lm studio", "anthropic", "openai", "gemini", "openrouter"]) {
       backendSelect.append(el("option", { value: backend }, backend));
     }
     backendSelect.value = d.backend ?? "ollama";
-    const modelInput = el("input", {
-      type: "text",
-      value: d.model ?? "",
-      placeholder: "model — e.g. gemma3:12b (required for Ollama)",
-      title: "Model for the llm/hybrid engines; cloud backends fall back to a default",
-      oninput: (e) => {
-        d.model = e.target.value;
+    const modelSelect = el("select", {
+      title: "Model for the llm/hybrid engines. Locals list installed models; "
+        + "'⬇ pull' entries download via Ollama when picked; clouds fall back "
+        + "to a sensible default when empty.",
+      onchange: async (e) => {
+        const value = e.target.value;
+        if (value === "__custom__") {
+          const typed = await askString("Model name", "Exact model tag/id:", d.model ?? "");
+          if (typed?.trim()) d.model = typed.trim();
+          renderDecomposeTab();
+          return;
+        }
+        if (value.startsWith("__pull__:")) {
+          const model = value.slice(9);
+          d.model = model; // set now — the pull lands in the background
+          try {
+            await ctx.apiJson("/mrln/prompt/llm-pull", {
+              method: "POST",
+              body: { model, start: true },
+            });
+            ctx.toast("info", "Pulling model", `${model} — Ollama downloads it in the background`);
+            watchDecomposePull(model);
+          } catch (err) {
+            ctx.toast("error", "Pull failed to start", err.message);
+          }
+          renderDecomposeTab();
+          return;
+        }
+        d.model = value;
       },
     });
+    const modelNote = el("span", { class: "mrln-note" }, "");
+    (async () => {
+      const backend = d.backend ?? "ollama";
+      const provider = backend === "lm studio" ? "lmstudio" : backend;
+      const current = (d.model ?? "").trim();
+      modelSelect.replaceChildren(el("option", { value: current }, current || "…"));
+      let body = null;
+      try {
+        body = await ctx.apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
+      } catch (err) {
+        modelNote.textContent = `✗ ${err.message}`;
+        modelNote.style.color = "#e88";
+        if (!current) modelSelect.replaceChildren(el("option", { value: "" }, "(unreachable)"));
+        modelSelect.append(el("option", { value: "__custom__" }, "✏ custom…"));
+        return;
+      }
+      const models = body.models ?? [];
+      const suggested = body.suggested ?? [];
+      const isCloud = "key_set" in body;
+      modelSelect.replaceChildren();
+      if (isCloud) {
+        modelSelect.append(el("option", { value: "" }, "(backend default)"));
+        modelNote.textContent = body.key_set
+          ? "✓ key stored"
+          : "no key stored — add it in the Settings tab";
+        modelNote.style.color = body.key_set ? "#6ca" : "#e88";
+      } else {
+        modelNote.textContent = `✓ ${models.length} installed`;
+        modelNote.style.color = "#6ca";
+      }
+      if (current && !models.includes(current) && !suggested.includes(current)) {
+        modelSelect.append(el("option", { value: current }, current));
+      }
+      for (const m of models) modelSelect.append(el("option", { value: m }, m));
+      for (const s of suggested) {
+        if (models.includes(s)) continue;
+        if (provider === "ollama") {
+          modelSelect.append(el("option", { value: `__pull__:${s}` }, `⬇ pull ${s}`));
+        } else {
+          modelSelect.append(el("option", { value: s }, s));
+        }
+      }
+      modelSelect.append(el("option", { value: "__custom__" }, "✏ custom…"));
+      if (!current && !isCloud && models.length) d.model = models[0]; // ollama needs one
+      modelSelect.value = (d.model ?? "").trim();
+      if (modelSelect.value !== (d.model ?? "").trim()) modelSelect.value = isCloud ? "" : models[0] ?? "";
+    })();
     const parts = [
       el(
         "div",
@@ -2433,7 +2527,9 @@ export function createComposerPanel(root, ctx) {
       field("Prompt to decompose", promptArea),
       field("Template type (classifiers)", typeInput),
       el("div", { class: "mrln-grid2" }, field("Engine", engineSelect), field("Backend", (d.engine ?? "programmatic") === "programmatic" ? el("span", { class: "mrln-note" }, "—") : backendSelect)),
-      (d.engine ?? "programmatic") === "programmatic" ? null : field("Model", modelInput),
+      (d.engine ?? "programmatic") === "programmatic"
+        ? null
+        : field("Model", el("div", { class: "mrln-inline" }, modelSelect, modelNote)),
       el(
         "div",
         { class: "mrln-actions" },

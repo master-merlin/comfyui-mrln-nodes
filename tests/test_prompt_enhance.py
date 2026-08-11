@@ -123,6 +123,21 @@ def test_llm_validate_endpoint(tmp_path):
     assert status == 502 and "unreachable" in body["error"]
 
 
+def test_llm_validate_cloud_providers_offline(tmp_path):
+    # cloud providers answer WITHOUT network: key state + curated suggestions
+    lib = build_library(tmp_path)
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "anthropic"})
+    assert status == 200 and body["models"] == []
+    assert body["key_set"] is False and body["suggested"]
+    promptapi.handle_save_settings(lib, {"llm_api_keys": {"anthropic": "k"}})
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "anthropic"})
+    assert body["key_set"] is True
+    # the first suggestion IS the empty-model fallback — keep them aligned
+    for provider, default in promptapi.DEFAULT_CLOUD_MODELS.items():
+        if default:
+            assert promptapi.CLOUD_MODEL_SUGGESTIONS[provider][0] == default
+
+
 def test_llm_pull_endpoint(tmp_path):
     import time
 

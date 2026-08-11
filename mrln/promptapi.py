@@ -825,12 +825,34 @@ SUGGESTED_OLLAMA_MODELS = (
 )
 
 
+# Curated cloud model suggestions for the model dropdowns; the FIRST entry
+# per provider is the DEFAULT_CLOUD_MODELS fallback. Edit freely.
+CLOUD_MODEL_SUGGESTIONS = {
+    "anthropic": ("claude-haiku-4-5-20251001", "claude-sonnet-5"),
+    "openai": ("gpt-4o-mini", "gpt-4o"),
+    "gemini": ("gemini-2.5-flash", "gemini-2.5-pro"),
+    "openrouter": (),
+}
+
+
 @_guarded
 def handle_llm_validate(lib, payload):
-    """Ping a local LLM backend and list its models — powers the green
-    checkmarks in the Composer settings and the Enhance node's dropdown."""
+    """Local providers: ping the backend and list installed models. Cloud
+    providers: no network — answer with the stored-key state and curated
+    model suggestions. Powers the green checkmarks in Settings and every
+    model dropdown (Enhance node, De-compose tab)."""
     provider = _require_str(payload, "provider")
-    llm = _llm_settings(_read_settings(lib))
+    settings = _read_settings(lib)
+    llm = _llm_settings(settings)
+    if provider in CLOUD_PROVIDERS:
+        key_set = bool((settings.get("llm_api_keys") or {}).get(provider))
+        return 200, {
+            "state": "ok",
+            "provider": provider,
+            "models": [],
+            "suggested": list(CLOUD_MODEL_SUGGESTIONS.get(provider, ())),
+            "key_set": key_set,
+        }
     import urllib.error
     import urllib.request
 
@@ -839,7 +861,9 @@ def handle_llm_validate(lib, payload):
     elif provider == "lmstudio":
         url = f"{llm.get('lmstudio_url') or DEFAULT_LMSTUDIO_URL}/v1/models"
     else:
-        raise ApiError(f"unknown provider '{provider}' (have: ollama, lmstudio)")
+        raise ApiError(
+            f"unknown provider '{provider}' (have: ollama, lmstudio, {', '.join(CLOUD_PROVIDERS)})"
+        )
     try:
         request = urllib.request.Request(url, headers={"User-Agent": "ComfyUI-MRLN-Nodes"})
         with urllib.request.urlopen(request, timeout=5) as resp:
