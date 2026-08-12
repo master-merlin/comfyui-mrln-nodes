@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Vehicle Icons",
+  "description": "Subject LoRAs that put one specific machine in the frame — three of them the pack author's own (mastermerlin). The trigger word is woven into the item text verbatim, because dropping it silently kills the LoRA; data carries the exact filename, strength and Civitai AIR urn. Tagged by base-model family: a flux1 car in an SDXL render is the classic wasted seed.",
+  "suits": ["object", "vehicle", "car"],
+  "items": [
+    {
+      "name": "ferrari-f40-1987",
+      "text": "FerrariF40, the 1987 Ferrari F40 in its original homologation shape, NACA ducts and that upright rear wing",
+      "text_short": "FerrariF40, 1987 Ferrari F40",
+      "tags": ["flux1", "mastermerlin", "classic"],
+      "data": {
+        "lora": "mastermerlin_flux_Ferrari_F40_1987.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:1825103@2065365",
+        "lora_info": {
+          "name": "Ferrari F40 - 1987",
+          "creator": "mastermerlin",
+          "base": "flux1",
+          "url": "https://civitai.com/models/1825103?modelVersionId=2065365",
+          "about": "Reproduces the 1987 F40's exact proportions and panel breaks rather than a generic wedge supercar; mastermerlin's top-rated model at 1,108 downloads and 75 thumbs-up, with the Flux.1 D version the most-downloaded of its thirteen base variants."
+        }
+      }
+    },
+    {
+      "name": "shelby-cobra-427-1965",
+      "text": "ShelbyCobra427, the 1965 Shelby Cobra 427 on its stubby big-block proportions, side pipes and blistered arches",
+      "text_short": "ShelbyCobra427, 1965 Shelby Cobra 427",
+      "tags": ["flux1", "mastermerlin", "classic"],
+      "data": {
+        "lora": "mastermerlin_flux_Shelby_Cobra_1965.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:1845415@2088377",
+        "lora_info": {
+          "name": "Shelby Cobra 427 - 1965",
+          "creator": "mastermerlin",
+          "base": "flux1",
+          "url": "https://civitai.com/models/1845415?modelVersionId=2088377",
+          "about": "Holds the 427 Cobra's short wheelbase and hand-formed aluminium surfacing, which generic car models flatten into a modern roadster; 908 downloads and 58 thumbs-up, the Flux.1 D version tied as its most-downloaded."
+        }
+      }
+    },
+    {
+      "name": "porsche-911-targa-1989",
+      "text": "911-930T4rga, the 1989 Porsche 911 Turbo Targa on the wide 930 body, removable roof panel and whale-tail",
+      "text_short": "911-930T4rga, 1989 Porsche 930 Turbo Targa",
+      "tags": ["qwen", "mastermerlin", "classic"],
+      "data": {
+        "lora": "mastermerlin_qwen_911_930_Turbo_33_Targa_1989.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:qwen:lora:civitai:1815501@2097510",
+        "lora_info": {
+          "name": "Porsche 911 Turbo Targa (930) - 1989",
+          "creator": "mastermerlin",
+          "base": "qwen",
+          "url": "https://civitai.com/models/1815501?modelVersionId=2097510",
+          "about": "The 930 Turbo Targa's specific roof-hoop and wide-arch geometry, a shape most base models collapse into a generic 911; 986 downloads and 61 thumbs-up, with the Qwen version its most-downloaded release."
+        }
+      }
+    },
+    {
+      "name": "widebody-sports-car-xl",
+      "text": "a widebody sports car, arches flared out hard over the extra track width, stance sitting square on the road",
+      "text_short": "widebody sports car",
+      "tags": ["sdxl", "tuning"],
+      "data": {
+        "lora": "WBC-XL-v1.safetensors",
+        "strength_model": 0.8,
+        "strength_clip": 0.8,
+        "comment": "urn:air:sdxl:lora:civitai:89032@525084",
+        "lora_info": {
+          "name": "Widebody Cars [SDXL]",
+          "creator": "fallenL",
+          "base": "sdxl",
+          "url": "https://civitai.com/models/89032?modelVersionId=525084",
+          "about": "A tuning-style LoRA that widens body work across six trained class words (widebody sports car, super car, hatchback, sedan, suv, truck), recommended at 0.6-1.0 weight; 4,001 downloads and 301 thumbs-up."
+        }
+      }
+    },
+    {
+      "name": "nissan-skyline-r34",
+      "text": "skyliner34, car, vehicle, the R34-generation Nissan Skyline GT-R with its squared-off arches and quad tail lamps",
+      "text_short": "skyliner34, car, vehicle",
+      "tags": ["sd1", "jdm"],
+      "data": {
+        "lora": "skylineR34-v1.0.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:8778@10364",
+        "lora_info": {
+          "name": "NISSAN Skyline GT-R R34 car LORA",
+          "creator": "Mikoeiaow",
+          "base": "sd1",
+          "url": "https://civitai.com/models/8778?modelVersionId=10364",
+          "about": "Pins the R34 GT-R's specific greenhouse and rear-quarter shape instead of a generic 90s coupe; the most-downloaded single-car LoRA in Civitai's car-photography results at 5,486 downloads and 619 thumbs-up."
+        }
+      }
+    }
+  ]
+}

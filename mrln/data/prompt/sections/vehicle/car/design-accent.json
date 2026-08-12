@@ -5,7 +5,8 @@
   "items": [
     {
       "name": "lamborghini-reventon",
-      "text": "Lamborghini Reventon",
+      "text": "Lamborghini Reventon, hard stealth-fighter facets and angular slit lighting over a low flat nose",
+      "text_short": "Lamborghini Reventon, stealth-fighter facets, slit lighting",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -13,7 +14,8 @@
     },
     {
       "name": "mclaren-765lt",
-      "text": "McLaren 765LT",
+      "text": "McLaren 765LT, exposed carbon aero blades and slim eye-socket lamp graphics",
+      "text_short": "McLaren 765LT, carbon blades, slim lamp graphics",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -21,7 +23,8 @@
     },
     {
       "name": "bugatti-divo",
-      "text": "Bugatti Divo",
+      "text": "Bugatti Divo, a two-tone paint split following the roof-to-tail fin above a finely bladed lamp signature",
+      "text_short": "Bugatti Divo, two-tone split, bladed lamps",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -29,7 +32,8 @@
     },
     {
       "name": "mclaren-speedtail",
-      "text": "McLaren Speedtail",
+      "text": "McLaren Speedtail, seamless teardrop surfacing with static camera pods and polished carbon detailing",
+      "text_short": "McLaren Speedtail, seamless surfacing, polished carbon",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -37,7 +41,8 @@
     },
     {
       "name": "koenigsegg-jesko",
-      "text": "Koenigsegg Jesko",
+      "text": "Koenigsegg Jesko, bare carbon weave left readable under clear lacquer with hard-edged lamp slashes",
+      "text_short": "Koenigsegg Jesko, lacquered bare carbon, slashed lamps",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -45,7 +50,8 @@
     },
     {
       "name": "pagani-utopia",
-      "text": "Pagani Utopia",
+      "text": "Pagani Utopia, jewel-like machined aluminium fittings, exposed fasteners and quad circular tail lamps",
+      "text_short": "Pagani Utopia, machined alloy fittings, quad round lamps",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -53,7 +59,8 @@
     },
     {
       "name": "lexus-lfa",
-      "text": "Lexus LFA",
+      "text": "Lexus LFA, precise triangular lamp graphics over a fine carbon weave under deep clear coat",
+      "text_short": "Lexus LFA, triangular lamp graphics, fine carbon",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -61,7 +68,8 @@
     },
     {
       "name": "koenigsegg-regera",
-      "text": "Koenigsegg Regera",
+      "text": "Koenigsegg Regera, an uninterrupted skin with flush apertures and a slim wraparound light bar",
+      "text_short": "Koenigsegg Regera, flush surfaces, slim light bar",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -69,7 +77,8 @@
     },
     {
       "name": "lamborghini-si-n-fkp-37",
-      "text": "Lamborghini Sián FKP 37",
+      "text": "Lamborghini Sián FKP 37, Y-shaped lighting up front and six hexagonal tail lamps set into bare carbon",
+      "text_short": "Lamborghini Sián, Y-shaped lights, hexagonal tail lamps",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -77,7 +86,8 @@
     },
     {
       "name": "bugatti-centodieci",
-      "text": "Bugatti Centodieci",
+      "text": "Bugatti Centodieci, five round intake ports punched into each flank beside a slim rectangular lamp signature",
+      "text_short": "Bugatti Centodieci, five round flank ports, slim lamps",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -85,7 +95,8 @@
     },
     {
       "name": "ferrari-daytona-sp3",
-      "text": "Ferrari Daytona SP3",
+      "text": "Ferrari Daytona SP3, a louvred rear deck, deep flank scallops and a full-width tail band",
+      "text_short": "Ferrari Daytona SP3, louvred rear deck, scalloped flanks",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -93,7 +104,8 @@
     },
     {
       "name": "porsche-918-spyder",
-      "text": "Porsche 918 Spyder",
+      "text": "Porsche 918 Spyder, top-exit exhaust stacks, painted alloy accents and one clean unbroken shoulder line",
+      "text_short": "Porsche 918 Spyder, top-exit exhausts, clean shoulder line",
       "weight": 0.0833,
       "tags": [
         "modern-production"
@@ -101,7 +113,8 @@
     },
     {
       "name": "bugatti-vision-gran-turismo",
-      "text": "Bugatti Vision Gran Turismo",
+      "text": "Bugatti Vision Gran Turismo, a dramatic two-tone split against exposed carbon with thin blade lighting",
+      "text_short": "Bugatti Vision GT, two-tone split, blade lighting",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -109,7 +122,8 @@
     },
     {
       "name": "ferrari-modulo",
-      "text": "Ferrari Modulo",
+      "text": "Ferrari Modulo, a knife-edge horizontal split line running the whole body above covered wheel arches",
+      "text_short": "Ferrari Modulo, knife-edge split line, covered arches",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -117,7 +131,8 @@
     },
     {
       "name": "pininfarina-battista",
-      "text": "Pininfarina Battista",
+      "text": "Pininfarina Battista, a light bar wrapping the nose, a twin-tone paint break and finely finished carbon",
+      "text_short": "Pininfarina Battista, wraparound light bar, twin-tone break",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -125,7 +140,8 @@
     },
     {
       "name": "koenigsegg-gemera",
-      "text": "Koenigsegg Gemera",
+      "text": "Koenigsegg Gemera, a huge single-piece glass roof and slim jewelled lamp units",
+      "text_short": "Koenigsegg Gemera, single-piece glass roof, jewelled lamps",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -133,7 +149,8 @@
     },
     {
       "name": "mclaren-ultimate-vision-gt",
-      "text": "McLaren Ultimate Vision GT",
+      "text": "McLaren Ultimate Vision GT, a glass-domed cockpit over exposed structure edged with thin luminous lines",
+      "text_short": "McLaren Ultimate Vision GT, glass dome, luminous edging",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -141,7 +158,8 @@
     },
     {
       "name": "jaguar-vision-gran-turismo",
-      "text": "Jaguar Vision Gran Turismo",
+      "text": "Jaguar Vision Gran Turismo, sweeping single-line surfacing with slim ribbon lighting front and rear",
+      "text_short": "Jaguar Vision GT, single-line surfacing, ribbon lighting",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -149,7 +167,8 @@
     },
     {
       "name": "chrysler-me-four-twelve-concept",
-      "text": "Chrysler ME Four-Twelve Concept",
+      "text": "Chrysler ME Four-Twelve Concept, exposed carbon panels and mesh-backed engine glass",
+      "text_short": "Chrysler ME Four-Twelve, carbon panels, mesh engine glass",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -157,7 +176,8 @@
     },
     {
       "name": "audi-ai-race-pb18-e-tron",
-      "text": "Audi AI:RACE (PB18 e-tron)",
+      "text": "Audi AI:RACE (PB18 e-tron), hard geometric lamp blocks above a machined two-tone split running the flanks",
+      "text_short": "Audi AI:RACE, geometric lamp blocks, two-tone flank split",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -165,7 +185,8 @@
     },
     {
       "name": "bmw-vision-next-100",
-      "text": "BMW Vision Next 100",
+      "text": "BMW Vision Next 100, kidney-shaped surface panels and copper-toned trim inlays over seamless flowing bodywork",
+      "text_short": "BMW Vision Next 100, kidney surface panels, copper trim inlays",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -173,7 +194,8 @@
     },
     {
       "name": "mercedes-benz-vision-avtr",
-      "text": "Mercedes-Benz Vision AVTR",
+      "text": "Mercedes-Benz Vision AVTR, articulated scale-like surface elements breathing with soft organic light",
+      "text_short": "Mercedes Vision AVTR, glowing scale-like surface elements",
       "weight": 0.1,
       "tags": [
         "concept-accents"
@@ -181,7 +203,8 @@
     },
     {
       "name": "apollo-intensa-emozione",
-      "text": "Apollo Intensa Emozione",
+      "text": "Apollo Intensa Emozione, savage carbon fin details and needle-thin twin lamp slashes",
+      "text_short": "Apollo Intensa Emozione, carbon fins, thin lamp slashes",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -189,7 +212,8 @@
     },
     {
       "name": "devel-sixteen",
-      "text": "Devel Sixteen",
+      "text": "Devel Sixteen, brutal slab surfaces with oversized quad exhausts and hard angular lighting",
+      "text_short": "Devel Sixteen, slab surfaces, quad exhausts",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -197,7 +221,8 @@
     },
     {
       "name": "arrinera-hussarya",
-      "text": "Arrinera Hussarya",
+      "text": "Arrinera Hussarya, blunt aggressive front detailing framed by wide dark intake surrounds",
+      "text_short": "Arrinera Hussarya, blunt nose, dark intake surrounds",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -205,7 +230,8 @@
     },
     {
       "name": "ktm-x-bow-gt-xr",
-      "text": "KTM X-Bow GT-XR",
+      "text": "KTM X-Bow GT-XR, an exposed carbon tub, contrasting accent flashes and a forward-hinged canopy",
+      "text_short": "KTM X-Bow GT-XR, exposed carbon tub, contrast accent flashes",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -213,7 +239,8 @@
     },
     {
       "name": "donkervoort-d8-gto",
-      "text": "Donkervoort D8 GTO",
+      "text": "Donkervoort D8 GTO, riveted alloy panels, bare carbon and cycle-wing detailing",
+      "text_short": "Donkervoort D8 GTO, riveted panels, bare carbon",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -221,7 +248,8 @@
     },
     {
       "name": "zenvo-tsr-s",
-      "text": "Zenvo TSR-S",
+      "text": "Zenvo TSR-S, a centrifugal tilting wing above heavily quilted carbon detailing",
+      "text_short": "Zenvo TSR-S, tilting wing, quilted carbon",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -229,7 +257,8 @@
     },
     {
       "name": "dallara-stradale",
-      "text": "Dallara Stradale",
+      "text": "Dallara Stradale, stripped functional carbon surfaces with visible fasteners and open sills",
+      "text_short": "Dallara Stradale, stripped carbon, visible fasteners",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -237,7 +266,8 @@
     },
     {
       "name": "w-motors-lykan-hypersport",
-      "text": "W Motors Lykan Hypersport",
+      "text": "W Motors Lykan Hypersport, jewelled headlamp inserts and fine gold-toned trim work",
+      "text_short": "W Motors Lykan, jewelled lamp inserts, gold trim work",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -245,7 +275,8 @@
     },
     {
       "name": "spyker-c8-aileron",
-      "text": "Spyker C8 Aileron",
+      "text": "Spyker C8 Aileron, aviation-inspired details, propeller-motif wheels and exposed rivet lines",
+      "text_short": "Spyker C8 Aileron, aviation details, exposed rivets",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -253,7 +284,8 @@
     },
     {
       "name": "glickenhaus-scg-004s",
-      "text": "Glickenhaus SCG 004S",
+      "text": "Glickenhaus SCG 004S, purposeful race-derived vents and stripped competition detailing",
+      "text_short": "Glickenhaus SCG 004S, race vents, stripped competition detailing",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"
@@ -261,7 +293,8 @@
     },
     {
       "name": "apollo-project-evo",
-      "text": "Apollo Project Evo",
+      "text": "Apollo Project Evo, faceted stealth surfacing with sharp carbon fins and slim lamp lines",
+      "text_short": "Apollo Project Evo, faceted stealth surfaces, carbon fins",
       "weight": 0.0909,
       "tags": [
         "boutique-exotic"

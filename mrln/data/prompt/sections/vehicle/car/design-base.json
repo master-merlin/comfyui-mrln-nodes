@@ -5,7 +5,8 @@
   "items": [
     {
       "name": "mazda-furai",
-      "text": "Mazda Furai",
+      "text": "Mazda Furai, a single-volume Le Mans prototype body with a full-width canopy and a long tapered tail",
+      "text_short": "Mazda Furai, single-volume canopy body, tapered tail",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -13,7 +14,8 @@
     },
     {
       "name": "bmw-gina",
-      "text": "BMW Gina",
+      "text": "BMW Gina, a taut fabric skin stretched over its frame so the surfaces read seamless and boneless",
+      "text_short": "BMW Gina, seamless stretched-skin surfaces",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -21,7 +23,8 @@
     },
     {
       "name": "mercedes-benz-biome",
-      "text": "Mercedes-Benz Biome",
+      "text": "Mercedes-Benz Biome, an organically grown teardrop volume of fused leaf-like surfaces with barely a shutline",
+      "text_short": "Mercedes-Benz Biome, organic teardrop volume, no shutlines",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -29,7 +32,8 @@
     },
     {
       "name": "ds-xe-tense",
-      "text": "DS XE-Tense",
+      "text": "DS XE-Tense, an asymmetric roadster silhouette with a sharply creased shoulder and deeply sculpted flanks",
+      "text_short": "DS XE-Tense, asymmetric roadster, creased shoulder",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -37,7 +41,8 @@
     },
     {
       "name": "lamborghini-terzo-millennio",
-      "text": "Lamborghini Terzo Millennio",
+      "text": "Lamborghini Terzo Millennio, razor-cut wedge geometry with Y-shaped cutouts and a cab floating between the arches",
+      "text_short": "Lamborghini Terzo Millennio, razor wedge, Y-shaped cutouts",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -45,7 +50,8 @@
     },
     {
       "name": "chrysler-halcyon",
-      "text": "Chrysler Halcyon",
+      "text": "Chrysler Halcyon, a long low glasshouse over smooth aerodynamic flanks closing into a fastback tail",
+      "text_short": "Chrysler Halcyon, long glasshouse, fastback tail",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -53,7 +59,8 @@
     },
     {
       "name": "maserati-genesis",
-      "text": "Maserati Genesis",
+      "text": "Maserati Genesis, classic long-hood cab-rearward proportions drawn down into a modern low silhouette",
+      "text_short": "Maserati Genesis, long hood, cab-rearward proportions",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -61,7 +68,8 @@
     },
     {
       "name": "renault-trezor",
-      "text": "Renault Trezor",
+      "text": "Renault Trezor, a one-piece clamshell canopy hinged open over a long low coupe body",
+      "text_short": "Renault Trezor, clamshell canopy, long low coupe",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -69,7 +77,8 @@
     },
     {
       "name": "mercedes-benz-vision-one-eleven",
-      "text": "Mercedes-Benz Vision One-Eleven",
+      "text": "Mercedes-Benz Vision One-Eleven, a rounded seventies wedge reborn as one smooth mono-volume with gullwing doors",
+      "text_short": "Mercedes-Benz Vision One-Eleven, rounded wedge, gullwing doors",
       "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
@@ -77,7 +86,8 @@
     },
     {
       "name": "porsche-mission-x",
-      "text": "Porsche Mission X",
+      "text": "Porsche Mission X, compact hypercar proportions under a Le Mans glass canopy with upward-swinging doors",
+      "text_short": "Porsche Mission X, compact hypercar, glass canopy",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -85,7 +95,8 @@
     },
     {
       "name": "genesis-gran-tourismo-concept",
-      "text": "Genesis Gran Tourismo Concept",
+      "text": "Genesis Gran Tourismo Concept, a stretched grand-touring silhouette with a low nose and one long arcing roofline",
+      "text_short": "Genesis Gran Tourismo, stretched GT silhouette, arcing roof",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -93,7 +104,8 @@
     },
     {
       "name": "polestar-synergy",
-      "text": "Polestar Synergy",
+      "text": "Polestar Synergy, minimal Scandinavian surfacing over a wide low stance and a cleanly cropped tail",
+      "text_short": "Polestar Synergy, minimal surfacing, wide low stance",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -101,7 +113,8 @@
     },
     {
       "name": "alpine-alpenglow",
-      "text": "Alpine Alpenglow",
+      "text": "Alpine Alpenglow, a slim single-seat prototype body with a bubble canopy and wheels standing clear of the flanks",
+      "text_short": "Alpine Alpenglow, slim prototype body, bubble canopy",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -109,7 +122,8 @@
     },
     {
       "name": "mg-cyberster",
-      "text": "MG Cyberster",
+      "text": "MG Cyberster, a compact two-seat roadster silhouette with a low cut screen and scissor doors",
+      "text_short": "MG Cyberster, compact roadster, low screen",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -117,7 +131,8 @@
     },
     {
       "name": "aston-martin-valhalla",
-      "text": "Aston Martin Valhalla",
+      "text": "Aston Martin Valhalla, mid-engined proportions with a hunched cab-forward roof and heavily undercut flanks",
+      "text_short": "Aston Martin Valhalla, cab-forward roof, undercut flanks",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -125,7 +140,8 @@
     },
     {
       "name": "lotus-evija",
-      "text": "Lotus Evija",
+      "text": "Lotus Evija, a Venturi-tunnelled body pierced clean through behind the doors so the light comes out the back",
+      "text_short": "Lotus Evija, body tunnelled clean through",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -133,7 +149,8 @@
     },
     {
       "name": "bugatti-tourbillon",
-      "text": "Bugatti Tourbillon",
+      "text": "Bugatti Tourbillon, a broad low grand-tourer body divided along its length by a raised centre spine",
+      "text_short": "Bugatti Tourbillon, broad low body, centre spine",
       "weight": 0.125,
       "tags": [
         "elegant-gt"
@@ -141,7 +158,8 @@
     },
     {
       "name": "aston-martin-valkyrie",
-      "text": "Aston Martin Valkyrie",
+      "text": "Aston Martin Valkyrie, an extreme teardrop cockpit slung between enormous underfloor venturi tunnels",
+      "text_short": "Aston Martin Valkyrie, teardrop cockpit, venturi tunnels",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -149,7 +167,8 @@
     },
     {
       "name": "mercedes-benz-amg-gt-r",
-      "text": "Mercedes Benz AMG GT R",
+      "text": "Mercedes Benz AMG GT R, a very long front deck running back to a short muscular tail over wide rear haunches",
+      "text_short": "Mercedes-AMG GT R, long front deck, short muscular tail",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -157,7 +176,8 @@
     },
     {
       "name": "ferrari-f8-tributo",
-      "text": "Ferrari F8 Tributo",
+      "text": "Ferrari F8 Tributo, compact mid-engined proportions under a tight cab-forward greenhouse",
+      "text_short": "Ferrari F8 Tributo, compact mid-engined proportions",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -165,7 +185,8 @@
     },
     {
       "name": "maserati-mc20",
-      "text": "Maserati MC20",
+      "text": "Maserati MC20, clean uncluttered mid-engined surfaces beneath a softly domed roof",
+      "text_short": "Maserati MC20, clean mid-engined surfaces, domed roof",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -173,7 +194,8 @@
     },
     {
       "name": "mclaren-720s",
-      "text": "McLaren 720S",
+      "text": "McLaren 720S, a teardrop cabin over dihedral doors and hollowed eye-socket intake channels",
+      "text_short": "McLaren 720S, teardrop cabin, dihedral doors",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -181,7 +203,8 @@
     },
     {
       "name": "aston-martin-dbs-superleggera",
-      "text": "Aston Martin DBS Superleggera",
+      "text": "Aston Martin DBS Superleggera, a long-nosed front-engined GT silhouette broadening into heavy rear haunches",
+      "text_short": "Aston Martin DBS Superleggera, long-nosed GT, wide haunches",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -189,7 +212,8 @@
     },
     {
       "name": "rimac-c-two",
-      "text": "Rimac C_Two",
+      "text": "Rimac C_Two, a smooth heavy-set electric GT body with a rounded nose and a full-width tail",
+      "text_short": "Rimac C_Two, smooth electric GT body, rounded nose",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -197,7 +221,8 @@
     },
     {
       "name": "ferrari-fxx",
-      "text": "Ferrari FXX",
+      "text": "Ferrari FXX, a track-only silhouette with a long pointed nose and a raised airbox standing above the roof",
+      "text_short": "Ferrari FXX, track-only silhouette, roof airbox",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -205,7 +230,8 @@
     },
     {
       "name": "honda-nsx-gt3",
-      "text": "Honda NSX GT3",
+      "text": "Honda NSX GT3, a widened race silhouette squatting on a low wide-track stance",
+      "text_short": "Honda NSX GT3, widened race silhouette, wide track",
       "weight": 0.1,
       "tags": [
         "production-hypercars"
@@ -213,7 +239,8 @@
     },
     {
       "name": "pagani-huayra",
-      "text": "Pagani Huayra",
+      "text": "Pagani Huayra, rounded aeronautical volumes with gullwing doors and a rear pod tapering to centred pipes",
+      "text_short": "Pagani Huayra, rounded aero volumes, gullwing doors",
       "weight": 0.1,
       "tags": [
         "production-hypercars"

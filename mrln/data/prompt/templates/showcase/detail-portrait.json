@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "label": "LoRA Showcase: Detail Portrait",
+  "type": ["human"],
+  "description": "Targets the flux1 family. A realism portrait that stacks three community LoRAs on the loras output — a base-realism model, the dedicated skin-texture model and an optional film look — while the prompt itself stays ordinary prose. Every LoRA slot is pinned to flux1, so the stack can never mix base families; anything missing from the loras folder downloads itself by its AIR urn.",
+  "prefix": "A portrait made the way a working photographer makes one: a real person in front of real glass, held in shallow depth, every choice in the frame serving how the light lands on skin.",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/profile",
+      "label": "Subject",
+      "tags_none": ["boudoir"]
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "emphasis": 1.15
+    },
+    {
+      "id": "tradition",
+      "ref": "style/portraiture",
+      "label": "Portrait Tradition",
+      "tags_any": ["studio"]
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Lighting"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "tags_any": ["studio"]
+    },
+    {
+      "id": "shot",
+      "ref": "viewpoint/portrait",
+      "label": "Framing",
+      "default": "waist-up"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    },
+    {
+      "id": "realism",
+      "ref": "loralab/portrait-realism",
+      "label": "Realism LoRA",
+      "tags_any": ["flux1"],
+      "tags_none": ["texture"],
+      "emphasis": 1.1
+    },
+    {
+      "id": "texture",
+      "ref": "loralab/portrait-realism",
+      "label": "Skin-Texture LoRA",
+      "tags_any": ["texture"],
+      "tags_none": ["sdxl", "sd1", "qwen"],
+      "emphasis": 1.15
+    },
+    {
+      "id": "grain",
+      "ref": "loralab/film-look",
+      "label": "Film LoRA",
+      "tags_any": ["flux1"],
+      "allow_empty": true,
+      "empty_weight": 0.5
+    }
+  ],
+  "order": [
+    "subject",
+    "expression",
+    "tradition",
+    "light",
+    "lens",
+    "shot",
+    "grade",
+    "realism",
+    "texture",
+    "grain"
+  ],
+  "suffix": "Finishing: (skin rendered as an actual surface rather than a smooth fill, carrying the faint asymmetry every real face has:1.2), individual hair strands separating where the key light catches them, (focus locked on the near eye:1.25). Colour kept honest and retouching held to what a good magazine would actually leave in.",
+  "negative": "child, underage, deformed, extra fingers, fused fingers, watermark, caption overlay, plastic skin, oversmoothed skin, airbrushed doll face, lowres",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

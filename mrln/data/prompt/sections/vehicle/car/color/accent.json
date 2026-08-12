@@ -6,6 +6,7 @@
     {
       "name": "deep-glossy-black",
       "text": "deep gloss black with wet-look depth",
+      "text_short": "deep gloss black, wet-look depth",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -14,6 +15,7 @@
     {
       "name": "woven-carbon",
       "text": "woven carbon fiber, twill weave readable under gloss lacquer",
+      "text_short": "woven carbon fiber, readable twill",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -22,6 +24,7 @@
     {
       "name": "hyper-chrome",
       "text": "reflective hyper chrome, mirror-bright edges",
+      "text_short": "hyper chrome, mirror-bright edges",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -30,6 +33,7 @@
     {
       "name": "platinum-silver",
       "text": "platinum silver, bright machined metal",
+      "text_short": "platinum silver, machined metal",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -38,6 +42,7 @@
     {
       "name": "midnight-chrome-dark-metallic",
       "text": "midnight chrome, a smoked dark mirror finish",
+      "text_short": "midnight chrome, smoked dark mirror",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -45,7 +50,8 @@
     },
     {
       "name": "neon-green",
-      "text": "vibrant neon green",
+      "text": "vibrant neon green, the saturation holding bright along the splitter lip and skirt edges",
+      "text_short": "vibrant neon green splitter and skirts",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -53,7 +59,8 @@
     },
     {
       "name": "electric-pulse-blue",
-      "text": "electric pulse blue",
+      "text": "electric pulse blue, a hard cyan-lit blue running the splitter, skirts and diffuser fins",
+      "text_short": "electric pulse blue aero parts",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -61,7 +68,8 @@
     },
     {
       "name": "crimson-energy-red",
-      "text": "crimson energy red",
+      "text": "crimson energy red, deep and glowing where the light rakes the aero edges",
+      "text_short": "crimson energy red aero edges",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -70,6 +78,7 @@
     {
       "name": "glowing-circuitry-lines",
       "text": "glowing circuitry lines traced along the aero edges",
+      "text_short": "glowing circuitry lines along the aero edges",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -78,6 +87,7 @@
     {
       "name": "anodized-red-metallic",
       "text": "anodized red metallic with candy depth",
+      "text_short": "anodized red metallic, candy depth",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -85,7 +95,8 @@
     },
     {
       "name": "anodized-blue-metallic",
-      "text": "anodized cobalt-blue metallic",
+      "text": "anodized cobalt-blue metallic, a hard electroplated sheen over machined surfaces",
+      "text_short": "anodized cobalt-blue metallic",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -93,7 +104,8 @@
     },
     {
       "name": "polished-gold",
-      "text": "polished glossy gold",
+      "text": "polished gold, mirror-bright and warm, drawing a tight highlight along the splitter lip",
+      "text_short": "polished mirror gold",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -102,6 +114,7 @@
     {
       "name": "titanium-metallic",
       "text": "titanium metallic, warm grey sheen",
+      "text_short": "titanium metallic, warm grey sheen",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -110,6 +123,7 @@
     {
       "name": "copper-metallic",
       "text": "copper metallic, warm reflective glow",
+      "text_short": "copper metallic, warm reflective glow",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -118,6 +132,7 @@
     {
       "name": "bronze-metallic",
       "text": "bronze metallic, muted satin warmth",
+      "text_short": "bronze metallic, muted satin warmth",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -126,6 +141,7 @@
     {
       "name": "rose-gold-metallic",
       "text": "rose gold metallic, soft pink-gold luster",
+      "text_short": "rose gold metallic, soft pink-gold luster",
       "weight": 0.2,
       "tags": [
         "metallic"

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Detail Boosters",
+  "description": "Triggerless slider LoRAs that scale rendered micro-detail. Each item's text is the quality it delivers, so it reads as prose inside a composed prompt; data carries the exact filename, the creator-stated strength and the Civitai AIR urn, so a machine missing the file can fetch it. Every item is tagged with its base-model family — a render must stay inside one family.",
+  "items": [
+    {
+      "name": "detail-tweaker-xl",
+      "text": "finely resolved micro-detail across every surface, fabric weave and material grain held crisp rather than smeared",
+      "text_short": "finely resolved micro-detail",
+      "tags": ["sdxl", "triggerless", "detail"],
+      "data": {
+        "lora": "add-detail-xl.safetensors",
+        "strength_model": 1.5,
+        "strength_clip": 1.5,
+        "comment": "urn:air:sdxl:lora:civitai:122359@135867",
+        "lora_info": {
+          "name": "Detail Tweaker XL",
+          "creator": "w4r10ck",
+          "base": "sdxl",
+          "url": "https://civitai.com/models/122359?modelVersionId=135867",
+          "about": "A bidirectional detail slider for SDXL (usable -3 to 3, the page recommends starting at 1.5) that adds or removes fine surface detail without changing composition; the #1 LoRA on Civitai's Highest Rated all-time board at 444,041 downloads and 43,460 thumbs-up."
+        }
+      }
+    },
+    {
+      "name": "detail-tweaker-sd1",
+      "text": "sharpened intricate detail throughout, small features and secondary surfaces resolving instead of dissolving",
+      "text_short": "sharpened intricate detail",
+      "tags": ["sd1", "triggerless", "detail"],
+      "data": {
+        "lora": "add_detail.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:58390@62833",
+        "lora_info": {
+          "name": "Detail Tweaker LoRA",
+          "creator": "CyberAIchemist",
+          "base": "sd1",
+          "url": "https://civitai.com/models/58390?modelVersionId=62833",
+          "about": "The original SD 1.5 detail slider — positive weight adds detail, negative weight simplifies (page states +2 to -2) — and the second most-downloaded SFW LoRA of all time at 576,500 downloads and 33,501 thumbs-up."
+        }
+      }
+    },
+    {
+      "name": "more-details-sd1",
+      "text": "added depth of fine detail, edges and small ornament reading clearly at full size",
+      "text_short": "added depth of fine detail",
+      "tags": ["sd1", "triggerless", "detail"],
+      "data": {
+        "lora": "more_details.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:82098@87153",
+        "lora_info": {
+          "name": "Add More Details - Detail Enhancer / Tweaker",
+          "creator": "Lykon",
+          "base": "sd1",
+          "url": "https://civitai.com/models/82098?modelVersionId=87153",
+          "about": "A detail enhancer from the author of DreamShaper that pushes secondary detail without hardening the image; a top-five all-time Most Downloaded LoRA at 406,491 downloads and 21,274 thumbs-up."
+        }
+      }
+    }
+  ]
+}

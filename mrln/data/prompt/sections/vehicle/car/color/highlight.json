@@ -5,7 +5,8 @@
   "items": [
     {
       "name": "pulse-neon-green",
-      "text": "Pulse Neon Green",
+      "text": "Pulse Neon Green, an acid green picking out mirror caps, badges and light-guide inlays",
+      "text_short": "Pulse Neon Green trim",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -13,7 +14,8 @@
     },
     {
       "name": "electric-pink",
-      "text": "Electric Pink",
+      "text": "Electric Pink, hot saturated pink on the trim edges, burning against dark bodywork",
+      "text_short": "Electric Pink trim edges",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -21,7 +23,8 @@
     },
     {
       "name": "shocking-purple",
-      "text": "Shocking Purple",
+      "text": "Shocking Purple, a vivid violet that flares wherever the trim catches the light",
+      "text_short": "Shocking Purple accents",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -29,7 +32,8 @@
     },
     {
       "name": "neon-violet",
-      "text": "Neon Violet",
+      "text": "Neon Violet, deep candy violet glowing along the slim trim inlays",
+      "text_short": "Neon Violet inlays",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -37,7 +41,8 @@
     },
     {
       "name": "bright-teal",
-      "text": "Bright Teal",
+      "text": "Bright Teal, a clean blue-green on badges and vent surrounds, cool against warm light",
+      "text_short": "Bright Teal badges and vent surrounds",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -45,7 +50,8 @@
     },
     {
       "name": "neon-turquoise",
-      "text": "Neon Turquoise",
+      "text": "Neon Turquoise, luminous aqua tracing the finest trim lines",
+      "text_short": "Neon Turquoise trim lines",
       "weight": 0.1667,
       "tags": [
         "neon-electric"
@@ -53,7 +59,8 @@
     },
     {
       "name": "blazing-red",
-      "text": "Blazing Red",
+      "text": "Blazing Red, a hot saturated red marking the vent slats and small details",
+      "text_short": "Blazing Red vent slats and details",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -61,7 +68,8 @@
     },
     {
       "name": "bright-orange",
-      "text": "Bright Orange",
+      "text": "Bright Orange, high-visibility orange on tow hooks, trim and badge outlines",
+      "text_short": "Bright Orange markings",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -69,7 +77,8 @@
     },
     {
       "name": "golden-yellow",
-      "text": "Golden Yellow",
+      "text": "Golden Yellow, a warm rich yellow lifting the badge faces and trim edges",
+      "text_short": "Golden Yellow badges and trim",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -77,7 +86,8 @@
     },
     {
       "name": "flame-red",
-      "text": "Flame Red",
+      "text": "Flame Red, an orange-shot red burning along the sharpest trim edges",
+      "text_short": "Flame Red edging",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -85,7 +95,8 @@
     },
     {
       "name": "deep-cobalt-blue",
-      "text": "Deep Cobalt Blue",
+      "text": "Deep Cobalt Blue, dense blue holding its saturation even in the shadowed trim recesses",
+      "text_short": "Deep Cobalt Blue trim",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -93,7 +104,8 @@
     },
     {
       "name": "candy-apple-red",
-      "text": "Candy Apple Red",
+      "text": "Candy Apple Red, translucent candy layers giving the smallest details real depth",
+      "text_short": "Candy Apple Red details",
       "weight": 0.1667,
       "tags": [
         "rich-bold"
@@ -101,7 +113,8 @@
     },
     {
       "name": "piano-black-gloss",
-      "text": "Piano Black gloss",
+      "text": "Piano Black gloss, dark mirror trim reflecting the surroundings in miniature",
+      "text_short": "Piano Black gloss trim",
       "weight": 0.3333,
       "tags": [
         "classic"
@@ -109,7 +122,8 @@
     },
     {
       "name": "reflective-chrome",
-      "text": "Reflective Chrome",
+      "text": "Reflective Chrome, mirror-polished trim drawing hard specular lines around vents and badges",
+      "text_short": "mirror-polished chrome trim",
       "weight": 0.3333,
       "tags": [
         "classic"
@@ -118,6 +132,7 @@
     {
       "name": "emissive-white",
       "text": "emissive white, softly glowing light-guide trim",
+      "text_short": "glowing white light-guide trim",
       "weight": 0.3333,
       "tags": [
         "classic"

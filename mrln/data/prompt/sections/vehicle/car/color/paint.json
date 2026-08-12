@@ -6,6 +6,7 @@
     {
       "name": "alpine-white",
       "text": "Alpine White",
+      "text_short": "Alpine White",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -13,7 +14,8 @@
     },
     {
       "name": "chalk",
-      "text": "Chalk",
+      "text": "Chalk, a pale off-white grey",
+      "text_short": "Chalk, pale off-white grey",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -22,6 +24,7 @@
     {
       "name": "glacier-white",
       "text": "Glacier White",
+      "text_short": "Glacier White",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -30,6 +33,7 @@
     {
       "name": "pearl-white",
       "text": "Pearl White",
+      "text_short": "Pearl White",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -38,6 +42,7 @@
     {
       "name": "carrara-white",
       "text": "Carrara White",
+      "text_short": "Carrara White",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -46,6 +51,7 @@
     {
       "name": "nardo-gray",
       "text": "Nardo Gray",
+      "text_short": "Nardo Gray",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -54,6 +60,7 @@
     {
       "name": "skyscraper-grey",
       "text": "Skyscraper Grey",
+      "text_short": "Skyscraper Grey",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -62,6 +69,7 @@
     {
       "name": "gunmetal-grey",
       "text": "Gunmetal Grey",
+      "text_short": "Gunmetal Grey",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -70,6 +78,7 @@
     {
       "name": "brooklyn-grey",
       "text": "Brooklyn Grey",
+      "text_short": "Brooklyn Grey",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -78,6 +87,7 @@
     {
       "name": "obsidian-black",
       "text": "Obsidian Black",
+      "text_short": "Obsidian Black",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -86,6 +96,7 @@
     {
       "name": "notte-black",
       "text": "Notte Black",
+      "text_short": "Notte Black",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -94,6 +105,7 @@
     {
       "name": "mythos-black",
       "text": "Mythos Black",
+      "text_short": "Mythos Black",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -102,6 +114,7 @@
     {
       "name": "vanta-black",
       "text": "Vanta Black",
+      "text_short": "Vanta Black",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -110,6 +123,7 @@
     {
       "name": "carbon-grey-matte",
       "text": "carbon grey matte",
+      "text_short": "carbon grey matte",
       "weight": 0.0714,
       "tags": [
         "whites-greys-blacks"
@@ -118,6 +132,7 @@
     {
       "name": "midnight-blue",
       "text": "Midnight Blue",
+      "text_short": "Midnight Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -126,6 +141,7 @@
     {
       "name": "sapphire-blue",
       "text": "Sapphire Blue",
+      "text_short": "Sapphire Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -134,6 +150,7 @@
     {
       "name": "portimao-blue",
       "text": "Portimao Blue",
+      "text_short": "Portimao Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -142,6 +159,7 @@
     {
       "name": "gentian-blue",
       "text": "Gentian Blue",
+      "text_short": "Gentian Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -150,6 +168,7 @@
     {
       "name": "misano-blue",
       "text": "Misano Blue",
+      "text_short": "Misano Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -158,6 +177,7 @@
     {
       "name": "tanzanite-blue",
       "text": "Tanzanite Blue",
+      "text_short": "Tanzanite Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -166,6 +186,7 @@
     {
       "name": "daytona-violet",
       "text": "Daytona Violet",
+      "text_short": "Daytona Violet",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -174,6 +195,7 @@
     {
       "name": "techno-violet",
       "text": "Techno Violet",
+      "text_short": "Techno Violet",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -181,7 +203,8 @@
     },
     {
       "name": "thundernight-metallic",
-      "text": "Thundernight Metallic",
+      "text": "Thundernight Metallic, a deep violet purple",
+      "text_short": "Thundernight violet purple",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -189,7 +212,8 @@
     },
     {
       "name": "viola-hong-kong",
-      "text": "Viola Hong Kong",
+      "text": "Viola Hong Kong, a vivid violet purple",
+      "text_short": "Viola Hong Kong violet",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -197,7 +221,8 @@
     },
     {
       "name": "viola-parsifae",
-      "text": "Viola Parsifae",
+      "text": "Viola Parsifae, a deep blue-toned purple",
+      "text_short": "Viola Parsifae blue-purple",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -206,6 +231,7 @@
     {
       "name": "midnight-purple",
       "text": "Midnight Purple",
+      "text_short": "Midnight Purple",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -214,6 +240,7 @@
     {
       "name": "miami-blue",
       "text": "Miami Blue",
+      "text_short": "Miami Blue",
       "weight": 0.0769,
       "tags": [
         "blues-purples"
@@ -227,6 +254,7 @@
     {
       "name": "ferrari-red",
       "text": "Ferrari Red",
+      "text_short": "Ferrari Red",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -235,6 +263,7 @@
     {
       "name": "guards-red",
       "text": "Guards Red",
+      "text_short": "Guards Red",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -248,6 +277,7 @@
     {
       "name": "carmine-red",
       "text": "Carmine Red",
+      "text_short": "Carmine Red",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -256,6 +286,7 @@
     {
       "name": "racing-red",
       "text": "Racing Red",
+      "text_short": "Racing Red",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -264,6 +295,7 @@
     {
       "name": "volcano-red",
       "text": "Volcano Red",
+      "text_short": "Volcano Red",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -272,6 +304,7 @@
     {
       "name": "soul-red-crystal-metallic",
       "text": "Soul Red Crystal Metallic",
+      "text_short": "Soul Red Crystal",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -280,6 +313,7 @@
     {
       "name": "papaya-orange",
       "text": "Papaya Orange",
+      "text_short": "Papaya Orange",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -288,6 +322,7 @@
     {
       "name": "orange-flame-metallic",
       "text": "Orange Flame Metallic",
+      "text_short": "Orange Flame",
       "weight": 0.125,
       "tags": [
         "reds-oranges"
@@ -296,6 +331,7 @@
     {
       "name": "british-racing-green",
       "text": "British Racing Green",
+      "text_short": "British Racing Green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -304,6 +340,7 @@
     {
       "name": "isle-of-man-green",
       "text": "Isle of Man Green",
+      "text_short": "Isle of Man Green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -312,6 +349,7 @@
     {
       "name": "porsche-green",
       "text": "Porsche Green",
+      "text_short": "Porsche Green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -319,7 +357,8 @@
     },
     {
       "name": "verde-mantis",
-      "text": "Verde Mantis",
+      "text": "Verde Mantis, a vivid lime green",
+      "text_short": "Verde Mantis lime green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -327,7 +366,8 @@
     },
     {
       "name": "verde-scandal",
-      "text": "Verde Scandal",
+      "text": "Verde Scandal, an acid yellow-green",
+      "text_short": "Verde Scandal acid green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -336,6 +376,7 @@
     {
       "name": "xp-green",
       "text": "XP Green",
+      "text_short": "XP Green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -344,6 +385,7 @@
     {
       "name": "signal-yellow",
       "text": "Signal Yellow",
+      "text_short": "Signal Yellow",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -352,6 +394,7 @@
     {
       "name": "sao-paulo-yellow",
       "text": "Sao Paulo Yellow",
+      "text_short": "Sao Paulo Yellow",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -360,6 +403,7 @@
     {
       "name": "cyber-yellow",
       "text": "Cyber Yellow",
+      "text_short": "Cyber Yellow",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -367,7 +411,8 @@
     },
     {
       "name": "giallo-inti",
-      "text": "Giallo Inti",
+      "text": "Giallo Inti, a deep golden yellow",
+      "text_short": "Giallo Inti golden yellow",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -376,6 +421,7 @@
     {
       "name": "electric-lime-green",
       "text": "Electric Lime Green",
+      "text_short": "Electric Lime Green",
       "weight": 0.0909,
       "tags": [
         "greens-yellows"
@@ -384,6 +430,7 @@
     {
       "name": "titanium-silver",
       "text": "Titanium Silver",
+      "text_short": "Titanium Silver",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -392,6 +439,7 @@
     {
       "name": "frozen-bronze-metallic",
       "text": "Frozen Bronze Metallic",
+      "text_short": "Frozen Bronze",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -399,7 +447,8 @@
     },
     {
       "name": "kalahari",
-      "text": "Kalahari",
+      "text": "Kalahari, a warm sand beige",
+      "text_short": "Kalahari sand beige",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -408,6 +457,7 @@
     {
       "name": "mojave-beige",
       "text": "Mojave Beige",
+      "text_short": "Mojave Beige",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -416,6 +466,7 @@
     {
       "name": "dark-olive-metallic",
       "text": "Dark Olive Metallic",
+      "text_short": "Dark Olive",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -424,6 +475,7 @@
     {
       "name": "goodwood-green-pearl",
       "text": "Goodwood Green Pearl",
+      "text_short": "Goodwood Green",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -432,6 +484,7 @@
     {
       "name": "champagne-gold",
       "text": "Champagne Gold",
+      "text_short": "Champagne Gold",
       "weight": 0.125,
       "tags": [
         "metallic-earth"
@@ -439,7 +492,8 @@
     },
     {
       "name": "copper-crest",
-      "text": "Copper Crest",
+      "text": "Copper Crest, a warm copper brown",
+      "text_short": "Copper Crest copper brown",
       "weight": 0.125,
       "tags": [
         "metallic-earth"

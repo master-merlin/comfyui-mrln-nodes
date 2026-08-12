@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "label": "LoRA Showcase: Style Lab",
+  "type": ["human"],
+  "description": "A controlled A/B bench for style-mover LoRAs: the same kind of stranger on the same night street every time, with only the style engine changing. Each variant is one base-model family — Flux.1 cyberpunk-anime and sci-fi environments, SDXL neon cyberpunk, SD 1.5 animation and figure looks — so a comparison never accidentally crosses families. The drawn movers ride the loras output into LoRA Apply and heal by AIR urn if the file is missing.",
+  "prefix": "One stranger seen full-figure on one street corner after dark, with a single style engine allowed to rewrite the whole frame. The staging is held deliberately constant and the scene dimensions deliberately few: the look is meant to be the only variable between renders.",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/passerby",
+      "label": "Subject",
+      "emphasis": 1.1
+    },
+    {
+      "id": "place",
+      "ref": "location/urban",
+      "label": "Setting",
+      "tags_any": ["night"],
+      "emphasis": 1.1
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Light",
+      "tags_any": ["night"]
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood"
+    },
+    {
+      "id": "composition",
+      "ref": "composition/framing",
+      "label": "Composition"
+    }
+  ],
+  "variants": [
+    {
+      "name": "flux-cyber",
+      "label": "Flux.1 — cyberpunk / sci-fi movers",
+      "slots": [
+        {
+          "id": "mover",
+          "ref": "loralab/scifi-style",
+          "label": "Style LoRA (Flux.1)",
+          "tags_any": ["flux1"],
+          "emphasis": 1.2
+        },
+        {
+          "id": "finish",
+          "ref": "loralab/film-look",
+          "label": "Finish LoRA (Flux.1)",
+          "tags_any": ["flux1"],
+          "allow_empty": true
+        }
+      ]
+    },
+    {
+      "name": "sdxl-cyber",
+      "label": "SDXL — neon cyberpunk mover",
+      "slots": [
+        {
+          "id": "mover",
+          "ref": "loralab/scifi-style",
+          "label": "Style LoRA (SDXL)",
+          "tags_any": ["sdxl"],
+          "emphasis": 1.2
+        },
+        {
+          "id": "finish",
+          "ref": "loralab/detail-boosters",
+          "label": "Detail LoRA (SDXL)",
+          "tags_any": ["sdxl"]
+        }
+      ]
+    },
+    {
+      "name": "sd1-anime",
+      "label": "SD 1.5 — animation and figure movers",
+      "slots": [
+        {
+          "id": "mover",
+          "ref": "loralab/anime-style",
+          "label": "Style LoRA (SD 1.5)",
+          "tags_any": ["sd1"],
+          "emphasis": 1.2
+        },
+        {
+          "id": "finish",
+          "ref": "loralab/detail-boosters",
+          "label": "Detail LoRA (SD 1.5)",
+          "tags_any": ["sd1"]
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "subject",
+    "place",
+    "light",
+    "mood",
+    "composition",
+    "@variant"
+  ],
+  "suffix": "The style engine owns the render: let it set line, shading and palette from edge to edge rather than sitting as a filter over a photograph. Underneath it the figure stays anatomically sound and the street stays readable, so the comparison is about the look and nothing else.",
+  "negative": "child, underage, deformed, extra fingers, fused fingers, watermark, caption overlay, lowres, jpeg artifacts",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

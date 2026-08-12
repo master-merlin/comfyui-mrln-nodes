@@ -6,6 +6,7 @@
     {
       "name": "auto-show-pose",
       "text": "The car is unoccupied and perfectly stationary in a pristine auto-show pose, wheels dead straight, weight settled evenly on all four contact patches so the body sits level and every panel gap reads clean.",
+      "text_short": "unoccupied auto-show pose, wheels dead straight, body level",
       "negative": "blurred wheels",
       "weight": 0.3333,
       "tags": [
@@ -15,6 +16,7 @@
     {
       "name": "magazine-parked",
       "text": "The car is unoccupied and elegantly parked with the front wheels turned to present the rim face and caliper to the camera, cover-shoot style, the turned wheel opening the arch to the light.",
+      "text_short": "unoccupied, front wheels turned to show rim and caliper",
       "negative": "blurred wheels",
       "weight": 0.3333,
       "tags": [
@@ -24,6 +26,7 @@
     {
       "name": "poised-motionless",
       "text": "The car is unoccupied, poised and motionless, brake discs cold and suspension settled, holding the coiled potential of a machine one ignition press from launch.",
+      "text_short": "unoccupied and motionless, cold brake discs, settled suspension",
       "negative": "blurred wheels",
       "weight": 0.3333,
       "tags": [
@@ -33,6 +36,7 @@
     {
       "name": "cruising-smooth",
       "text": "The car is cruising at moderate speed, a driver's silhouette faint behind tinted glass; the background and wheel rims carry smooth motion blur while the bodywork stays tack sharp.",
+      "text_short": "cruising, driver dim behind tinted glass, blurred rims, sharp body",
       "weight": 0.3333,
       "tags": [
         "smooth-motion"
@@ -41,6 +45,7 @@
     {
       "name": "gliding-curve",
       "text": "The car is gliding through a gentle open-road curve, the body leaning a single graceful degree onto its loaded outside springs, a partially obscured driver focused on the road ahead.",
+      "text_short": "gliding through an open curve, slight body lean, driver focused ahead",
       "weight": 0.3333,
       "tags": [
         "smooth-motion"
@@ -49,6 +54,7 @@
     {
       "name": "low-tracking-float",
       "text": "The car is caught by a low tracking shot at speed, appearing to float over the pavement, wheels blurred into discs while every badge and shutline on the body stays crisp; the driver a subtle presence in the cockpit.",
+      "text_short": "low tracking shot at speed, wheels blurred to discs, crisp body, faint driver",
       "weight": 0.3333,
       "tags": [
         "smooth-motion"
@@ -57,6 +63,7 @@
     {
       "name": "powerslide-drift",
       "text": "The car is executing a controlled powerslide around a paved corner at full opposite lock, thick plumes of tire smoke boiling off the rear arches, the helmeted driver clearly visible working the wheel.",
+      "text_short": "controlled powerslide, full opposite lock, tire smoke, helmeted driver",
       "weight": 0.25,
       "tags": [
         "aggressive-dynamics"
@@ -65,6 +72,7 @@
     {
       "name": "launch-standstill",
       "text": "The car is launching from a standstill, rear suspension squatting hard, rear tire sidewalls wrinkling under torque while the nose goes light; a helmeted driver grips the steering wheel.",
+      "text_short": "launching hard, rear squat, wrinkled sidewalls, helmeted driver",
       "weight": 0.25,
       "tags": [
         "aggressive-dynamics"
@@ -73,6 +81,7 @@
     {
       "name": "hard-braking",
       "text": "The car is braking hard into a corner, nose diving over compressed front springs, brake discs glowing orange through the spokes, the helmeted driver braced against the deceleration.",
+      "text_short": "braking hard, nose diving, brake discs glowing, helmeted driver",
       "weight": 0.25,
       "tags": [
         "aggressive-dynamics"
@@ -81,6 +90,7 @@
     {
       "name": "cornering-limit",
       "text": "The car is cornering at the limit, weight loaded onto the outside tires with their sidewalls visibly deformed against the rim edge, a few degrees of body roll telling the truth about grip; the helmeted driver actively steering through.",
+      "text_short": "cornering at the limit, loaded outside tires, body roll",
       "weight": 0.25,
       "tags": [
         "aggressive-dynamics"
@@ -88,7 +98,8 @@
     },
     {
       "name": "concours-flawless",
-      "text": "The unoccupied car stands in flawless concours condition, paint detailed to a depth that holds undistorted reflections, untouched by road or weather (this is the default state).",
+      "text": "The unoccupied car stands in flawless concours condition, paint detailed to a depth that holds undistorted reflections, untouched by road or weather.",
+      "text_short": "unoccupied, flawless concours condition, undistorted reflections",
       "weight": 0.25,
       "tags": [
         "condition-storytelling"
@@ -97,6 +108,7 @@
     {
       "name": "road-grime",
       "text": "The recently parked, unoccupied car wears the honest evidence of a finished drive: fine road grime misted across the front fascia and rocker panels, brake discs ticking as they cool.",
+      "text_short": "unoccupied, fine road grime on fascia and rockers, discs cooling",
       "weight": 0.25,
       "tags": [
         "condition-storytelling"
@@ -105,6 +117,7 @@
     {
       "name": "rain-beaded",
       "text": "The unoccupied car is uniformly wet from a passing shower, water beaded tight on the waxed paint with each droplet acting as a tiny lens, the ground beneath dark and damp.",
+      "text_short": "unoccupied, wet from a shower, water beaded on waxed paint, dark ground",
       "weight": 0.25,
       "tags": [
         "condition-storytelling"
@@ -113,6 +126,7 @@
     {
       "name": "fresh-tire-marks",
       "text": "The car has just come to a stop, fresh black tire marks curving across the pavement behind it, faint smoke still rising off the warm rear tires, the helmeted driver still seated.",
+      "text_short": "just stopped, fresh tire marks behind, smoke off warm tires, driver still seated",
       "weight": 0.25,
       "tags": [
         "condition-storytelling"
@@ -121,6 +135,7 @@
     {
       "name": "pit-stop",
       "text": "The car sits in a high-tech pit box captured mid-tire-change, wheel guns flashing, the pit crew motion-blurred around a body held razor sharp.",
+      "text_short": "pit box mid tire change, wheel guns, crew blurred, body sharp",
       "weight": 0.3333,
       "tags": [
         "service-showcase"
@@ -129,6 +144,7 @@
     {
       "name": "dynamometer-run",
       "text": "The car is strapped to a dynamometer inside a workshop, rear wheels spun to a complete blur on the rollers, tie-down straps pulled taut, a technician or helmeted driver operating from the seat.",
+      "text_short": "strapped to a workshop dyno, rear wheels blurred on the rollers, driver at the wheel",
       "weight": 0.3333,
       "tags": [
         "service-showcase"
@@ -137,6 +153,7 @@
     {
       "name": "detailing",
       "text": "The unoccupied car is under meticulous detailing in a bright pristine workshop, a detailer feathering a polisher across one panel, swirl-free paint blazing under the inspection lamps.",
+      "text_short": "unoccupied under detailing, polisher on the panel, swirl-free paint",
       "weight": 0.3333,
       "tags": [
         "service-showcase"

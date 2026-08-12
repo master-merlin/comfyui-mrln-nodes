@@ -5,7 +5,8 @@
   "items": [
     {
       "name": "bmw-m4",
-      "text": "BMW M4",
+      "text": "BMW M4, blistered fenders over a flat wide-track stance and quad exhaust outlets",
+      "text_short": "BMW M4, blistered fenders, wide track",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -13,7 +14,8 @@
     },
     {
       "name": "porsche-911-gt3-rs",
-      "text": "Porsche 911 GT3 RS",
+      "text": "Porsche 911 GT3 RS, a towering swan-neck rear wing above deeply louvred front fenders and hard-edged aero blades",
+      "text_short": "Porsche 911 GT3 RS, swan-neck wing, louvred fenders",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -21,7 +23,8 @@
     },
     {
       "name": "lamborghini-hurac-n",
-      "text": "Lamborghini Huracán",
+      "text": "Lamborghini Huracán, hexagonal intakes and chiselled aero surfaces over a wide planted stance",
+      "text_short": "Lamborghini Huracán, hexagonal intakes, planted stance",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -29,7 +32,8 @@
     },
     {
       "name": "audi-r8-v10",
-      "text": "Audi R8 V10",
+      "text": "Audi R8 V10, side blades feeding big rear intakes across a low broad-shouldered stance",
+      "text_short": "Audi R8 V10, side blades, broad shoulders",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -37,7 +41,8 @@
     },
     {
       "name": "jaguar-f-type-svr",
-      "text": "Jaguar F-Type SVR",
+      "text": "Jaguar F-Type SVR, muscular haunches, a deployable rear spoiler and vented bonnet louvres",
+      "text_short": "Jaguar F-Type SVR, muscular haunches, vented bonnet",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -45,7 +50,8 @@
     },
     {
       "name": "chevrolet-corvette-zr1",
-      "text": "Chevrolet Corvette ZR1",
+      "text": "Chevrolet Corvette ZR1, a deep front splitter, tall rear wing and heat-extracting hood vents",
+      "text_short": "Corvette ZR1, deep splitter, tall wing, hood vents",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -53,7 +59,8 @@
     },
     {
       "name": "ford-gt",
-      "text": "Ford GT",
+      "text": "Ford GT, flying buttresses channelling air through the rear quarters into open tunnels",
+      "text_short": "Ford GT, flying buttresses, open air tunnels",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -61,7 +68,8 @@
     },
     {
       "name": "nissan-gt-r-nismo",
-      "text": "Nissan GT-R Nismo",
+      "text": "Nissan GT-R Nismo, a squared aggressive nose, carbon canards and a broad flat rear wing",
+      "text_short": "Nissan GT-R Nismo, carbon canards, flat rear wing",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -69,7 +77,8 @@
     },
     {
       "name": "alfa-romeo-giulia-quadrifoglio",
-      "text": "Alfa Romeo Giulia Quadrifoglio",
+      "text": "Alfa Romeo Giulia Quadrifoglio, an active front splitter under a taut nose split by three-lobe intakes",
+      "text_short": "Alfa Romeo Quadrifoglio, active splitter, three-lobe intakes",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -77,7 +86,8 @@
     },
     {
       "name": "mercedes-amg-gt-black-series",
-      "text": "Mercedes-AMG GT Black Series",
+      "text": "Mercedes-AMG GT Black Series, a manually adjustable double-deck rear wing over a massively vented hood",
+      "text_short": "AMG GT Black Series, double-deck wing, vented hood",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -85,7 +95,8 @@
     },
     {
       "name": "dodge-viper-acr",
-      "text": "Dodge Viper ACR",
+      "text": "Dodge Viper ACR, an enormous straight rear wing, deep dive planes and a full-width flat splitter",
+      "text_short": "Dodge Viper ACR, huge straight wing, dive planes",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -93,7 +104,8 @@
     },
     {
       "name": "porsche-cayman-gt4-rs",
-      "text": "Porsche Cayman GT4 RS",
+      "text": "Porsche Cayman GT4 RS, a swan-neck wing, NACA-ducted lid and open ram intakes behind the side glass",
+      "text_short": "Porsche Cayman GT4 RS, swan-neck wing, NACA ducts",
       "weight": 0.0833,
       "tags": [
         "high-performance-road"
@@ -101,7 +113,8 @@
     },
     {
       "name": "mclaren-p1",
-      "text": "McLaren P1",
+      "text": "McLaren P1, an active rear wing rising out of a deeply sculpted low-drag tail",
+      "text_short": "McLaren P1, active rear wing, sculpted low-drag tail",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -109,7 +122,8 @@
     },
     {
       "name": "hennessey-venom-f5",
-      "text": "Hennessey Venom F5",
+      "text": "Hennessey Venom F5, a slippery long-tail body with minimal drag surfaces and deep side intakes",
+      "text_short": "Hennessey Venom F5, low-drag long tail, deep intakes",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -117,7 +131,8 @@
     },
     {
       "name": "ssc-tuatara",
-      "text": "SSC Tuatara",
+      "text": "SSC Tuatara, an ultra-narrow teardrop tail with faired-in rear wheels and knife-edge aero surfaces",
+      "text_short": "SSC Tuatara, teardrop tail, faired rear wheels",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -125,7 +140,8 @@
     },
     {
       "name": "koenigsegg-agera-rs",
-      "text": "Koenigsegg Agera RS",
+      "text": "Koenigsegg Agera RS, a top-mounted rear wing on slim pylons above a deeply tunnelled diffuser",
+      "text_short": "Koenigsegg Agera RS, pylon-mounted wing, deep diffuser",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -133,7 +149,8 @@
     },
     {
       "name": "bugatti-chiron",
-      "text": "Bugatti Chiron",
+      "text": "Bugatti Chiron, quad-turbo mass with a C-line intake wrapping the cabin and a full-width rear grille",
+      "text_short": "Bugatti Chiron, C-line intakes, full-width rear grille",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -141,7 +158,8 @@
     },
     {
       "name": "lamborghini-aventador-svj",
-      "text": "Lamborghini Aventador SVJ",
+      "text": "Lamborghini Aventador SVJ, active aero vanes inside a big rear wing above sharply cut Y-shaped ducting",
+      "text_short": "Lamborghini Aventador SVJ, active rear wing, Y-shaped ducts",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -149,7 +167,8 @@
     },
     {
       "name": "mclaren-senna",
-      "text": "McLaren Senna",
+      "text": "McLaren Senna, a brutally functional double-element rear wing over exposed suspension and gaping fender louvres",
+      "text_short": "McLaren Senna, double-element wing, fender louvres",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -157,7 +176,8 @@
     },
     {
       "name": "pagani-zonda-r",
-      "text": "Pagani Zonda R",
+      "text": "Pagani Zonda R, a long swan-neck wing and central fin running back over quad centre exhausts",
+      "text_short": "Pagani Zonda R, swan-neck wing, central fin",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -165,7 +185,8 @@
     },
     {
       "name": "aston-martin-vulcan",
-      "text": "Aston Martin Vulcan",
+      "text": "Aston Martin Vulcan, a track-only body of vents and canards under a towering adjustable wing",
+      "text_short": "Aston Martin Vulcan, vents and canards, towering wing",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -173,7 +194,8 @@
     },
     {
       "name": "brabham-bt62",
-      "text": "Brabham BT62",
+      "text": "Brabham BT62, a dual-plane GT wing above a fully louvred body and a huge flat floor",
+      "text_short": "Brabham BT62, dual-plane wing, louvred body",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -181,7 +203,8 @@
     },
     {
       "name": "bugatti-bolide",
-      "text": "Bugatti Bolide",
+      "text": "Bugatti Bolide, a stripped track-only shell dominated by a roof scoop and dimpled aero surfaces",
+      "text_short": "Bugatti Bolide, roof scoop, stripped track shell",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -189,7 +212,8 @@
     },
     {
       "name": "ferrari-fxx-k-evo",
-      "text": "Ferrari FXX-K Evo",
+      "text": "Ferrari FXX-K Evo, a twin-pylon rear wing bridged to the tail above deep flank tunnels",
+      "text_short": "Ferrari FXX-K Evo, twin-pylon rear wing, flank tunnels",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -197,7 +221,8 @@
     },
     {
       "name": "lamborghini-sesto-elemento",
-      "text": "Lamborghini Sesto Elemento",
+      "text": "Lamborghini Sesto Elemento, raw exposed carbon panels cut open into sharp triangular vents",
+      "text_short": "Lamborghini Sesto Elemento, raw carbon, triangular vents",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -205,7 +230,8 @@
     },
     {
       "name": "pagani-huayra-r",
-      "text": "Pagani Huayra R",
+      "text": "Pagani Huayra R, a shark-fin spine, twin roof scoop and a full-width race diffuser",
+      "text_short": "Pagani Huayra R, shark fin, roof scoop, race diffuser",
       "weight": 0.0714,
       "tags": [
         "track-hypercars"
@@ -213,7 +239,8 @@
     },
     {
       "name": "gma-t-50s-niki-lauda",
-      "text": "GMA T.50s Niki Lauda",
+      "text": "GMA T.50s Niki Lauda, a central fan extractor in the tail beneath a delta-shaped ram intake",
+      "text_short": "GMA T.50s, fan-extractor tail, delta ram intake",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -221,7 +248,8 @@
     },
     {
       "name": "porsche-935-modern",
-      "text": "Porsche 935 (modern)",
+      "text": "Porsche 935 (modern), an extreme long-tail body with faired-in rear wheels and slatted fender vents",
+      "text_short": "modern Porsche 935, long tail, faired rear wheels",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -229,7 +257,8 @@
     },
     {
       "name": "ferrari-488-gt-modificata",
-      "text": "Ferrari 488 GT Modificata",
+      "text": "Ferrari 488 GT Modificata, endurance-race bodywork with a broad low splitter and a swan-neck wing",
+      "text_short": "Ferrari 488 GT Modificata, race splitter, swan-neck wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -237,7 +266,8 @@
     },
     {
       "name": "lmp1-hypercar-aero-concept",
-      "text": "LMP1 Hypercar aero concept",
+      "text": "LMP1 Hypercar aero concept, closed prototype bodywork with a shark fin, wheel-arch louvres and a full-width rear wing",
+      "text_short": "LMP1 prototype aero, shark fin, full-width wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -245,7 +275,8 @@
     },
     {
       "name": "formula-1-aero-concept",
-      "text": "Formula 1 aero concept",
+      "text": "Formula 1 aero concept, multi-element front and rear wings, barge boards and exposed suspension wishbones",
+      "text_short": "Formula 1 aero, multi-element wings, barge boards",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -253,7 +284,8 @@
     },
     {
       "name": "radical-rxc-gt",
-      "text": "Radical RXC GT",
+      "text": "Radical RXC GT, a lightweight prototype-derived body with an overhung rear wing and open wheel-arch vents",
+      "text_short": "Radical RXC GT, prototype body, overhung rear wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -261,7 +293,8 @@
     },
     {
       "name": "praga-bohema",
-      "text": "Praga Bohema",
+      "text": "Praga Bohema, an aero-first cockpit fed by a roof scoop between deeply channelled sidepods",
+      "text_short": "Praga Bohema, roof scoop, channelled sidepods",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -269,7 +302,8 @@
     },
     {
       "name": "dtm-race-car-aero-concept",
-      "text": "DTM race car aero concept",
+      "text": "DTM race car aero concept, boxed flared arches, a deep front splitter and a straight rear wing on end plates",
+      "text_short": "DTM aero, flared arches, straight rear wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -277,7 +311,8 @@
     },
     {
       "name": "lamborghini-essenza-scv12",
-      "text": "Lamborghini Essenza SCV12",
+      "text": "Lamborghini Essenza SCV12, an LMP-inspired tail with a huge rear wing and an airbox standing above the roof",
+      "text_short": "Lamborghini Essenza SCV12, roof airbox, huge rear wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"
@@ -285,7 +320,8 @@
     },
     {
       "name": "porsche-911-gt1-strassenversion",
-      "text": "Porsche 911 GT1 Strassenversion",
+      "text": "Porsche 911 GT1 Strassenversion, a flat homologation body with a mid-mounted engine cover and a long GT wing",
+      "text_short": "Porsche 911 GT1, flat homologation body, long GT wing",
       "weight": 0.1,
       "tags": [
         "motorsport-concepts"

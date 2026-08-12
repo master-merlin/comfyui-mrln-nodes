@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Anime Style",
+  "description": "Illustration and figure style-mover LoRAs for SD 1.5. Trigger phrases are woven into the item text verbatim because the model does nothing without them; data carries the exact filename, creator-stated strength and Civitai AIR urn. Tagged by base-model family.",
+  "items": [
+    {
+      "name": "anime-screencap-sd1",
+      "text": "the flat, clean look of a broadcast animation screencap, limited shading steps and confident flat colour fills",
+      "text_short": "broadcast anime screencap look",
+      "tags": [
+        "sd1",
+        "anime",
+        "mover",
+        "triggerless"
+      ],
+      "data": {
+        "lora": "animemix_v3_offset.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:4982@60568",
+        "lora_info": {
+          "name": "Anime Screencap Style LoRA (v3 offset)",
+          "creator": "Lykon",
+          "base": "sd1",
+          "url": "https://civitai.com/models/4982?modelVersionId=60568",
+          "about": "Turns a render into a TV-animation frame — flat fills, hard shadow steps, broadcast colour — and the page recommends weight 1 on style-neutral checkpoints; 58,195 downloads and 4,561 thumbs-up."
+        }
+      }
+    },
+    {
+      "name": "blindbox-figure-sd1",
+      "text": "full body, chibi, rendered as a glossy vinyl blind-box collectible figure standing on its own display base",
+      "text_short": "full body, chibi blind-box figure",
+      "tags": [
+        "sd1",
+        "anime",
+        "mover",
+        "figure"
+      ],
+      "data": {
+        "lora": "blindbox_v1_mix.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:25995@32988",
+        "lora_info": {
+          "name": "blindbox (chibi figure style, v1 mix)",
+          "creator": "samecorner",
+          "base": "sd1",
+          "url": "https://civitai.com/models/25995?modelVersionId=32988",
+          "about": "The definitive blind-box collectible look, turning any subject into a glossy vinyl figure; a top-six all-time Most Downloaded model at 304,863 downloads and 14,249 thumbs-up."
+        }
+      }
+    }
+  ]
+}

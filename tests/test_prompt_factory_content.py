@@ -235,40 +235,12 @@ def test_factory_aliases_valid(lib):
         lib.load_template(source)  # raises if the chain is dead
 
 
-# sections that predate the text_short convention; everything newer must carry it
-_LEGACY_NO_SHORT = (
-    "vehicle/car/action",
-    "vehicle/car/aero-addon",
-    "vehicle/car/caliper",
-    "vehicle/car/color/",
-    "vehicle/car/design-",
-    "vehicle/car/detail",
-    "vehicle/car/finish",
-    "vehicle/car/graphics",
-    "vehicle/car/wheel",
-    "location/urban",
-    "location/nature",
-    "location/studio",
-    "location/luxury",
-    "location/industrial",
-    "location/futuristic",
-    "location/automotive",
-    "lighting/day",
-    "lighting/night",
-    "lighting/quality",
-    "atmosphere/time-of-day",
-    "viewpoint/general",
-    "camera/settings",
-    "style/grade",
-)
-
-
 def test_new_content_short_variant_coverage(lib):
-    """Expansion rule: every post-restructure section keeps >=90% text_short
-    coverage so short mode works across the whole library."""
+    """Expansion rule: EVERY section keeps >=90% text_short coverage so short
+    mode works across the whole library. The pre-convention sections were
+    backfilled in the 2026-08-12 content round — there is no exemption list
+    any more, and new content must not reintroduce one."""
     for slug in lib.section_slugs():
-        if any(slug.startswith(prefix) for prefix in _LEGACY_NO_SHORT):
-            continue
         items = lib.load_section(slug).items
         covered = sum(1 for item in items if item.text_short)
         assert covered >= 0.9 * len(items), (
@@ -314,15 +286,19 @@ def test_domain_sections_declare_suits(lib):
 
 
 def test_no_artist_names_in_style_sections(lib):
-    """Policy: characteristics, never artist or studio names."""
+    """Policy: characteristics, never artist or studio names. Applies to any
+    section that reaches the prompt as a STYLE statement — including the
+    LoRA-lab showcase, where a community model's trained trigger is not a
+    licence to ship a studio name in factory content (user tiers may)."""
     banned = re.compile(
         r"\b(ghibli|shinkai|wlop|greg rutkowski|artgerm|leibovitz|lindbergh|mucha|banksy)\b", re.I
     )
     for slug in lib.section_slugs():
-        if not slug.startswith("style/"):
+        if not (slug.startswith("style/") or slug.startswith("loralab/")):
             continue
         for item in lib.load_section(slug).items:
-            assert not banned.search(item.text), f"'{slug}/{item.name}' names an artist/studio"
+            for text in (item.text, item.text_short or ""):
+                assert not banned.search(text), f"'{slug}/{item.name}' names an artist/studio"
 
 
 def test_template_conventions(lib):

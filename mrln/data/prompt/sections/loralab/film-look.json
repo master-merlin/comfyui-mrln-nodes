@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Film Look",
+  "description": "Analog and photographic-honesty LoRAs — grain, tonality and the un-AI look. Trigger phrases are woven into the item text verbatim so they survive an LLM rewrite; data carries the exact filename, strength and Civitai AIR urn. Tagged by base-model family.",
+  "items": [
+    {
+      "name": "amateur-photography-flux",
+      "text": "the unposed honesty of a real snapshot, ordinary framing and available light instead of a rendered gloss",
+      "text_short": "unposed amateur snapshot look",
+      "tags": ["flux1", "triggerless", "film"],
+      "data": {
+        "lora": "amateurphoto-v6-forcu.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:652699@993999",
+        "lora_info": {
+          "name": "Amateur Photography (v6, Flux Dev)",
+          "creator": "peterkickasspeter",
+          "base": "flux1",
+          "url": "https://civitai.com/models/652699?modelVersionId=993999",
+          "about": "The reddit-famous anti-AI-look LoRA that trades studio polish for phone-camera plausibility; 82,686 model downloads and 4,200 thumbs-up, and a headline pick in Civitai's 'Flux LoRA's for Realism' article."
+        }
+      }
+    },
+    {
+      "name": "kodak-film-grain-flux",
+      "text": "cinematic style, film grain style, organic emulsion grain settled into the shadows and highlight roll-off that behaves like stock",
+      "text_short": "cinematic style, film grain style",
+      "tags": ["flux1", "film", "grain"],
+      "data": {
+        "lora": "cinematic style film grain style film noise style v1-step00001950.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:365274@1425675",
+        "lora_info": {
+          "name": "Kodak Film Grain (Cinematic) Film Photography style",
+          "creator": "EauDeNoire",
+          "base": "flux1",
+          "url": "https://civitai.com/models/365274?modelVersionId=1425675",
+          "about": "Lays true Kodak-style emulsion grain and cinematic tonality over a Flux render; 4,912 downloads and 429 thumbs-up from Civitai's leading utility-LoRA creator, whose Skin Texture LoRA alone has 180k downloads."
+        }
+      }
+    },
+    {
+      "name": "noise-offset-sd1",
+      "text": "true blacks and a deep contrast range, bright highlights allowed to stand against real darkness",
+      "text_short": "true blacks, deep contrast range",
+      "tags": ["sd1", "triggerless", "film", "contrast"],
+      "data": {
+        "lora": "epi_noiseoffset2.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:sd1:lora:civitai:13941@16576",
+        "lora_info": {
+          "name": "epi_noiseoffset v2",
+          "creator": "epinikion",
+          "base": "sd1",
+          "url": "https://civitai.com/models/13941?modelVersionId=16576",
+          "about": "The classic noise-offset LoRA that unlocks genuinely dark and genuinely bright values in SD 1.5 instead of the washed mid-grey default; 228,302 downloads and 13,016 thumbs-up, and a fixture of every 'essential SD1.5 LoRAs' list."
+        }
+      }
+    }
+  ]
+}

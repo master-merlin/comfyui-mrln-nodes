@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Portrait Realism",
+  "description": "Realism LoRAs for people — the base-realism pair that fixes the plastic look, plus the dedicated skin-texture model (tagged 'texture' so a template can draw one of each). Trigger phrases are woven into the item text verbatim; data carries the exact filename, creator-stated strength and Civitai AIR urn. Tagged by base-model family.",
+  "items": [
+    {
+      "name": "ultrareal-flux",
+      "text": "unmistakably photographic skin and light, the ordinary imperfection of a real camera file rather than a render",
+      "text_short": "real photographic skin and light",
+      "tags": ["flux1", "triggerless", "realism"],
+      "data": {
+        "lora": "UltraRealPhoto.safetensors",
+        "strength_model": 0.7,
+        "strength_clip": 0.7,
+        "comment": "urn:air:flux1:lora:civitai:796382@1026423",
+        "lora_info": {
+          "name": "UltraRealistic Lora Project (Flux v2)",
+          "creator": "Danrisi",
+          "base": "flux1",
+          "url": "https://civitai.com/models/796382?modelVersionId=1026423",
+          "about": "The reference Flux realism LoRA, pulling faces and light off the plastic-render default (creator runs 0.5-1.0, usually 0.7, at guidance 3.5); 83,915 model downloads and 3,748 thumbs-up, 65,798 on v2 alone."
+        }
+      }
+    },
+    {
+      "name": "phlux-flux",
+      "text": "photoreal rendering with lifted, deliberately styled lighting and clean separation between subject and ground",
+      "text_short": "styled photoreal lighting",
+      "tags": ["flux1", "triggerless", "realism"],
+      "data": {
+        "lora": "Phlux.safetensors",
+        "strength_model": 0.75,
+        "strength_clip": 0.75,
+        "comment": "urn:air:flux1:lora:civitai:672963@753339",
+        "lora_info": {
+          "name": "Phlux - Photorealism with style",
+          "creator": "evertonlisboad367",
+          "base": "flux1",
+          "url": "https://civitai.com/models/672963?modelVersionId=753339",
+          "about": "Photorealism with an opinionated lighting and colour treatment, recommended at 0.5-1 weight; 12,045 downloads and 855 thumbs-up, and the partner Civitai's realism article pairs with Amateur Photography for texture plus lighting."
+        }
+      }
+    },
+    {
+      "name": "skin-texture-flux",
+      "text": "skin texture style, realism, detailed, visible pores and fine facial down catching the light, natural sheen instead of wax",
+      "text_short": "skin texture style, realism, detailed",
+      "tags": ["flux1", "realism", "texture"],
+      "data": {
+        "lora": "skin texture style v5.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:580857@1081450",
+        "lora_info": {
+          "name": "Realistic Skin Texture style (F1D v2.5)",
+          "creator": "EauDeNoire",
+          "base": "flux1",
+          "url": "https://civitai.com/models/580857?modelVersionId=1081450",
+          "about": "A neutral texture tool that restores pores, fine hair and micro-relief to over-smoothed faces; the biggest skin-texture LoRA on Civitai at 179,700 model downloads and 7,404 thumbs-up, 42,891 on this Flux.1 D v2.5 version."
+        }
+      }
+    }
+  ]
+}

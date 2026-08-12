@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "label": "LoRA Showcase: Night Machine",
+  "type": ["object", "vehicle", "car"],
+  "description": "One named car on one night road, with the base-model family chosen by variant: Flux.1 draws mastermerlin's F40 or Cobra, Qwen draws his 930 Turbo Targa, SDXL draws the widebody tuner and SD 1.5 the R34. Every variant pins exactly one family across all its LoRA slots, so a Flux car can never land in an SDXL render; the drawn files ride the loras output into LoRA Apply and heal by AIR urn if missing.",
+  "prefix": "A night automotive frame built around one specific car — not a shape that resembles it, the car itself. Worked the way a marque photographer works a location after the light goes: one machine, one road, everything else in service of the paintwork.",
+  "slots": [
+    {
+      "id": "stage",
+      "ref": "vehicle/stage/night-road",
+      "label": "Stage",
+      "emphasis": 1.1
+    },
+    {
+      "id": "light",
+      "ref": "lighting/night",
+      "label": "Lighting"
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "state",
+      "ref": "vehicle/car/heritage-state",
+      "label": "Period Touch",
+      "allow_empty": true
+    },
+    {
+      "id": "view",
+      "ref": "viewpoint/general",
+      "label": "Viewpoint",
+      "emphasis": 1.15
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "variants": [
+    {
+      "name": "flux1",
+      "label": "Flux.1 — mastermerlin icons",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "loralab/vehicle-icons",
+          "label": "Subject LoRA (Flux.1)",
+          "tags_any": ["flux1"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "grain",
+          "ref": "loralab/film-look",
+          "label": "Film LoRA (Flux.1)",
+          "tags_any": ["flux1"]
+        }
+      ]
+    },
+    {
+      "name": "qwen",
+      "label": "Qwen — 930 Turbo Targa",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "loralab/vehicle-icons",
+          "label": "Subject LoRA (Qwen)",
+          "tags_any": ["qwen"],
+          "emphasis": 1.25
+        }
+      ]
+    },
+    {
+      "name": "sdxl",
+      "label": "SDXL — widebody tuner",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "loralab/vehicle-icons",
+          "label": "Subject LoRA (SDXL)",
+          "tags_any": ["sdxl"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "boost",
+          "ref": "loralab/detail-boosters",
+          "label": "Detail LoRA (SDXL)",
+          "tags_any": ["sdxl"]
+        }
+      ]
+    },
+    {
+      "name": "sd1",
+      "label": "SD 1.5 — Skyline R34",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "loralab/vehicle-icons",
+          "label": "Subject LoRA (SD 1.5)",
+          "tags_any": ["sd1"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "boost",
+          "ref": "loralab/detail-boosters",
+          "label": "Detail LoRA (SD 1.5)",
+          "tags_any": ["sd1"]
+        },
+        {
+          "id": "contrast",
+          "ref": "loralab/film-look",
+          "label": "Contrast LoRA (SD 1.5)",
+          "tags_any": ["sd1"]
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "@variant",
+    "stage",
+    "light",
+    "weather",
+    "state",
+    "view",
+    "grade"
+  ],
+  "suffix": "Materials: (reflections running the whole length of the body line, paint reading wet even when it is dry, tyre sidewall relief and brake hardware legible inside the wheel arch:1.2). Deep shadows that still hold information, highlights that stop short of clipping, and road surface carrying its own grain under the machine.",
+  "negative": "watermark, caption overlay, toy car proportions, warped bodywork, deformed wheels, melted panel gaps, lowres",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

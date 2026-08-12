@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "LoRA Lab: Sci-Fi Style",
+  "description": "Style-mover LoRAs that push a whole frame into cyberpunk or hard science fiction. Trigger phrases are woven into the item text verbatim; data carries the exact filename, creator-stated strength and Civitai AIR urn. Tagged by base-model family — these are the movers a style A/B should compare within one family, never across.",
+  "items": [
+    {
+      "name": "cyberpunk-anime-flux",
+      "text": "anime, cyberpunk, hard neon graphics laid over clean animated cel shapes, rain-lit signage doing the colour work",
+      "text_short": "anime, cyberpunk",
+      "tags": ["flux1", "cyberpunk", "mover"],
+      "data": {
+        "lora": "CPA.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:128568@747534",
+        "lora_info": {
+          "name": "Cyberpunk Anime Style (Flux)",
+          "creator": "CN_Signal",
+          "base": "flux1",
+          "url": "https://civitai.com/models/128568?modelVersionId=747534",
+          "about": "Fuses cel-animation shape language with neon cyberpunk lighting in one pass; the dominant cyberpunk-anime style LoRA at 42,989 model downloads and 4,308 thumbs-up, 24,532 on the Flux version alone."
+        }
+      }
+    },
+    {
+      "name": "cyberpunk-sdxl",
+      "text": "cyberpunk style, saturated signage light bleeding across wet chrome and glass, hard magenta and cyan doing the modelling",
+      "text_short": "cyberpunk style",
+      "tags": ["sdxl", "cyberpunk", "mover"],
+      "data": {
+        "lora": "sdxl_cyberpunk.safetensors",
+        "strength_model": 0.7,
+        "strength_clip": 0.7,
+        "comment": "urn:air:sdxl:lora:civitai:133621@147106",
+        "lora_info": {
+          "name": "[Lah] Cyberpunk | SDXL",
+          "creator": "Lah_Inthe_Futureland",
+          "base": "sdxl",
+          "url": "https://civitai.com/models/133621?modelVersionId=147106",
+          "about": "A clean, fully SFW cyberpunk look for SDXL recommended at 0.4-1.0 weight; 7,778 downloads and 618 thumbs-up with an entirely work-safe example gallery."
+        }
+      }
+    },
+    {
+      "name": "scifi-environments-flux",
+      "text": "coherent science-fiction set design, plausible hardware and lived-in industrial surfaces holding together across the whole frame",
+      "text_short": "coherent sci-fi set design",
+      "tags": ["flux1", "scifi", "mover", "triggerless"],
+      "data": {
+        "lora": "Sci-fi_env_flux.safetensors",
+        "strength_model": 1.0,
+        "strength_clip": 1.0,
+        "comment": "urn:air:flux1:lora:civitai:105945@800592",
+        "lora_info": {
+          "name": "Sci-fi Environments (Flux v1.0)",
+          "creator": "CN_Signal",
+          "base": "flux1",
+          "url": "https://civitai.com/models/105945?modelVersionId=800592",
+          "about": "Builds internally consistent sci-fi environments — greebles, panel logic and wear that agree with each other; the top result for sci-fi LoRA searches at 21,334 model downloads and 1,847 thumbs-up."
+        }
+      }
+    }
+  ]
+}

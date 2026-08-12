@@ -5,23 +5,28 @@
   "items": [
     {
       "name": "graphics",
-      "text": "Graphics option: {subtle pinstriping|minimalist geometric graphics|glowing energy lines}."
+      "text": "{subtle pinstriping drawn the length of the shoulder line|minimalist geometric graphics blocked across the flanks|glowing energy lines tracing the body creases}",
+      "text_short": "{subtle pinstriping|minimalist geometric graphics|glowing energy lines}"
     },
     {
       "name": "stripes",
-      "text": "Stripes option: {sharp dual full-length racing stripes|clean offset racing stripe|bold side stripes clearly visible}."
+      "text": "{sharp dual full-length racing stripes running nose to tail|a single clean offset racing stripe over hood and roof|bold side stripes running the rockers, clearly visible}",
+      "text_short": "{dual full-length racing stripes|offset racing stripe|bold side stripes}"
     },
     {
       "name": "sponsor-decals",
-      "text": "Racing aesthetic: scattered fictional sponsor decals rendered crisply."
+      "text": "crisply printed fictional sponsor decals scattered across the flanks and rear quarters, paddock-authentic and legible",
+      "text_short": "crisp fictional sponsor decals"
     },
     {
       "name": "racing-livery",
-      "text": "Livery option: full pro racing livery inspired by {modern GT3|classic Group C|cyberpunk|JGTC}."
+      "text": "a full professional racing livery in the spirit of {modern GT3 endurance racers|classic Group C prototypes|cyberpunk street racing|1990s JGTC}",
+      "text_short": "full racing livery, {modern GT3|classic Group C|cyberpunk|JGTC}"
     },
     {
       "name": "graphic-wrap",
-      "text": "Wrap option: unique graphic wrap {angular geometric|digital camo|circuitry motifs}."
+      "text": "a unique printed graphic wrap in {angular geometric shapes|digital camouflage|fine circuitry motifs}, the pattern following the body surfaces",
+      "text_short": "graphic wrap, {angular geometric|digital camo|circuitry motifs}"
     }
   ],
   "suits": [
