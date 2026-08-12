@@ -23,6 +23,17 @@ from .settings import _profiles_file
 
 @_guarded
 def handle_library(lib, payload):
+    # Fingerprint FIRST, for two reasons. (1) 'fp=<fingerprint>' short-circuits
+    # the whole listing: the panel caches (fingerprint, payload) and re-sends
+    # the fingerprint on refresh, so an unchanged library costs one scan
+    # instead of parsing every file. (2) Taken first, the returned fingerprint
+    # can only ever be OLDER than the payload it labels — the other order could
+    # label a stale payload with a fresh fingerprint, which a caching client
+    # would then keep forever. A request without 'fp' behaves exactly as before.
+    fingerprint = lib.fingerprint()
+    fp = payload.get("fp")
+    if isinstance(fp, str) and fp and fp == fingerprint:
+        return 200, {"unchanged": True, "fingerprint": fingerprint}
     templates = []
     for slug in lib.template_slugs():
         entry = {"slug": slug, "tier": lib.tier_of("templates", slug)}
@@ -69,7 +80,7 @@ def handle_library(lib, payload):
         for name in sorted(lib.pack_profiles())
     ]
     return 200, {
-        "fingerprint": lib.fingerprint(),
+        "fingerprint": fingerprint,
         "templates": templates,
         "sections": sections,
         "folders": lib.section_folders(),

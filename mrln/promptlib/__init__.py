@@ -59,6 +59,16 @@ from .schema import (
     parse_template,
 )
 from .serialize import dump_item, dump_section, dump_slot, dump_template
+from .store import (
+    THUMB_KINDS,
+    has_thumb,
+    history_append,
+    history_files,
+    history_prune,
+    history_read,
+    thumb_path,
+    user_thumb_target,
+)
 
 __all__ = [
     "CONFLICT_POLICIES",
@@ -68,6 +78,7 @@ __all__ = [
     "RANDOM_TOKENS",
     "STANDARD",
     "TEXT_LENGTHS",
+    "THUMB_KINDS",
     "Composed",
     "ItemNotFoundError",
     "Library",
@@ -100,6 +111,11 @@ __all__ = [
     "dump_template",
     "export_bundle",
     "fill_json_template",
+    "has_thumb",
+    "history_append",
+    "history_files",
+    "history_prune",
+    "history_read",
     "import_bundle",
     "lora_base_family",
     "lora_entries",
@@ -116,6 +132,8 @@ __all__ = [
     "resolve_template",
     "score_match",
     "section_closure",
+    "thumb_path",
     "trigger_from_metadata",
+    "user_thumb_target",
     "validate_slug",
 ]
