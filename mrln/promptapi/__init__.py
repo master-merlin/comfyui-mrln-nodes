@@ -19,6 +19,7 @@ Split across submodules (it was one 1.7k-line file):
   llm       — local/cloud chat backends, validate + model-pull endpoints
   lora      — Civitai lookups, AIR downloads, install status, item healing
   decompose — the LLM/hybrid de-compose engines
+  intake    — image metadata -> extraction, then the verbatim/de-compose paths
   library   — library listing, detail, preview, saves, bundles
   routes    — the ROUTES table and register_routes()
 
@@ -52,6 +53,36 @@ from .decompose import (
     _llm_decompose,
     _validate_llm_fragments,
     handle_decompose,
+)
+from .intake import (
+    CIVITAI_IMAGES_ENDPOINT,
+    MAX_IMAGE_BYTES,
+    VERBATIM_RENDER,
+    IntakeError,
+    attach_local_files,
+    build_lora_section,
+    build_verbatim_template,
+    civitai_image_id,
+    decode_image_payload,
+    decode_user_comment,
+    escape_braces,
+    extraction_from_candidates,
+    extraction_from_civitai_item,
+    extraction_from_fields,
+    fetch_civitai_image,
+    graph_candidates,
+    handle_extract_apply,
+    handle_extract_image,
+    is_param_tail,
+    merge_lora_resources,
+    params_summary,
+    parse_a1111_parameters,
+    parse_civitai_resources,
+    parse_param_tail,
+    read_image_metadata,
+    resolve_air,
+    strip_lora_tags,
+    workflow_candidates,
 )
 from .library import (
     _BUNDLE_KINDS,
@@ -96,6 +127,7 @@ from .lora import (
     _KNOWN_SECRETS,
     _LORA_DL_STATUS,
     _SAFE_SEGMENT,
+    CATCHWORD_JOINER,
     _civitai_summary,
     _fetch_lora_file,
     _hash_key,
@@ -109,13 +141,18 @@ from .lora import (
     _sanitize_subfolder,
     _scrub_secrets,
     _sha256_of,
+    default_trigger_selection,
     download_lora_by_air,
     handle_lora_civitai,
     handle_lora_download,
     handle_lora_meta,
     handle_lora_status,
+    lora_info,
     lora_status,
     parse_air,
+    render_catchword,
+    split_catchword,
+    trigger_selection,
 )
 from .routes import ROUTES, _warm_library_caches, register_routes
 from .settings import (

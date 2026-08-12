@@ -11,6 +11,7 @@ from .. import promptlib as pl
 from ..pack import logger
 from .core import MAX_BODY_BYTES
 from .decompose import handle_decompose
+from .intake import handle_extract_apply, handle_extract_image
 from .library import (
     handle_delete,
     handle_export,
@@ -55,6 +56,9 @@ ROUTES = (
     ("post", "/mrln/prompt/save-template", handle_save_template, True),
     ("post", "/mrln/prompt/delete", handle_delete, True),
     ("post", "/mrln/prompt/decompose", handle_decompose, True),
+    # image intake: extract first, then the user picks one of the two paths
+    ("post", "/mrln/prompt/extract-image", handle_extract_image, True),
+    ("post", "/mrln/prompt/extract-apply", handle_extract_apply, True),
     ("get", "/mrln/prompt/export", handle_export, False),
     ("post", "/mrln/prompt/import", handle_import, True),
 )

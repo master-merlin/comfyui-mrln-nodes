@@ -90,6 +90,94 @@ def _civitai_summary(resp):
     }
 
 
+# -- trigger words: provenance vs truth ---------------------------------------
+# A LoRA item's TEXT is its catchword — the words that actually render. The
+# full list Civitai (or the safetensors metadata) handed us is PROVENANCE,
+# stored as data.lora_info.trained_words, and the editor's mute/solo NEVER
+# edits it. That split is what makes the state survive a reload with no new
+# schema field and nothing widget-only to lose:
+#
+#   MUTE = the word is in trained_words but absent from the catchword
+#   SOLO = mute every other word — it collapses to the same persisted state
+#
+# so re-opening the editor re-derives the chips by set difference. The
+# catchword is always joined in trained_words order, so a selection renders
+# deterministically; all-muted is legal (a baked-in or unwanted trigger) and
+# renders nothing; and words typed by hand that have no provenance entry are
+# kept as user-added. Back-compat is the default selection: the FIRST trained
+# word, which is exactly what the Civitai lookup has always written.
+
+CATCHWORD_JOINER = ", "
+
+
+def _clean_words(values):
+    return [str(word).strip() for word in values or [] if str(word).strip()]
+
+
+def split_catchword(catchword):
+    """A catchword string -> the words it renders, in written order."""
+    return [word.strip() for word in str(catchword or "").split(",") if word.strip()]
+
+
+def default_trigger_selection(trained_words):
+    """The back-compat selection: the first trained word and nothing else, so
+    an item nobody touched keeps rendering byte-identically."""
+    return _clean_words(trained_words)[:1]
+
+
+def render_catchword(trained_words, selected):
+    """The catchword TEXT for a selection: the provenance words in
+    trained_words order first (determinism), then any free-text extras in the
+    order given. Empty when everything is muted."""
+    words = _clean_words(trained_words)
+    picked = _clean_words(selected)
+    wanted = {word.casefold() for word in picked}
+    known = {word.casefold() for word in words}
+    out = [word for word in words if word.casefold() in wanted]
+    seen = {word.casefold() for word in out}
+    for word in picked:
+        folded = word.casefold()
+        if folded not in known and folded not in seen:
+            out.append(word)
+            seen.add(folded)
+    return CATCHWORD_JOINER.join(out)
+
+
+def trigger_selection(trained_words, catchword):
+    """The editor's chip state, derived from the FILE alone: which provenance
+    words render, which are muted (present in provenance, absent from the
+    catchword), and which rendered words are user-added free text."""
+    words = _clean_words(trained_words)
+    rendered = split_catchword(catchword)
+    rendered_fold = {word.casefold() for word in rendered}
+    known_fold = {word.casefold() for word in words}
+    return {
+        "words": words,
+        "active": [word for word in words if word.casefold() in rendered_fold],
+        "muted": [word for word in words if word.casefold() not in rendered_fold],
+        "extra": [word for word in rendered if word.casefold() not in known_fold],
+        "catchword": str(catchword or "").strip(),
+    }
+
+
+def lora_info(summary, *, filename=""):
+    """The provenance blob an item stores as `data.lora_info`: what the source
+    told us, never what the editor selected. Empty when the source told us
+    nothing, so nothing pointless is ever written to a user file."""
+    summary = summary or {}
+    info = {}
+    words = _clean_words(summary.get("trained_words"))
+    if words:
+        info["trained_words"] = words
+    for key in ("air", "model_name", "version_name"):
+        value = summary.get(key)
+        if value:
+            info[key] = str(value)
+    if filename:
+        info["file"] = str(filename)
+    return info
+
+
 # ONE dict for the whole package (path -> ((mtime_ns, size), sha256)), only
 # ever mutated in place: the download worker seeds it, request threads read it.
 _HASH_CACHE = {}
@@ -210,6 +298,13 @@ def handle_lora_civitai(lib, payload):
         }
     out = _civitai_summary(data)
     out["name"] = real
+    # The editor stores `lora_info` as provenance and `catchword` as truth; the
+    # default selection is the first word, so an item created from this answer
+    # renders exactly what `trigger` alone used to produce.
+    out["lora_info"] = lora_info(out, filename=real)
+    out["catchword"] = render_catchword(
+        out["trained_words"], default_trigger_selection(out["trained_words"])
+    )
     return 200, out
 
 
@@ -245,6 +340,12 @@ def handle_lora_meta(lib, payload):
             "remediation": "type the catchword manually — trainers embed triggers as "
             "modelspec.trigger_phrase or kohya ss_tag_frequency",
         }
+    # Deliberately NOT extended with trained_words/lora_info: safetensors
+    # metadata yields exactly ONE trigger, so the provenance list would be
+    # [trigger] and the catchword would equal it — the client derives both
+    # from `trigger` alone, and this body's exact shape is pinned by a
+    # protocol test. The Civitai lookup, which really does return several
+    # words, is where the richer shape belongs.
     return 200, {"trigger": trigger, "source": source, "name": real}
 
 
@@ -315,11 +416,18 @@ def _sanitize_lora_filename(name):
     return base
 
 
-def _heal_section_lora(lib, section_slug, item_name, new_lora):
+def _heal_section_lora(lib, section_slug, item_name, new_lora, info=None):
     """Re-point a section item's data.lora at the downloaded file (user-tier
     write). Factory-origin items get a full self-contained snapshot — the
     tier merge replaces items by name wholesale, so a thin entry would wipe
-    the item's texts."""
+    the item's texts.
+
+    `info` is the provenance blob from the same Civitai response (see
+    lora_info): stored as data.lora_info so the editor can offer every trained
+    word as a mute/solo chip. The item's TEXT — its catchword, i.e. which of
+    those words actually render — is never touched here; overwriting a
+    catchword the user curated is exactly what the provenance/truth split
+    exists to prevent."""
     section = lib.load_section(section_slug)
     target = next((i for i in section.items if i.name == item_name), None)
     if target is None:
@@ -336,6 +444,8 @@ def _heal_section_lora(lib, section_slug, item_name, new_lora):
         entry = pl.dump_item(target)
         raw["items"].append(entry)
     entry["data"] = {**(entry.get("data") or {}), "lora": new_lora}
+    if info:
+        entry["data"]["lora_info"] = {**(entry["data"].get("lora_info") or {}), **info}
     lib.save_user("sections", section_slug, raw)
 
 
@@ -389,6 +499,12 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
         )
         with urllib.request.urlopen(request, timeout=30) as resp:
             meta = json.loads(resp.read().decode("utf-8"))
+        # the same response that names the file also names every trained word:
+        # record it as provenance so the caller can store it on the item
+        # without a second Civitai round trip (empty when it carries none)
+        provenance = lora_info(_civitai_summary(meta))
+        if provenance:
+            status["lora_info"] = provenance
         files = [
             f
             for f in (meta.get("files") or [])
@@ -463,8 +579,13 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
             lib, section_slug, item_name, folder, stored = heal
             new_name = f"{folder}/{filename}" if folder else filename
             stored = str(stored or "").replace("\\", "/")
-            if stored.lower() != new_name.lower():
-                _heal_section_lora(lib, section_slug, item_name, new_name)
+            moved = stored.lower() != new_name.lower()
+            info = status.get("lora_info") or None
+            # a user-tier snapshot is written when the path moved OR when there
+            # is provenance worth keeping; without either there is nothing to say
+            if moved or info:
+                _heal_section_lora(lib, section_slug, item_name, new_name, info)
+            if moved:
                 status["healed"] = new_name
         status["status"] = "done"
         detail = f"saved as {filename}"
@@ -668,10 +789,12 @@ def download_lora_by_air(lib, air, *, folder="", filename="", section="", item="
     status["detail"] = _scrub_secrets(detail, token)
     _evict_finished_status(_LORA_DL_STATUS)
     final = f"{folder}/{name}" if folder else name
-    if section and item and str(stored or "").replace("\\", "/").lower() != final.lower():
+    moved = str(stored or "").replace("\\", "/").lower() != final.lower()
+    if section and item and (moved or status.get("lora_info")):
         with contextlib.suppress(Exception):  # the file is there; healing is a bonus
-            _heal_section_lora(lib, section, item, final)
-            status["healed"] = final
+            _heal_section_lora(lib, section, item, final, status.get("lora_info") or None)
+            if moved:
+                status["healed"] = final
     with contextlib.suppress(Exception):
         folder_paths.get_filename_list.cache_clear()  # make the new file visible now
     return final
