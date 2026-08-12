@@ -128,10 +128,14 @@ def test_default_call_reproduces_the_pre_change_golden_as_length_one_lists(node)
     The call deliberately passes NO batch arguments, which is exactly what a
     workflow saved before this feature does."""
     out = run(node)
-    assert len(out) == 5
-    for index, (values, golden) in enumerate(zip(out, GOLDEN, strict=True)):
+    # the 5 outputs GOLDEN was captured from, plus gen_info APPENDED at the end
+    # by SPEC 6.4 — GOLDEN itself stays untouched, which is the point of it
+    assert len(out) == 6
+    for index, (values, golden) in enumerate(zip(out[:5], GOLDEN, strict=True)):
         assert isinstance(values, list), f"output {index} is not a list"
         assert values == [golden], f"output {index} drifted from the pre-change render"
+    # the appended output is a length-1 list too (its content: test_prompt_gen_info.py)
+    assert out[5] == ["a car, bright red, moonlit night\nSeed: 7"]
     # and no batch bookkeeping leaks into a single render
     assert "batch " not in out[2][0]
 
@@ -150,7 +154,7 @@ def test_batch_count_one_is_identical_to_omitting_the_widgets(node):
 
 def test_output_is_list_covers_every_output(classes):
     cls = classes["MRLN_PromptTemplate"]
-    assert cls.OUTPUT_IS_LIST == (True, True, True, True, True)
+    assert cls.OUTPUT_IS_LIST == (True,) * 6  # 5 + gen_info (SPEC 6.4)
     assert len(cls.OUTPUT_IS_LIST) == len(cls.RETURN_TYPES) == len(cls.RETURN_NAMES)
 
 
@@ -182,6 +186,7 @@ def test_batch_widgets_append_after_profile(classes):
         "choices",
         "loras",
         "llm",
+        "gen_info",  # appended by SPEC 6.4; proof lives in test_prompt_gen_info.py
     ]
 
 
@@ -423,10 +428,12 @@ def test_every_output_stays_aligned_across_the_batch(node, user_tier):
             "render": {"format": "string", "joiner": ", "},
         },
     )
-    prompts, negatives, choices, loras, llms = run(
+    prompts, negatives, choices, loras, llms, gen_info = run(
         node, template="batch/kitted", batch_mode="combinatorial"
     )
-    assert len(prompts) == len(negatives) == len(choices) == len(loras) == len(llms) == 2
+    assert (
+        len(prompts) == len(negatives) == len(choices) == len(loras) == len(llms) == len(gen_info)
+    ) and len(prompts) == 2
     assert prompts == ["stock body", "WideBodyKit"]
     assert json.loads(loras[0]) == []
     assert json.loads(loras[1])[0]["lora"] == "kits/wide.safetensors"

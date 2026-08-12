@@ -427,7 +427,7 @@ def test_node_llm_output_and_profile_render(node_env):
 
 def test_preview_parity_with_profile(node_env):
     node = node_env()
-    prompt, negative, choices, _loras, llm = node.execute(
+    prompt, negative, choices, _loras, llm, *_rest = node.execute(
         template="overdrive/full-shot",
         selection="paint=guards-red",
         selection_mode="as configured",

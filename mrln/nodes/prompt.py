@@ -6,6 +6,7 @@ logic lives in the engine; combos are rebuilt on every INPUT_TYPES call so
 import hashlib
 import itertools
 import json
+import re
 from collections import OrderedDict
 from inspect import cleandoc
 
@@ -179,6 +180,87 @@ def _combinatorial_batch(lib, tpl, probe, seed, selection_map, compose_one):
     return items, dimensions
 
 
+# -- gen_info (SPEC 6.4 / ruling D5) -----------------------------------------
+# We emit generation metadata as a STRING a metadata-capable save node can
+# embed; this pack does no image IO. The dialect is A1111 `parameters`, and the
+# hard rule is that it carries ONLY what this node actually knows: the prompts,
+# the seed it drew with, and the Civitai identity of the LoRAs it selected.
+# Steps / Sampler / CFG scale / Model live on the sampler and checkpoint nodes,
+# so they are absent rather than guessed — a guessed value would travel with
+# the image as if it were true, which is worse than a missing one.
+#
+# Same grammar as mrln/promptapi/lora.py::_AIR_RE, deliberately re-stated here:
+# that module is the web-API surface (aiohttp, settings, threads) and nothing in
+# nodes/ may drag it into import at registration time.
+_AIR_CIVITAI_RE = re.compile(
+    r"^urn:air:[a-z0-9._-]+:[a-z0-9._-]+:civitai:(\d+)@(\d+)$", re.IGNORECASE
+)
+
+
+def _civitai_resources(entries):
+    """The `Civitai resources` payload for a render's LoRA entries.
+
+    Shape verified against Civitai's own uploader-side parser
+    (civitai/src/utils/metadata/automatic.metadata.ts, read 2026-08-12): a
+    resource is `{type, weight?, modelVersionId?, air?, modelName?,
+    versionName?}`. We emit the explicit `{"type","weight","modelVersionId"}`
+    triple rather than the `air` form because Civitai resolves `air` through
+    parseAIR(), which THROWS on an urn it dislikes — one odd ecosystem segment
+    would take the whole image's metadata down with it, while an explicit
+    modelVersionId is just a number. modelName/versionName are dropped by that
+    parser on the way in, so inventing them would buy nothing.
+
+    A LoRA without a parseable Civitai AIR is SKIPPED: we know the file name,
+    not who published it, and a resource entry that names the wrong version is
+    a false attribution. `weight` is the model strength — A1111 LoRA weight is
+    one number and has no clip counterpart, so strength_clip is not smuggled in.
+    """
+    resources = []
+    for entry in entries:
+        match = _AIR_CIVITAI_RE.match(str((entry or {}).get("air") or "").strip())
+        if not match:
+            continue
+        try:
+            weight = float(entry.get("strength_model", 1.0))
+        except (TypeError, ValueError):  # pragma: no cover - render.py filters these first
+            continue
+        resources.append(
+            {
+                # constant, not the AIR's type segment: these entries come from
+                # items carrying data.lora and are applied as LoRAs, and 'lora'
+                # is the token Civitai's vocabulary uses for exactly that
+                "type": "lora",
+                "weight": int(weight) if weight.is_integer() else weight,
+                "modelVersionId": int(match.group(2)),
+            }
+        )
+    return resources
+
+
+def _gen_info(positive, negative, seed, lora_entries):
+    """A1111 `parameters` string for one rendered item.
+
+        <positive>
+        Negative prompt: <negative>          <- only when non-empty
+        Seed: <seed>[, Civitai resources: [{…}]]
+
+    The prompts go in verbatim so the string parses back to the exact prompt
+    the node emitted. The key/value tail is last and comma-joined, which is
+    also what Civitai's regex needs: it matches `, Civitai resources:` (leading
+    comma) followed by a compact one-line array, hence the tight separators.
+    """
+    lines = [positive]
+    if (negative or "").strip():
+        lines.append(f"Negative prompt: {negative}")
+    tail = [f"Seed: {seed}"]
+    resources = _civitai_resources(lora_entries)
+    if resources:
+        payload = json.dumps(resources, ensure_ascii=False, separators=(",", ":"))
+        tail.append(f"Civitai resources: {payload}")
+    lines.append(", ".join(tail))
+    return "\n".join(lines)
+
+
 def _batch_line(index, total, seed, dimensions):
     """First line of a batched item's choices report. Emitted ONLY when the
     batch has more than one item, so a single render stays byte-identical to
@@ -204,18 +286,23 @@ class PromptTemplate:
     of four copies of one draw. batch_mode 'combinatorial' instead enumerates
     every combination of the slots that are currently random. At
     batch_count 1 the node behaves exactly as it always has.
+
+    The 'gen_info' output carries the prompts, the seed and the drawn LoRAs'
+    Civitai ids as an A1111 'parameters' string, so a metadata-capable save
+    node can embed what this render actually knows. It states nothing it does
+    not know: no Steps, Sampler, CFG or Model. This pack writes no images.
     """
 
     CATEGORY = category("prompt")
     DESCRIPTION = cleandoc(__doc__)
     FUNCTION = "execute"
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "negative", "choices", "loras", "llm")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("prompt", "negative", "choices", "loras", "llm", "gen_info")
     # Every output is a list so one queue can carry a whole batch; ComfyUI
     # then runs the downstream graph once per item. A length-1 list is
     # indistinguishable from a single value downstream, which is what keeps
     # every existing workflow working untouched.
-    OUTPUT_IS_LIST = (True, True, True, True, True)
+    OUTPUT_IS_LIST = (True, True, True, True, True, True)
     OUTPUT_TOOLTIPS = (
         "The rendered positive prompt in the chosen format.",
         "The joined negative prompt (template + section + item negatives), always a plain string.",
@@ -227,6 +314,16 @@ class PromptTemplate:
         "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, protect, system, params} "
         "— the rendered prompt, the profile's LLM system prompt, and the LoRA trigger "
         "words the enhancer must keep verbatim.",
+        "Generation metadata in the A1111 'parameters' dialect, for a save node that can "
+        "embed a metadata string: the positive prompt, a 'Negative prompt:' line when there "
+        "is one, then 'Seed: <seed>' plus 'Civitai resources:' naming the drawn LoRAs by "
+        "Civitai model-version id and weight (LoRAs without a Civitai AIR are left out). "
+        "INCLUDED is only what this node knows — there is deliberately NO Steps, Sampler, "
+        "CFG scale or Model here, because those live on your sampler and checkpoint nodes "
+        "and a guessed value would travel with the image as if it were true. Civitai's own "
+        "reader needs a 'Steps:' key before it looks at any of this, so the save node has "
+        "to contribute the sampler settings on the same key/value line. This pack writes "
+        "no images.",
     )
 
     @classmethod
@@ -473,18 +570,23 @@ class PromptTemplate:
             ]
 
         total = len(items)
-        prompts, negatives, choices, loras, llms = [], [], [], [], []
+        prompts, negatives, choices, loras, llms, gen_infos = [], [], [], [], [], []
         for index, (composed, item_seed) in enumerate(items, start=1):
             out = composed.rendered
             report = out.choices
             if total > 1:
                 report = f"{_batch_line(index, total, item_seed, dimensions)}\n{report}"
+            entries = pl.lora_entries(composed.resolved)
             prompts.append(out.positive)
             negatives.append(out.negative)
             choices.append(report)
-            loras.append(json.dumps(pl.lora_entries(composed.resolved), ensure_ascii=False))
+            loras.append(json.dumps(entries, ensure_ascii=False))
             llms.append(composed.llm)
-        return (prompts, negatives, choices, loras, llms)
+            # item_seed, not the master seed: in a batch each image carries the
+            # seed it was actually drawn with, which is the only thing that
+            # makes a shared image reproducible
+            gen_infos.append(_gen_info(out.positive, out.negative, item_seed, entries))
+        return (prompts, negatives, choices, loras, llms, gen_infos)
 
 
 class PromptSection:
