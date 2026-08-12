@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "label": "Period Signature",
+  "description": "The room, street or machine that tells you the year without anyone having to say it.",
+  "items": [
+    {
+      "name": "jazz-interior",
+      "text": "a room of lacquered surfaces and stepped geometry, cigarette smoke layered flat in the lamplight, a gramophone horn in the corner",
+      "text_short": "art-deco room, layered smoke",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "motor-and-marquee",
+      "text": "a tall narrow motor car at the kerb and a tiled theatre entrance behind, painted signwriting straight onto glass",
+      "text_short": "tall motor car, tiled marquee",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "blackout-street",
+      "text": "a street under blackout, headlamps masked to slits, tape crossing every window and sandbags stacked against a doorway",
+      "text_short": "blackout street, taped windows",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "hangar-line",
+      "text": "a hangar apron with aircraft parked wing to wing, oil drums and chocks, painted instructions stencilled onto everything",
+      "text_short": "hangar apron, stencilled drums",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "chrome-diner",
+      "text": "chrome and vinyl under fluorescent tube light, a formica counter, tail-finned cars nosed in at the window",
+      "text_short": "chrome diner, tail fins outside",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "new-suburb",
+      "text": "a new suburban street of identical roofs and thin young trees, a station wagon on fresh concrete, television aerials repeating down the line",
+      "text_short": "new suburb, aerials repeating",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "wood-panelled-room",
+      "text": "wood-panelled walls, a shag rug and burnt-orange upholstery, a lamp with a shade the colour of weak tea",
+      "text_short": "wood panelling and burnt orange",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "service-station",
+      "text": "a service station under a wide flat canopy, plastic-lettered price signs and a car with a vinyl roof at the pump",
+      "text_short": "flat-canopy service station",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "neon-arcade",
+      "text": "an arcade lit only by cabinet screens and neon tubing, carpet patterned to hide everything, a fog of cigarette and ozone",
+      "text_short": "neon arcade, screen light",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "glass-office",
+      "text": "a glass-and-brass office lobby with a potted ficus, a beige computer terminal glowing on a desk that is mostly telephone",
+      "text_short": "brass lobby, beige terminal",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "reclaimed-street",
+      "text": "a street the plants have taken back, buckled tarmac split by grass, a bus on its rims being used as a wall",
+      "text_short": "green-taken street, bus as wall",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "scrap-settlement",
+      "text": "a settlement built from what stood before it — corrugated sheet lashed to concrete, water drums under every downpipe, smoke from a stove going straight up",
+      "text_short": "scrap settlement, drums and smoke",
+      "tags": [
+        "post-apocalypse"
+      ]
+    }
+  ]
+}

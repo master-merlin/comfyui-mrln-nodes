@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "label": "Period Medium",
+  "description": "How the era's own cameras and film rendered the world — the look people read as 'from then' before they read anything else.",
+  "items": [
+    {
+      "name": "orthochromatic-plate",
+      "text": "the look of an orthochromatic plate — skies blown to paper white, reds falling almost black, grain like fine sand",
+      "text_short": "orthochromatic plate look",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "nitrate-print",
+      "text": "a nitrate print's silvery highlight and deep separated black, edges softening slightly toward the corners",
+      "text_short": "silvery nitrate print",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "press-flash",
+      "text": "a single press flashbulb fired straight on, hard shadow thrown onto the wall behind, highlights burnt and corners falling away",
+      "text_short": "hard press-flash frontal",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "newsreel-grain",
+      "text": "coarse newsreel grain and a slightly unsteady frame, contrast pushed in the developing to survive a bad negative",
+      "text_short": "coarse newsreel grain",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "kodachrome-saturation",
+      "text": "Kodachrome-era colour: dense reds, clean neutral whites and a fine grain that holds detail into the shadow",
+      "text_short": "dense mid-century colour",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "large-format-portrait",
+      "text": "a large-format studio negative — enormous tonal range, shallow plane of focus and detail that survives any enlargement",
+      "text_short": "large-format studio negative",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "faded-print-1970s",
+      "text": "a colour print aged toward warm — cyan gone first, so whites read cream and shadows carry a red cast",
+      "text_short": "warm-faded colour print",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "polaroid-instant",
+      "text": "an instant print's soft corners and slightly cool cast, a white border and a surface that shows every fingerprint",
+      "text_short": "instant print, soft corners",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "video-still",
+      "text": "the look of a video still — scan lines, colour bleeding across hard edges and a highlight that smears rather than clips",
+      "text_short": "video still with scan lines",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "push-processed-neg",
+      "text": "a colour negative pushed two stops in a hurry, grain opened up and shadows gone green-grey",
+      "text_short": "pushed, grainy colour negative",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "scavenged-optics",
+      "text": "an image made through scavenged optics — coating gone in patches, flare crossing the frame, one corner permanently soft",
+      "text_short": "scavenged lens, patchy flare",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "sun-bleached-capture",
+      "text": "colour bleached toward the ultraviolet end by relentless sun, dust on the sensor printed into every frame",
+      "text_short": "sun-bleached, dust-marked",
+      "tags": [
+        "post-apocalypse"
+      ]
+    }
+  ]
+}

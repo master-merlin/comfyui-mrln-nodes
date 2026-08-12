@@ -444,3 +444,63 @@ def test_alias_table_empty_pre_release(lib):
     add entries here instead (mechanism covered by test_prompt_resilience)."""
     data = json.loads((FACTORY_ROOT / "aliases.json").read_text(encoding="utf-8"))
     assert data["sections"] == {} and data["templates"] == {}
+
+
+# -- the era axis -------------------------------------------------------------
+# Coherence is the whole product here: a period portrait is only worth having
+# if the clothes, the hair, the room and the film stock land in the SAME year.
+# That coupling is a tag filter, so these guard the tags rather than the prose.
+
+ERA_TAGS = {"1920s", "wwii", "1950s", "1970s", "1980s", "post-apocalypse"}
+
+
+def test_every_era_item_carries_exactly_one_era_tag(lib):
+    """An untagged item would leak into every period; a two-era item would make
+    a 1950s draw arrive in 1980s clothes."""
+    for slug in (s for s in lib.section_slugs() if s.startswith("era/")):
+        for item in lib.load_section(slug).items:
+            eras = ERA_TAGS.intersection(item.tags)
+            assert len(eras) == 1, (
+                f"'{slug}/{item.name}' carries {sorted(eras) or 'no'} era tag(s) — exactly "
+                "one is required, or it cannot be coupled to a period"
+            )
+
+
+def test_every_era_has_a_draw_in_every_era_dimension(lib):
+    """A period with no wardrobe (or no hair, place, medium) renders a variant
+    with a hole in it. Adding an era means adding items to ALL of them."""
+    dimensions = sorted(s for s in lib.section_slugs() if s.startswith("era/"))
+    assert dimensions, "the era axis vanished"
+    for slug in dimensions:
+        items = lib.load_section(slug).items
+        present = {tag for item in items for tag in ERA_TAGS & set(item.tags)}
+        missing = ERA_TAGS - present
+        assert not missing, f"'{slug}' has nothing for {sorted(missing)}"
+
+
+def test_the_period_template_couples_every_era_slot_to_one_period(lib):
+    """The bug this prevents: a variant whose wardrobe is filtered to 1950s but
+    whose hair is not, which reads as a costume error rather than a draw."""
+    tpl = lib.load_template("portrait/period-portrait")
+    names = {v.name for v in tpl.variants}
+    assert names == ERA_TAGS, f"variants {sorted(names)} != eras {sorted(ERA_TAGS)}"
+    for variant in tpl.variants:
+        era_slots = [s for s in variant.slots if s.ref.startswith("era/")]
+        assert era_slots, f"variant '{variant.name}' draws no era content"
+        for slot in era_slots:
+            assert list(slot.tags_any) == [variant.name], (
+                f"variant '{variant.name}' slot '{slot.id}' filters "
+                f"{list(slot.tags_any)} — every era slot must name its own period"
+            )
+
+
+def test_the_period_template_does_not_draw_a_modern_look(lib):
+    """human/profile is a complete CONTEMPORARY look — its own hair, makeup and
+    clothing — so a period template must not use it (it produced a WWII
+    portrait in beachy mermaid waves before this was caught)."""
+    tpl = lib.load_template("portrait/period-portrait")
+    refs = [s.ref for s in tpl.slots] + [s.ref for v in tpl.variants for s in v.slots]
+    assert "human/profile" not in refs, (
+        "period-portrait draws human/profile, which supplies modern hair and clothing "
+        "that fight the era slots"
+    )

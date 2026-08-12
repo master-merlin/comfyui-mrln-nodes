@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "label": "Period Wardrobe",
+  "description": "What the era actually put on a body, tagged by period so a variant can couple it to the matching hair, place and film.",
+  "suits": [
+    "human"
+  ],
+  "items": [
+    {
+      "name": "flapper-drop-waist",
+      "text": "a drop-waist beaded chemise that skims rather than shapes, fringe hem swinging a half-beat behind the body, silk stockings rolled below the knee",
+      "text_short": "beaded drop-waist flapper dress",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "cloche-and-coat",
+      "text": "a wool cloche pulled to the eyebrows over a shingled bob, worn with a wrapped collar coat fastened at one hip by a single oversized button",
+      "text_short": "cloche hat and wrap coat",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "black-tie-tails",
+      "text": "white tie and tails cut long in the body, wing collar and piqué waistcoat, the whole silhouette narrow and vertical",
+      "text_short": "white tie and tails",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "workwear-1920s",
+      "text": "a collarless union shirt under wide braces, heavy moleskin trousers gone soft at the knee, a flat cap that has taken the shape of its owner",
+      "text_short": "braces, moleskin and a flat cap",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "service-dress",
+      "text": "a wool service tunic pressed at the shoulders and worn at the elbows, brass buttons dulled deliberately, webbing belt bearing the weight of everything",
+      "text_short": "wool service tunic and webbing",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "utility-suit",
+      "text": "a rationed utility suit built to a government pattern — square shoulders, no turn-ups, the exact number of buttons allowed and not one more",
+      "text_short": "square-shouldered utility suit",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "factory-coveralls",
+      "text": "denim factory coveralls rolled to the forearm, hair bound up in a knotted scarf against the machinery, steel-toed boots laced tight",
+      "text_short": "coveralls and a knotted headscarf",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "flight-jacket",
+      "text": "a sheepskin flight jacket zipped to the chin, collar turned up, the leather cracked white along every fold it has ever made",
+      "text_short": "sheepskin flight jacket",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "full-skirt-day-dress",
+      "text": "a cotton day dress with a fitted bodice and a skirt held wide by stiff petticoats, narrow patent belt, white gloves to the wrist",
+      "text_short": "full-skirted cotton day dress",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "grey-flannel-suit",
+      "text": "a grey flannel suit with natural shoulders and a narrow lapel, white shirt, slim dark tie, hat brim snapped down at the front",
+      "text_short": "grey flannel suit and snap-brim hat",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "rolled-cuff-denim",
+      "text": "a white t-shirt with the sleeve rolled once, selvedge denim turned up thick at the ankle, engineer boots scuffed at the toe",
+      "text_short": "white tee and turned-up selvedge",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "circle-skirt-diner",
+      "text": "a felt circle skirt and fitted twin-set, saddle shoes with folded bobby socks, a cardigan buttoned only at the throat",
+      "text_short": "circle skirt and twin-set",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "wide-lapel-suit",
+      "text": "a wide-lapel suit in warm brown, flared trousers breaking over stacked heels, shirt collar spread across the jacket like wings",
+      "text_short": "wide-lapel suit and flares",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "prairie-dress",
+      "text": "a prairie dress in small floral cotton, ruffled yoke and long full sleeves gathered at a narrow cuff, hem to the boot",
+      "text_short": "floral prairie dress",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "denim-on-denim",
+      "text": "a denim jacket over high-waisted flares in a different, harder wash, embroidery climbing one leg, a wide tooled belt between them",
+      "text_short": "denim jacket over high-waisted flares",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "halter-jersey",
+      "text": "a jersey halter dress cut on the bias so it moves with the room, gold at the throat, hair parted dead centre",
+      "text_short": "bias-cut jersey halter dress",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "power-shoulder",
+      "text": "a boxy blazer with shoulders built out past the frame, worn over a silk blouse with a bow at the neck and a pencil skirt to the knee",
+      "text_short": "power-shouldered blazer",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "neon-activewear",
+      "text": "a neon leotard over footless tights, slouch socks pushed down over trainers, a headband holding back volume that fights it",
+      "text_short": "neon leotard and slouch socks",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "leather-and-stonewash",
+      "text": "a cropped leather jacket with the sleeves pushed up, stonewashed jeans tapered hard at the ankle, white high-tops kept deliberately clean",
+      "text_short": "cropped leather and stonewash",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "double-breasted-eighties",
+      "text": "a double-breasted suit in a chalk stripe, jacket wide and long, braces visible when it opens, tie knotted thick",
+      "text_short": "chalk-stripe double-breasted suit",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "layered-salvage",
+      "text": "layered salvage worn in the order it was found — a quilted liner under a canvas coat under a harness, every strap doing a job someone chose",
+      "text_short": "layered salvaged clothing",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "patched-workwear",
+      "text": "workwear patched with whatever held: mismatched denim panels, a boot sole stitched on at the shoulder as armour, cuffs bound with wire",
+      "text_short": "patched and reinforced workwear",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "dust-wrap",
+      "text": "a wrapped head-cloth and goggles pushed up on the forehead, a scarf hauled down off the mouth, dust settled into every seam",
+      "text_short": "dust wrap and pushed-up goggles",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "scavenger-armour",
+      "text": "plate cut from road signs and lashed over a padded jacket, the reflective face turned inward, one shoulder built up heavier than the other",
+      "text_short": "road-sign plate over padding",
+      "tags": [
+        "post-apocalypse"
+      ]
+    }
+  ]
+}

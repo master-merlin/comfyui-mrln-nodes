@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "label": "Period Portrait",
+  "type": [
+    "human"
+  ],
+  "description": "One person, one period, everything agreeing. The variant picks the era and every era slot follows it — clothes, hair, the room and the film stock all land in the same decade instead of borrowing from four. Leave the variant on random and each render moves through time.",
+  "prefix": "A portrait made in its own time, not a costume photograph of it. The subject is {nationality}, {age}.",
+  "slots": [
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Who"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "pose",
+      "ref": "pose/standing",
+      "label": "Pose"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Light"
+    },
+    {
+      "id": "shot",
+      "ref": "viewpoint/portrait",
+      "label": "Framing"
+    }
+  ],
+  "variants": [
+    {
+      "name": "1920s",
+      "label": "1920s",
+      "description": "the jazz age, lacquer and cigarette smoke",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "1920s"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "1920s"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "1920s"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "1920s"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "wwii",
+      "label": "WWII",
+      "description": "wartime, rationed and functional",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "wwii"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "wwii"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "wwii"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "wwii"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "1950s",
+      "label": "1950s",
+      "description": "mid-century, chrome and new concrete",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "1950s"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "1950s"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "1950s"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "1950s"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "1970s",
+      "label": "1970s",
+      "description": "warm browns, long lapels and long light",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "1970s"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "1970s"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "1970s"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "1970s"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "1980s",
+      "label": "1980s",
+      "description": "built shoulders, neon and video",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "1980s"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "1980s"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "1980s"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "1980s"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "post-apocalypse",
+      "label": "After the collapse",
+      "description": "salvage, dust and reclaimed ground",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "post-apocalypse"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "post-apocalypse"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "post-apocalypse"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "post-apocalypse"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "nationality",
+    "age",
+    "@variant",
+    "expression",
+    "pose",
+    "light",
+    "shot"
+  ],
+  "suffix": "The period is carried by what is in frame, never by a caption.",
+  "negative": "child, chibi, underage, deformed, extra fingers, watermark, text, modern clothing, contemporary hairstyle, smartphone, plastic packaging, digital watch, printed logo, anachronism",
+  "render": {
+    "format": "string"
+  }
+}

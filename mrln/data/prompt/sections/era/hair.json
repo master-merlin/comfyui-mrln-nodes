@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "label": "Period Hair",
+  "description": "Hair and grooming that dates an image as precisely as the clothes do.",
+  "suits": [
+    "human"
+  ],
+  "items": [
+    {
+      "name": "shingled-bob",
+      "text": "hair shingled close at the nape and set in flat marcel waves that catch light like corrugated metal",
+      "text_short": "marcel-waved shingled bob",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "slicked-centre-part",
+      "text": "hair oiled flat to the skull with a knife-sharp centre part, a hard shine and not one strand out of the plan",
+      "text_short": "oiled flat centre part",
+      "tags": [
+        "1920s"
+      ]
+    },
+    {
+      "name": "victory-rolls",
+      "text": "hair rolled up and back off the face into two high victory rolls, the rest pinned into a soft sausage curl at the shoulder",
+      "text_short": "victory rolls and pinned curls",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "short-back-and-sides",
+      "text": "short back and sides taken high and tight, the top left just long enough to be combed over with water",
+      "text_short": "short back and sides",
+      "tags": [
+        "wwii"
+      ]
+    },
+    {
+      "name": "bouffant-set",
+      "text": "a salon-set bouffant lacquered into a shape that will survive the evening, ends turned under in a single obedient curve",
+      "text_short": "lacquered bouffant set",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "greased-pompadour",
+      "text": "a greased pompadour combed up at the front and back at the sides into a ducktail, a comb never far away",
+      "text_short": "greased pompadour",
+      "tags": [
+        "1950s"
+      ]
+    },
+    {
+      "name": "feathered-layers",
+      "text": "long layers feathered back from the face and flicked out at the ends, parted in the centre and left to move",
+      "text_short": "feathered flicked-back layers",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "natural-afro",
+      "text": "a full round afro picked out to a clean silhouette, edges shaped rather than cut hard",
+      "text_short": "picked-out round afro",
+      "tags": [
+        "1970s"
+      ]
+    },
+    {
+      "name": "crimped-volume",
+      "text": "hair crimped through the lengths and backcombed at the crown, held by enough spray to keep its height in wind",
+      "text_short": "crimped and backcombed volume",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "side-part-mullet",
+      "text": "short and spiky through the top, left long and layered at the neck, one side pushed back behind the ear",
+      "text_short": "spiked top, long at the neck",
+      "tags": [
+        "1980s"
+      ]
+    },
+    {
+      "name": "hacked-short",
+      "text": "hair hacked short with a blade rather than cut, uneven at the ends, pushed back with the same hand that does everything else",
+      "text_short": "blade-hacked short crop",
+      "tags": [
+        "post-apocalypse"
+      ]
+    },
+    {
+      "name": "bound-braids",
+      "text": "tight bound braids kept close to the scalp so nothing catches, ends whipped with wire and thread",
+      "text_short": "wire-bound tight braids",
+      "tags": [
+        "post-apocalypse"
+      ]
+    }
+  ]
+}
