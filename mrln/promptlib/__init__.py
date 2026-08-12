@@ -28,7 +28,15 @@ from .profiles import (
     merged_profiles,
     overlay_profile,
 )
-from .render import CONFLICT_POLICIES, FORMATS, Rendered, lora_entries, lora_tags, render
+from .render import (
+    CONFLICT_POLICIES,
+    FORMATS,
+    Rendered,
+    lora_base_family,
+    lora_entries,
+    lora_tags,
+    render,
+)
 from .resolve import (
     MODES,
     RANDOM_TOKENS,
@@ -93,6 +101,7 @@ __all__ = [
     "export_bundle",
     "fill_json_template",
     "import_bundle",
+    "lora_base_family",
     "lora_entries",
     "lora_tags",
     "merged_profiles",

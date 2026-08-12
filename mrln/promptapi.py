@@ -115,6 +115,9 @@ def _pool(lib, ref):
         }
         if item.data and item.data.get("lora"):
             entry["lora"] = str(item.data["lora"])
+            base = pl.lora_base_family(item.data)
+            if base:  # the pill names the target model, so a mismatch is visible
+                entry["base"] = base
         pool.append(entry)
     return pool
 
@@ -142,6 +145,15 @@ def handle_library(lib, payload):
                 suits=list(section.suits),
                 merged=section.merged,
                 has_lora=any(i.data and i.data.get("lora") for i in section.items),
+                lora_bases=sorted(
+                    {
+                        base
+                        for i in section.items
+                        if i.data and i.data.get("lora")
+                        for base in [pl.lora_base_family(i.data)]
+                        if base
+                    }
+                ),
             )
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))

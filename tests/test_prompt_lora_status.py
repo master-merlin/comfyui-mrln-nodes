@@ -371,3 +371,35 @@ def test_ignore_disables_the_check(monkeypatch):
     node_class()().execute(
         model=fake_model("SDXL"), clip="C", loras=mismatched(), on_mismatch="ignore"
     )
+
+
+def test_library_and_pool_expose_the_lora_base(lib, monkeypatch):
+    """The Composer's LoRA pills name the target model, so the data has to
+    reach them: per section in the listing, per item in the pool."""
+    _status, listing = promptapi.handle_library(lib, {})
+    row = next(s for s in listing["sections"] if s["slug"] == "lora/kits")
+    assert row["has_lora"] is True
+    assert row["lora_bases"] == ["sdxl"]  # from the AIR's ecosystem segment
+    _status, pool = promptapi.handle_items(lib, {"ref": "lora/kits"})
+    items = {i["name"]: i for i in pool["items"]}
+    assert items["bodykit"]["base"] == "sdxl"
+    assert "base" not in items["noair"]  # nothing declared, nothing claimed
+
+
+def test_explicit_base_beats_the_air_ecosystem(lib):
+    lib.save_user(
+        "sections",
+        "lora/kits",
+        {
+            "items": [
+                {
+                    "name": "bodykit",
+                    "text": "HycadeBodykit",
+                    # the file was re-trained for another family than the AIR says
+                    "data": {"lora": "k.safetensors", "comment": AIR, "base": "FLUX1"},
+                }
+            ]
+        },
+    )
+    _status, pool = promptapi.handle_items(lib, {"ref": "lora/kits"})
+    assert pool["items"][0]["base"] == "flux1"

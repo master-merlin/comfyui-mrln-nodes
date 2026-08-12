@@ -2154,7 +2154,7 @@ export function createComposerPanel(root, ctx) {
     for (const item of pool) {
       const marks = [
         item.name === defaultItem ? "•" : "",
-        item.lora ? "(LoRA)" : "",
+        item.lora ? (item.base ? `(LoRA ${item.base})` : "(LoRA)") : "",
         item.tier === "user" ? "(user)" : "",
       ]
         .filter(Boolean)
@@ -2192,6 +2192,11 @@ export function createComposerPanel(root, ctx) {
     if (slot.allow_empty) chips.push(el("span", { class: "mrln-chip" }, "optional"));
     const loraItem = pool.find((p) => p.lora);
     if (loraItem) {
+      // name the target model on the pill: which one is DRAWN matters, since a
+      // pool can hold several families and only one can match the checkpoint
+      const drawn = pool.find((p) => p.lora && p.name === state.rows.get(slot.id)?.value);
+      const bases = [...new Set(pool.filter((p) => p.base).map((p) => p.base))];
+      const shown = drawn?.base ? [drawn.base] : bases;
       chips.push(
         el(
           "button",
@@ -2199,7 +2204,12 @@ export function createComposerPanel(root, ctx) {
             class: "mrln-chip mrln-chip-btn mrln-user",
             title: "This section carries LoRA blocks (loaded via the loras "
               + "output → LoRA Apply node). Click to edit the section in the "
-              + "Library tab.",
+              + "Library tab."
+              + (shown.length
+                ? `\nTrained for: ${shown.join(", ")}${
+                    drawn?.base ? " (the current pick)" : ""
+                  } — LoRA Apply warns when the connected model differs.`
+                : "\nNo base model declared — no compatibility check possible."),
             onclick: async () => {
               if (!confirmReplaceEditor()) return;
               switchTab("library");
@@ -2207,7 +2217,7 @@ export function createComposerPanel(root, ctx) {
               editorBox.scrollIntoView({ block: "nearest" });
             },
           },
-          "LoRA"
+          shown.length ? `LoRA ${shown.join("/")}` : "LoRA"
         )
       );
     }
@@ -3168,9 +3178,16 @@ export function createComposerPanel(root, ctx) {
             {
               class: "mrln-chip mrln-user",
               title: "Carries LoRA blocks — drawn items load their file via "
-                + "the template node's loras output → LoRA Apply (MRLN)",
+                + "the template node's loras output → LoRA Apply (MRLN)."
+                + ((section.lora_bases ?? []).length
+                  ? ` Trained for: ${section.lora_bases.join(", ")} — LoRA Apply `
+                    + "warns if the connected model is a different architecture."
+                  : " None of them declares a base model, so no compatibility "
+                    + "check is possible."),
             },
-            "LoRA"
+            (section.lora_bases ?? []).length
+              ? `LoRA ${section.lora_bases.join("/")}`
+              : "LoRA"
           )
         : null,
       section.merged
