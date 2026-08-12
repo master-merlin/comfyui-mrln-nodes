@@ -1342,15 +1342,15 @@ def _heal_section_lora(lib, section_slug, item_name, new_lora):
     lib.save_user("sections", section_slug, raw)
 
 
-def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir, filename, heal):
-    """Background thread: Civitai version metadata -> stream the primary
-    .safetensors file -> SHA256 verify -> move into place -> optional heal.
-    Writes progress into _LORA_DL_STATUS; never raises."""
+def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status):
+    """Civitai version metadata -> stream the primary .safetensors file ->
+    SHA256 verify -> move into place. Returns the final file name; RAISES on
+    any failure (partial .part always removed). `status` is a plain progress
+    sink so both the threaded and the synchronous caller can watch it."""
     import os
     import urllib.parse
     import urllib.request
 
-    status = _LORA_DL_STATUS[status_key]
     part_path = None
     try:
         request = urllib.request.Request(
@@ -1401,6 +1401,22 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
             )
         os.replace(part_path, final_path)
         status["name"] = filename
+        return filename
+    except Exception:
+        # never leave a multi-GB torso in the loras folder: os.replace has
+        # not run (or already consumed the file), so drop the partial
+        if part_path and os.path.exists(part_path):
+            with contextlib.suppress(OSError):
+                os.remove(part_path)
+        raise
+
+
+def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir, filename, heal):
+    """Background thread wrapper: fetch, then optionally heal the section item
+    at the new path. Writes progress into _LORA_DL_STATUS; never raises."""
+    status = _LORA_DL_STATUS[status_key]
+    try:
+        filename = _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status)
         if heal:
             lib, section_slug, item_name, folder, stored = heal
             new_name = f"{folder}/{filename}" if folder else filename
@@ -1413,11 +1429,6 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
     except Exception as exc:
         status["status"] = "error"
         status["detail"] = str(exc)
-        # never leave a multi-GB torso in the loras folder: os.replace has
-        # not run (or already consumed the file), so drop the partial
-        if part_path and os.path.exists(part_path):
-            with contextlib.suppress(OSError):
-                os.remove(part_path)
 
 
 @_guarded
@@ -1475,6 +1486,123 @@ def handle_lora_download(lib, payload):
     return 200, {"air": air, "status": "downloading"}
 
 
+def _lora_items(lib, template=None):
+    """Every LoRA-carrying library item as (section_slug, item), scoped to one
+    template's reachable pools when `template` is given."""
+    if template is None:
+        slugs = lib.section_slugs()
+    else:
+        tpl = lib.load_template(template)
+        refs = [s.ref for s in tpl.slots]
+        refs.extend(s.ref for v in tpl.variants for s in v.slots)
+        sections, _missing = pl.section_closure(lib, refs)
+        slugs = sorted(sections)
+    out = []
+    for slug in slugs:
+        try:
+            section = lib.load_section(slug)
+        except pl.PromptLibError:
+            continue
+        for item in section.items:
+            if item.hidden:
+                continue
+            if (item.data or {}).get("lora"):
+                out.append((slug, item))
+    return out
+
+
+def lora_status(lib, template=None):
+    """Which LoRA files the library (or one template) needs, and which of
+    them are actually installed. Pure apart from the folder_paths lookup, so
+    the startup scan, the endpoint and the node all share one answer."""
+    installed = None
+    try:
+        import folder_paths
+
+        installed = {
+            n.replace("\\", "/").lower(): n for n in folder_paths.get_filename_list("loras")
+        }
+    except Exception:  # outside ComfyUI there is nothing to check against
+        pass
+    rows, missing = [], 0
+    for slug, item in _lora_items(lib, template):
+        data = item.data or {}
+        name = str(data.get("lora") or "")
+        comment = str(data.get("comment") or "").strip()
+        air = comment if comment.lower().startswith("urn:air:") else ""
+        present = True if installed is None else name.replace("\\", "/").lower() in installed
+        if not present:
+            missing += 1
+        rows.append(
+            {
+                "file": name,
+                "air": air,
+                "section": slug,
+                "item": item.name,
+                "present": present,
+            }
+        )
+    return {
+        "loras": rows,
+        "total": len(rows),
+        "missing": missing,
+        "can_download": installed is not None,
+    }
+
+
+@_guarded
+def handle_lora_status(lib, payload):
+    """GET: which LoRA files this library — or one template — needs and which
+    are missing on this machine. Feeds the Composer's pre-render warning so a
+    missing file surfaces before the graph dies in LoRA Apply."""
+    template = payload.get("template")
+    template = template.strip() if isinstance(template, str) and template.strip() else None
+    body = lora_status(lib, template)
+    if template:
+        body["template"] = template
+    return 200, body
+
+
+def download_lora_by_air(lib, air, *, folder="", filename="", section="", item="", stored=""):
+    """SYNCHRONOUS download-by-AIR for the node path — the Composer is not
+    involved, so this blocks until the file is verified and in place.
+    Returns the loras-root-relative name; raises RuntimeError on failure."""
+    parsed = parse_air(air)
+    if parsed is None:
+        raise RuntimeError(f"'{air}' is not a Civitai AIR urn")
+    try:
+        import folder_paths
+    except ImportError as exc:
+        raise RuntimeError("LoRA downloads run inside a running ComfyUI only") from exc
+    roots = folder_paths.get_folder_paths("loras")
+    if not roots:
+        raise RuntimeError("no loras folder registered in this ComfyUI")
+    import os
+
+    folder = _sanitize_subfolder(folder)
+    dest_dir = os.path.join(roots[0], *folder.split("/")) if folder else roots[0]
+    _, version_id = parsed
+    token = str(_read_settings(lib).get("civitai_api_key") or "")
+    headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    status = {"status": "downloading", "detail": "", "loaded": 0, "total": 0}
+    _LORA_DL_STATUS[air] = status  # the Composer can watch a node-side fetch
+    name = _fetch_lora_file(
+        headers, token, version_id, dest_dir, _sanitize_lora_filename(filename), status
+    )
+    status["status"] = "done"
+    status["detail"] = f"saved as {name}"
+    final = f"{folder}/{name}" if folder else name
+    if section and item and str(stored or "").replace("\\", "/").lower() != final.lower():
+        with contextlib.suppress(Exception):  # the file is there; healing is a bonus
+            _heal_section_lora(lib, section, item, final)
+            status["healed"] = final
+    with contextlib.suppress(Exception):
+        folder_paths.get_filename_list.cache_clear()  # make the new file visible now
+    return final
+
+
 @_guarded
 def handle_lora_meta(lib, payload):
     """Trigger word from an installed LoRA's own metadata. Names come from
@@ -1513,6 +1641,7 @@ ROUTES = (
     ("get", "/mrln/prompt/section", handle_section, False),
     ("get", "/mrln/prompt/items", handle_items, False),
     ("get", "/mrln/prompt/lora-meta", handle_lora_meta, False),
+    ("get", "/mrln/prompt/lora-status", handle_lora_status, False),
     ("get", "/mrln/prompt/lora-civitai", handle_lora_civitai, False),
     ("get", "/mrln/prompt/lora-download", handle_lora_download, False),
     ("post", "/mrln/prompt/lora-download", handle_lora_download, True),
@@ -1553,6 +1682,31 @@ def _warm_library_caches():
             except pl.PromptLibError:
                 pass
         logger.info("MRLN prompt library warmed (%d files)", count)
+        # Startup LoRA audit: a missing file otherwise only surfaces when the
+        # graph already died in LoRA Apply. Report it while the user is still
+        # reading the boot log, and name the AIRs that can heal themselves.
+        status = lora_status(lib)
+        if status["can_download"] and status["missing"]:
+            gone = [row for row in status["loras"] if not row["present"]]
+            healable = sum(1 for row in gone if row["air"])
+            logger.warning(
+                "MRLN prompt: %d of %d referenced LoRA file(s) are missing "
+                "(%d carry a Civitai AIR and can be fetched from the Composer, "
+                "or by the LoRA Apply node with on_missing = 'download')",
+                status["missing"],
+                status["total"],
+                healable,
+            )
+            for row in gone[:10]:
+                logger.warning(
+                    "MRLN prompt:   missing '%s' (%s/%s)%s",
+                    row["file"],
+                    row["section"],
+                    row["item"],
+                    "" if row["air"] else " — no AIR, needs a manual file pick",
+                )
+            if len(gone) > 10:
+                logger.warning("MRLN prompt:   … and %d more", len(gone) - 10)
     except Exception:
         logger.debug("MRLN prompt library warm-up skipped", exc_info=True)
 

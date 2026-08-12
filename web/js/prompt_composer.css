@@ -387,6 +387,17 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 }
 .mrln-cloud-label { flex: 0 0 76px; opacity: 0.8; }
 
+/* compose tab: the template's missing LoRA files, before the graph is queued */
+.mrln-lora-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 5px 6px;
+  border: 1px solid #a55;
+  border-radius: 6px;
+}
+.mrln-lora-banner li { word-break: break-word; }
+
 .mrln-items-table { width: 100%; border-collapse: collapse; }
 .mrln-items-table td { padding: 2px; vertical-align: top; }
 .mrln-items-table .mrln-w-name { width: 26%; }

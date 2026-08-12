@@ -450,6 +450,23 @@ class LoraApply:
                     },
                 ),
             },
+            "optional": {
+                "on_missing": (
+                    ["error", "skip", "download"],
+                    {
+                        "default": "error",
+                        "tooltip": "A drawn LoRA file this machine does not have: "
+                        "'error' stops the run and names the file (safe default); "
+                        "'skip' renders without it and logs a warning — the trigger "
+                        "words stay in the prompt, so the image just loses that "
+                        "LoRA's influence; 'download' fetches it from Civitai by the "
+                        "AIR urn stored on the item (SHA256-verified, blocks the run "
+                        "for as long as the download takes) and re-points the item at "
+                        "the file. Use 'download' for shared workflows that should "
+                        "heal themselves without opening the Composer.",
+                    },
+                ),
+            },
         }
 
     @classmethod
@@ -462,7 +479,7 @@ class LoraApply:
             return str(exc)
         return True
 
-    def execute(self, model, clip, loras):
+    def execute(self, model, clip, loras, on_missing="error"):
         entries = parse_loras_json(loras)
         if not entries:
             return (model, clip)
@@ -470,14 +487,37 @@ class LoraApply:
         import comfy.utils
         import folder_paths
 
-        available = folder_paths.get_filename_list("loras")
-        normalized = {name.replace("\\", "/").lower(): name for name in available}
+        def lookup(name):
+            available = folder_paths.get_filename_list("loras")
+            normalized = {n.replace("\\", "/").lower(): n for n in available}
+            return (
+                name if name in available else normalized.get(name.replace("\\", "/").lower())
+            ), available
+
         for name, strength_model, strength_clip, air in entries:
-            real = name if name in available else normalized.get(name.replace("\\", "/").lower())
+            real, available = lookup(name)
+            if real is None and on_missing == "download" and air:
+                # the workflow can heal itself without the Composer: fetch by
+                # the AIR the item carries, verified, then look the file up again
+                from .. import promptapi
+
+                logger.info("MRLN LoRA Apply: fetching missing '%s' from %s", name, air)
+                fetched = promptapi.download_lora_by_air(
+                    pl.open_library(), air, filename=name.replace("\\", "/").rsplit("/", 1)[-1]
+                )
+                real, available = lookup(fetched)
             if real is None:
+                if on_missing == "skip":
+                    logger.warning(
+                        "MRLN LoRA Apply: '%s' not installed — skipped (trigger words "
+                        "remain in the prompt, the LoRA's influence does not)",
+                        name,
+                    )
+                    continue
                 hint = (
-                    f" Its Civitai AIR is {air} — the Composer's section editor "
-                    "offers a one-click download that heals the LoRA block."
+                    f" Its Civitai AIR is {air} — set this node's on_missing to "
+                    "'download' to fetch it automatically, or use the Composer's "
+                    "one-click download."
                     if air
                     else " Fix the LoRA block in the Composer (Library tab) or install the file."
                 )
