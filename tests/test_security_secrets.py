@@ -305,3 +305,68 @@ def test_node_path_failure_resolves_the_status_and_scrubs(lib, tmp_path, monkeyp
     assert excinfo.value.__cause__ is None  # no unscrubbed cause rides the log
     status = promptapi._LORA_DL_STATUS[AIR]
     assert status["status"] == "error" and KEY not in json.dumps(status)
+
+
+# -- integrity honesty: an unverified download must SAY it is unverified ------
+
+
+def test_a_download_without_a_civitai_sha_reports_itself_unverified(tmp_path, monkeypatch):
+    """Civitai does not always ship a SHA256. Skipping the check is the only
+    option, but staying quiet about it is not: the user is installing a
+    multi-GB weight file from a third party and the status is the only place
+    that can tell them it arrived unchecked."""
+    meta = _meta(sha="")
+    meta["files"][0]["hashes"] = {}
+    status, _calls, dest = _run_worker(tmp_path, monkeypatch, meta=meta)
+    assert status["status"] == "done"  # the file still installs
+    assert (dest / "bmw_m4_cs.safetensors").read_bytes() == BLOB
+    assert status["unverified"] is True
+    assert "unverified" in status["detail"] and "no SHA256" in status["detail"]
+
+
+def test_a_verified_download_never_claims_to_be_unverified(tmp_path, monkeypatch):
+    status, _calls, _dest = _run_worker(tmp_path, monkeypatch)
+    assert status["status"] == "done"
+    assert not status.get("unverified")
+    assert "unverified" not in status["detail"]
+
+
+# -- bounded status maps -----------------------------------------------------
+
+
+def test_finished_status_entries_are_evicted_but_in_flight_ones_survive():
+    """Both per-key status maps are written from UNAUTHENTICATED routes, one
+    entry per distinct key ever asked for. Eviction must bound them without
+    ever dropping an entry a poller is still waiting on."""
+    statuses = {}
+    for i in range(200):
+        statuses[f"done-{i}"] = {"status": "done", "detail": ""}
+    statuses["live"] = {"status": "downloading", "detail": ""}
+    statuses["also-live"] = {"status": "pulling", "detail": ""}
+    lora_mod._evict_finished_status(statuses, keep=64)
+    assert len(statuses) == 64
+    # the two in-flight entries are what pollers are watching: never dropped
+    assert statuses["live"]["status"] == "downloading"
+    assert statuses["also-live"]["status"] == "pulling"
+    # and the survivors are the NEWEST terminal ones (dicts keep insertion order)
+    assert "done-199" in statuses and "done-0" not in statuses
+
+
+def test_eviction_keeps_everything_when_only_in_flight_entries_remain():
+    # 100 concurrent downloads is absurd but must not silently lose statuses
+    statuses = {f"live-{i}": {"status": "downloading"} for i in range(100)}
+    lora_mod._evict_finished_status(statuses, keep=64)
+    assert len(statuses) == 100  # nothing terminal to drop, so nothing goes
+
+
+def test_a_finished_download_trims_the_shared_status_map(tmp_path, monkeypatch):
+    promptapi._LORA_DL_STATUS.clear()
+    for i in range(lora_mod._STATUS_KEEP + 20):
+        promptapi._LORA_DL_STATUS[f"urn:air:sdxl:lora:civitai:{i}@{i}"] = {
+            "status": "done",
+            "detail": "",
+        }
+    _run_worker(tmp_path, monkeypatch)
+    assert len(promptapi._LORA_DL_STATUS) <= lora_mod._STATUS_KEEP
+    assert AIR in promptapi._LORA_DL_STATUS  # the one just written stays
+    promptapi._LORA_DL_STATUS.clear()

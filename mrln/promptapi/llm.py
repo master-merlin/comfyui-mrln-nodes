@@ -9,9 +9,9 @@ import threading
 
 from .core import ApiError, _guarded, _require_str
 
-# lora.py owns the secret registry; it imports neither this module nor
-# anything that reaches back here, so this stays acyclic.
-from .lora import _remember_secret, _scrub_secrets
+# lora.py owns the secret registry and the status-map evictor; it imports
+# neither this module nor anything that reaches back here, so this stays acyclic.
+from .lora import _evict_finished_status, _remember_secret, _scrub_secrets
 from .settings import (
     DEFAULT_LMSTUDIO_URL,
     DEFAULT_OLLAMA_URL,
@@ -323,6 +323,11 @@ def _pull_worker(url, model):
     except Exception as exc:
         # the poll route is unauthenticated: class + message, never a body
         _PULL_STATUS[model] = {"status": "error", "detail": _exc_detail(exc)}
+    finally:
+        # bound the map: one entry per model name ever requested, all from an
+        # unauthenticated route. Only terminal entries are dropped — evicting a
+        # "pulling" one would strand the poller watching it.
+        _evict_finished_status(_PULL_STATUS)
 
 
 @_guarded

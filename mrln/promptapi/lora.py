@@ -263,6 +263,25 @@ _LORA_DL_STATUS = {}  # air urn -> {"status", "detail", "name", "loaded", "total
 # in handle_lora_download has to be atomic — see the comment there
 _DL_LOCK = threading.Lock()
 
+# Both per-key status maps are written from unauthenticated routes, one entry
+# per distinct AIR (or model name) ever asked for, and nothing ever removed
+# them — an unbounded map keyed by attacker-supplied strings in a long-running
+# server. Eviction only ever drops entries that have REACHED A TERMINAL STATE:
+# an in-flight one is what a poller is waiting on, so losing it would strand a
+# multi-GB download with no way to observe it finishing.
+_STATUS_KEEP = 64
+
+
+def _evict_finished_status(statuses, keep=_STATUS_KEEP):
+    """Trim a status map in place to `keep` entries, oldest terminal first.
+    Python dicts preserve insertion order, so the head is the oldest."""
+    if len(statuses) <= keep:
+        return
+    for key in [k for k, v in statuses.items() if (v or {}).get("status") in ("done", "error")]:
+        if len(statuses) <= keep:
+            break
+        statuses.pop(key, None)
+
 
 def parse_air(air):
     """(model_id, version_id) from a Civitai AIR urn, or None."""
@@ -408,6 +427,12 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
                 f"SHA256 mismatch after download (got {digest.hexdigest()[:12]}…, "
                 f"Civitai says {want_sha[:12]}…) — file discarded"
             )
+        if not want_sha:
+            # Civitai shipped no SHA256 for this file, so nothing was verified.
+            # Say so instead of implying an integrity check happened: the caller
+            # surfaces this, and a user weighing a multi-GB weight file from a
+            # third party deserves to know it arrived unchecked.
+            status["unverified"] = True
         os.replace(part_path, final_path)
         # the stream was hashed for verification anyway: seed the cache so the
         # Composer's follow-up Civitai lookup never re-reads the whole file
@@ -442,11 +467,16 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
                 _heal_section_lora(lib, section_slug, item_name, new_name)
                 status["healed"] = new_name
         status["status"] = "done"
-        status["detail"] = _scrub_secrets(f"saved as {filename}", token)
+        detail = f"saved as {filename}"
+        if status.get("unverified"):
+            detail += " (Civitai shipped no SHA256 — integrity unverified)"
+        status["detail"] = _scrub_secrets(detail, token)
     except Exception as exc:
         # an UNAUTHENTICATED poll returns this string verbatim: scrub first
         status["status"] = "error"
         status["detail"] = _scrub_secrets(str(exc), token)
+    finally:
+        _evict_finished_status(_LORA_DL_STATUS)
 
 
 @_guarded
@@ -629,9 +659,14 @@ def download_lora_by_air(lib, air, *, folder="", filename="", section="", item="
         detail = _scrub_secrets(f"{type(exc).__name__}: {exc}", token)
         status["status"] = "error"
         status["detail"] = detail
+        _evict_finished_status(_LORA_DL_STATUS)
         raise RuntimeError(detail) from None
     status["status"] = "done"
-    status["detail"] = _scrub_secrets(f"saved as {name}", token)
+    detail = f"saved as {name}"
+    if status.get("unverified"):
+        detail += " (Civitai shipped no SHA256 — integrity unverified)"
+    status["detail"] = _scrub_secrets(detail, token)
+    _evict_finished_status(_LORA_DL_STATUS)
     final = f"{folder}/{name}" if folder else name
     if section and item and str(stored or "").replace("\\", "/").lower() != final.lower():
         with contextlib.suppress(Exception):  # the file is there; healing is a bonus
