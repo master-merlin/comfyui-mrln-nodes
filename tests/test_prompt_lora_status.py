@@ -215,6 +215,41 @@ def test_missing_lora_download_fetches_then_loads(monkeypatch):
     assert loaded == ["/loras/kits/hycade.safetensors"]
 
 
+def test_authored_name_matches_installed_slashes_and_case(monkeypatch):
+    """A LoRA block authored on Windows carries 'kits\\Hycade.safetensors';
+    the same library on Linux lists 'kits/hycade.safetensors'. execute()'s
+    lookup normalizes both sides — without it every backslash-authored block
+    dies as a missing file on the other OS."""
+    fake_folder_paths(monkeypatch, ["kits/Hycade.safetensors"])
+    loaded = fake_comfy(monkeypatch)
+    model, clip, report = node_class()().execute(
+        model="M", clip="C", loras=loras_json(name="kits\\hycade.safetensors")
+    )
+    assert (model, clip) == ("M+lora", "C+lora")  # resolved and applied
+    assert loaded == ["/loras/kits/Hycade.safetensors"]
+    # the report names the INSTALLED casing, not what the item authored
+    assert "✓ kits/Hycade.safetensors" in report
+    assert report.startswith("1 of 1 LoRA(s) applied")
+
+
+def test_case_only_mismatch_also_resolves(monkeypatch):
+    fake_folder_paths(monkeypatch, ["Kits/HYCADE.safetensors"])
+    fake_comfy(monkeypatch)
+    _model, _clip, report = node_class()().execute(
+        model="M", clip="C", loras=loras_json(name="kits/hycade.safetensors")
+    )
+    assert "✓ Kits/HYCADE.safetensors" in report
+
+
+def test_an_unrelated_name_is_still_missing(monkeypatch):
+    """The normalization must not become a fuzzy match: only separator and
+    case differ, never the name itself."""
+    fake_folder_paths(monkeypatch, ["kits/hycade-v2.safetensors"])
+    fake_comfy(monkeypatch)
+    with pytest.raises(FileNotFoundError, match=r"hycade\.safetensors"):
+        node_class()().execute(model="M", clip="C", loras=loras_json())
+
+
 def test_download_without_air_still_errors(monkeypatch):
     fake_folder_paths(monkeypatch, [])
     fake_comfy(monkeypatch)

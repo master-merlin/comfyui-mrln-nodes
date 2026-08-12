@@ -12,6 +12,7 @@ from mrln.promptlib import (
     ItemNotFoundError,
     Library,
     SectionNotFoundError,
+    TemplateNotFoundError,
     parse_section,
     render,
     resolve_section,
@@ -63,7 +64,11 @@ def build_roots(tmp_path):
                 "cycle-a": "cycle-b",
                 "cycle-b": "cycle-a",
                 "dead-end": "nowhere",
-            }
+            },
+            # the TEMPLATE tier of the same table: the shipped aliases.json is
+            # empty pre-release, so without a fixture this whole tier — and
+            # the separate alias walk in promptapi._raw_file — never runs
+            "templates": {"retired": "stale", "ancient": "retired"},
         },
     )
     _write(
@@ -133,6 +138,41 @@ def test_aliased_slug_lands_on_merged_view(lib, tmp_path):
     merged = lib.load_section("paint")  # alias -> color -> factory+user merge
     assert merged.merged
     assert [item.name for item in merged.items] == ["red", "gold", "petrol"]
+
+
+def test_template_alias_resolves_through_load_and_api(lib):
+    """The pack's release promise ('a released slug never just dies') covers
+    TEMPLATES too — the tier a saved workflow points at. Every reader must
+    follow it: the engine's loader, the Composer's detail endpoint, and the
+    raw-file reader behind the raw editor (which walks aliases itself)."""
+    assert lib.load_template("retired").slug == "stale"
+    assert lib.load_template("ancient").slug == "stale"  # chains, like sections do
+    # the raw editor: promptapi._raw_file re-implements the alias walk
+    assert promptapi._raw_file(lib, "templates", "retired") == promptapi._raw_file(
+        lib, "templates", "stale"
+    )
+    assert promptapi._raw_file(lib, "templates", "ancient") == promptapi._raw_file(
+        lib, "templates", "stale"
+    )
+    with pytest.raises(TemplateNotFoundError):
+        promptapi._raw_file(lib, "templates", "never-existed")
+    # a stored workflow opening the retired slug gets the LIVE template
+    status, body = promptapi.handle_template(lib, {"slug": "retired"})
+    assert status == 200
+    live = promptapi.handle_template(lib, {"slug": "stale"})[1]
+    assert [s["id"] for s in body["template"]["slots"]] == [
+        s["id"] for s in live["template"]["slots"]
+    ]
+    assert body["missing_refs"] == live["missing_refs"]
+    # and it renders — the full path a workflow takes after a factory rename
+    status, preview = promptapi.handle_preview(lib, {"template": "retired"})
+    assert status == 200 and preview["choices"]
+
+
+def test_template_alias_cycle_stays_not_found(lib, tmp_path):
+    _write(tmp_path / "user", "aliases.json", {"templates": {"ping": "pong", "pong": "ping"}})
+    with pytest.raises(Exception, match="not found"):
+        lib.load_template("ping")
 
 
 # -- missing sections: skip + warn -------------------------------------------
@@ -252,6 +292,50 @@ def test_tombstone_hides_factory_item_from_pools(lib, tmp_path):
     gold = next(i for i in merged.items if i.name == "gold")
     assert gold.hidden and gold.text == "shimmering gold"  # content stays visible to editors
     assert [q for q, _, _ in lib.scope_items("color")] == ["red"]
+    with pytest.raises(ItemNotFoundError):
+        resolve_section(lib, "color", "gold", seed=0)
+
+
+def _pinned_lib(tmp_path, tombstone):
+    """Factory template pinning 'gold', optionally tombstoned in the user
+    tier. Built before the first read so no scan memo is in play."""
+    factory, user = tmp_path / "factory", tmp_path / "user"
+    _write(
+        factory,
+        "templates/pinned.json",
+        {"slots": [{"id": "paint", "ref": "color", "default": "gold"}]},
+    )
+    if tombstone:
+        _write(user, "sections/color.json", {"items": [{"name": "gold", "hidden": True}]})
+    return Library(factory, user)
+
+
+def test_pinned_item_is_honored_while_it_is_visible(tmp_path):
+    build_roots(tmp_path)
+    paint = {s.id: s for s in rt(_pinned_lib(tmp_path, False), slug="pinned").slots}["paint"]
+    assert (paint.item_name, paint.random, paint.stale_note) == ("gold", False, "")
+
+
+def test_tombstoned_item_pinned_by_a_template_degrades_to_random(tmp_path):
+    """Hiding an item and PINNING it are two features that meet here: a
+    template default (or a workflow selection) naming a tombstoned item can
+    no longer find it, so the slot draws randomly and says so. Freezing the
+    semantic matters because fixed picks deliberately bypass tag filters —
+    a refactor letting them bypass the hidden filter too would silently
+    resurrect every item a user tombstoned."""
+    build_roots(tmp_path)
+    lib = _pinned_lib(tmp_path, True)
+    degraded = {s.id: s for s in rt(lib, slug="pinned").slots}["paint"]
+    assert degraded.item_name == "red"  # the only item left in the pool
+    assert degraded.random is True
+    assert "gold" in degraded.stale_note
+    # the choices report has to SHOW it — a silent swap is the failure mode
+    tpl = lib.load_template("pinned")
+    assert "⚠ paint:" in render(rt(lib, slug="pinned"), "string", tpl.render).choices
+    # a durable workflow selection degrades identically ...
+    chosen = {s.id: s for s in rt(lib, slug="pinned", selection={"paint": "gold"}).slots}["paint"]
+    assert chosen.item_name == "red" and chosen.random is True and "gold" in chosen.stale_note
+    # ... while the standalone Section node stays hard-strict about it
     with pytest.raises(ItemNotFoundError):
         resolve_section(lib, "color", "gold", seed=0)
 
@@ -377,3 +461,48 @@ def test_save_section_renames_repoint_user_templates(tmp_path):
         {"slug": "color", "data": {"items": [{"name": "x", "text": "y"}]}, "renames": {"a": "a"}},
     )
     assert status == 200 and body["templates_rewritten"] == 0
+
+
+def test_rename_rewrites_fully_qualified_defaults(tmp_path):
+    """A folder-scoped slot may spell its default either way — scope-relative
+    ('urban/shibuya') or fully qualified with the ref ('location/urban/
+    shibuya'); the Composer writes the first, hand-authored templates the
+    second. The rename heal has to cover BOTH prefixes or a hand-authored
+    default is quietly left pointing at a name that no longer exists."""
+    factory = tmp_path / "f"
+    user = tmp_path / "u"
+    _write(
+        factory,
+        "sections/location/urban.json",
+        {"items": [{"name": "shibuya", "text": "Shibuya Crossing"}]},
+    )
+    _write(
+        user,
+        "templates/mine.json",
+        {
+            "slots": [
+                {"id": "rel", "ref": "location", "default": "urban/shibuya"},
+                {"id": "qualified", "ref": "location", "default": "location/urban/shibuya"},
+                {"id": "leaf", "ref": "location/urban", "default": "shibuya"},
+                # a look-alike that must NOT be touched: same tail, other scope
+                {"id": "untouched", "ref": "location", "default": "urban/shibuya-station"},
+            ]
+        },
+    )
+    lib = Library(factory, user)
+    status, body = promptapi.handle_save_section(
+        lib,
+        {
+            "slug": "location/urban",
+            "data": {"items": [{"name": "shinjuku", "text": "Shinjuku"}]},
+            "renames": {"shibuya": "shinjuku"},
+        },
+    )
+    assert status == 200 and body["templates_rewritten"] == 1
+    defaults = {slot.id: slot.default for slot in lib.load_template("mine").slots}
+    assert defaults == {
+        "rel": "urban/shinjuku",
+        "qualified": "location/urban/shinjuku",
+        "leaf": "shinjuku",
+        "untouched": "urban/shibuya-station",
+    }

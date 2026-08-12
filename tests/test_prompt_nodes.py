@@ -204,6 +204,32 @@ def test_section_execute_random_deterministic(section_node):
     assert one == two
 
 
+def test_section_execute_allow_empty_returns_three_strings(section_node, user_tier):
+    """The allow_empty widget ('for optional add-on sections') advertises an
+    EMPTY draw. Downstream text nodes concatenate the three outputs blindly,
+    so the omitted outcome has to be ('', '', '') — three strings, no None."""
+    section_dir = user_tier / "sections"
+    section_dir.mkdir(parents=True, exist_ok=True)
+    (section_dir / "addon.json").write_text(
+        json.dumps({"items": [{"name": "sparkle", "text": "a faint sparkle"}]}),
+        encoding="utf-8",
+    )
+    seeds = range(40)
+    draws = {
+        seed: section_node.execute(section="addon", item="🎲 random", seed=seed, allow_empty=True)
+        for seed in seeds
+    }
+    omitted = [seed for seed, out in draws.items() if out[2] == ""]
+    assert omitted, "allow_empty=True never omitted in 40 seeds"
+    assert draws[omitted[0]] == ("", "", "")
+    # the same seed with the widget OFF always yields the item
+    assert all(
+        section_node.execute(section="addon", item="🎲 random", seed=seed, allow_empty=False)
+        == ("a faint sparkle", "", "sparkle")
+        for seed in seeds
+    )
+
+
 def test_section_validate_scope(classes):
     node_cls = classes["MRLN_PromptSection"]
     assert node_cls.VALIDATE_INPUTS(section="location", item="🎲 random") is True
@@ -224,6 +250,23 @@ def test_template_validate_selection_mismatch(classes):
     assert "bogus" in verdict and "unknown" in verdict
     assert "not found" in node_cls.VALIDATE_INPUTS(template="nope", selection="x=y")
     assert "name=value" in node_cls.VALIDATE_INPUTS(template=tpl, selection="garbage")
+
+
+def test_template_validate_accepts_dotted_nested_selection_heads(classes):
+    """Nested pins ('<slot>.<child>=…') are exactly what the Composer's Apply
+    writes into the widget, and which children exist depends on what the slot
+    DRAWS — so the pre-queue gate can only validate the head. Drop the split
+    and ComfyUI refuses to queue every workflow carrying a nested pin."""
+    node_cls = classes["MRLN_PromptTemplate"]
+    tpl = "overdrive/full-shot"
+    # 'base' is a shared slot, 'scene' a variant slot — both are known heads,
+    # and the child part is deliberately unvalidated here
+    assert node_cls.VALIDATE_INPUTS(template=tpl, selection="base.child=off") is True
+    assert node_cls.VALIDATE_INPUTS(template=tpl, selection="scene.subject-a=off") is True
+    assert node_cls.VALIDATE_INPUTS(template=tpl, selection="base.a.b=random") is True
+    # an unknown HEAD is still caught, and the message names the whole key
+    verdict = node_cls.VALIDATE_INPUTS(template=tpl, selection="ghost.child=x")
+    assert "ghost.child" in verdict and "unknown" in verdict
 
 
 def test_is_changed_reacts_to_user_files(classes, user_tier):

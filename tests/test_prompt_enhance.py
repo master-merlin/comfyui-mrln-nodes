@@ -137,6 +137,77 @@ def test_llm_validate_endpoint(tmp_path):
     assert status == 502 and "unreachable" in body["error"]
 
 
+class _FakeResponse:
+    """Minimal stand-in for what urlopen() yields: a context manager whose
+    read() returns bytes."""
+
+    def __init__(self, obj):
+        self._body = json.dumps(obj).encode("utf-8")
+
+    def read(self):
+        return self._body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+def _fake_urlopen(monkeypatch, obj):
+    """Answer the next urllib call with `obj`; returns the URL log."""
+    import urllib.request
+
+    urls = []
+
+    def fake(request, timeout=None):
+        urls.append(request.full_url if hasattr(request, "full_url") else request)
+        return _FakeResponse(obj)
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake)
+    return urls
+
+
+def test_llm_validate_ollama_success_lists_models_and_filters_suggestions(tmp_path, monkeypatch):
+    """The success branch drives every model dropdown (Enhance node,
+    De-compose tab). The stem filter is the part with teeth: it must not
+    re-offer a multi-GB pull of a family the user already has installed at a
+    different size."""
+    lib = build_library(tmp_path)
+    urls = _fake_urlopen(monkeypatch, {"models": [{"name": "zzz:1b"}, {"name": "gemma3:4b"}]})
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "ollama"})
+    assert status == 200 and body["state"] == "ok" and body["provider"] == "ollama"
+    assert urls and urls[0].endswith("/api/tags")
+    assert body["models"] == ["gemma3:4b", "zzz:1b"]  # sorted, not source order
+    # gemma3 is installed (a different tag): the whole STEM drops out
+    assert not [s for s in body["suggested"] if s.startswith("gemma3")]
+    # ... while unrelated families stay offered
+    assert "qwen3:8b" in body["suggested"]
+    assert set(body["suggested"]) <= set(promptapi.SUGGESTED_OLLAMA_MODELS)
+
+
+def test_llm_validate_ollama_exact_match_also_drops_the_suggestion(tmp_path, monkeypatch):
+    lib = build_library(tmp_path)
+    installed = list(promptapi.SUGGESTED_OLLAMA_MODELS)
+    _fake_urlopen(monkeypatch, {"models": [{"name": name} for name in installed]})
+    _status, body = promptapi.handle_llm_validate(lib, {"provider": "ollama"})
+    assert body["models"] == sorted(installed)
+    assert body["suggested"] == []  # everything curated is already there
+    # nameless entries are skipped rather than becoming empty strings
+    _fake_urlopen(monkeypatch, {"models": [{"name": ""}, {"digest": "x"}]})
+    _status, body = promptapi.handle_llm_validate(lib, {"provider": "ollama"})
+    assert body["models"] == []
+
+
+def test_llm_validate_lmstudio_success_reads_the_openai_shape(tmp_path, monkeypatch):
+    lib = build_library(tmp_path)
+    urls = _fake_urlopen(monkeypatch, {"data": [{"id": "local-x"}, {"id": "a-model"}]})
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "lmstudio"})
+    assert status == 200 and urls[0].endswith("/v1/models")
+    assert body["models"] == ["a-model", "local-x"]
+    assert body["suggested"] == []  # LM Studio has no pull API — never suggest
+
+
 def test_llm_validate_cloud_providers_offline(tmp_path):
     # cloud providers answer WITHOUT network: key state + curated suggestions
     lib = build_library(tmp_path)

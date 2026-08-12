@@ -5,10 +5,16 @@ logic lives in the engine; combos are rebuilt on every INPUT_TYPES call so
 
 import hashlib
 import json
+from collections import OrderedDict
 from inspect import cleandoc
 
 from .. import promptlib as pl
 from ..pack import build_mappings, category, logger
+
+# The engine's own selection-token parser. VALIDATE_INPUTS runs the very
+# function resolve_section runs so the pre-queue gate can never be stricter
+# (or looser) than the engine it fronts — one parser, no mirrored regex.
+from ..promptlib.resolve import _parse_token as _parse_selection_token
 
 EMPTY_SENTINEL = "(library empty — add JSON files and press R to refresh)"
 RANDOM_ENTRY = "🎲 random"
@@ -362,17 +368,29 @@ class PromptSection:
         # them: values can validly be stale (workflow older than the library).
         if section in (None, "", EMPTY_SENTINEL):
             return "prompt library is empty — add JSON files to your user library and Refresh"
-        if item is None or item in (RANDOM_ENTRY, "random"):
+        if item is None:
+            return True
+        # Control tokens are the ENGINE's grammar, not the dropdown's: an
+        # API-submitted workflow may carry 'off'/'🔇 off' (mute) or
+        # 'random@<seed>'/'🎲 random@<seed>' (own-seed roll), all of which
+        # resolve_section handles. Ask the engine's parser instead of
+        # guessing, so a malformed seed is refused here with the engine's
+        # own message rather than blowing up mid-queue.
+        try:
+            kind, value = _parse_selection_token(item, item)
+        except pl.PromptLibError as exc:
+            return str(exc)
+        if kind != "fixed":
             return True
         try:
             pool = pl.open_library().scope_items(section)
         except pl.PromptLibError as exc:
             return str(exc)
         names = {qualified for qualified, _, _ in pool}
-        if item in names or any(item == f"{section}/{qualified}" for qualified in names):
+        if value in names or any(value == f"{section}/{qualified}" for qualified in names):
             return True
         return (
-            f"item '{item}' is not inside section '{section}' — pick an item under "
+            f"item '{value}' is not inside section '{section}' — pick an item under "
             f"{section}/ or {RANDOM_ENTRY}"
         )
 
@@ -695,7 +713,14 @@ def _strip_thinking(text):
     return _re.sub(r"<think>.*?</think>", "", text, flags=_re.DOTALL)
 
 
-_ENHANCE_CACHE = {}  # (backend, model, system, prompt, seed, temp, max_tokens) -> text
+# (backend, model, system, prompt, seed, temp, max_tokens) -> text. Bounded
+# LRU: the key embeds the FULL system text and prompt and every entry holds a
+# full rewrite, while control_after_generate rolls the seed per queue — an
+# unbounded dict would grow into an append-only log of multi-KB triples for
+# the server's lifetime. The stated purpose (re-queues never re-call) only
+# ever needs the recent tail.
+_ENHANCE_CACHE = OrderedDict()
+_ENHANCE_CACHE_MAX = 128
 
 # When no profile system prompt rides the wire ('standard' profile, or a bare
 # prompt input), the enhancer still works under this generic contract —
@@ -922,8 +947,9 @@ class PromptEnhance:
             digest = hashlib.sha256(f"{system_text}\n{prompt}".encode()).digest()
             seed = int.from_bytes(digest[:8], "big") & 0x7FFFFFFF
         cache_key = (backend, model, system_text, prompt, seed, round(temperature, 4), max_tokens)
-        cached = _ENHANCE_CACHE.get(cache_key)
+        cached = _ENHANCE_CACHE.pop(cache_key, None)
         if cached is not None:
+            _ENHANCE_CACHE[cache_key] = cached  # re-insert at the end: LRU touch
             return (cached, f"enhanced via {backend}:{model or 'default'} (cached) seed {seed}")
 
         # RELATIVE import: inside ComfyUI the pack is not a top-level module
@@ -953,7 +979,9 @@ class PromptEnhance:
         if not text:
             return (prompt, f"pass-through: {backend} returned empty text — original kept")
         text, missing = _enforce_protected(text, protect)
-        _ENHANCE_CACHE[cache_key] = text
+        _ENHANCE_CACHE[cache_key] = text  # a miss, so this inserts at the end
+        while len(_ENHANCE_CACHE) > _ENHANCE_CACHE_MAX:
+            _ENHANCE_CACHE.popitem(last=False)  # drop the least recently used
         vram = "vram freed" if (backend == "ollama" and free_vram == "after call") else "vram kept"
         guarded = ""
         if protect:

@@ -49,6 +49,95 @@ def test_parse_kv_lines_errors(text, match):
         parse_kv_lines(text)
 
 
+# -- mirror contract with the Composer's JS helpers --------------------------
+# web/js/composer/util.js re-implements parse_kv_lines and _parse_token for
+# the panel. The split is DELIBERATE — the panel must never refuse to render
+# a half-typed line, the engine must never guess at one — but it has to stay
+# deliberate. These vectors are the same ones tests/js/util.test.mjs asserts
+# on the JS side; if either mirror moves, exactly one of the two suites goes
+# red. Change both together or not at all.
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("  subject = woman \nsetting=street", {"subject": "woman", "setting": "street"}),
+        ("expr=a=b=c", {"expr": "a=b=c"}),  # only the FIRST '=' splits
+        ("subject=woman # not a comment", {"subject": "woman # not a comment"}),
+        ("subject=woman\r\nsetting=street\r\n", {"subject": "woman", "setting": "street"}),
+        ("# a comment\n\n   \nsubject=woman", {"subject": "woman"}),
+        ("", {}),
+    ],
+)
+def test_parse_kv_lines_agrees_with_the_js_mirror(text, expected):
+    """Vectors where BOTH sides must produce the same map."""
+    assert parse_kv_lines(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text,match",
+    [
+        ("not a pair", "name=value"),  # JS silently SKIPS this line
+        ("a=1\na=2", "duplicate"),  # JS keeps the last one
+    ],
+)
+def test_parse_kv_lines_is_strict_where_the_js_mirror_is_lenient(text, match):
+    """The panel tolerates half-typed text so it can keep rendering; the
+    engine refuses it so a typo never silently drops a slot override."""
+    with pytest.raises(SelectionError, match=match):
+        parse_kv_lines(text)
+
+
+@pytest.mark.parametrize(
+    "token,expected",
+    [
+        ("sunset", ("fixed", "sunset")),
+        ("  sunset  ", ("fixed", "sunset")),  # both mirrors trim
+        ("random", ("random", None)),
+        ("random@123", ("random", 123)),
+        ("🎲 random", ("random", None)),
+        ("🎲 random@7", ("random", 7)),
+        ("Random", ("fixed", "Random")),  # case sensitive on both sides
+        ("randomly", ("fixed", "randomly")),
+    ],
+)
+def test_parse_token_agrees_with_the_js_mirror(token, expected):
+    from mrln.promptlib.resolve import _parse_token
+
+    assert _parse_token(token, token) == expected
+
+
+@pytest.mark.parametrize("token", ["random@abc", "random@"])
+def test_parse_token_rejects_a_bad_seed_where_the_js_mirror_shrugs(token):
+    """JS parseToken's `random(?:@(\\d+))?$` fails to match, so it classifies
+    these as a plain item name; the engine names the problem instead of
+    hunting for an item literally called 'random@abc'."""
+    from mrln.promptlib.resolve import _parse_token
+
+    with pytest.raises(SelectionError, match="not a valid seed integer"):
+        _parse_token(token, token)
+
+
+def test_parse_token_accepts_a_negative_seed_the_js_mirror_will_not():
+    """Divergence in the OTHER direction, pinned so it cannot drift
+    unnoticed: python's int() takes '-1', the JS `(\\d+)` group does not — so
+    'random@-1' rolls seed -1 in the engine but shows as an item name in the
+    panel. Harmless today (a negative seed still derives an rng); if the
+    panel ever has to round-trip it, this is the line that says so."""
+    from mrln.promptlib.resolve import _parse_token
+
+    assert _parse_token("random@-1", "random@-1") == ("random", -1)
+
+
+@pytest.mark.parametrize("token", ["off", "🔇 off"])
+def test_parse_token_reads_off_as_a_mute_where_the_js_mirror_defers(token):
+    """JS parseToken returns 'off' as a fixed item — its callers recognize
+    mutes separately. The engine resolves the mute right here."""
+    from mrln.promptlib.resolve import _parse_token
+
+    assert _parse_token(token, token) == ("off", None)
+
+
 # -- fixed / random ---------------------------------------------------------
 
 
@@ -220,6 +309,39 @@ def test_resolve_section_random_and_emoji(lib):
 def test_resolve_section_scope_error(lib):
     with pytest.raises(ItemNotFoundError):
         resolve_section(lib, "lighting", "urban/shibuya", seed=0)
+
+
+def test_resolve_section_allow_empty_draws_nothing_sometimes(lib):
+    """The Section node's allow_empty widget ('for optional add-on sections')
+    reaches the engine through resolve_section's own Slot, which uses the
+    SCHEMA-default empty_weight — a wiring no template test covers. The empty
+    outcome must be possible, deterministic per seed, and impossible when the
+    widget is off."""
+    seeds = range(60)
+    empty = [
+        s
+        for s in seeds
+        if resolve_section(lib, "color", "random", seed=s, allow_empty=True).item_name is None
+    ]
+    assert empty, "allow_empty=True never omitted in 60 seeds"
+    # ... and with the widget off the very same seeds always draw an item
+    assert all(
+        resolve_section(lib, "color", "random", seed=s, allow_empty=False).item_name is not None
+        for s in seeds
+    )
+    # an omitted draw is still a fully-formed, string-typed result
+    omitted = resolve_section(lib, "color", "random", seed=empty[0], allow_empty=True)
+    assert (omitted.text, omitted.negative) == ("", "")
+    assert omitted.random is True
+    # deterministic: the same seed omits again
+    again = resolve_section(lib, "color", "random", seed=empty[0], allow_empty=True)
+    assert again.item_name is None
+
+
+def test_resolve_section_allow_empty_leaves_fixed_picks_alone(lib):
+    """allow_empty weights the RANDOM draw; an explicit pick still wins."""
+    resolved = resolve_section(lib, "color", "petrol", seed=0, allow_empty=True)
+    assert (resolved.item_name, resolved.text) == ("petrol", "dark petrol")
 
 
 # -- label expansion ---------------------------------------------------------
