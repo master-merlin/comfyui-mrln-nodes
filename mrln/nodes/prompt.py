@@ -4,6 +4,7 @@ logic lives in the engine; combos are rebuilt on every INPUT_TYPES call so
 'Refresh node definitions' picks up new library files."""
 
 import hashlib
+import itertools
 import json
 from collections import OrderedDict
 from inspect import cleandoc
@@ -11,14 +12,24 @@ from inspect import cleandoc
 from .. import promptlib as pl
 from ..pack import build_mappings, category, logger
 
-# The engine's own selection-token parser. VALIDATE_INPUTS runs the very
-# function resolve_section runs so the pre-queue gate can never be stricter
-# (or looser) than the engine it fronts — one parser, no mirrored regex.
+# The engine's own selection-token parser and draw-pool filter. VALIDATE_INPUTS
+# runs the very function resolve_section runs so the pre-queue gate can never be
+# stricter (or looser) than the engine it fronts — one parser, no mirrored
+# regex. Same reasoning for the pool filter: which items a RANDOM slot can draw
+# is decided by suits/type and slot tag rules, and a second implementation of
+# those here would silently drift from the draw it is supposed to enumerate.
+from ..promptlib.resolve import _filtered_pool as _draw_pool
 from ..promptlib.resolve import _parse_token as _parse_selection_token
 
 EMPTY_SENTINEL = "(library empty — add JSON files and press R to refresh)"
 RANDOM_ENTRY = "🎲 random"
 FORMAT_OPTIONS = ["template default", *pl.FORMATS]
+BATCH_MODES = ["increment seed", "combinatorial"]
+BATCH_MAX = 64
+# A combinatorial space is a product, so it explodes quietly: three 8-item
+# slots is 512 renders, four is 4096. The cap turns that into an actionable
+# error instead of a hung queue.
+COMBINATORIAL_CAP = 512
 
 
 def _template_options():
@@ -78,6 +89,106 @@ def _fingerprint_or_nan():
         return float("nan")  # fail open: re-run rather than serve stale cache
 
 
+def _combinatorial_plan(lib, tpl, resolved):
+    """(constant_pins, dimensions) for a combinatorial batch.
+
+    `dimensions` is [(slot_id, [item names])] for every top-level slot the
+    probe render resolved as RANDOM and that has more than one drawable
+    candidate, in authored render order — the axes of the cartesian product.
+    `constant_pins` are the selection entries EVERY combination carries: the
+    single-candidate random slots and the variant the master seed drew.
+
+    Why pin at all: the enumerated renders run in 'as configured' mode,
+    because that is the only mode that honors a pin ('randomize all' re-rolls
+    one by design). So every slot the user's mode randomized has to be named
+    explicitly, or it would silently fall back to its template default and
+    render something the random path would never produce.
+
+    Weight-0 items are 'never draw' for the engine, so they are not part of
+    the random space and must not be part of its enumeration either.
+    """
+    by_id = {slot.id: slot for slot in tpl.slots}
+    for variant in tpl.variants:
+        if variant.name == resolved.variant:  # only the ACTIVE variant's slots render
+            by_id.update({slot.id: slot for slot in variant.slots})
+    pins = {}
+    dimensions = []
+    for rs in resolved.slots:
+        # fixed picks, mutes and dead refs are already constant; nested child
+        # slots are not enumerable (which children exist depends on the parent
+        # draw) and stay on the master seed
+        if not rs.random or rs.missing:
+            continue
+        slot = by_id.get(rs.id)
+        if slot is None:
+            continue
+        try:
+            pool = _draw_pool(lib.scope_items(slot.ref), slot, tpl.type)
+        except pl.PromptLibError:
+            continue
+        names = [qualified for qualified, _, item in pool if item.weight > 0]
+        if len(names) > 1:
+            dimensions.append((rs.id, names))
+        elif names:
+            pins[rs.id] = names[0]
+        else:
+            # allow_empty carries the entire weight: the only outcome this
+            # slot has is the empty one, so mute it rather than let its
+            # template default speak in a mode that never asked for it
+            pins[rs.id] = "off"
+    if resolved.variant is not None:
+        pins["variant"] = resolved.variant
+    elif resolved.variant_off:
+        pins["variant"] = "off"
+    return pins, dimensions
+
+
+def _cap_message(size, dimensions):
+    space = " x ".join(f"{slot_id}:{len(names)}" for slot_id, names in dimensions)
+    return (
+        f"combinatorial batch would render {size:,} combinations ({space}), far over the "
+        f"{COMBINATORIAL_CAP} cap — fix more slots or reduce the space: add 'slot=item' "
+        "lines to the selection box (one line takes one slot out of the product), point a "
+        "slot at a narrower section, or switch batch_mode to 'increment seed'."
+    )
+
+
+def _combinatorial_batch(lib, tpl, probe, seed, selection_map, compose_one):
+    """([(composed, seed)], dimensions) — one render per combination of the
+    random slots, all on the master seed. `probe` is the ordinary render that
+    already happened: it names the active variant and which slots are random,
+    which is exactly what the engine had to resolve anyway."""
+    pins, dimensions = _combinatorial_plan(lib, tpl, probe.resolved)
+    if not dimensions:
+        # nothing random to enumerate: emit the ordinary render untouched, so
+        # a combinatorial workflow with everything pinned is byte-identical to
+        # the same workflow without the batch widgets
+        return [(probe, seed)], ()
+    size = 1
+    for _slot_id, names in dimensions:
+        size *= len(names)
+    if size > COMBINATORIAL_CAP:
+        raise ValueError(_cap_message(size, dimensions))
+    base = {**selection_map, **pins}
+    items = []
+    for combo in itertools.product(*[names for _, names in dimensions]):
+        pinned = dict(base)
+        for (slot_id, _names), name in zip(dimensions, combo, strict=True):
+            pinned[slot_id] = name
+        items.append((compose_one(seed, "as configured", pinned), seed))
+    return items, dimensions
+
+
+def _batch_line(index, total, seed, dimensions):
+    """First line of a batched item's choices report. Emitted ONLY when the
+    batch has more than one item, so a single render stays byte-identical to
+    what pre-batch workflows produced."""
+    line = f"batch {index}/{total} (seed {seed})"
+    if dimensions:
+        line += f"   combinatorial: {', '.join(slot_id for slot_id, _ in dimensions)}"
+    return line
+
+
 class PromptTemplate:
     """Render positive + negative prompts from a library template.
 
@@ -87,6 +198,12 @@ class PromptTemplate:
     {variables} and inline {a|b} wildcards, and renders in the template's
     format or an override. The 'choices' output reports exactly what was
     selected or drawn.
+
+    Batching: batch_count > 1 emits a LIST of prompts — item i drawn with
+    master seed + i — so a batch of four gives four DIFFERENT images instead
+    of four copies of one draw. batch_mode 'combinatorial' instead enumerates
+    every combination of the slots that are currently random. At
+    batch_count 1 the node behaves exactly as it always has.
     """
 
     CATEGORY = category("prompt")
@@ -94,11 +211,17 @@ class PromptTemplate:
     FUNCTION = "execute"
     RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
     RETURN_NAMES = ("prompt", "negative", "choices", "loras", "llm")
+    # Every output is a list so one queue can carry a whole batch; ComfyUI
+    # then runs the downstream graph once per item. A length-1 list is
+    # indistinguishable from a single value downstream, which is what keeps
+    # every existing workflow working untouched.
+    OUTPUT_IS_LIST = (True, True, True, True, True)
     OUTPUT_TOOLTIPS = (
         "The rendered positive prompt in the chosen format.",
         "The joined negative prompt (template + section + item negatives), always a plain string.",
         "Report of the variant/items chosen per slot with seed and tier — wire to a text "
-        "preview to see what was drawn.",
+        "preview to see what was drawn. Batched runs prefix each item with a "
+        "'batch i/N (seed …)' line.",
         "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
         "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
         "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, protect, system, params} "
@@ -219,6 +342,37 @@ class PromptTemplate:
                         "choices still win.",
                     },
                 ),
+                "batch_count": (
+                    "INT",
+                    {
+                        "default": 1,
+                        "min": 1,
+                        "max": BATCH_MAX,
+                        "tooltip": "How many prompts this node emits per queue — the fix for "
+                        "'batch size 4, four identical images'. Every output becomes a LIST "
+                        "of that many prompts and ComfyUI runs the downstream graph once per "
+                        "item, so each image gets its own draw. Item i uses master seed + i, "
+                        "so fixed slots stay put while random ones vary. 1 (the default) is "
+                        "exactly the single value this node has always emitted — existing "
+                        "workflows are unaffected. IGNORED in 'combinatorial' mode, where "
+                        "the number of combinations sets the count.",
+                    },
+                ),
+                "batch_mode": (
+                    BATCH_MODES,
+                    {
+                        "default": BATCH_MODES[0],
+                        "tooltip": "How the batch varies. 'increment seed': render batch_count "
+                        "prompts with master seeds seed, seed+1, seed+2 … — the usual "
+                        "'give me N different ones'. 'combinatorial': ignore batch_count and "
+                        "emit EVERY combination of the slots that are currently random, in "
+                        "template order, each one pinned (they report as [fixed], and the "
+                        "batch line names the enumerated slots); leftover randomness such as "
+                        "a random variant stays on the master seed. Capped at 512 "
+                        "combinations — over that it errors with the computed size, and you "
+                        "shrink the space by fixing more slots in the selection box.",
+                    },
+                ),
             },
         }
 
@@ -274,6 +428,8 @@ class PromptTemplate:
         trigger="",
         variables="",
         profile=pl.STANDARD,
+        batch_count=1,
+        batch_mode=BATCH_MODES[0],
     ):
         if template == EMPTY_SENTINEL:
             raise pl.TemplateNotFoundError(template, [])
@@ -284,21 +440,51 @@ class PromptTemplate:
         variable_map = pl.parse_kv_lines(variables, what="variables")
         if trigger:
             variable_map["trigger"] = trigger
-        composed = pl.compose(
-            lib,
-            tpl,
-            seed=seed,
-            mode=selection_mode,
-            selection=selection_map,
-            variables=variable_map,
-            profile=profile,
-            format=format,
-            text_length=text_length,
-            conflict_policy=conflict_policy,
-        )
-        out = composed.rendered
-        loras = json.dumps(pl.lora_entries(composed.resolved), ensure_ascii=False)
-        return (out.positive, out.negative, out.choices, loras, composed.llm)
+
+        def compose_one(item_seed, mode, item_selection):
+            # ONE pipeline for every batch item — the engine stays the only
+            # place that knows how a prompt is built, so a batched render can
+            # never drift from a single one.
+            return pl.compose(
+                lib,
+                tpl,
+                seed=item_seed,
+                mode=mode,
+                selection=item_selection,
+                variables=variable_map,
+                profile=profile,
+                format=format,
+                text_length=text_length,
+                conflict_policy=conflict_policy,
+            )
+
+        first = compose_one(seed, selection_mode, selection_map)
+        dimensions = ()
+        if batch_mode == "combinatorial":
+            items, dimensions = _combinatorial_batch(
+                lib, tpl, first, seed, selection_map, compose_one
+            )
+        else:
+            count = max(1, min(int(batch_count or 1), BATCH_MAX))
+            # item 0 IS the ordinary render (seed + 0), so the probe is reused
+            items = [(first, seed)] + [
+                (compose_one(seed + i, selection_mode, selection_map), seed + i)
+                for i in range(1, count)
+            ]
+
+        total = len(items)
+        prompts, negatives, choices, loras, llms = [], [], [], [], []
+        for index, (composed, item_seed) in enumerate(items, start=1):
+            out = composed.rendered
+            report = out.choices
+            if total > 1:
+                report = f"{_batch_line(index, total, item_seed, dimensions)}\n{report}"
+            prompts.append(out.positive)
+            negatives.append(out.negative)
+            choices.append(report)
+            loras.append(json.dumps(pl.lora_entries(composed.resolved), ensure_ascii=False))
+            llms.append(composed.llm)
+        return (prompts, negatives, choices, loras, llms)
 
 
 class PromptSection:

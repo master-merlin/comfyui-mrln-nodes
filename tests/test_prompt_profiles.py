@@ -372,10 +372,13 @@ def test_every_factory_profile_carries_fidelity_and_style_lock():
         assert "STYLE LOCK:" in system, name
 
 
-def test_profile_widget_is_last_and_lists_factory_profiles(node_env):
+def test_profile_widget_position_and_lists_factory_profiles(node_env):
     inputs = node_env.INPUT_TYPES()
     all_names = [*inputs["required"], *inputs.get("optional", {})]
-    assert all_names[-1] == "profile"  # positional widgets_values append-only
+    # Ruling D2 (SPEC §1) RETIRED "profile stays last": the real rule it stood
+    # in for is append-only, so 'profile' keeps its INDEX while later widgets
+    # append after it. test_protocol_nodes.py owns the full frozen order.
+    assert all_names.index("profile") == 9
     options = inputs["optional"]["profile"][0]
     assert options[0] == "standard"
     # one EXPLICIT entry per model family — users must not need to know
@@ -385,24 +388,31 @@ def test_profile_widget_is_last_and_lists_factory_profiles(node_env):
 
 def test_node_llm_output_and_profile_render(node_env):
     node = node_env()
-    out = node.execute(
-        template="overdrive/full-shot",
-        selection="",
-        selection_mode="as configured",
-        seed=3,
-        format="template default",
-        profile="sdxl",
-    )
+    # node outputs are lists since SPEC 4.2 (OUTPUT_IS_LIST); unbatched = 1 item
+    out = [
+        values[0]
+        for values in node.execute(
+            template="overdrive/full-shot",
+            selection="",
+            selection_mode="as configured",
+            seed=3,
+            format="template default",
+            profile="sdxl",
+        )
+    ]
     llm = json.loads(out[4])
     assert llm["target"] == "sdxl" and "system" in llm
     assert llm["prompt"] == out[0]  # single wire: the llm output carries the prompt
-    standard = node.execute(
-        template="overdrive/full-shot",
-        selection="",
-        selection_mode="as configured",
-        seed=3,
-        format="template default",
-    )
+    standard = [
+        values[0]
+        for values in node.execute(
+            template="overdrive/full-shot",
+            selection="",
+            selection_mode="as configured",
+            seed=3,
+            format="template default",
+        )
+    ]
     standard_llm = json.loads(standard[4])
     assert standard_llm["target"] == "standard" and standard_llm["prompt"] == standard[0]
     assert (
@@ -425,6 +435,8 @@ def test_preview_parity_with_profile(node_env):
         format="template default",
         profile="sdxl",
     )
+    # node outputs are lists since SPEC 4.2 (OUTPUT_IS_LIST); unbatched = 1 item
+    prompt, negative, choices, llm = prompt[0], negative[0], choices[0], llm[0]
     from mrln.promptlib import open_library
 
     status, body = promptapi.handle_preview(

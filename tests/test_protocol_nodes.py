@@ -232,7 +232,7 @@ FROZEN_ORDER = {
             "conflict_policy",
             "text_length",
         ],
-        "optional": ["variables", "profile"],
+        "optional": ["variables", "profile", "batch_count", "batch_mode"],
         "outputs": ["prompt", "negative", "choices", "loras", "llm"],
     },
     "MRLN_ShowText": {
@@ -279,5 +279,8 @@ def test_lora_report_is_json_serializable_and_stringy(classes):
         seed=0,
         format="template default",
     )
-    assert all(isinstance(value, str) for value in out)
-    assert isinstance(json.loads(out[3]), list)
+    # SPEC 4.2 made every output a LIST of strings (OUTPUT_IS_LIST); the
+    # promise is unchanged — no None ever reaches a downstream text node.
+    assert all(isinstance(values, list) and values for values in out)
+    assert all(isinstance(value, str) for values in out for value in values)
+    assert isinstance(json.loads(out[3][0]), list)

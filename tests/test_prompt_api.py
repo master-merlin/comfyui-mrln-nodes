@@ -150,6 +150,8 @@ def test_preview_matches_node_execute(tmp_path, monkeypatch):
         format="template default",
         trigger="SkylineGTR34Vspec",
     )
+    # node outputs are lists since SPEC 4.2 (OUTPUT_IS_LIST); unbatched = 1 item
+    prompt, negative, choices = prompt[0], negative[0], choices[0]
     from mrln.promptlib import open_library
 
     body = ok(

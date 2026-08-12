@@ -48,6 +48,14 @@ def section_node(classes):
     return classes["MRLN_PromptSection"]()
 
 
+def single(out):
+    """Unwrap an unbatched render. Every output is a list since SPEC 4.2
+    (OUTPUT_IS_LIST); a length-1 list is what ComfyUI hands downstream nodes
+    as a single value, so these tests read item 0. Batch behavior itself
+    lives in tests/test_prompt_batch.py."""
+    return tuple(values[0] for values in out)
+
+
 def run_template(node, **kw):
     args = {
         "template": "overdrive/full-shot",
@@ -57,7 +65,7 @@ def run_template(node, **kw):
         "format": "template default",
     }
     args.update(kw)
-    return node.execute(**args)[:3]  # (prompt, negative, choices); loras tested separately
+    return single(node.execute(**args)[:3])  # (prompt, negative, choices); loras tested separately
 
 
 def test_domain_registered(classes):
@@ -89,12 +97,14 @@ def test_loras_output_json(classes, template_node, user_tier):
         _json.dumps({"slots": [{"id": "kit", "ref": "lora/kits", "default": "bodykit"}]}),
         encoding="utf-8",
     )
-    out = template_node.execute(
-        template="lora-tpl",
-        selection="",
-        selection_mode="as configured",
-        seed=0,
-        format="template default",
+    out = single(
+        template_node.execute(
+            template="lora-tpl",
+            selection="",
+            selection_mode="as configured",
+            seed=0,
+            format="template default",
+        )
     )
     assert "HycadeBodykit" in out[0]
     assert "<lora:" not in out[0]  # signalling rides the loras output, not the prompt
@@ -102,12 +112,14 @@ def test_loras_output_json(classes, template_node, user_tier):
         {"lora": "kits\\hycade.safetensors", "strength_model": 0.87, "strength_clip": 0.87}
     ]
     # empty stack renders as an empty JSON list, and LoraApply validates it
-    plain = template_node.execute(
-        template="overdrive/full-shot",
-        selection="",
-        selection_mode="as configured",
-        seed=0,
-        format="template default",
+    plain = single(
+        template_node.execute(
+            template="overdrive/full-shot",
+            selection="",
+            selection_mode="as configured",
+            seed=0,
+            format="template default",
+        )
     )
     assert _json.loads(plain[3]) == []
     assert classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras=plain[3]) is True
