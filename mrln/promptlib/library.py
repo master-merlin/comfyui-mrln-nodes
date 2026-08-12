@@ -22,13 +22,25 @@ KINDS = ("sections", "templates", "profiles", "system_prompts")
 WRITABLE_KINDS = ("sections", "templates")
 
 _log = logging.getLogger(__name__)
+_SHADOW_WARNED: set = set()  # refs already reported as leaf-shadows-folder
+
+
+# Win32 resolves these names (with or without an extension) to devices, so a
+# file can never be created under them — reject before the write silently
+# lands somewhere else.
+_WIN_DEVICE_NAMES = (
+    frozenset({"con", "prn", "aux", "nul"})
+    | {f"com{i}" for i in range(1, 10)}
+    | {f"lpt{i}" for i in range(1, 10)}
+)
 
 
 def validate_slug(slug):
     """Path-safe slug or SchemaError. Every '/'-segment must match
     SLUG_SEGMENT_RE — this is the only gate between request strings and
-    filesystem paths, so it rejects '', '..', '\\', absolute paths and
-    empty segments by construction."""
+    filesystem paths, so it rejects '', '..', '\\', absolute paths, empty
+    segments and trailing dots by construction — plus the Win32 device
+    names, which no platform can store as a file."""
     if not isinstance(slug, str) or not slug:
         raise SchemaError(str(slug), "slug must be a non-empty string")
     for segment in slug.split("/"):
@@ -36,19 +48,26 @@ def validate_slug(slug):
             raise SchemaError(
                 slug,
                 f"invalid slug segment {segment!r} — use lowercase letters, digits, "
-                "'.', '_' or '-', and '/' to separate folders",
+                "'.', '_' or '-', and '/' to separate folders (no trailing '.')",
+            )
+        if segment.split(".", 1)[0] in _WIN_DEVICE_NAMES:
+            raise SchemaError(
+                slug,
+                f"slug segment {segment!r} is a reserved Windows device name — pick another name",
             )
     return slug
 
 
-# (path, mtime_ns) -> parsed object; module-level so nodes/tests share it
+# str(path) -> (mtime_ns, parsed object); module-level so nodes/tests share
+# it. Keyed by PATH ALONE with the mtime in the value: keying by
+# (path, mtime) instead would leave one dead parsed object behind per file
+# edit, and nothing ever evicts them in a long-running ComfyUI session.
 _PARSE_CACHE: dict = {}
 
 
 @dataclass(frozen=True)
 class Entry:
     slug: str
-    kind: str
     tier: str  # "factory" | "user"
     path: Path
     mtime_ns: int
@@ -119,8 +138,14 @@ class Library:
                 continue
             for path in sorted(kind_dir.rglob("*.json")):
                 slug = path.relative_to(kind_dir).with_suffix("").as_posix()
-                stat = path.stat()
-                entries[slug] = Entry(slug, kind, tier, path, stat.st_mtime_ns, stat.st_size)
+                try:
+                    stat = path.stat()
+                except OSError:
+                    # Deleted (or made unreadable) between rglob and stat — a
+                    # concurrent Composer delete must not take down every
+                    # listing. A file that vanished is one we never scanned.
+                    continue
+                entries[slug] = Entry(slug, tier, path, stat.st_mtime_ns, stat.st_size)
         self._scan_cache[kind] = entries
         return entries
 
@@ -224,9 +249,10 @@ class Library:
             stat = path.stat()
         except OSError as exc:
             raise SchemaError(str(path), f"cannot read file: {exc}") from exc
-        key = (str(path), stat.st_mtime_ns)
-        if key in _PARSE_CACHE:
-            return _PARSE_CACHE[key]
+        key = str(path)
+        cached = _PARSE_CACHE.get(key)
+        if cached is not None and cached[0] == stat.st_mtime_ns:
+            return cached[1]
         try:
             with open(path, encoding="utf-8") as fh:
                 data = json.load(fh)
@@ -235,7 +261,7 @@ class Library:
         except OSError as exc:
             raise SchemaError(str(path), f"cannot read file: {exc}") from exc
         parsed = parser(data, slug, str(path))
-        _PARSE_CACHE[key] = parsed
+        _PARSE_CACHE[key] = (stat.st_mtime_ns, parsed)  # replaces the old generation
         return parsed
 
     def _load(self, kind, slug, parser, not_found):
@@ -291,10 +317,21 @@ class Library:
         sections sorted by slug, items in file order."""
         ref = ref.strip("/")
         slugs = self._scan("sections")
+        matching = sorted(s for s in slugs if s.startswith(ref + "/"))
         if ref in slugs:
+            # Leaf wins (flipping that would silently re-point live slots),
+            # but it must not be silent: a same-named folder underneath is
+            # unreachable through this ref, so say so once per process.
+            if matching and ref not in _SHADOW_WARNED:
+                _SHADOW_WARNED.add(ref)
+                _log.warning(
+                    "section '%s' is both a leaf file and a folder; the leaf wins and "
+                    "%s stay unreachable through this ref — rename one of them",
+                    ref,
+                    ", ".join(f"'{s}'" for s in matching),
+                )
             section = self.load_section(ref)
             return [(item.name, section, item) for item in section.items if not item.hidden]
-        matching = sorted(s for s in slugs if s.startswith(ref + "/"))
         if not matching:
             target = self._alias_target(
                 "sections",

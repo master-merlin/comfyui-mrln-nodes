@@ -30,7 +30,6 @@ from .profiles import (
 )
 from .render import (
     CONFLICT_POLICIES,
-    FORMATS,
     Rendered,
     lora_base_family,
     lora_entries,
@@ -47,6 +46,7 @@ from .resolve import (
     resolve_template,
 )
 from .schema import (
+    FORMATS,
     TEXT_LENGTHS,
     RenderConfig,
     Section,

@@ -32,9 +32,8 @@ class SectionNotFoundError(PromptLibError):
 
 
 class TemplateNotFoundError(PromptLibError):
-    def __init__(self, slug, available, search_dirs=()):
-        where = f" (searched: {', '.join(str(d) for d in search_dirs)})" if search_dirs else ""
-        super().__init__(f"template '{slug}' not found{where} — available: {_avail(available)}")
+    def __init__(self, slug, available):
+        super().__init__(f"template '{slug}' not found — available: {_avail(available)}")
         self.slug = slug
 
 
@@ -81,4 +80,6 @@ class RecursionLimitError(PromptLibError):
 
 
 class RenderError(PromptLibError):
-    pass
+    """Bad render knob (unknown format / conflict policy). Part of the
+    PromptLibError hierarchy so the API layer turns it into a 400 instead of
+    letting a bare ValueError escape as a 500."""

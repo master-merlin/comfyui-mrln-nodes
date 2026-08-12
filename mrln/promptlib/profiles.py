@@ -9,6 +9,7 @@ endpoint, so parity is structural, not tested-for."""
 
 import json
 import logging
+import math
 import re
 from dataclasses import dataclass, replace
 
@@ -19,6 +20,9 @@ from .resolve import resolve_template, walk_slots
 _log = logging.getLogger(__name__)
 
 STANDARD = "standard"
+# RenderConfig.profile is deliberately absent: it is the template's
+# default-profile HINT, and compose() picks the profile from its own argument
+# — a profile overriding which profile applies was a silent no-op.
 _RENDER_OVERRIDES = (
     "format",
     "joiner",
@@ -26,7 +30,6 @@ _RENDER_OVERRIDES = (
     "block_joiner",
     "text_length",
     "lora_tags",
-    "profile",
 )
 _WIDGET_DEFAULT = (None, "", "template default")
 _DROP = object()
@@ -95,13 +98,18 @@ def apply_template_overrides(tpl, overrides, *, profile=STANDARD):
             known["default"] = str(raw["default"])
         if "emphasis" in raw:
             try:
-                known["emphasis"] = None if raw["emphasis"] is None else float(raw["emphasis"])
+                value = None if raw["emphasis"] is None else float(raw["emphasis"])
             except (TypeError, ValueError):
+                value = math.nan
+            # pack-level profiles are raw user JSON (never schema-validated),
+            # and float('nan') succeeds — a NaN here renders '(text:nan)'
+            if value is not None and not math.isfinite(value):
                 raise SelectionError(
                     f"profile={profile}",
                     f"slot '{slot.id}': override 'emphasis' must be a number, "
                     f"got {raw['emphasis']!r} — fix the profile",
                 ) from None
+            known["emphasis"] = value
         return replace(slot, **known) if known else slot
 
     known = {

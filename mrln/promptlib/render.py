@@ -5,9 +5,10 @@ import json
 import re
 from dataclasses import dataclass
 
+from .errors import RenderError
 from .resolve import walk_slots
+from .schema import FORMATS, emphasize  # one definition; a second copy would drift
 
-FORMATS = ("string", "string_labeled", "json", "json_flat")
 CONFLICT_POLICIES = ("negative prevails", "positive prevails")
 
 
@@ -19,13 +20,7 @@ class Rendered:
 
 
 def _emphasized(slot):
-    text = slot.text
-    if not text:
-        return ""
-    if slot.emphasis and slot.emphasis != 1.0:
-        # a sentence period inside a weight wrapper reads as "…canopy.:1.15"
-        return f"({text.rstrip('.')}:{slot.emphasis:g})"
-    return text
+    return emphasize(slot.text, slot.emphasis) if slot.text else ""
 
 
 def _string(resolved, cfg):
@@ -124,7 +119,7 @@ def lora_tags(resolved):
 
 def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
     if conflict_policy not in CONFLICT_POLICIES:
-        raise ValueError(
+        raise RenderError(
             f"unknown conflict policy '{conflict_policy}' "
             f"(policies: {', '.join(CONFLICT_POLICIES)})"
         )
@@ -162,7 +157,7 @@ def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
     elif fmt == "json_flat":
         positive = json.dumps({"prompt": _string(resolved, cfg)}, ensure_ascii=False, indent=2)
     else:
-        raise ValueError(f"unknown format '{fmt}' (formats: {', '.join(FORMATS)})")
+        raise RenderError(f"unknown format '{fmt}' (formats: {', '.join(FORMATS)})")
 
     if cfg.lora_tags and fmt in ("string", "string_labeled", "json_flat"):
         tags = lora_tags(resolved)
@@ -181,8 +176,14 @@ def render(resolved, fmt, cfg, conflict_policy="negative prevails"):
     conflicts = []
     if negative:
         terms = [t for t in negative.split(", ") if t]
+        # Whole-term match only: a plain substring search drops the negative
+        # 'art' against a positive 'trending on artstation'. The lookarounds
+        # (rather than \b) keep terms that begin or end in punctuation
+        # working, so only the false positives change.
         conflicts = [
-            t for t in terms if re.search(re.escape(t), positive, re.IGNORECASE) is not None
+            t
+            for t in terms
+            if re.search(rf"(?<!\w){re.escape(t)}(?!\w)", positive, re.IGNORECASE) is not None
         ]
         if conflict_policy == "positive prevails" and conflicts:
             negative = ", ".join(t for t in terms if t not in conflicts)
@@ -240,18 +241,19 @@ def _choices(resolved, fmt, conflicts=(), conflict_policy="negative prevails"):
         lines.append(f"lora: {tag}")
     lines.extend(_lora_entries(resolved)[1])  # skipped-entry warnings
 
+    drawn = [s for s in walk_slots(resolved.slots) if s.item_name is not None]
     present = set()
     for slot in walk_slots(resolved.slots):
         present.update(slot.tags)
-    for slot in walk_slots(resolved.slots):
-        if slot.item_name is None:
-            continue
-        others = present - set(slot.tags)
+    for slot in drawn:
         for req in slot.requires:
             if req not in present:
                 lines.append(f"⚠ {slot.id}: requires '{req}' — nothing drawn carries that tag")
         for exc in slot.excludes:
-            if exc in others:
+            # Per-slot provenance, not `present - set(slot.tags)`: subtracting
+            # removes the tag VALUE globally, so a slot that carries AND
+            # excludes 'glass' hid every other slot's 'glass'.
+            if any(exc in other.tags for other in drawn if other is not slot):
                 lines.append(f"⚠ {slot.id}: excludes '{exc}' — but another drawn item carries it")
     for term in conflicts:
         if conflict_policy == "positive prevails":

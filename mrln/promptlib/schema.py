@@ -4,6 +4,7 @@ even where rendering lands later. Unknown keys are ignored (forward compat).
 """
 
 import copy
+import math
 import re
 from dataclasses import dataclass, field
 
@@ -11,7 +12,16 @@ from .errors import SchemaError
 
 FORMATS = ("string", "string_labeled", "json", "json_flat")
 RANDOM_TOKEN = "random"
-SLUG_SEGMENT_RE = re.compile(r"^[a-z0-9][a-z0-9._-]*$")
+# Selection control tokens. They live HERE (the leaf module) so schema can
+# reject content that names them and resolve can parse them from the one
+# definition — two copies would silently drift apart.
+RANDOM_TOKENS = (RANDOM_TOKEN, "🎲 random")
+OFF_TOKENS = ("off", "🔇 off")  # mute a slot (or the variant block)
+RESERVED_NAMES = frozenset(RANDOM_TOKENS + OFF_TOKENS)
+# A trailing '.' is rejected: Win32 strips it when creating the directory, so
+# the slug the caller confirmed would 404 while the file lives under another
+# name (see validate_slug for the reserved-device-name half of the gate).
+SLUG_SEGMENT_RE = re.compile(r"^[a-z0-9](?:[a-z0-9._-]*[a-z0-9_-])?$")
 _VERSION = 1
 
 
@@ -122,6 +132,31 @@ def default_label(slug):
     return slug.rsplit("/", 1)[-1].replace("-", " ").replace("_", " ").title()
 
 
+def is_reserved_name(name):
+    """True for a name resolve.py reads as a control token ('off', 'random',
+    their emoji forms, 'random@<seed>'). Content carrying such a name can
+    never be picked, so schema rejects it at parse time."""
+    name = str(name).strip()
+    return name in RESERVED_NAMES or any(name.startswith(r + "@") for r in RANDOM_TOKENS)
+
+
+def emphasize(text, emphasis):
+    """The single emphasis-wrapping rule, shared by the body render and both
+    inline-weaving sites — a change to the syntax must land in one place."""
+    if text and emphasis and emphasis != 1.0:
+        # a sentence period inside a weight wrapper reads as "…canopy.:1.15"
+        return f"({text.rstrip('.')}:{emphasis:g})"
+    return text
+
+
+def _is_number(value):
+    """A usable numeric field value. json.loads accepts the bare NaN /
+    Infinity literals, and every `nan < 0` / `nan <= 0` comparison is False —
+    so without the isfinite guard a NaN weight sails through validation and
+    makes weighted_index always draw the LAST pool item."""
+    return isinstance(value, (int, float)) and math.isfinite(value)
+
+
 def _check_version(data, source):
     version = data.get("version", _VERSION)
     if not isinstance(version, int) or version > _VERSION:
@@ -160,8 +195,15 @@ def _parse_item(raw, index, source):
     name = name or slugify(text)
     if not isinstance(name, str) or not name.strip():
         raise SchemaError(source, f"items[{index}] has an invalid 'name'")
+    if is_reserved_name(name):
+        raise SchemaError(
+            source,
+            f"items[{index}]: name '{name.strip()}' is a reserved selection token "
+            f"({', '.join(sorted(RESERVED_NAMES))} or 'random@<seed>') — an item with "
+            "that name could never be picked; rename it",
+        )
     weight = raw.get("weight", 1.0)
-    if not isinstance(weight, (int, float)) or weight < 0:
+    if not _is_number(weight) or weight < 0:
         raise SchemaError(source, f"items[{index}] ('{name}'): 'weight' must be a number >= 0")
     data = raw.get("data")
     if data is not None and not isinstance(data, dict):
@@ -171,7 +213,7 @@ def _parse_item(raw, index, source):
         # walks lora entries unconditionally), so bad values must fail here
         for key in ("strength_model", "strength_clip"):
             strength = data.get(key)
-            if strength is not None and not isinstance(strength, (int, float)):
+            if strength is not None and not _is_number(strength):
                 raise SchemaError(
                     source, f"items[{index}] ('{name}'): data '{key}' must be a number"
                 )
@@ -235,20 +277,24 @@ def _parse_slot(raw, where, source):
     if not isinstance(slot_id, str) or not slot_id.strip():
         raise SchemaError(source, f"{where}: slot is missing an 'id'")
     slot_id = slot_id.strip()
-    if slot_id == "variant" or slot_id.startswith("@") or "/" in slot_id:
+    if slot_id == "variant" or slot_id.startswith("@") or "/" in slot_id or "." in slot_id:
+        # '.' is the nested child-path separator in the selection format
+        # ('scene.subject'), so a dotted top-level id would be emitted twice.
         raise SchemaError(
-            source, f"{where}: slot id '{slot_id}' is reserved (no 'variant', '@…', or '/')"
+            source,
+            f"{where}: slot id '{slot_id}' is reserved (no 'variant', '@…', '/', or '.' — "
+            "'.' separates a parent slot from its nested child)",
         )
     ref = raw.get("ref")
     if not isinstance(ref, str) or not ref.strip():
         raise SchemaError(source, f"{where}: slot '{slot_id}' is missing a 'ref'")
     emphasis = raw.get("emphasis")
     if emphasis is not None:
-        if not isinstance(emphasis, (int, float)) or emphasis <= 0:
+        if not _is_number(emphasis) or emphasis <= 0:
             raise SchemaError(source, f"{where}: slot '{slot_id}': 'emphasis' must be > 0")
         emphasis = float(emphasis)
     empty_weight = raw.get("empty_weight", 1.0)
-    if not isinstance(empty_weight, (int, float)) or empty_weight < 0:
+    if not _is_number(empty_weight) or empty_weight < 0:
         raise SchemaError(source, f"{where}: slot '{slot_id}': 'empty_weight' must be >= 0")
     return Slot(
         id=slot_id,
@@ -278,6 +324,13 @@ def parse_template(data, slug, source):
         if not isinstance(raw_variant, dict) or not raw_variant.get("name"):
             raise SchemaError(source, "each variant needs a 'name'")
         vname = str(raw_variant["name"]).strip()
+        if is_reserved_name(vname):
+            raise SchemaError(
+                source,
+                f"variant name '{vname}' is a reserved selection token "
+                f"({', '.join(sorted(RESERVED_NAMES))} or 'random@<seed>') — "
+                "'variant=<name>' could never pin it; rename the variant",
+            )
         vslots = tuple(
             _parse_slot(raw, f"variant '{vname}'", source)
             for raw in raw_variant.get("slots", []) or []
@@ -314,6 +367,11 @@ def parse_template(data, slug, source):
     for entry in order:
         if entry not in known:
             raise SchemaError(source, f"'order' references unknown slot id '{entry}'")
+    if len(order) != len(set(order)):
+        # a repeated id resolves the SAME slot twice under the same seed key,
+        # so its text is duplicated verbatim in the prompt — always a bug
+        dupes = sorted({e for e in order if order.count(e) > 1})
+        raise SchemaError(source, f"'order' repeats {', '.join(repr(d) for d in dupes)}")
     if not order:
         order = tuple(shared_ids) + (("@variant",) if variants else ())
     elif variants and "@variant" not in order:
@@ -403,9 +461,7 @@ def parse_template(data, slug, source):
                         f"profile '{pname}': slot '{sid}' overrides allow only default/emphasis",
                     )
                 ov_emphasis = fields_.get("emphasis")
-                if ov_emphasis is not None and (
-                    not isinstance(ov_emphasis, (int, float)) or ov_emphasis <= 0
-                ):
+                if ov_emphasis is not None and (not _is_number(ov_emphasis) or ov_emphasis <= 0):
                     raise SchemaError(
                         source, f"profile '{pname}': slot '{sid}': 'emphasis' must be > 0"
                     )

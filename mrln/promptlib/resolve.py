@@ -10,13 +10,22 @@ import re
 from dataclasses import dataclass, replace
 
 from .errors import ItemNotFoundError, RecursionLimitError, SectionNotFoundError, SelectionError
-from .schema import RANDOM_TOKEN, TEXT_LENGTHS, Slot
+from .schema import (
+    OFF_TOKENS,
+    RANDOM_TOKEN,
+    RANDOM_TOKENS,
+    TEXT_LENGTHS,
+    Slot,
+    emphasize,
+)
 from .seeding import derive_rng, weighted_index
 from .textexpr import expand, variable_names
 
+# 'randomize all' re-rolls every slot off the master seed EXCEPT two explicit
+# author/user decisions, which survive it: a mute ('off') stays muted, and an
+# explicit seed pin ('random@42') keeps drawing its pinned item. Both show up
+# in the choices report ('[off]' / the '@42' suffix).
 MODES = ("as configured", "randomize all", "all fixed defaults")
-RANDOM_TOKENS = (RANDOM_TOKEN, "🎲 random")
-OFF_TOKENS = ("off", "🔇 off")  # mute a slot (or the variant block) from the selection
 _MAX_NEST_DEPTH = 3
 
 
@@ -129,12 +138,20 @@ def _filtered_pool(pool, slot, template_type):
 
 
 def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type=(), strict=False):
-    token_src = selection.get(slot.id, slot.default or RANDOM_TOKEN)
-    kind, value = _parse_token(str(token_src), f"{slot.id}={token_src}")
+    # A present-but-EMPTY value ('s=') is not a pick of the item named '': it
+    # falls back to the slot default exactly like the variant line does,
+    # instead of fabricating a "item '' was renamed or removed" note.
+    raw_token = selection.get(slot.id)
+    token_src = (
+        ("" if raw_token is None else str(raw_token).strip()) or slot.default or RANDOM_TOKEN
+    )
+    kind, value = _parse_token(token_src, f"{slot.id}={token_src}")
     fixed_first = False
 
     if mode == "randomize all":
-        if kind != "off":  # a mute survives 'randomize all'
+        # a mute survives the mode, and so does an explicit 'random@N' pin
+        # (the user pinned that draw on purpose; the report shows the '@N')
+        if kind != "off":
             kind, value = "random", value if kind == "random" else None
     elif mode == "all fixed defaults":
         d_kind, d_value = _parse_token(slot.default or RANDOM_TOKEN, f"{slot.id}={slot.default}")
@@ -236,6 +253,16 @@ def _resolve_slot(lib, slot, key, *, master_seed, mode, selection, template_type
         weights = [item.weight for _, _, item in draw_pool]
         if slot.allow_empty:
             weights.append(slot.empty_weight)
+        if sum(weights) <= 0:
+            # weight 0 means 'never draw'; a pool where that holds for every
+            # candidate has no legal draw. seeding.weighted_index answers 0
+            # there (a belt-and-braces error return in a FROZEN module), which
+            # would draw a weight-0 item — catch it here instead.
+            raise SelectionError(
+                slot.id,
+                f"every item in '{slot.ref}' has weight 0 — give at least one a weight "
+                "above 0, set allow_empty with empty_weight, or pick an item explicitly",
+            )
         idx = weighted_index(rng, weights)
         if slot.allow_empty and idx == len(draw_pool):
             return (
@@ -361,7 +388,15 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=
         if key == "variant":
             continue
         head = key.split(".", 1)[0]  # nested keys validate their head here,
-        if head in shared_by_id or head in active_variant_by_id:  # rest after resolution
+        if head in shared_by_id and head not in tpl.order:  # rest after resolution
+            # A partial 'order' silently drops the slot AND every pick aimed
+            # at it — the stored choice would do nothing, with no warning.
+            raise SelectionError(
+                f"{key}=…",
+                f"slot '{head}' is missing from the template's 'order', so it never "
+                "renders — add it to the order or drop the selection line",
+            )
+        if head in shared_by_id or head in active_variant_by_id:
             continue
         if head in inactive:
             raise SelectionError(
@@ -429,10 +464,7 @@ def resolve_template(lib, tpl, *, seed, mode, selection, variables, text_length=
     for rs in resolved_slots:
         if rs.id == "trigger":  # the node widget keeps its contract
             continue
-        text = rs.text
-        if text and rs.emphasis and rs.emphasis != 1.0:
-            text = f"({text.rstrip('.')}:{rs.emphasis:g})"
-        slot_vars[rs.id] = text
+        slot_vars[rs.id] = emphasize(rs.text, rs.emphasis)
     # A woven variant slot must never break the prompt: when its block is
     # muted or the other variant is active it never resolves, so it weaves
     # "" like a muted slot (setdefault keeps the active variant's draw).
@@ -528,10 +560,7 @@ def _resolve_and_expand(
                     consumed=consumed,
                 )
                 children.append(child)
-                child_text = child.text
-                if child_text and child.emphasis and child.emphasis != 1.0:
-                    child_text = f"({child_text.rstrip('.')}:{child.emphasis:g})"
-                child_vars[child_slot.id] = child_text
+                child_vars[child_slot.id] = emphasize(child.text, child.emphasis)
             resolved = replace(resolved, children=tuple(children))
         base_text = item.text_short if (text_length == "short" and item.text_short) else item.text
         text = expand(base_text, {**variables, **child_vars}, rng)
