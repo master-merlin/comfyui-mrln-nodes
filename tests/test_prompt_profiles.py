@@ -354,22 +354,22 @@ FACTORY_PROFILES = {
 }
 
 
-def test_factory_fidelity_profiles_carry_style_lock():
-    # UAT 2026-08-12: enhancers converted stated media (anime -> realistic).
-    # Every profile under the FIDELITY contract must also pin the medium.
+def test_every_factory_profile_carries_fidelity_and_style_lock():
+    # UAT 2026-08-12: enhancers dropped named content and converted stated
+    # media (anime -> realistic). Both guarantees are universal — image,
+    # video and audio families alike, since every one of them feeds the
+    # Enhance node's system prompt.
     import json
     from pathlib import Path
 
     path = Path(support.ROOT) / "mrln" / "data" / "prompt" / "profiles.json"
     profiles = json.loads(path.read_text(encoding="utf-8"))["profiles"]
-    fidelity = {
-        name
-        for name, prof in profiles.items()
-        if "FIDELITY:" in ((prof.get("llm") or {}).get("system") or "")
-    }
-    assert len(fidelity) >= 22  # the image families ship the contract
-    for name in fidelity:
-        assert "STYLE LOCK:" in profiles[name]["llm"]["system"], name
+    assert len(profiles) >= 29
+    for name, prof in profiles.items():
+        system = (prof.get("llm") or {}).get("system") or ""
+        assert system, f"profile '{name}' ships no LLM system prompt"
+        assert "FIDELITY:" in system, name
+        assert "STYLE LOCK:" in system, name
 
 
 def test_profile_widget_is_last_and_lists_factory_profiles(node_env):

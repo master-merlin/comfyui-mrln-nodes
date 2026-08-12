@@ -36,36 +36,38 @@ full replacement). Same-name templates replace the factory file entirely.
 
 ### Factory library
 
-135 sections / ~1600 curated items across dimension folders every template
-shares (`location` incl. anime/sci-fi/fantasy/historical/underwater places,
-`lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
-particles, `viewpoint`, `camera` with 14 film stocks and real lens/format/
-technique pools, `style` with genre/movement/anime/photography/palette/
-quality-boost bundles, `composition`) and subject domains (`vehicle` — car,
-motorcycle, aircraft, ship, train, sci-fi craft; `human` + `wardrobe` +
-`pose`; `animal` + `nature`; `architecture`, `food`, `product`, `creature`).
-Nearly every item carries a detailed long text plus a compact `text_short`
-for tight tokenizers. Genre coupling runs on tags (`anime`, `scifi`,
-`fantasy`, `historical`, `night`…) that templates select with per-slot
-`tags_any` filters.
+202 sections / ~2800 curated items across dimension folders every template
+shares (`location` incl. anime/sci-fi/fantasy/historical/underwater/coastal
+places, `lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
+particles/reentry, `viewpoint`, `camera` with film stocks and real lens/
+format/technique pools plus per-genre glass, `style` with genre/movement/
+anime/photography/palette/quality-boost bundles, `composition`) and subject
+domains (`vehicle` — car, motorcycle, aircraft, ship, train, sci-fi craft;
+`human` + `wardrobe` + `pose`; `animal` + `nature` + `creature`;
+`architecture`, `food`, `product`, `battle`, `treasure`). Each item pairs a
+detailed long text with a compact `text_short`, so tag-based targets get tag
+flow and prose models get prose from the same library. Genre coupling runs on
+tags (`anime`, `scifi`, `fantasy`, `historical`, `night`…) that templates
+select with per-slot `tags_any` / `tags_none` filters.
 
-Showcase templates, one per domain:
+Flagship templates — every one permutation-tested seed by seed so any draw
+combination reads like a specialist wrote the brief:
 
 | Template | What it composes |
 | --- | --- |
-| `overdrive/full-shot` | the OverDrive concept-car showcase (day/night variants) |
-| `vehicle/aviation-shot`, `vehicle/maritime-shot` | aircraft/vessel × state × weather × long glass |
-| `boudoir/session` | solo / duo / couple via nested model profiles (adults only, tasteful glamour) |
-| `portrait/studio`, `character/concept` | studio portraits and character-design sheets |
-| `anime/keyvisual`, `scifi/vista` | genre scenes over tagged locations |
-| `wildlife/documentary`, `landscape/grand` | subject × behavior × habitat; landform hero shots |
-| `food/editorial`, `product/hero`, `architecture/study` | commercial photography formulas |
-| `vehicle/night-ride`, `vehicle/heritage-classic` | neon-noir motion (parked/rolling variants); classic-car portraiture with your own LoRA trigger |
-| `vehicle/blueprint-sheet`, `vehicle/rider-lifestyle` | any machine as an annotated technical sheet; motorcycle culture with an optional nested rider |
-| `poster/travel`, `whimsy/storybook` | any place as a vintage poster; the trending pet-in-handmade-media formula |
-| `fantasy/epic-encounter`, `noir/night-scene` | archetype vs mythical creature at romanticist scale; one hard light on pushed Delta 3200 |
-| `macro/small-world`, `astro/nightscape` | textures become landscapes; celestial heroes over dark landforms |
-| `street/candid`, `moment/cozy` | decisive-moment street; hygge with the weather kept outside the window |
+| `overdrive/full-shot`, `overdrive/night-pursuit`, `overdrive/design-studio` | the OverDrive concept-car showcase (day/night variants), neon-noir pursuit, design-studio reveal |
+| `vehicle/apex-attack`, `vehicle/night-ride`, `vehicle/heritage-classic` | motorsport at the limit; neon-noir motion (parked/rolling); classic-car portraiture with your own LoRA trigger |
+| `vehicle/aviation-shot`, `vehicle/maritime-shot`, `vehicle/blueprint-sheet`, `vehicle/rider-lifestyle` | aircraft/vessel × state × weather × long glass; any machine as an annotated technical sheet; motorcycle culture with an optional nested rider |
+| `scifi/fleet-arrival`, `scifi/vista`, `scifi/mecha-clash`, `scifi/android-portrait` | capital fleets making atmospheric entry (day-raid/night-siege), genre vistas, mech combat, synthetic portraiture |
+| `fantasy/epic-encounter`, `fantasy/battlefield-charge`, `fantasy/dragon-hoard`, `fantasy/realm-vista`, `fantasy/enchanted-portrait` | archetype vs mythical creature at romanticist scale; massed armies (charge/last-stand/aftermath); treasure-light interiors; realm panoramas |
+| `anime/cinema-still`, `anime/keyvisual`, `anime/slice-of-life`, `anime/character` | theatrical anime master shots, key visuals, quiet everyday scenes, character sheets |
+| `portrait/studio`, `portrait/character-concept`, `portrait/noir-night`, `portrait/street-candid` | studio portraits, character-design sheets, one hard light on pushed Delta 3200, decisive-moment street |
+| `boudoir/session`, `boudoir/vanity-portrait`, `boudoir/window-silhouette` | solo / duo / couple via nested model profiles (adults only, tasteful glamour) |
+| `animal/documentary`, `animal/small-world`, `animal/storybook` | subject × behavior × habitat; macro textures as landscapes; pet-in-handmade-media |
+| `landscape/grand`, `landscape/astro-nightscape`, `landscape/moody-intimate` | landform hero shots; celestial heroes over dark landforms; intimate weather |
+| `architecture/study`, `architecture/blue-hour-icon`, `architecture/golden-interior`, `architecture/cozy-moment` | architectural formulas from icon to interior to hygge |
+| `food/editorial`, `food/dark-mood`, `food/pour-shot`, `product/hero`, `product/lifestyle-scene`, `product/teardown-sheet` | commercial photography formulas |
+| `design/travel-poster`, `design/movie-poster`, `design/album-cover` | any place as a vintage poster; one-sheet and sleeve design |
 
 The human-domain content is strictly adults-only and kept at a tasteful
 glamour level (lint-enforced); templates carry matching safety negatives by
