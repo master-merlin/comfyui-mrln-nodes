@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "History Painting",
+  "description": "How the grand battle canvases were actually made — manner, surface and staging traditions; characteristics only, never artist names.",
+  "items": [
+    {
+      "name": "romanticist-battle",
+      "text": "romanticist battle canvas, early-1800s sublime, the melee dissolving into smoke and light at its edges, small brilliant figures under an enormous violent sky, glazed atmospheric depth",
+      "text_short": "romanticist battle sublime"
+    },
+    {
+      "name": "baroque-melee",
+      "text": "baroque battle-piece manner, 1600s cavalry-skirmish tradition, a churning diagonal knot of horses and pikes, tenebrist light picking single riders out of deep brown darkness",
+      "text_short": "baroque cavalry melee"
+    },
+    {
+      "name": "academic-salon",
+      "text": "academic salon history painting, 1870s museum finish, life-size theatrical staging, every strap and buckle resolved, controlled even light across acres of canvas",
+      "text_short": "salon history painting"
+    },
+    {
+      "name": "cyclorama-panorama",
+      "text": "battle-panorama cyclorama manner, one continuous sweeping horizon of massed action, mid-ground detail dense as tapestry, composed for a viewer turning in place",
+      "text_short": "cyclorama battle panorama"
+    },
+    {
+      "name": "woven-tapestry",
+      "text": "medieval battle-tapestry styling, stacked narrative registers, stylized horses caught mid-leap, wool and gilt-thread palette, margins crowded with small embroidered witnesses",
+      "text_short": "battle tapestry weave"
+    },
+    {
+      "name": "gold-screen",
+      "text": "folding-screen battle painting, Momoyama-period manner, gold-leaf cloud bands slicing the field into episodes, lacquer-dark armor and banner geometry floating on burnished gold",
+      "text_short": "gold-leaf screen battle"
+    },
+    {
+      "name": "concept-keyframe",
+      "text": "modern cinematic concept key-frame, value-first massing with atmosphere doing the compositional work, edges sharpened only at the story's focal point, disciplined color script",
+      "text_short": "cinematic concept key-frame"
+    }
+  ]
+}

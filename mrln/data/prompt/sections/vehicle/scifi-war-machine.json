@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "label": "War Machine",
+  "description": "Combat-weight machines built for the clash templates — every item carries mass, motion and battle state.",
+  "suits": ["object", "vehicle"],
+  "tags": ["scifi"],
+  "items": [
+    {
+      "name": "assault-mech",
+      "text": "a twelve-meter bipedal assault mech mid-stride, torso twisting independent of the hips, autocannon barrels still smoking, fresh scoring raked across the glacis plate",
+      "text_short": "striding assault mech"
+    },
+    {
+      "name": "siege-quadruped",
+      "text": "a siege quadruped the size of a building, four column legs planted wide, the dorsal railgun spine charging with a rising line of light",
+      "text_short": "building-sized siege walker"
+    },
+    {
+      "name": "hover-tank",
+      "text": "a skirted hover tank drifting sideways over rubble, dust blasting out from under the plenum skirt, turret counter-rotating to hold its lock",
+      "text_short": "drifting hover tank"
+    },
+    {
+      "name": "duelist-frame",
+      "text": "a sleek humanoid combat frame in a fencing stance, thermal blade shedding white droplets of molten edge, armor panels flared open for heat dump",
+      "text_short": "dueling combat frame"
+    },
+    {
+      "name": "artillery-crawler",
+      "text": "a tracked artillery crawler in firing configuration, outriggers punched into the ground, twin barrels recoiling in staggered rhythm under climbing smoke rings",
+      "text_short": "firing artillery crawler"
+    },
+    {
+      "name": "drone-carrier-gunship",
+      "text": "a drone-carrier gunship on station, launch cells cycling along its flanks, attack drones peeling off in ribbons toward the ground",
+      "text_short": "drone-carrier gunship"
+    },
+    {
+      "name": "riot-enforcer",
+      "text": "a squat riot-control enforcer braced behind a deployed ballistic shield wall, stun lattice crackling between its shoulder emitters",
+      "text_short": "shielded riot enforcer"
+    },
+    {
+      "name": "scrap-titan",
+      "text": "a salvage titan welded from three generations of dead machines, mismatched arms, a crane for a spine, engine hearts glowing through gaps in the plating",
+      "text_short": "welded scrap titan"
+    },
+    {
+      "name": "spider-breacher",
+      "text": "a spider-legged breaching platform climbing a wall face, cutting-torch mandibles throwing fans of sparks, anchor bolts firing into the concrete as it ascends",
+      "text_short": "wall-climbing breacher rig"
+    },
+    {
+      "name": "shield-bearer",
+      "text": "a broad-shouldered guardian mech kneeling behind a projected energy aegis, hexagonal shield cells flaring white where impacts land, servos trembling under the sustained load",
+      "text_short": "kneeling shield-bearer mech"
+    },
+    {
+      "name": "hunter-pack",
+      "text": "a pack of low quadruped hunter drones moving in bounding overwatch, lidar eyes sweeping in synchronized arcs, dust kicked up in short bursts at every leap",
+      "text_short": "bounding hunter drone pack"
+    },
+    {
+      "name": "wrecking-ram",
+      "text": "a demolition ram-walker shouldering through a facade, counterweight haunches low, its tusk blade buried to the hilt in structural concrete as the floor above sags",
+      "text_short": "ram-walker mid-demolition"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Nationality / Heritage",
-  "description": "The source's twenty-nationality pool — composes as '{ethnicity} woman/man'.",
+  "description": "Nationality pool — composes as '{ethnicity} woman/man'; respectful and concrete, with worldwide coverage.",
   "suits": ["human"],
   "items": [
     { "name": "swedish", "text": "Swedish", "text_short": "Swedish" },
@@ -23,6 +23,14 @@
     { "name": "egyptian", "text": "Egyptian", "text_short": "Egyptian" },
     { "name": "mexican", "text": "Mexican", "text_short": "Mexican" },
     { "name": "icelandic", "text": "Icelandic", "text_short": "Icelandic" },
-    { "name": "turkish", "text": "Turkish", "text_short": "Turkish" }
+    { "name": "turkish", "text": "Turkish", "text_short": "Turkish" },
+    { "name": "french", "text": "French", "text_short": "French" },
+    { "name": "german", "text": "German", "text_short": "German" },
+    { "name": "spanish", "text": "Spanish", "text_short": "Spanish" },
+    { "name": "ukrainian", "text": "Ukrainian", "text_short": "Ukrainian" },
+    { "name": "lebanese", "text": "Lebanese", "text_short": "Lebanese" },
+    { "name": "thai", "text": "Thai", "text_short": "Thai" },
+    { "name": "kenyan", "text": "Kenyan", "text_short": "Kenyan" },
+    { "name": "argentinian", "text": "Argentinian", "text_short": "Argentinian" }
   ]
 }

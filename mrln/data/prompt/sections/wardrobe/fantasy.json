@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Fantasy Attire",
+  "description": "Non-armor fantasy costume — robes, cloaks and court dress; the soft counterpart to wardrobe/armor. Tagged 'fantasy' for genre coupling.",
+  "suits": ["human"],
+  "tags": ["fantasy"],
+  "items": [
+    { "name": "sorceress-gown", "text": "a midnight sorceress gown, tight sleeves ending in pointed cuffs over the hands, silver sigils embroidered along the hems", "text_short": "sorceress sigil gown" },
+    { "name": "elven-court-gown", "text": "an elven court gown of grey-green silk, trailing split sleeves, leaf-vine embroidery in silver thread", "text_short": "elven court gown" },
+    { "name": "ranger-cloak", "text": "a weathered ranger cloak with a deep hood, layered wool over oiled-leather bracers and a quiver strap", "text_short": "hooded ranger cloak" },
+    { "name": "royal-mantle", "text": "an ermine-trimmed royal mantle over cloth-of-gold, jeweled clasp at the throat, train sweeping the steps", "text_short": "ermine royal mantle" },
+    { "name": "witch-layers", "text": "layered witch attire, tattered charcoal skirts, a corseted bodice hung with charms, wide-brim pointed hat", "text_short": "layered witch attire" },
+    { "name": "battlemage-coat", "text": "a high-collared battlemage coat, rune-stitched leather panels, scorch marks at the cuffs", "text_short": "rune battlemage coat" },
+    { "name": "druid-vestments", "text": "druid vestments of undyed wool and woven bark, antler talismans, a moss-green mantle pinned with a bronze brooch", "text_short": "druid vestments" },
+    { "name": "barbarian-furs", "text": "northern barbarian furs, a wolf-pelt mantle over a studded leather jerkin, fur-wrapped boots", "text_short": "wolf-fur mantle" },
+    { "name": "desert-mystic", "text": "desert mystic robes, layered sand-toned gauze, coin-fringed sash and veils lifting in the wind", "text_short": "coin-fringed mystic robes" },
+    { "name": "fae-gossamer", "text": "a fae gown of layered gossamer, dew-beaded cobweb lace at the shoulders, iridescent wing-sheen fabric shifting color as it moves", "text_short": "fae gossamer gown" }
+  ]
+}

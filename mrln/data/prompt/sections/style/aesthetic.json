@@ -47,7 +47,7 @@
     },
     {
       "name": "whimsical-storybook",
-      "text": "whimsical storybook aesthetic, charming characters, cozy scenes and gentle humor",
+      "text": "whimsical storybook aesthetic, rounded friendly shapes, lamplit cottages and hand-drawn charm, gentle humor tucked into the details",
       "text_short": "whimsical storybook"
     },
     {
@@ -64,6 +64,16 @@
       "name": "wabi-sabi",
       "text": "wabi-sabi aesthetic, imperfect natural materials, patina and contemplative emptiness",
       "text_short": "wabi-sabi patina"
+    },
+    {
+      "name": "frutiger-aero",
+      "text": "frutiger-aero aesthetic, glossy aqua bubbles, dewy grass and clean glass gradients, humanist 2000s tech optimism",
+      "text_short": "frutiger aero gloss"
+    },
+    {
+      "name": "quiet-luxury",
+      "text": "quiet-luxury aesthetic, unbranded impeccable tailoring in camel, cream and greige, cashmere and calf leather, wealth whispered through fit and fabric",
+      "text_short": "quiet luxury neutrals"
     }
   ]
 }

@@ -1,51 +1,51 @@
 {
   "version": 1,
   "label": "Studio Light",
-  "description": "Controlled studio setups for portrait and product work.",
+  "description": "Controlled studio setups for portrait and product work — modifier, position and shadow behavior named in every item.",
   "items": [
     {
       "name": "softbox-key",
-      "text": "large octagonal softbox as key light at 45 degrees, creamy highlight roll-off and soft defined shadows",
+      "text": "large octagonal softbox key at 45 degrees off camera and just above eye line, creamy highlight roll-off, the soft-edged nose shadow falling toward the far cheek",
       "text_short": "large softbox key"
     },
     {
       "name": "rembrandt",
-      "text": "classic Rembrandt lighting, key high and to the side leaving a triangle of light on the shadowed cheek",
+      "text": "classic Rembrandt lighting, key high and to the side leaving a small triangle of light on the shadowed cheek, eyes catching light in both sockets",
       "text_short": "Rembrandt lighting"
     },
     {
       "name": "butterfly",
-      "text": "butterfly lighting from high front, symmetrical glamour shadows under nose and chin",
+      "text": "butterfly lighting from high front, the symmetrical glamour shadow directly under nose and chin, cheekbones lifted into the light",
       "text_short": "butterfly glamour light"
     },
     {
       "name": "clamshell",
-      "text": "clamshell beauty lighting, soft key above and fill below erasing texture, luminous even skin",
+      "text": "clamshell beauty lighting, soft key above and reflector fill below erasing texture, luminous even skin with twin catchlights",
       "text_short": "clamshell beauty light"
     },
     {
       "name": "rim-kicker",
-      "text": "twin rim kickers from behind separating the subject with bright edge highlights",
+      "text": "twin rim kickers from behind at head height, bright edge highlights tracing shoulders and hair, separating the subject cleanly from the dark background",
       "text_short": "twin rim kickers"
     },
     {
       "name": "gelled-duotone",
-      "text": "opposing gelled strobes, teal from one side and magenta from the other, saturated duotone modeling",
+      "text": "opposing gelled strobes, teal from one side and magenta from the other, the two colors meeting in a saturated seam along the center of the form",
       "text_short": "teal-magenta gel light"
     },
     {
       "name": "hard-bare-flash",
-      "text": "hard bare direct flash, crisp fashion-editorial shadows thrown flat on the backdrop",
+      "text": "hard bare direct flash from the camera position, crisp fashion-editorial shadows thrown flat and tight against the backdrop",
       "text_short": "hard direct flash"
     },
     {
       "name": "ring-light",
-      "text": "frontal ring light, shadowless beauty illumination with a circular catchlight in the eyes",
+      "text": "frontal ring light on the lens axis, shadowless beauty illumination with a signature circular catchlight in the eyes and a faint halo shadow behind",
       "text_short": "ring light beauty"
     },
     {
       "name": "gridded-spot",
-      "text": "a gridded spot picking the subject out of a black studio void, controlled spill",
+      "text": "a gridded spot picking the subject out of a black studio void, tight controlled spill, the beam edge feathering to nothing",
       "text_short": "gridded spot on black"
     },
     {
@@ -62,6 +62,31 @@
       "name": "window-flag-negative",
       "text": "single soft window source with black negative fill deepening the shadow side, quiet cinematic contrast",
       "text_short": "soft key, negative fill"
+    },
+    {
+      "name": "beauty-dish",
+      "text": "silver beauty dish just above the lens axis, crisp yet feathered light hugging the cheekbones, a tight round catchlight and rapid falloff under the jaw",
+      "text_short": "beauty dish key"
+    },
+    {
+      "name": "book-light",
+      "text": "a book light, strobe bounced into white board then pushed through a diffusion frame, the softest wrap a studio can make, shadows melting without a visible direction line",
+      "text_short": "book-light soft wrap"
+    },
+    {
+      "name": "short-lighting",
+      "text": "short lighting, the key thrown onto the far side of the face so the camera-side cheek falls into shadow, the face narrowed and sculpted with the background held a stop darker",
+      "text_short": "short-lit sculpted face"
+    },
+    {
+      "name": "strip-speculars",
+      "text": "two vertical strip softboxes flanked behind the subject, drawing long unbroken specular bands down glass, bodywork or skin — the product-studio move that defines a glossy form against black",
+      "text_short": "twin strip-light speculars"
+    },
+    {
+      "name": "overhead-scrim",
+      "text": "one large scrim directly overhead with a low backlight skimming from behind, soft top-light pooling into the tabletop while steam and rim edges catch the back edge-light",
+      "text_short": "overhead scrim, back edge-light"
     }
   ]
 }

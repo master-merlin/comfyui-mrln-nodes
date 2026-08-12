@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Ensemble",
+  "description": "Streetscapes and urban fabric — many buildings speaking as one subject.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "canal-house-row", "text": "a row of canal houses shoulder to shoulder, stepped and bell gables in oxblood and ochre brick, hoisting beams jutting from the attics, facades leaning a degree or two out over the water", "text_short": "gabled canal row", "tags": ["historical"] },
+    { "name": "cycladic-village", "text": "a cliff village of whitewashed cubes stacked down the caldera rim, blue domes and doors, lanes narrowing into stairways between the houses", "text_short": "whitewashed cliff village" },
+    { "name": "machiya-lane", "text": "a lane of timber machiya townhouses, fine wooden lattices over the ground floors, noren curtains breathing in the doorways, tiled eaves stepping down the street in overlapping waves", "text_short": "machiya timber lane", "tags": ["anime", "historical"] },
+    { "name": "street-canyon", "text": "a deep midtown street canyon, granite and glass cliffs squeezing the sky to one bright slot, fire escapes zigzagging down the older walls", "text_short": "midtown street canyon", "tags": ["city"] },
+    { "name": "hillside-patchwork", "text": "a hillside neighborhood of hand-built houses stacked to the ridge, raw brick and painted plaster patched in teal, coral and yellow, staircase alleys threading the slope", "text_short": "stacked hillside patchwork", "tags": ["city"] },
+    { "name": "italian-hilltown", "text": "an Italian hill town wound around its crag, stone houses sharing walls all the way up to the campanile, terracotta roofs interlocking like scales", "text_short": "walled hill town", "tags": ["historical"] },
+    { "name": "shophouse-row", "text": "a row of Peranakan shophouses, pastel facades dressed with pilasters and glazed majolica tiles, shuttered windows above the shaded five-foot-way arcade", "text_short": "pastel shophouse row", "tags": ["historical"] },
+    { "name": "timber-wharf-row", "text": "a row of tarred and ochre timber wharf houses leaning into each other along the quay, gable hoists hanging over the water, plank alleys running back between them", "text_short": "timber wharf gables", "tags": ["historical"] }
+  ]
+}

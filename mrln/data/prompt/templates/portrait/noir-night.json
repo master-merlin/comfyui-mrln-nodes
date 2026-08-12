@@ -4,15 +4,19 @@
   "type": [
     "human"
   ],
-  "description": "Film noir: a character under one hard light in the night city, on pushed black-and-white stock.",
-  "prefix": "A film-noir scene.",
+  "description": "Film noir with the style pillars locked in prose: pushed black-and-white stock, one hard light, the night city. Randomness lives in who stands in the beam and where.",
+  "prefix": "A film-noir scene on pushed black-and-white stock — {figure} holding still in the night city, light and shadow doing all the storytelling.",
   "slots": [
     {
       "id": "figure",
       "ref": "human/archetype",
-      "label": "The figure",
+      "label": "The Figure",
       "default": "detective",
-      "emphasis": 1.2
+      "emphasis": 1.2,
+      "tags_none": [
+        "fantasy",
+        "scifi"
+      ]
     },
     {
       "id": "expression",
@@ -23,7 +27,7 @@
     {
       "id": "scene",
       "ref": "location",
-      "label": "Night city",
+      "label": "Night City",
       "tags_any": [
         "night"
       ],
@@ -38,26 +42,12 @@
     {
       "id": "light",
       "ref": "lighting/dramatic",
-      "label": "One hard light",
-      "default": "single-practical"
-    },
-    {
-      "id": "film",
-      "ref": "camera/film",
-      "label": "Pushed stock",
-      "default": "delta-3200"
-    },
-    {
-      "id": "palette",
-      "ref": "style/palette",
-      "label": "Palette",
-      "default": "black-and-white"
-    },
-    {
-      "id": "genre",
-      "ref": "style/genre",
-      "label": "Genre",
-      "default": "film-noir"
+      "label": "Light and Shadow",
+      "default": "single-practical",
+      "emphasis": 1.15,
+      "tags_none": [
+        "neon"
+      ]
     },
     {
       "id": "framing",
@@ -66,10 +56,11 @@
       "default": "frame-in-frame"
     }
   ],
-  "suffix": "venetian-blind shadows, cigarette-haze atmosphere, fatal glamour restraint",
-  "negative": "color, cheerful daylight, watermark, child, underage",
+  "suffix": "Noir Rendering: (pushed 3200-speed black-and-white film, coarse grain clumping in the shadows, blacks crushed to velvet:1.25), halation swelling around every naked bulb, venetian-blind shadows raking across the scene, wet asphalt doubling the lights, cigarette haze hanging in the beam, fatal glamour restraint.",
+  "negative": "color photograph, colorized, cheerful daylight, watermark, text, child, underage",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "label": "Portrait Glass",
+  "description": "Curated people-photography optics — every item is a lens a working portrait, boudoir or street shooter would actually mount. Tagged studio/boudoir/street/night so templates draw a coherent kit.",
+  "items": [
+    {
+      "name": "85mm-f14",
+      "text": "shot on an 85mm f/1.4 prime wide open, gentle telephoto compression keeping the features honest, focus a knife-edge on the near iris, the background collapsing into deep unbroken bokeh",
+      "text_short": "85mm f/1.4, eye-critical focus, deep creamy bokeh",
+      "tags": ["studio", "boudoir"]
+    },
+    {
+      "name": "105mm-beauty",
+      "text": "shot on a 105mm f/1.4 beauty telephoto, the face compressed flat and flattering, one plane of the features critically sharp, specular catchlights crisp in both eyes",
+      "text_short": "105mm f/1.4 beauty tele, crisp catchlights",
+      "tags": ["studio"]
+    },
+    {
+      "name": "135mm-headshot",
+      "text": "shot on a 135mm f/1.8 at head-and-shoulders distance, the background stacked close and melted to smooth fields of color, the face carved out by compression alone",
+      "text_short": "135mm f/1.8, compressed background, isolated face",
+      "tags": ["studio", "boudoir"]
+    },
+    {
+      "name": "70-200-fashion",
+      "text": "shot on a 70-200mm f/2.8 zoom racked to the long end, runway-style compression, the subject lifted clean off a backdrop reduced to a seamless gradient",
+      "text_short": "70-200mm at 200, runway compression",
+      "tags": ["studio"]
+    },
+    {
+      "name": "50mm-f12",
+      "text": "shot on a 50mm f/1.2 normal prime, perspective matching the naked eye, a whisper-thin plane of focus and highlights going soft and luminous wide open",
+      "text_short": "50mm f/1.2, natural perspective, thin focus",
+      "tags": ["studio", "boudoir", "street"]
+    },
+    {
+      "name": "35mm-reportage",
+      "text": "shot on a 35mm reportage prime stopped to f/5.6 and zone-focused for speed, subject and street held together in one honest plane of context",
+      "text_short": "35mm at f/5.6, zone-focused reportage",
+      "tags": ["street"]
+    },
+    {
+      "name": "28mm-hip",
+      "text": "shot on a 28mm compact prime from chest height, everything from arm's reach to the far curb acceptably sharp, the frame wide enough to swallow the whole scene",
+      "text_short": "28mm from the hip, deep street sharpness",
+      "tags": ["street"]
+    },
+    {
+      "name": "noct-f10",
+      "text": "shot on an f/1.0 noct prime wide open, focus wafer-thin on the subject, every practical light in the depth swelling into a soft glowing disc",
+      "text_short": "f/1.0 noct prime, glowing bokeh discs",
+      "tags": ["street", "boudoir", "night"]
+    },
+    {
+      "name": "vintage-sonnar",
+      "text": "shot on uncoated pre-war 85mm glass, gentle veiling flare lifting the blacks, the out-of-focus field swirling softly toward the frame edges",
+      "text_short": "uncoated vintage 85mm, lifted blacks, swirly bokeh",
+      "tags": ["studio", "boudoir"]
+    },
+    {
+      "name": "black-mist",
+      "text": "shot through a quarter-strength black-mist diffusion filter, highlights blooming gently, micro-contrast tamed so skin reads luminous while the eyes stay sharp",
+      "text_short": "black-mist diffusion, blooming highlights, luminous skin",
+      "tags": ["boudoir"]
+    },
+    {
+      "name": "anamorphic-close",
+      "text": "shot on close-focus anamorphic glass, oval bokeh stretching vertically behind the shoulders, a faint horizontal streak crossing the frame at every point light",
+      "text_short": "anamorphic close-up, oval bokeh, horizontal flare",
+      "tags": ["studio", "night"]
+    }
+  ]
+}

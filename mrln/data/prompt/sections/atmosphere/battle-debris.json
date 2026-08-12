@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Battle Debris",
+  "description": "The combat particulate layer — airborne evidence of violence that gives action frames their density.",
+  "items": [
+    {
+      "name": "shrapnel-sparks",
+      "text": "white-hot shrapnel sparks fanning off every impact point, short violent arcs dying into thin smoke trails",
+      "text_short": "fanning shrapnel sparks"
+    },
+    {
+      "name": "concrete-dust",
+      "text": "pulverized concrete dust rolling outward in a ground-hugging wave, whole slabs still airborne at its leading edge",
+      "text_short": "rolling concrete dust wave"
+    },
+    {
+      "name": "tracer-lattice",
+      "text": "tracer fire stitching bright dotted lines across the frame, ricochets kinking away at broken angles",
+      "text_short": "tracer fire lattice"
+    },
+    {
+      "name": "glass-blizzard",
+      "text": "a blizzard of shattered glass falling in sheets, every shard carrying one bright specular flash on the way down",
+      "text_short": "falling glass glitter"
+    },
+    {
+      "name": "casing-rain",
+      "text": "brass casings raining and bouncing, spinning glints scattering around the muzzle line",
+      "text_short": "raining spent casings"
+    },
+    {
+      "name": "hydraulic-mist",
+      "text": "atomized hydraulic fluid venting in fine amber jets from severed lines, hanging as oily mist wherever light crosses it",
+      "text_short": "amber hydraulic mist"
+    },
+    {
+      "name": "sheared-plating",
+      "text": "sheared armor plates cartwheeling away trailing rivets and torn brackets, each landing printing a fresh crater in the ground",
+      "text_short": "cartwheeling armor plates"
+    },
+    {
+      "name": "arc-discharge",
+      "text": "stray electrical discharge crawling over the wreckage, blue-white arcs snapping between exposed conductors and grounding out with each snap",
+      "text_short": "crawling electrical arcs"
+    },
+    {
+      "name": "chaff-flares",
+      "text": "chaff ribbons and countermeasure flares drifting down, foil strips turning slowly in the air above hard magnesium points of light",
+      "text_short": "drifting chaff and flares"
+    },
+    {
+      "name": "oil-smoke",
+      "text": "black oil-fire smoke columns leaning with the wind, ember cores pulsing deep inside each plume",
+      "text_short": "leaning oil-fire smoke"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "label": "Epic Scale Light",
+  "description": "Environment-scale dramatic keys — light events big enough to stage a landscape, a fleet or a battle, each naming its source, direction and behavior. Complements lighting/dramatic, which works at subject scale. Tagged 'epic' so portrait-scale templates can exclude the whole pool.",
+  "tags": ["epic"],
+  "items": [
+    {
+      "name": "terminator-sweep",
+      "text": "the planet's own terminator crossing the scene, one half of the landscape in low amber sidelight while the other has already sunk into blue shadow, the boundary drawn across the ground like a slow tide line",
+      "text_short": "terminator line crossing the land"
+    },
+    {
+      "name": "crepuscular-fan",
+      "text": "a fan of crepuscular rays spread from a single gap in the cloud deck, discrete blades of sunlight laid kilometers apart across the land, each lit pool a stage of its own",
+      "text_short": "kilometer-wide crepuscular fan",
+      "tags": ["day"]
+    },
+    {
+      "name": "cloud-buried-lightning",
+      "text": "sheet lightning buried deep inside the cloud deck, the whole sky pulsing as one vast diffused strobe, silhouettes printed hard against each flash and swallowed again",
+      "text_short": "lightning pulsing inside clouds",
+      "tags": ["night"]
+    },
+    {
+      "name": "city-underglow",
+      "text": "the underside of a low cloud ceiling lit amber by the city beneath it, the sky turned into an inverted floodlit floor, tower tops dissolving into the glowing deck",
+      "text_short": "clouds underlit by city glow",
+      "tags": ["night"]
+    },
+    {
+      "name": "engine-plume-key",
+      "text": "the scene keyed by drive plumes passing overhead, a moving white-orange source swinging every shadow across the ground as it crosses, heat shimmer bending the highlights",
+      "text_short": "moving engine-plume key light",
+      "tags": ["scifi"]
+    },
+    {
+      "name": "burning-horizon",
+      "text": "a firestorm on the far horizon backlighting the smoke ceiling, deep orange underlight rolling along the clouds while the foreground holds cold ambient shadow",
+      "text_short": "horizon firestorm underlight"
+    },
+    {
+      "name": "orbital-mirror",
+      "text": "one moon-bright disc of redirected sunlight from an orbital mirror, a single clean circular pool of daylight sliding across the dark landscape, dusk everywhere outside its edge",
+      "text_short": "orbital mirror light disc",
+      "tags": ["scifi", "night"]
+    },
+    {
+      "name": "eclipse-totality",
+      "text": "solar-eclipse totality overhead, a black disc ringed in silver corona, a 360-degree sunset glow around the whole horizon while the ground sits in sudden midday darkness",
+      "text_short": "eclipse totality corona",
+      "tags": ["day"]
+    },
+    {
+      "name": "binary-suns",
+      "text": "two suns of different colors in the sky at once, doubled shadows in amber and blue-white splitting away from every object, the overlap zones going neutral where the two keys cancel",
+      "text_short": "binary suns, doubled shadows",
+      "tags": ["scifi", "day"]
+    },
+    {
+      "name": "impact-dust-shaft",
+      "text": "sunlight standing inside the dust column above a fresh impact, one colossal tilted pillar of lit particulate reaching from ground to cloud, brighter than anything around it",
+      "text_short": "lit dust column over impact",
+      "tags": ["day"]
+    },
+    {
+      "name": "flare-drift",
+      "text": "slow-falling illumination flares drifting down on parachutes, hard white-green light swinging gently, shadows wheeling in counter-rotation around every object as each flare sinks",
+      "text_short": "drifting illumination flares",
+      "tags": ["night"]
+    },
+    {
+      "name": "bioluminescent-ground",
+      "text": "the land itself glowing, bioluminescent fields underlighting the whole scene in cyan, the brightest source in frame lying below the subject while the sky stays a starless ceiling",
+      "text_short": "glowing ground underlight",
+      "tags": ["night"]
+    }
+  ]
+}

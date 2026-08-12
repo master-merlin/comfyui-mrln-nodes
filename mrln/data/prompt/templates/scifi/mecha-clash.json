@@ -6,16 +6,15 @@
   "slots": [
     {
       "id": "machine",
-      "ref": "vehicle/scifi-craft",
+      "ref": "vehicle/scifi-war-machine",
       "label": "The Machine",
-      "default": "mech-walker",
+      "default": "assault-mech",
       "emphasis": 1.3
     },
     {
       "id": "arena",
-      "ref": "location",
+      "ref": "location/scifi-horizon",
       "label": "Battleground",
-      "tags_any": ["scifi"],
       "emphasis": 1.15
     },
     {
@@ -26,30 +25,30 @@
     },
     {
       "id": "light",
-      "ref": "lighting/dramatic",
+      "ref": "lighting/epic",
       "label": "Light",
-      "default": "volumetric-shafts"
+      "default": "cloud-buried-lightning"
     },
     {
       "id": "particles",
-      "ref": "atmosphere/particles",
+      "ref": "atmosphere/battle-debris",
       "label": "Debris",
-      "default": "sparks"
+      "default": "shrapnel-sparks"
     },
     {
       "id": "settings",
-      "ref": "camera/settings",
-      "label": "Camera",
-      "default": "cinema-anamorphic"
+      "ref": "viewpoint/dynamic",
+      "label": "Vantage",
+      "default": "low-chase-cam"
     },
     {
       "id": "medium",
-      "ref": "style/rendering",
-      "label": "Render Pipeline",
-      "default": "cinematic-engine"
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "bleach-bypass"
     }
   ],
-  "suffix": "Impact Rendering: (mass and inertia physically believable:1.25), hydraulics straining, armor plates shedding paint at the impact points, shockwave dust rings, motion blur only where physics demands it.",
+  "suffix": "Impact Rendering: (mass and inertia physically believable:1.25), hydraulics straining, armor plates shedding paint at the impact points, shockwave dust rings, motion blur only where physics demands it. Shot on a 40mm anamorphic at T2.2 with a 180-degree cinema shutter, oval bokeh and horizontal flares.",
   "negative": "watermark, text, toy-like scale, plastic sheen, static pose",
   "render": {
     "format": "string_labeled",

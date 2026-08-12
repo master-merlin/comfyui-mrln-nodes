@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Street Moment",
+  "description": "Candid caught-mid-action moments for street and reportage work — gerund phrases that weave after 'caught', each one a decisive instant a camera could actually freeze.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "hailing-taxi",
+      "text": "hailing a taxi with two fingers raised, already stepping off the curb",
+      "text_short": "hailing a taxi, stepping off the curb"
+    },
+    {
+      "name": "puddle-leap",
+      "text": "mid-leap over a wide puddle, coat flaring, one heel just clearing the reflection",
+      "text_short": "leaping a puddle, coat flaring"
+    },
+    {
+      "name": "cupped-match",
+      "text": "lighting a cigarette inside cupped hands, the small flame warming the lower half of the face",
+      "text_short": "lighting a cigarette in cupped hands"
+    },
+    {
+      "name": "watch-check",
+      "text": "checking a wristwatch against the station clock, weight already shifting toward the platforms",
+      "text_short": "checking a wristwatch against the station clock"
+    },
+    {
+      "name": "coffee-tray-balance",
+      "text": "balancing four coffee cups in a cardboard tray while shouldering a door open",
+      "text_short": "balancing a tray of coffees through a door"
+    },
+    {
+      "name": "hat-chase",
+      "text": "chasing a wind-snatched hat three quick steps down the pavement, one arm outstretched",
+      "text_short": "chasing a wind-blown hat"
+    },
+    {
+      "name": "umbrella-fight",
+      "text": "wrestling an umbrella blown inside-out, ribs bent skyward against the gust",
+      "text_short": "fighting an inside-out umbrella"
+    },
+    {
+      "name": "pigeon-burst",
+      "text": "glancing up as a burst of pigeons explodes off the pavement around them",
+      "text_short": "startled by pigeons bursting into flight"
+    },
+    {
+      "name": "grocery-key-juggle",
+      "text": "juggling two paper grocery bags against one raised knee while fishing for keys",
+      "text_short": "juggling grocery bags while fishing for keys"
+    },
+    {
+      "name": "bus-wave",
+      "text": "waving down a bus half a second too late, arm still raised as it pulls away",
+      "text_short": "waving at a bus already pulling away"
+    },
+    {
+      "name": "shop-glass-pause",
+      "text": "paused mid-step by a shop window, their own reflection layered over the display",
+      "text_short": "paused at a shop window, reflection layered over the display"
+    },
+    {
+      "name": "phone-laugh",
+      "text": "breaking into an open laugh at something said down the phone, head tipped back",
+      "text_short": "laughing openly into a phone"
+    }
+  ]
+}

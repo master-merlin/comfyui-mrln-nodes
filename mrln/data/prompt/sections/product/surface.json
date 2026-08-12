@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Staging Surface",
+  "description": "The surface under the product — tabletop materials that set the shot's temperature.",
+  "suits": ["product", "object"],
+  "items": [
+    { "name": "wet-slate", "text": "on wet black slate, water sheeting into a low mirror, the stone's grain flashing silver where the highlight skims across it", "text_short": "wet black slate" },
+    { "name": "honed-travertine", "text": "on honed travertine, pale pores and fossil lines under a soft top light, warmth without gloss", "text_short": "honed travertine" },
+    { "name": "brushed-steel", "text": "on a brushed stainless bench, the grain stretching every reflection into long soft streaks, cool workshop neutrality", "text_short": "brushed steel bench" },
+    { "name": "raw-concrete", "text": "on a raw concrete slab, trowel arcs and pinholes catching the raking light, a rough ground that makes polished products read sharper", "text_short": "raw concrete slab" },
+    { "name": "butcher-block", "text": "on an end-grain walnut butcher block, checkerboard grain oiled deep, old knife scars softened by years of scrubbing", "text_short": "walnut butcher block" },
+    { "name": "white-terrazzo", "text": "on white terrazzo, marble chips scattering confetti color beneath the product, the slab ground flat to an eggshell sheen", "text_short": "white terrazzo" },
+    { "name": "black-acrylic", "text": "on polished black acrylic, a wet-look mirror reflection doubling the product, the edges falling away into pure black", "text_short": "black acrylic mirror" },
+    { "name": "midnight-velvet", "text": "on midnight velvet, the pile drinking every stray reflection so the product's own highlights float against darkness", "text_short": "light-drinking velvet" },
+    { "name": "washed-linen", "text": "on washed oatmeal linen, rumpled ridges throwing soft parallel shadows, a natural ground that flatters ceramics and skincare", "text_short": "washed linen ridges" },
+    { "name": "crushed-ice", "text": "on a bed of crushed ice, facets firing tiny prisms, cold fog creeping between the cubes and pooling at the base", "text_short": "crushed ice bed" }
+  ]
+}

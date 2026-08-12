@@ -1,18 +1,16 @@
 {
   "version": 1,
   "label": "Cozy Moment",
-  "description": "Hygge distilled: a warm interior, weather kept outside the window, maybe a companion animal.",
-  "prefix": "A deeply cozy interior moment.",
+  "description": "Hygge distilled: a genuinely snug room, warm practical light, weather kept outside the window, maybe a companion animal.",
+  "prefix": "A deeply cozy interior moment, shot on warm-toned analog film with grain like felt.",
   "slots": [
-    { "id": "space", "ref": "architecture/interior", "label": "The space", "emphasis": 1.2 },
-    { "id": "companion", "ref": "animal/pet", "label": "Companion", "allow_empty": true, "emphasis": 1.15 },
+    { "id": "space", "ref": "architecture/snug-interior", "label": "The space", "emphasis": 1.2 },
+    { "id": "companion", "ref": "animal/hearthside", "label": "Companion", "allow_empty": true, "emphasis": 1.15 },
     { "id": "outside", "ref": "atmosphere/weather", "label": "Outside the window", "default": "light-rain" },
-    { "id": "light", "ref": "lighting/organic", "label": "Warm light", "default": "fireplace-glow" },
-    { "id": "mood", "ref": "atmosphere/mood", "label": "Mood", "default": "nostalgic" },
-    { "id": "medium", "ref": "style/medium", "label": "Medium", "default": "analog-film" },
-    { "id": "palette", "ref": "style/palette", "label": "Palette", "default": "golden-warmth" }
+    { "id": "light", "ref": "lighting/organic", "label": "Warm light", "tags_none": ["day", "night"], "default": "fireplace-glow" },
+    { "id": "palette", "ref": "style/palette", "label": "Palette", "tags_any": ["warm", "pale"], "default": "golden-warmth" }
   ],
   "suffix": "steam rising from a mug, soft blankets, the weather safely on the other side of the glass",
-  "negative": "clinical light, watermark, text",
+  "negative": "clinical light, watermark, text, people",
   "render": { "format": "string", "joiner": ", " }
 }

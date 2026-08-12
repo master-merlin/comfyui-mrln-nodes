@@ -43,6 +43,11 @@
       "name": "downcast-lashes",
       "text": "gaze lowered, lashes catching the light",
       "text_short": "downcast lashes"
+    },
+    {
+      "name": "up-through-lashes",
+      "text": "chin dipped, eyes lifted to the lens up through the lashes",
+      "text_short": "gaze up through lashes"
     }
   ]
 }

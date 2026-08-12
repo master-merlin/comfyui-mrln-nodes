@@ -4,25 +4,24 @@
   "type": [
     "human"
   ],
-  "description": "Street photography: a characterful stranger, city geometry, weather doing the mood work.",
-  "prefix": "A candid street photograph, decisive moment.",
+  "description": "Street photography over a dedicated stranger cast: an ordinary passerby caught in a decisive moment, city geometry and weather doing the mood work, reportage optics locked to the street kit.",
+  "prefix": "A candid street photograph, the decisive moment — {passerby}, caught {moment}, unaware of the frame closing around them.",
   "slots": [
     {
       "id": "passerby",
-      "ref": "human/archetype",
-      "label": "The stranger",
+      "ref": "human/passerby",
+      "label": "The Stranger",
       "emphasis": 1.15
     },
     {
       "id": "moment",
-      "ref": "human/gesture",
-      "label": "Caught mid",
-      "allow_empty": true
+      "ref": "human/street-moment",
+      "label": "Caught Mid"
     },
     {
       "id": "scene",
       "ref": "location/urban",
-      "label": "City stage",
+      "label": "City Stage",
       "emphasis": 1.15
     },
     {
@@ -34,20 +33,17 @@
     {
       "id": "film",
       "ref": "camera/film",
-      "label": "Film",
+      "label": "Film Character",
       "default": "tri-x-400"
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
-      "label": "Lens",
-      "default": "35mm-environmental"
-    },
-    {
-      "id": "styleline",
-      "ref": "style/photography",
-      "label": "Style",
-      "default": "street"
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage",
+      "tags_any": [
+        "street"
+      ]
     },
     {
       "id": "framing",
@@ -56,10 +52,11 @@
       "default": "layered-depth"
     }
   ],
-  "suffix": "unposed truth, layered strangers in depth, geometry aligning for one instant",
-  "negative": "posed studio look, watermark, text, child, underage",
+  "suffix": "Street Rendering: (unposed truth, strangers layered through the depth of the frame, geometry aligning for one held instant:1.2), available light only, honest grain, motion allowed to blur at the frame edges, the city indifferent around its subject.",
+  "negative": "posed studio look, studio lighting, watermark, text, child, underage",
   "render": {
-    "format": "string",
-    "joiner": ", "
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
   }
 }

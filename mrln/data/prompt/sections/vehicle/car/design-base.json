@@ -6,7 +6,7 @@
     {
       "name": "mazda-furai",
       "text": "Mazda Furai",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -14,7 +14,7 @@
     {
       "name": "bmw-gina",
       "text": "BMW Gina",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -22,7 +22,7 @@
     {
       "name": "mercedes-benz-biome",
       "text": "Mercedes-Benz Biome",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -30,7 +30,7 @@
     {
       "name": "ds-xe-tense",
       "text": "DS XE-Tense",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -38,7 +38,7 @@
     {
       "name": "lamborghini-terzo-millennio",
       "text": "Lamborghini Terzo Millennio",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -46,7 +46,7 @@
     {
       "name": "chrysler-halcyon",
       "text": "Chrysler Halcyon",
-      "weight": 0.1429,
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -54,7 +54,23 @@
     {
       "name": "maserati-genesis",
       "text": "Maserati Genesis",
-      "weight": 0.1429,
+      "weight": 0.1111,
+      "tags": [
+        "visionary-sculptural"
+      ]
+    },
+    {
+      "name": "renault-trezor",
+      "text": "Renault Trezor",
+      "weight": 0.1111,
+      "tags": [
+        "visionary-sculptural"
+      ]
+    },
+    {
+      "name": "mercedes-benz-vision-one-eleven",
+      "text": "Mercedes-Benz Vision One-Eleven",
+      "weight": 0.1111,
       "tags": [
         "visionary-sculptural"
       ]
@@ -62,7 +78,7 @@
     {
       "name": "porsche-mission-x",
       "text": "Porsche Mission X",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -70,7 +86,7 @@
     {
       "name": "genesis-gran-tourismo-concept",
       "text": "Genesis Gran Tourismo Concept",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -78,7 +94,7 @@
     {
       "name": "polestar-synergy",
       "text": "Polestar Synergy",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -86,7 +102,7 @@
     {
       "name": "alpine-alpenglow",
       "text": "Alpine Alpenglow",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -94,7 +110,7 @@
     {
       "name": "mg-cyberster",
       "text": "MG Cyberster",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -102,7 +118,7 @@
     {
       "name": "aston-martin-valhalla",
       "text": "Aston Martin Valhalla",
-      "weight": 0.1429,
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]
@@ -110,7 +126,15 @@
     {
       "name": "lotus-evija",
       "text": "Lotus Evija",
-      "weight": 0.1429,
+      "weight": 0.125,
+      "tags": [
+        "elegant-gt"
+      ]
+    },
+    {
+      "name": "bugatti-tourbillon",
+      "text": "Bugatti Tourbillon",
+      "weight": 0.125,
       "tags": [
         "elegant-gt"
       ]

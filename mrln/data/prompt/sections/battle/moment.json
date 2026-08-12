@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "label": "Battle Moment",
+  "description": "The story beat and its camera in one draw — items are tagged charge / last-stand / aftermath so template variants couple via tags_any.",
+  "items": [
+    {
+      "name": "lances-drop",
+      "text": "the charge at full commit seen from a low chase camera racing beside the front rank, couched lances dropping level in a wave down the line, torn earth thrown man-high behind the hooves",
+      "text_short": "full-commit lance charge",
+      "tags": ["charge"]
+    },
+    {
+      "name": "closing-run",
+      "text": "the last fifty paces framed head-on at helmet height, both lines breaking into a run, the gap closing, arrows still falling steeply into the space between",
+      "text_short": "final fifty paces",
+      "tags": ["charge"]
+    },
+    {
+      "name": "impact-ripple",
+      "text": "the first heartbeat of impact seen side-on from just above the spear-points, the collision rippling down the line like a wave along a whip, riders standing up in their stirrups",
+      "text_short": "impact rippling the line",
+      "tags": ["charge"]
+    },
+    {
+      "name": "shrinking-ring",
+      "text": "a ring of shields shrinking around the planted standard, framed from outside the circle through the gap between two raised rims, every shield facing outward and none of them unmarked",
+      "text_short": "shrinking shield-ring",
+      "tags": ["last-stand"]
+    },
+    {
+      "name": "broken-gate",
+      "text": "a splintered gateway held by a handful, framed from inside the arch looking out at the mass pressing in, dust sifting from the strained lintel at every blow",
+      "text_short": "holding the broken gate",
+      "tags": ["last-stand"]
+    },
+    {
+      "name": "hilltop-circle",
+      "text": "the survivors back to back on the hilltop, camera low on the slope beneath them so their leveled spears rake across the storm-lit clouds, banners planted at the circle's center",
+      "text_short": "hilltop last circle",
+      "tags": ["last-stand"]
+    },
+    {
+      "name": "crow-silence",
+      "text": "the field after, seen from a slow high vantage — spears standing at angles like winter reeds, crows drifting down in ones and twos, nothing else moving",
+      "text_short": "crow-quiet field",
+      "tags": ["aftermath"]
+    },
+    {
+      "name": "rain-on-steel",
+      "text": "fine rain beading and running on abandoned helms and blades in the near foreground while the emptied field softens into mist behind them, banners soaked flat against the mud",
+      "text_short": "rain on abandoned steel",
+      "tags": ["aftermath"]
+    },
+    {
+      "name": "survivor-walk",
+      "text": "one unhorsed knight walking slowly out of the frame's depth between the fallen, helm carried loose in one hand, a wet banner cloth dragging from the other",
+      "text_short": "lone survivor walking",
+      "tags": ["aftermath"]
+    }
+  ]
+}

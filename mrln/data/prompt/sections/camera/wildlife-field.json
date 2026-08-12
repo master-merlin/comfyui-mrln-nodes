@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Wildlife Fieldcraft",
+  "description": "Field rigs and disciplines of working wildlife photographers — how the frame was physically made, from long glass to camera traps.",
+  "items": [
+    {
+      "name": "600mm-bag-hide",
+      "text": "shot on a 600mm f/4 super-telephoto resting on a beanbag in a ground-level hide, eye-level with the animal, the background compressed into a wash of habitat color",
+      "text_short": "600mm f/4 from a ground hide, eye-level"
+    },
+    {
+      "name": "teleconverter-blind",
+      "text": "an 840mm teleconverter rig braced on a vehicle-blind window mount, heat shimmer trembling in the far distance, focus locked hard on the nearest eye",
+      "text_short": "840mm teleconverter from a vehicle blind"
+    },
+    {
+      "name": "floating-hide",
+      "text": "shot from a floating hide with the lens barely above the water, subject and its reflection meeting in one low mirror-line sightline",
+      "text_short": "floating hide at water level",
+      "tags": ["water"]
+    },
+    {
+      "name": "camera-trap",
+      "text": "a wide-angle DSLR camera trap fired by an infrared beam, soft off-camera flashes rigged days in advance, the animal photographing itself mid-stride at close range",
+      "text_short": "wide-angle camera-trap frame",
+      "tags": ["ground"]
+    },
+    {
+      "name": "remote-ground-rig",
+      "text": "a remote wide-angle camera placed at ground level hours ahead and triggered from a distance, paws huge and horizon low in the exaggerated close perspective",
+      "text_short": "remote ground-level wide angle",
+      "tags": ["ground"]
+    },
+    {
+      "name": "gimbal-pan",
+      "text": "a fluid gimbal head panning with the running animal at 1/30 second, legs and habitat streaked into motion while the eye stays pinned sharp",
+      "text_short": "slow-shutter gimbal pan, sharp eye"
+    },
+    {
+      "name": "belly-crawl-stalk",
+      "text": "a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green",
+      "text_short": "prone stalk through blurred grass"
+    },
+    {
+      "name": "canopy-platform",
+      "text": "shot from a canopy platform at branch height, level with the treetop world instead of craning up at it, leaves layering soft around the clear sightline",
+      "text_short": "canopy platform at branch height"
+    },
+    {
+      "name": "boat-drift",
+      "text": "shot from a drifting boat with the engine cut, the long lens braced on the gunwale, a low skimming angle across open water",
+      "text_short": "long lens braced on a drifting boat",
+      "tags": ["water"]
+    },
+    {
+      "name": "headland-scope",
+      "text": "shot from a clifftop headland on a fluid head, the long lens angled slightly down over open water, swell lines stacking soft in the compressed distance",
+      "text_short": "clifftop long lens over open water",
+      "tags": ["water"]
+    },
+    {
+      "name": "ghillie-wrap",
+      "text": "a ghillie-suited photographer melted into the undergrowth, lens hood wrapped in scrim, shooting through a natural gap in the foliage",
+      "text_short": "ghillie-suited through the foliage gap"
+    }
+  ]
+}

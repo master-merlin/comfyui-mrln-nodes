@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Grand Interior",
+  "description": "Large public interiors — halls, atriums, terminals and stages; any subject.",
+  "tags": ["indoor"],
+  "items": [
+    {
+      "name": "museum-atrium",
+      "text": "A skylit museum atrium, white marble floors and a suspended sculpture turning slowly over the void between gallery balconies.",
+      "text_short": "skylit museum atrium"
+    },
+    {
+      "name": "grand-library",
+      "text": "A grand reading room, green-shaded lamps down long oak tables beneath a coffered barrel vault, book galleries behind brass rails.",
+      "text_short": "grand library reading room"
+    },
+    {
+      "name": "opera-house",
+      "text": "An opera house auditorium, tiers of gilded boxes rising in a horseshoe around red velvet stalls beneath a painted dome and crystal chandelier.",
+      "text_short": "gilded opera auditorium"
+    },
+    {
+      "name": "railway-concourse",
+      "text": "A historic railway concourse beneath a glazed iron train shed, split-flap destination boards and polished stone floors reflecting the ribs above.",
+      "text_short": "glazed railway concourse"
+    },
+    {
+      "name": "airport-terminal",
+      "text": "A contemporary airport terminal, a wave-form ceiling of white steel ribs over glass walls, empty check-in islands on terrazzo.",
+      "text_short": "wave-roof airport terminal"
+    },
+    {
+      "name": "grand-hotel-lobby",
+      "text": "A grand hotel lobby, double-height columns of book-matched marble, a brass elevator bank and a towering floral centerpiece on a round table.",
+      "text_short": "grand hotel lobby"
+    },
+    {
+      "name": "palace-ballroom",
+      "text": "An empty palace ballroom, parquet de Versailles underfoot, mirrored walls multiplying crystal chandeliers into golden depth.",
+      "text_short": "mirrored palace ballroom"
+    },
+    {
+      "name": "arena-stage",
+      "text": "An empty arena stage, rigging trusses and moving-head beams over a glossy black deck, haze hanging in the shafts of light.",
+      "text_short": "arena stage in haze"
+    },
+    {
+      "name": "victorian-palm-house",
+      "text": "A Victorian palm house, white iron ribs and thousands of glass panes arching over dense tropical planting and dripping humidity.",
+      "text_short": "Victorian palm house"
+    },
+    {
+      "name": "glass-galleria",
+      "text": "A 19th-century shopping galleria, mosaic marble floors beneath a barrel-vaulted glass and iron roof, gilded storefronts rising four storeys to the lunettes.",
+      "text_short": "glass-vaulted galleria"
+    },
+    {
+      "name": "underground-cistern",
+      "text": "An underground cistern hall, a forest of salvaged marble columns rising from black water, walkways skimming the surface between uplit capitals.",
+      "text_short": "column forest cistern"
+    },
+    {
+      "name": "victorian-swimming-baths",
+      "text": "A Victorian swimming bath hall, glazed brick in cream and green, cast-iron spectator galleries above still turquoise water and numbered changing stalls along the poolside.",
+      "text_short": "Victorian bath hall"
+    }
+  ]
+}

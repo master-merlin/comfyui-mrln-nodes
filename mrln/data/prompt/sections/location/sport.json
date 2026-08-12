@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "label": "Sport Venue",
+  "description": "Training floors, courts, pools and arenas — athletic settings for portrait, lifestyle and action work.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "boxing-gym",
+      "text": "An old boxing gym, a ring with sagging red ropes under a single low lampshade, heavy bags patched with duct tape and fight posters curling on the brick walls.",
+      "text_short": "old-school boxing gym"
+    },
+    {
+      "name": "skate-park",
+      "text": "A poured-concrete skate park, coping-scuffed bowls and quarter pipes, wax-darkened ledges and scattered stickers beneath a full-length graffiti mural.",
+      "text_short": "concrete skate park bowls"
+    },
+    {
+      "name": "floodlit-pitch",
+      "text": "A rain-freshened training pitch under stadium floodlights, chalk-white touchlines glowing against dark turf, empty dugouts and low haze around the lamp banks.",
+      "text_short": "floodlit training pitch",
+      "tags": ["night"]
+    },
+    {
+      "name": "climbing-gym",
+      "text": "A climbing gym wall of angled plywood volumes, color-coded resin holds tracing routes up the overhang, chalk dust hanging in slanted light above the crash pads.",
+      "text_short": "color-coded climbing wall"
+    },
+    {
+      "name": "martial-arts-dojo",
+      "text": "A traditional martial arts dojo, sprung cedar floor polished by decades of bare feet, calligraphy scrolls and racked wooden practice weapons along the wall.",
+      "text_short": "cedar-floored dojo"
+    },
+    {
+      "name": "velodrome",
+      "text": "An indoor velodrome, honey-colored pine boards banking to forty-three degrees, the black measurement line and red sprinters' line sweeping through the curve.",
+      "text_short": "banked velodrome boards"
+    },
+    {
+      "name": "stadium-tunnel",
+      "text": "A stadium players' tunnel, rubberized floor sloping up toward a rectangle of green pitch and glare, championship years stenciled along the concrete walls.",
+      "text_short": "stadium players' tunnel"
+    },
+    {
+      "name": "competition-pool",
+      "text": "A competition natatorium, lane ropes in team colors stretched across deep-blue water, backstroke flags and a digital timing board glowing above the starting blocks.",
+      "text_short": "competition swimming pool"
+    }
+  ]
+}

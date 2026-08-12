@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Boudoir Interior",
-  "description": "The sixteen shared session interiors from the OverDrive boudoir source, adapted to schema.",
+  "description": "Session interiors from the OverDrive boudoir source, adapted to schema and extended in the same register.",
   "suits": ["human"],
   "tags": ["boudoir", "indoor"],
   "items": [
@@ -85,6 +85,21 @@
       "text": "Moody film-noir parlor featuring dark crimson flock wallpaper, heavy velvet drapes and vintage brass fixtures.",
       "text_short": "film-noir crimson parlor",
       "tags": ["night"]
+    },
+    {
+      "name": "ryokan-suite",
+      "text": "Serene ryokan suite with tatami flooring, shoji-filtered light, a low cedar platform bed and a single ikebana arrangement in the tokonoma alcove.",
+      "text_short": "tatami ryokan suite"
+    },
+    {
+      "name": "art-deco-suite",
+      "text": "Glamorous Art Deco suite with lacquered burl-wood panels, fan-motif mirrors, frosted-glass sconces and champagne velvet upholstery.",
+      "text_short": "Art Deco lacquer suite"
+    },
+    {
+      "name": "attic-skylight-loft",
+      "text": "Converted attic loft with steep exposed rafters, a brass bed beneath a wide skylight and soft directional toplight falling across rumpled white linen.",
+      "text_short": "attic skylight loft"
     }
   ]
 }

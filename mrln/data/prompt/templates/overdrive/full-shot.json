@@ -75,7 +75,10 @@
     {
       "id": "state",
       "ref": "vehicle/car/action",
-      "label": "Depicted state"
+      "label": "Depicted state",
+      "tags_none": [
+        "service-showcase"
+      ]
     },
     {
       "id": "view",

@@ -1,59 +1,64 @@
 {
   "version": 1,
   "label": "Dynamic Viewpoint",
-  "description": "Energetic and unusual camera positions for any subject.",
+  "description": "Energetic and unusual camera positions for any subject — each names the camera's height, distance and what the position does to scale and motion.",
   "items": [
     {
       "name": "drone-high",
-      "text": "high drone shot looking steeply down, subject small in a vast environment",
+      "text": "high drone shot looking steeply down from a hundred meters, the subject a small precise figure in a vast readable environment, its shadow stretching long across the ground plane",
       "text_short": "high drone view",
       "tags": ["aerial"]
     },
     {
       "name": "birds-eye-topdown",
-      "text": "perfect top-down bird's-eye view, the scene flattened into graphic shapes",
+      "text": "perfect nadir top-down view, the scene flattened into a graphic plan of shapes and cast shadows with no horizon left to orient by",
       "text_short": "top-down view",
       "tags": ["aerial"]
     },
     {
       "name": "worms-eye",
-      "text": "extreme worm's-eye view from ground level, subject towering against the sky",
+      "text": "extreme worm's-eye view with the camera at ground level looking straight up, the subject towering into converging verticals against open sky",
       "text_short": "worm's-eye view"
     },
     {
       "name": "dutch-tilt",
-      "text": "dutch tilt, the horizon canted for restless tension",
+      "text": "Dutch tilt of a committed fifteen degrees, every stable line turned diagonal, restless tension injected into a static frame",
       "text_short": "dutch tilt"
     },
     {
       "name": "pov-hands",
-      "text": "first-person point of view, the viewer's own hands entering the frame",
+      "text": "first-person point of view, the viewer's own hands entering the lower frame edge in soft focus, the scene beyond them the real subject",
       "text_short": "first-person POV"
     },
     {
       "name": "isometric",
-      "text": "clean isometric three-quarter overhead perspective, diorama-like parallel projection",
+      "text": "clean isometric three-quarter overhead perspective with no vanishing point, parallel lines staying parallel, the scene reading as a precise miniature diorama",
       "text_short": "isometric view"
     },
     {
       "name": "through-foreground",
-      "text": "shot through out-of-focus foreground elements, layered voyeuristic depth",
+      "text": "shot through out-of-focus foreground elements, a soft dark frame of blur layering the scene with voyeuristic depth",
       "text_short": "through-foreground layers"
     },
     {
       "name": "reflection-only",
-      "text": "the subject seen only as a reflection, in glass, water or chrome",
+      "text": "the subject present only as its reflection in glass, still water or chrome, the reflecting surface's own texture rippling through the likeness",
       "text_short": "seen in reflection"
     },
     {
       "name": "tracking-side",
-      "text": "side-on tracking view moving with the subject, background streaking past",
+      "text": "side-on tracking view locked to the moving subject, the background streaked into horizontal ribbons while the subject stays pin-sharp",
       "text_short": "side tracking view"
     },
     {
       "name": "macro-distance",
-      "text": "macro-range closeness, shallow focus, textures becoming landscapes",
+      "text": "macro-range closeness a hand-width from the subject, the focus plane a few millimeters deep, familiar textures turning into landscape",
       "text_short": "macro closeness"
+    },
+    {
+      "name": "low-chase-cam",
+      "text": "chase camera skimming centimeters above the ground behind the subject, surface rushing beneath and the world pouring toward the vanishing point",
+      "text_short": "ground-skimming chase cam"
     }
   ]
 }

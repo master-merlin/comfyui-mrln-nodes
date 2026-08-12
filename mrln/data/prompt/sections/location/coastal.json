@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "label": "Coastal Location",
+  "description": "Shorelines and working waterfronts — harbors, piers, cliffs, coves and dunes.",
+  "items": [
+    {
+      "name": "fishing-harbor",
+      "text": "A small fishing harbor at low tide, trawlers leaning on the mud beside stone quays, lobster pots and drying nets stacked along the slipway.",
+      "text_short": "fishing harbor at low tide"
+    },
+    {
+      "name": "boardwalk-pier",
+      "text": "A wooden pleasure pier striding out over the surf on barnacled piles, painted railings, striped kiosks and a distant pavilion at its end.",
+      "text_short": "wooden pleasure pier"
+    },
+    {
+      "name": "lighthouse-point",
+      "text": "A white lighthouse on a grassy headland above black wave-cut rocks, a keeper's cottage and walled path leading out to the lamp tower.",
+      "text_short": "headland lighthouse"
+    },
+    {
+      "name": "sea-cave",
+      "text": "Inside a sea cave, turquoise light bouncing off the water onto wet basalt walls, the bright mouth framing open ocean.",
+      "text_short": "glowing sea cave mouth"
+    },
+    {
+      "name": "tide-pools",
+      "text": "A shelf of tide pools on dark volcanic rock, anemones and starfish held in glassy windows of trapped seawater.",
+      "text_short": "tide pools on rock shelf"
+    },
+    {
+      "name": "dune-boardwalk",
+      "text": "A weathered plank boardwalk winding through grassy dunes toward the sea, wind-drifted sand feathered across the boards.",
+      "text_short": "dune boardwalk path"
+    },
+    {
+      "name": "mediterranean-fishing-village",
+      "text": "A Mediterranean fishing village front, colorwashed houses stacked above a curved quay, small wooden boats bobbing on clear green water.",
+      "text_short": "colorwashed fishing village"
+    },
+    {
+      "name": "chalk-cliffs",
+      "text": "White chalk cliffs dropping sheer into slate-blue sea, a footpath snaking through cropped turf along the top of the drop.",
+      "text_short": "white chalk clifftop"
+    },
+    {
+      "name": "black-sand-beach",
+      "text": "A black volcanic sand beach backed by columnar basalt cliffs, white foam sliding over the dark grains and sea stacks standing offshore in drifting mist.",
+      "text_short": "black sand, basalt columns"
+    },
+    {
+      "name": "riviera-beach-club",
+      "text": "A riviera beach club lido, rows of striped umbrellas and matching loungers raked toward the tideline below a white balustrade promenade.",
+      "text_short": "striped riviera beach club"
+    },
+    {
+      "name": "storm-harbor-mole",
+      "text": "A stone harbor mole under heavy swell, waves detonating against the seaward face and washing green water across the walkway toward the beacon at its end.",
+      "text_short": "storm waves over harbor mole"
+    }
+  ]
+}

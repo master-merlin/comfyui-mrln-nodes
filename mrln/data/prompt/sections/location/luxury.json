@@ -1,26 +1,32 @@
 {
   "version": 1,
   "label": "Luxury Estate",
+  "description": "Estates, resorts and money-no-object addresses — driveways, docks, courtyards and terraces.",
   "items": [
     {
       "name": "tuscan-villa-driveway",
-      "text": "The grand, cypress-lined gravel driveway leading to a classic Tuscan villa made of warm, weathered stone, set within a landscape of rolling hills and orderly rows of grapevines."
+      "text": "The grand, cypress-lined gravel driveway leading to a classic Tuscan villa made of warm, weathered stone, set within a landscape of rolling hills and orderly rows of grapevines.",
+      "text_short": "cypress villa driveway"
     },
     {
       "name": "modern-mansion-driveway",
-      "text": "The driveway of a large, generic modern mansion with a manicured lawn and high privacy hedges."
+      "text": "The basalt-paved driveway of a modern mansion, a water-feature rill running along one edge, manicured lawn and high privacy hedges beyond.",
+      "text_short": "basalt mansion driveway"
     },
     {
       "name": "hollywood-hills-mansion",
-      "text": "The perfectly manicured driveway of a modern, minimalist glass-and-steel mansion in the Hollywood Hills overlooking the sprawling Los Angeles basin."
+      "text": "The perfectly manicured driveway of a modern, minimalist glass-and-steel mansion in the Hollywood Hills overlooking the sprawling Los Angeles basin.",
+      "text_short": "Hollywood Hills glass mansion"
     },
     {
       "name": "castle-forecourt",
-      "text": "The grand forecourt of a historic castle estate like Neuschwanstein, framed by tall stone walls and dramatic, forested alpine topography."
+      "text": "The cobbled forecourt of a fairy-tale alpine castle, white limestone walls and pointed turrets rising straight from forested crags, valley haze layering the peaks beyond the gatehouse.",
+      "text_short": "fairy-tale castle forecourt"
     },
     {
       "name": "yacht-harbor-dock",
-      "text": "A clean wooden dock in an exclusive yacht harbor, lined with mooring posts and coiled ropes."
+      "text": "A teak dock in an exclusive yacht harbor, varnished mooring cleats and coiled lines, a row of white superyacht sterns rising behind.",
+      "text_short": "yacht harbor teak dock"
     },
     {
       "name": "private-airstrip",
@@ -34,7 +40,7 @@
     },
     {
       "name": "grand-hotel-portico",
-      "text": "The lantern-lit portico of a grand belle-époque hotel, brass luggage carts and a red carpet under the columns.",
+      "text": "The portico of a grand belle-époque hotel, glass lanterns between the columns, brass luggage carts and a red carpet running out to the drive.",
       "text_short": "grand hotel portico"
     },
     {
@@ -82,6 +88,36 @@
       "name": "beachfront-villa",
       "text": "A lavish beachfront villa forecourt, palm shadows across pale stone and turquoise water beyond the dunes.",
       "text_short": "beachfront villa forecourt"
+    },
+    {
+      "name": "monte-carlo-casino-square",
+      "text": "The Casino Square of Monte Carlo, belle-époque facades and copper-green domes, clipped palms and polished cobbles ringing the fountain garden.",
+      "text_short": "Monte Carlo Casino Square"
+    },
+    {
+      "name": "superyacht-aft-deck",
+      "text": "The aft deck of a superyacht, oiled teak planking and brushed-steel rails, a champagne-colored wake unspooling toward the horizon.",
+      "text_short": "superyacht aft deck"
+    },
+    {
+      "name": "riad-courtyard",
+      "text": "A Marrakech riad courtyard, zellige-tiled fountain, carved cedar arcades and orange trees dropping shade onto cool stone.",
+      "text_short": "zellige riad courtyard"
+    },
+    {
+      "name": "estate-wine-cellar",
+      "text": "A vaulted estate wine cellar, candle sconces down a barrel-lined stone aisle, chalk-marked vintages sleeping in the dark.",
+      "text_short": "barrel-vault wine cellar"
+    },
+    {
+      "name": "penthouse-terrace",
+      "text": "A penthouse roof terrace of pale limestone and frameless glass balustrade, a linear gas fire pit between clipped olive trees, the skyline dropping away on three sides.",
+      "text_short": "penthouse roof terrace"
+    },
+    {
+      "name": "collectors-garage-gallery",
+      "text": "A collector's gallery garage, museum-grade lighting coves over seamless epoxy floors, a glass wall dividing the leather club chairs of the lounge from the display bays.",
+      "text_short": "glass gallery garage"
     }
   ]
 }

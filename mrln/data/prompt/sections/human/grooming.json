@@ -9,6 +9,7 @@
     { "name": "chiseled-jaw", "text": "chiseled jawline", "text_short": "chiseled jawline" },
     { "name": "groomed-full-beard", "text": "neatly groomed full beard", "text_short": "groomed full beard" },
     { "name": "heavy-shadow", "text": "heavy five-o'clock shadow", "text_short": "heavy shadow" },
-    { "name": "mustache-classic", "text": "classic well-kept mustache", "text_short": "classic mustache" }
+    { "name": "mustache-classic", "text": "classic well-kept mustache", "text_short": "classic mustache" },
+    { "name": "salt-pepper-beard", "text": "short salt-and-pepper beard, neatly edged", "text_short": "salt-and-pepper beard" }
   ]
 }

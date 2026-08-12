@@ -52,6 +52,11 @@
       "name": "blueprint",
       "text": "blueprint print, white technical linework glowing on deep cyan ground",
       "text_short": "blueprint cyan"
+    },
+    {
+      "name": "mezzotint",
+      "text": "mezzotint print look, velvety continuous tone worked from dark to light, deep matte blacks, highlights burnished out of darkness",
+      "text_short": "mezzotint velvet blacks"
     }
   ]
 }

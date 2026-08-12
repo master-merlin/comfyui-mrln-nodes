@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "label": "Studio Light Rig",
+  "description": "Automotive studio lighting craft — how the paint, glass and metal are actually lit, written for machines instead of faces.",
+  "suits": ["object", "vehicle"],
+  "items": [
+    {
+      "name": "overhead-softbox-line",
+      "text": "one room-length overhead softbox laying a single unbroken specular line from nose to tail, the quality of the surfacing judged by how cleanly that line flows",
+      "text_short": "roofline softbox highlight line"
+    },
+    {
+      "name": "light-painting-pass",
+      "text": "a long-exposure light-painting pass, a handheld LED tube walked the length of the body until every panel carries one continuous liquid highlight",
+      "text_short": "light-painting tube pass"
+    },
+    {
+      "name": "dark-field-rim",
+      "text": "dark-field lighting, black walls and two strip boxes raking the flanks so the machine reads as bright carved edges over deep paint",
+      "text_short": "dark-field strip rims"
+    },
+    {
+      "name": "inspection-tunnel",
+      "text": "rows of diffused tube light overhead like a paint-inspection tunnel, zebra stripes bending across the surfacing and proving it true",
+      "text_short": "zebra inspection stripes"
+    },
+    {
+      "name": "single-fresnel",
+      "text": "one large fresnel set high and far for hard sun discipline, a single clean shadow thrown long across the studio floor",
+      "text_short": "hard single fresnel, one long shadow"
+    },
+    {
+      "name": "bounce-cove-wrap",
+      "text": "the whole cove used as a bounce, wraparound shadowless white with shutlines and intakes drawn purely by occlusion",
+      "text_short": "shadowless cove bounce"
+    },
+    {
+      "name": "scan-stripes",
+      "text": "structured-light scanner stripes sweeping the bodywork, thin cyan contour lines mapping every change of curvature they cross",
+      "text_short": "scan-line cyan contours"
+    },
+    {
+      "name": "pin-spot-black",
+      "text": "pin spots out of blackness picking one wheel, the badge and the lamp graphic, everything else held at the edge of visibility",
+      "text_short": "pin spots from black",
+      "tags": ["car"]
+    },
+    {
+      "name": "sunset-gel-gradient",
+      "text": "a smooth amber-to-violet gel gradient washed across the backdrop, the machine held under a neutral white key so the paint stays honest",
+      "text_short": "gel gradient backdrop, neutral key"
+    }
+  ]
+}

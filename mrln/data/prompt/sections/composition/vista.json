@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Vista Composition",
+  "description": "Landscape composition craft — how the frame organizes land, sky and distance, from grand vistas to quiet corners.",
+  "items": [
+    {
+      "name": "low-horizon-sky",
+      "text": "horizon dropped into the lowest third, the sky given four-fifths of the frame to perform",
+      "text_short": "low horizon, dominant sky"
+    },
+    {
+      "name": "high-horizon-foreground",
+      "text": "horizon pinned high, the foreground ground plane unrolling toward the viewer in deep textured perspective",
+      "text_short": "high horizon, unrolled foreground"
+    },
+    {
+      "name": "s-curve-lead",
+      "text": "a river or shoreline drawn as a silver S-curve, pulling the eye from the near corner to the far light",
+      "text_short": "silver S-curve lead-in"
+    },
+    {
+      "name": "foreground-anchor",
+      "text": "a bold foreground anchor at arm's length — cracked rock, ice, flowers — with the vista receding behind it in three distinct planes",
+      "text_short": "near anchor, three receding planes"
+    },
+    {
+      "name": "layered-recession",
+      "text": "ridge upon ridge receding in tonal steps, each layer paler and softer than the last, depth built entirely from atmosphere",
+      "text_short": "atmospheric layered recession"
+    },
+    {
+      "name": "lone-element",
+      "text": "one small element allowed to matter — a single tree, boulder or reed — held in generous negative space",
+      "text_short": "lone element in negative space"
+    },
+    {
+      "name": "mirror-symmetry",
+      "text": "a still-water reflection folding the scene into perfect bilateral symmetry, the waterline as the fold",
+      "text_short": "still-water mirror symmetry"
+    },
+    {
+      "name": "pattern-field",
+      "text": "the land itself as pattern — dunes, furrows, ice plates — repeating to the frame edge with a single interruption for scale",
+      "text_short": "repeating land pattern, one break"
+    },
+    {
+      "name": "frame-within",
+      "text": "the vista framed through a natural arch, cave mouth or branch window, darkness ringing the bright distance",
+      "text_short": "natural frame around the vista"
+    },
+    {
+      "name": "diagonal-drive",
+      "text": "one strong diagonal running corner to corner — a ridge line, a shadow edge — keeping the stillness charged",
+      "text_short": "corner-to-corner diagonal"
+    },
+    {
+      "name": "telephoto-slice",
+      "text": "a long-lens slice cut from the greater landscape, layers compressed flat, geography abstracted into shape and tone",
+      "text_short": "compressed telephoto slice"
+    },
+    {
+      "name": "scale-tree",
+      "text": "a lone tree set small against a colossal landform, the size gap between them becoming the story of the frame",
+      "text_short": "lone tree against colossal landform"
+    }
+  ]
+}

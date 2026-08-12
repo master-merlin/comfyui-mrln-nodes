@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "label": "Seated Pose",
+  "description": "Chair, stool and floor seating mechanics for portrait work — the seated counterpart of pose/standing.",
+  "suits": ["human"],
+  "tags": ["solo"],
+  "items": [
+    { "name": "stool-lean-in", "text": "perched on a stool, elbows planted on the knees, torso pitched toward the lens", "text_short": "stool lean-in" },
+    { "name": "chair-reverse-straddle", "text": "straddling a reversed chair, forearms stacked on the backrest, chin resting on them", "text_short": "reversed-chair straddle" },
+    { "name": "crossed-knee-poise", "text": "seated tall with legs crossed at the knee, hands stacked on the top knee, shoulders level", "text_short": "crossed-knee poise" },
+    { "name": "floor-editorial", "text": "seated on the floor, one leg extended, the other knee raised, leaning back on a straight arm", "text_short": "floor editorial sit" },
+    { "name": "perch-edge", "text": "perched on the front edge of the seat, spine long, ankles crossed beneath the chair", "text_short": "edge-of-seat perch" },
+    { "name": "armchair-sprawl", "text": "settled deep into an armchair, one arm draped along the armrest, ankle resting on the opposite knee", "text_short": "armchair sprawl" }
+  ]
+}

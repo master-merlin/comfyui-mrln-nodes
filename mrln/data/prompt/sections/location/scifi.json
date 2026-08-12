@@ -65,6 +65,21 @@
       "name": "quantum-server-cathedral",
       "text": "A cathedral-scale server hall, crystalline compute pillars pulsing with slow light beneath vaulted cooling arrays.",
       "text_short": "crystalline server cathedral"
+    },
+    {
+      "name": "orbital-shipyard",
+      "text": "An orbital shipyard scaffold, skeletal hull frames caged in gantry lattice, welding arcs flaring against the planet's sunlit limb.",
+      "text_short": "orbital shipyard gantries"
+    },
+    {
+      "name": "colony-greenhouse",
+      "text": "A pressurized colony greenhouse dome, hydroponic racks misting under magenta grow-light strips, rust-red dunes pressing against the glass outside.",
+      "text_short": "colony greenhouse dome"
+    },
+    {
+      "name": "ring-habitat-farmland",
+      "text": "Farmland inside a rotating ring habitat, fields, rivers and villages curving up overhead until they vanish behind the glare of the axis sunline.",
+      "text_short": "ring habitat curved farmland"
     }
   ]
 }

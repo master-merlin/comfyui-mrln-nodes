@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "label": "Sci-Fi Attire",
+  "description": "Non-armor sci-fi costume — street tech, spacer workwear and lit fabrics; the hard-light counterpart to wardrobe/fantasy. Tagged 'scifi' for genre coupling.",
+  "suits": ["human"],
+  "tags": ["scifi"],
+  "items": [
+    { "name": "cyberpunk-jacket", "text": "a cropped cyberpunk jacket, electroluminescent piping tracing every seam, high asymmetric collar, holographic decals peeling at the shoulder", "text_short": "EL-piped cyberpunk jacket", "tags": ["neon"] },
+    { "name": "holo-slip-dress", "text": "a slip dress of holographic film, oil-slick color shifting with every movement, laser-cut hem floating weightless", "text_short": "holographic slip dress", "tags": ["neon"] },
+    { "name": "fiberoptic-gown", "text": "an evening gown woven with fiber-optic strands, constellations of cold light drifting through the midnight fabric", "text_short": "fiber-optic light gown", "tags": ["neon"] },
+    { "name": "station-jumpsuit", "text": "a fitted orbital-station jumpsuit, quilted thermal panels at shoulder and knee, magnetic tool tabs, a data cuff blinking at the wrist", "text_short": "orbital station jumpsuit" },
+    { "name": "spacer-layers", "text": "layered spacer robes over a pressure-mesh undersuit, dust-sealed goggles pushed up, breather mask hanging at the throat", "text_short": "spacer robes, breather" },
+    { "name": "vinyl-raincoat", "text": "an asymmetric transparent-vinyl raincoat over graphic thermal layers, glossy plastic catching every light source, cargo straps at the thigh", "text_short": "clear vinyl raincoat", "tags": ["neon"] }
+  ]
+}

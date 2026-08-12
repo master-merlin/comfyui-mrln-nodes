@@ -2,7 +2,7 @@
   "version": 1,
   "label": "Aviation Shot",
   "type": ["object", "vehicle", "aircraft"],
-  "description": "Aviation photography: aircraft type and state under big skies with long glass.",
+  "description": "Aviation photography: aircraft and an airframe-agnostic flight moment under a sky written from altitude, on long glass.",
   "prefix": "A breathtaking aviation photograph worthy of an airshow poster — one aircraft owning an enormous sky, the sense of speed, altitude and air pressure almost physical.",
   "slots": [
     {
@@ -13,14 +13,15 @@
     },
     {
       "id": "state",
-      "ref": "vehicle/aircraft/state",
+      "ref": "vehicle/aircraft/moment",
       "label": "Caught",
       "emphasis": 1.15
     },
     {
       "id": "sky",
-      "ref": "atmosphere/weather",
-      "label": "Sky"
+      "ref": "vehicle/aircraft/sky",
+      "label": "Sky",
+      "tags_none": ["night"]
     },
     {
       "id": "time",
@@ -29,9 +30,10 @@
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
+      "ref": "vehicle/craft/optics",
       "label": "Optics",
-      "default": "600mm-telephoto"
+      "tags_any": ["reach"],
+      "default": "600mm-f4"
     },
     {
       "id": "film",

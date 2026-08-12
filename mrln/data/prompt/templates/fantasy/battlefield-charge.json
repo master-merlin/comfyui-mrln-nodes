@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "label": "Battlefield Charge",
+  "description": "Massed fantasy battle at history-painting scale: war host, banners in wind, mud and steel — charge, last stand or aftermath via variants.",
+  "prefix": "A monumental fantasy battle canvas — armies rendered as weather, masses instead of individuals, one focal figure carrying the story; the wind works every banner and the ground claims every boot.",
+  "slots": [
+    {
+      "id": "standard",
+      "ref": "battle/standard",
+      "label": "Banners"
+    },
+    {
+      "id": "ground",
+      "ref": "battle/ground",
+      "label": "The Field",
+      "emphasis": 1.1
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Wind and Weather",
+      "default": "strong-wind"
+    },
+    {
+      "id": "hour",
+      "ref": "atmosphere/time-of-day",
+      "label": "Hour",
+      "tags_any": ["day"],
+      "default": "stormlight"
+    },
+    {
+      "id": "manner",
+      "ref": "style/history-painting",
+      "label": "Painted As",
+      "default": "romanticist-battle"
+    }
+  ],
+  "variants": [
+    {
+      "name": "charge",
+      "label": "The Charge",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "battle/moment",
+          "label": "The Moment",
+          "tags_any": ["charge"],
+          "default": "lances-drop",
+          "emphasis": 1.2
+        },
+        {
+          "id": "focal",
+          "ref": "battle/focal",
+          "label": "The Eye Lands On",
+          "tags_none": ["aftermath"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "host",
+          "ref": "battle/host",
+          "label": "The Host",
+          "emphasis": 1.2
+        },
+        {
+          "id": "terror",
+          "ref": "animal/dragon",
+          "label": "Loosed on the Field",
+          "allow_empty": true,
+          "empty_weight": 15,
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "last-stand",
+      "label": "The Last Stand",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "battle/moment",
+          "label": "The Moment",
+          "tags_any": ["last-stand"],
+          "default": "shrinking-ring",
+          "emphasis": 1.2
+        },
+        {
+          "id": "focal",
+          "ref": "battle/focal",
+          "label": "The Eye Lands On",
+          "tags_none": ["aftermath"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "host",
+          "ref": "battle/host",
+          "label": "Pressing In",
+          "tags_any": ["advancing"],
+          "emphasis": 1.2
+        },
+        {
+          "id": "terror",
+          "ref": "animal/dragon",
+          "label": "Loosed on the Field",
+          "allow_empty": true,
+          "empty_weight": 15,
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "aftermath",
+      "label": "The Aftermath",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "battle/moment",
+          "label": "The Moment",
+          "tags_any": ["aftermath"],
+          "default": "crow-silence",
+          "emphasis": 1.2
+        },
+        {
+          "id": "focal",
+          "ref": "battle/focal",
+          "label": "The Eye Lands On",
+          "tags_any": ["aftermath"],
+          "emphasis": 1.25
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "@variant",
+    "standard",
+    "ground",
+    "weather",
+    "hour",
+    "manner"
+  ],
+  "suffix": "Battle Rendering: (vast history-painting scale, distance measured in banner-counts:1.2), (mud, steel and cloth as honest materials — wet iron glare, matte churned earth, heavy soaked banner cloth:1.15), masses dissolving into brushwork with distance, full detail spent only where the eye lands, no two figures in the same pose.",
+  "negative": "modern weapons, firearms, tanks, watermark, text, child, underage, graphic gore, severed limbs, duplicate clone faces, identical repeated soldiers",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

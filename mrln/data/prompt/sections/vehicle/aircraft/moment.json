@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Flight Moment",
+  "description": "Airframe-agnostic flight moments — drama written against air, light and terrain so any aircraft type can carry it.",
+  "suits": ["object", "vehicle", "aircraft"],
+  "items": [
+    {
+      "name": "vapor-pull",
+      "text": "hauled through a hard turn, condensation blooming in sheets off the lifting surfaces and streaming from the tips",
+      "text_short": "hard turn, vapor blooming"
+    },
+    {
+      "name": "committed-low-pass",
+      "text": "committed to a low pass down the display line, its own shadow rushing to meet it as the ground blurs beneath",
+      "text_short": "low pass, shadow closing"
+    },
+    {
+      "name": "cloud-surfing",
+      "text": "skimming a solid cloud deck, wake carving a soft furrow while its shadow races alongside ringed by a glory",
+      "text_short": "skimming cloud deck, glory alongside"
+    },
+    {
+      "name": "valley-run",
+      "text": "threading a steep-walled valley below the ridgelines, banked against scree slopes that rise on either side",
+      "text_short": "valley run below the ridgelines"
+    },
+    {
+      "name": "sun-cross",
+      "text": "crossing the sun's disc as a hard black silhouette, flare spilling around the airframe's outline",
+      "text_short": "silhouette crossing the sun"
+    },
+    {
+      "name": "crosswind-arrival",
+      "text": "crabbed into a gusting crosswind just above the runway, wings rocking, a heartbeat from kicking straight",
+      "text_short": "crabbed crosswind arrival"
+    },
+    {
+      "name": "camera-ship-formation",
+      "text": "holding tight formation with the camera ship, close enough to count fasteners, the horizon tilted behind it",
+      "text_short": "tight formation with camera ship"
+    },
+    {
+      "name": "mountain-departure",
+      "text": "climbing hard away from a mountain strip, the terrain falling away beneath it in stacked ridgelines",
+      "text_short": "climbing departure over ridgelines"
+    },
+    {
+      "name": "rain-curtain-arrival",
+      "text": "emerging from a grey curtain of rain into a shaft of clear light, wet skin gleaming along every panel line",
+      "text_short": "breaking out of rain into light"
+    },
+    {
+      "name": "golden-taxi",
+      "text": "taxiing toward the threshold through drifting exhaust shimmer, a marshaller's silhouette guiding it between the wing tips",
+      "text_short": "taxiing to the threshold, marshaller ahead"
+    }
+  ]
+}

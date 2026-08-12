@@ -1,29 +1,35 @@
 {
   "version": 1,
   "label": "Industrial Location",
+  "description": "Working and derelict industry — hangars, docks, mills and heavy infrastructure.",
   "items": [
     {
       "name": "airplane-hangar",
-      "text": "The interior of a massive, empty airplane hangar with a high, curved steel-truss ceiling and a polished, sealed concrete floor."
+      "text": "The interior of a massive, empty airplane hangar with a high, curved steel-truss ceiling and a polished, sealed concrete floor.",
+      "text_short": "empty aircraft hangar"
     },
     {
       "name": "abandoned-runway",
-      "text": "An abandoned airport runway with cracked asphalt, faded yellow markings, and a derelict, glassless control tower."
+      "text": "An abandoned airport runway with cracked asphalt, faded yellow markings, and a derelict, glassless control tower.",
+      "text_short": "abandoned cracked runway"
     },
     {
       "name": "industrial-park",
-      "text": "An anonymous industrial park with simple, functional warehouses and loading bays."
+      "text": "A tidy industrial park, sandwich-panel warehouses with rows of loading docks, rooftop HVAC units and fresh lane markings painted on dark asphalt.",
+      "text_short": "tidy industrial park"
     },
     {
       "name": "shipping-dock-cranes",
       "text": "An industrial shipping dock, the scene dominated by the artificial lights of towering container cranes and immense, orderly stacks of cargo containers.",
+      "text_short": "floodlit container dock",
       "tags": [
         "night"
       ]
     },
     {
       "name": "industrial-back-alley",
-      "text": "A dimly lit back alley behind industrial buildings, with dumpsters and external pipes.",
+      "text": "A dim back alley between industrial buildings, steam curling from wall vents past dumpsters, conduit runs and painted steel fire doors.",
+      "text_short": "steamy industrial back alley",
       "tags": [
         "night"
       ]
@@ -31,6 +37,7 @@
     {
       "name": "cooling-towers",
       "text": "A decommissioned nuclear power plant, with the two massive, concrete cooling towers silhouetted against the night sky and lit by stark, orange-toned security lights at their base.",
+      "text_short": "cooling towers, security lights",
       "tags": [
         "night"
       ],
@@ -40,7 +47,8 @@
     },
     {
       "name": "flickering-industrial-street",
-      "text": "An old industrial street with flickering streetlights, rusted metal fences, and graffiti-scarred walls.",
+      "text": "An aging industrial street, buzzing sodium lamps cycling on and off above rusted chain-link, graffiti layered across corrugated fences and bricked-up windows.",
+      "text_short": "sodium-lit industrial street",
       "tags": [
         "night"
       ]
@@ -54,6 +62,44 @@
       "name": "abandoned-factory-floor",
       "text": "An abandoned factory floor, rusted beams, broken glass and silent machinery under a high sawtooth roof.",
       "text_short": "abandoned factory floor"
+    },
+    {
+      "name": "steel-mill-pour",
+      "text": "A steel mill casting floor mid-pour, molten metal arcing from the tilted ladle in a fountain of sparks beneath silhouetted gantry cranes.",
+      "text_short": "steel mill molten pour"
+    },
+    {
+      "name": "turbine-hall",
+      "text": "A power-station turbine hall, mint-green turbine casings in a long row beneath the gantry crane, waxed screed floor running to arched steel windows.",
+      "text_short": "turbine hall row"
+    },
+    {
+      "name": "refinery-flare-stacks",
+      "text": "An oil refinery under sodium-vapor light, flare stacks burning over a glinting lattice of pipework, distillation towers and drifting steam.",
+      "text_short": "refinery flare stacks",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "dry-dock",
+      "text": "A graving dry dock with a ship towering above the floor on keel blocks, staging scaffolds climbing the rust-streaked hull plates.",
+      "text_short": "ship in dry dock"
+    },
+    {
+      "name": "open-pit-quarry",
+      "text": "A working stone quarry, terraced benches stepping down to switchback haul roads, pale drill dust chalking every ledge.",
+      "text_short": "terraced quarry benches"
+    },
+    {
+      "name": "aircraft-boneyard",
+      "text": "A desert aircraft boneyard, rows of retired airliners with engines shrink-wrapped white and cockpit glass masked, tail fins fading in the dry glare toward distant mountains.",
+      "text_short": "desert aircraft boneyard"
+    },
+    {
+      "name": "rail-freight-yard",
+      "text": "A rail freight yard, strings of rust-red tank cars and graffiti-tagged boxcars on parallel sidings, oil-stained ballast and switch stands between the rails.",
+      "text_short": "rail freight yard sidings"
     }
   ]
 }

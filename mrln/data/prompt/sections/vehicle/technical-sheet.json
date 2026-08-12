@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "Sheet Treatment",
+  "description": "Technical-presentation treatments for machines — every item is a complete graphic language: ground, linework, annotation style.",
+  "suits": ["object", "vehicle"],
+  "items": [
+    {
+      "name": "cyanotype-blueprint",
+      "text": "rendered as a cyanotype blueprint, crisp white linework on Prussian-blue ground, three orthographic views tied together with dimension chains and a ruled title block",
+      "text_short": "cyanotype blueprint, orthographic views"
+    },
+    {
+      "name": "patent-plate",
+      "text": "rendered as a vintage patent-office plate, fine hatched shading, numbered leader lines and serif figure captions on toned archival paper",
+      "text_short": "patent drawing plate",
+      "tags": ["historical"]
+    },
+    {
+      "name": "exploded-isometric",
+      "text": "rendered as an exploded isometric diagram, components floated apart along dotted assembly axes, each part numbered against a keyed legend",
+      "text_short": "exploded isometric diagram"
+    },
+    {
+      "name": "ghosted-cutaway",
+      "text": "rendered as an airbrushed ghost cutaway, the outer skin faded to glass over a fully drawn drivetrain, structure and interior",
+      "text_short": "airbrushed ghost cutaway"
+    },
+    {
+      "name": "service-manual",
+      "text": "rendered as a factory service-manual page, bold numbered callouts, torque tables and caution boxes set into the margins",
+      "text_short": "factory service-manual page"
+    },
+    {
+      "name": "wind-tunnel-report",
+      "text": "rendered as an aerodynamic test report, CFD streamlines combed over the body, a false-color pressure map and instrument data blocks along the footer",
+      "text_short": "CFD wind-tunnel report sheet"
+    },
+    {
+      "name": "homologation-sheet",
+      "text": "rendered as a period homologation document, side elevation over a dimension grid, stamped approvals and typewritten specification rows",
+      "text_short": "homologation spec sheet",
+      "tags": ["historical"]
+    },
+    {
+      "name": "catalog-plate",
+      "text": "rendered as a collection catalog plate, the machine floated on archival cream with italic specification footnotes and a small provenance map",
+      "text_short": "collection catalog plate"
+    },
+    {
+      "name": "restoration-survey",
+      "text": "rendered as a restoration survey board, a master drawing ringed by paint-depth readings, taped material swatches and pinned inspection photographs",
+      "text_short": "restoration survey board"
+    }
+  ]
+}

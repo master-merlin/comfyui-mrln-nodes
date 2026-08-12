@@ -41,6 +41,7 @@
       "id": "genre",
       "ref": "style/genre",
       "label": "Design Language",
+      "tags_any": ["fantasy"],
       "default": "high-fantasy"
     },
     {

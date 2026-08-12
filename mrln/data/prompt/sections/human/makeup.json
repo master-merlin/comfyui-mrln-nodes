@@ -1,16 +1,17 @@
 {
   "version": 1,
   "label": "Makeup / Lipstick",
-  "description": "Lipstick pool from the source plus glamour eye looks.",
+  "description": "Self-contained lip colors and glamour eye looks — each item composes directly, no trailing noun needed.",
   "suits": ["human"],
   "items": [
-    { "name": "classic-crimson", "text": "glossy classic crimson", "text_short": "crimson lips" },
-    { "name": "vampire-black-red", "text": "vampire black-red", "text_short": "black-red lips" },
-    { "name": "plum-velvet", "text": "deep plum velvet", "text_short": "plum velvet lips" },
-    { "name": "nude-rose", "text": "glossy nude rose", "text_short": "nude rose lips" },
-    { "name": "metallic-burgundy", "text": "metallic burgundy", "text_short": "metallic burgundy lips" },
-    { "name": "frosted-blush", "text": "frosted blush pink", "text_short": "frosted pink lips" },
-    { "name": "oxblood-satin", "text": "bold oxblood satin", "text_short": "oxblood satin lips" },
+    { "name": "classic-crimson", "text": "glossy classic crimson lipstick", "text_short": "crimson lips" },
+    { "name": "vampire-black-red", "text": "vampire black-red lipstick", "text_short": "black-red lips" },
+    { "name": "plum-velvet", "text": "deep plum velvet lipstick", "text_short": "plum velvet lips" },
+    { "name": "nude-rose", "text": "glossy nude rose lipstick", "text_short": "nude rose lips" },
+    { "name": "metallic-burgundy", "text": "metallic burgundy lipstick", "text_short": "metallic burgundy lips" },
+    { "name": "frosted-blush", "text": "frosted blush pink lipstick", "text_short": "frosted pink lips" },
+    { "name": "oxblood-satin", "text": "bold oxblood satin lipstick", "text_short": "oxblood satin lips" },
+    { "name": "berry-stain", "text": "sheer berry-stained lip tint", "text_short": "berry lip tint" },
     {
       "name": "smoky-eye",
       "text": "smoky charcoal eyeshadow with defined winged liner",
@@ -20,6 +21,16 @@
       "name": "golden-shimmer-eye",
       "text": "golden shimmer eyeshadow with soft defined lashes",
       "text_short": "golden shimmer eyes"
+    },
+    {
+      "name": "bronze-smoky",
+      "text": "molten bronze eyeshadow smoked out with soft black kohl",
+      "text_short": "bronze smoky eyes"
+    },
+    {
+      "name": "graphic-liner",
+      "text": "crisp graphic winged eyeliner over bare glossy lids",
+      "text_short": "graphic winged liner"
     },
     {
       "name": "clean-glow",

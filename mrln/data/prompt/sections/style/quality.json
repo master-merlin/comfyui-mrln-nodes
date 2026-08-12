@@ -40,6 +40,12 @@
       "negative": "extra fingers, missing fingers, fused fingers, malformed hands"
     },
     {
+      "name": "pony-score",
+      "text": "score_9, score_8_up, score_7_up",
+      "text_short": "score_9, score_8_up, score_7_up",
+      "negative": "score_6, score_5, score_4, worst quality, low quality, jpeg artifacts, watermark, signature, child, underage"
+    },
+    {
       "name": "maximal-8k",
       "text": "8K ultra-high-definition, extreme micro-detail, hyper-detailed surfaces, crystalline sharpness, HDR depth",
       "text_short": "8k UHD, extreme detail, HDR",

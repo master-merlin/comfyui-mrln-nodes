@@ -1,16 +1,19 @@
 {
   "version": 1,
   "label": "Uniform",
-  "description": "Professional uniforms.",
+  "description": "Professional uniforms with the worn-in details that sell the job.",
   "suits": ["human"],
   "items": [
-    { "name": "pilot-flight-suit", "text": "an olive flight suit with squadron patches and aviators", "text_short": "pilot flight suit" },
-    { "name": "naval-dress", "text": "crisp naval dress whites with gold insignia", "text_short": "naval dress whites" },
-    { "name": "racing-overalls", "text": "sponsor-patched racing overalls tied at the waist", "text_short": "racing overalls" },
-    { "name": "chef-whites", "text": "double-breasted chef whites with a side towel", "text_short": "chef whites" },
-    { "name": "surgeon-scrubs", "text": "teal surgical scrubs with a cap and hanging mask", "text_short": "surgical scrubs" },
-    { "name": "firefighter-turnout", "text": "soot-marked firefighter turnout gear with reflective bands", "text_short": "firefighter turnout gear" },
-    { "name": "airline-crew", "text": "a tailored airline crew uniform with a neck scarf", "text_short": "airline crew uniform" },
-    { "name": "park-ranger", "text": "a park ranger uniform with a wide-brim hat", "text_short": "park ranger uniform" }
+    { "name": "pilot-flight-suit", "text": "an olive nomex flight suit, squadron patches on the shoulders, zips half-open, aviators hooked at the collar", "text_short": "pilot flight suit" },
+    { "name": "naval-dress", "text": "crisp naval dress whites, gold rank insignia, ribbon bars squared above the breast pocket", "text_short": "naval dress whites" },
+    { "name": "racing-overalls", "text": "sponsor-patched fireproof racing overalls, sleeves tied at the waist over a sweat-damp base layer", "text_short": "racing overalls" },
+    { "name": "chef-whites", "text": "double-breasted chef whites, side towel tucked into the apron string, knife roll under one arm", "text_short": "chef whites" },
+    { "name": "surgeon-scrubs", "text": "teal surgical scrubs, cap tied back, mask hanging loose at the throat", "text_short": "surgical scrubs" },
+    { "name": "firefighter-turnout", "text": "soot-marked firefighter turnout gear, reflective triple-trim bands, helmet carried under one arm", "text_short": "firefighter turnout gear" },
+    { "name": "airline-crew", "text": "a tailored airline crew uniform, fitted jacket and pencil skirt, knotted silk neck scarf", "text_short": "airline crew uniform" },
+    { "name": "park-ranger", "text": "a park ranger uniform, khaki shirt with a brass badge, wide-brim campaign hat", "text_short": "park ranger uniform" },
+    { "name": "astronaut-suit", "text": "an orange astronaut launch-entry suit, pressure connectors at chest and thigh, mission patches, helmet carried at the hip", "text_short": "astronaut pressure suit", "tags": ["scifi"] },
+    { "name": "fencing-whites", "text": "crisp fencing whites, quilted plastron under a high-collared jacket, mesh mask cradled in one arm, épée resting against the shoulder", "text_short": "fencing whites" },
+    { "name": "equestrian-show", "text": "show-jumping attire, fitted navy riding coat over white breeches, tall polished field boots, leather gloves and a velvet-covered helmet", "text_short": "equestrian show attire" }
   ]
 }

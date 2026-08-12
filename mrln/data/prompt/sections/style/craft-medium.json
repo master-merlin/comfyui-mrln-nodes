@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Handmade Medium",
+  "description": "Warm handcrafted media for illustration work — every item something made with hands, never a camera or a renderer.",
+  "items": [
+    {
+      "name": "watercolor-wash",
+      "text": "soft watercolor washes with blooming wet-in-wet edges, pigment pooling at the borders of every shape, paper grain showing through the color",
+      "text_short": "blooming watercolor washes"
+    },
+    {
+      "name": "gouache-flat",
+      "text": "matte gouache in confident flat strokes, chalky opaque color, tiny ridges of dried paint catching the light",
+      "text_short": "flat matte gouache"
+    },
+    {
+      "name": "paper-collage-layers",
+      "text": "hand-cut paper collage in layered depth, torn deckle edges, tiny true shadows where each layer lifts from the one beneath",
+      "text_short": "layered cut-paper collage"
+    },
+    {
+      "name": "wool-felt",
+      "text": "needle-felted wool, fuzzy fiber halos on every contour, seams and stitch dimples left proudly visible",
+      "text_short": "needle-felted wool texture"
+    },
+    {
+      "name": "claymation-still",
+      "text": "hand-modeled clay with visible thumbprints and slightly imperfect symmetry, the warm depth of a stop-motion film still",
+      "text_short": "thumbprinted claymation still"
+    },
+    {
+      "name": "linocut-block",
+      "text": "a hand-pulled linocut, carved gouge marks, bold black shapes and the soft blind emboss of the press in thick paper",
+      "text_short": "hand-pulled linocut"
+    },
+    {
+      "name": "colored-pencil-soft",
+      "text": "layered colored pencil, waxy strokes building velvety color, highlights lifted out with an eraser",
+      "text_short": "layered colored pencil"
+    },
+    {
+      "name": "ink-wash-minimal",
+      "text": "ink wash on absorbent paper, one confident dark accent, diluted grey blooms and vast breathing whites",
+      "text_short": "minimal ink wash"
+    },
+    {
+      "name": "pop-up-book",
+      "text": "a paper-engineered pop-up book scene caught mid-opening, folded card layers standing up from the gutter, glue tabs just hidden",
+      "text_short": "pop-up book paper scene"
+    },
+    {
+      "name": "diorama-box",
+      "text": "a handmade shadow-box diorama, painted backdrop, cotton-wool clouds hung on threads, tiny modelled props on a small wooden stage",
+      "text_short": "shadow-box diorama"
+    },
+    {
+      "name": "embroidery-hoop",
+      "text": "embroidered thread art stretched in a hoop, satin-stitch color fields, french-knot texture, the linen ground showing at the edges",
+      "text_short": "hooped embroidery art"
+    },
+    {
+      "name": "pastel-chalk-soft",
+      "text": "soft chalk pastel, powdery hand-blended color, strokes breaking gently over the tooth of the paper",
+      "text_short": "soft chalk pastel"
+    }
+  ]
+}

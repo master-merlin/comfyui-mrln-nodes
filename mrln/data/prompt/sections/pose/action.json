@@ -13,6 +13,7 @@
     { "name": "climbing", "text": "scaling a wall, muscles taut, one hand reaching for the ledge", "text_short": "wall climbing reach" },
     { "name": "casting-spell", "text": "arms sweeping through a spellcasting arc, energy trailing the hands", "text_short": "spellcasting sweep", "tags": ["fantasy"] },
     { "name": "sliding", "text": "a low knee-slide under obstruction, sparks and motion blur", "text_short": "low knee-slide" },
-    { "name": "bow-draw", "text": "a full archer's draw, anchor point steady, back muscles engaged", "text_short": "full archer draw" }
+    { "name": "bow-draw", "text": "a full archer's draw, anchor point steady, back muscles engaged", "text_short": "full archer draw" },
+    { "name": "parkour-vault", "text": "vaulting a rail with one palm planted, legs swept sideways, jacket lifting with the motion", "text_short": "parkour rail vault" }
   ]
 }

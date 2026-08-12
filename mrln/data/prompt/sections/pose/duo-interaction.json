@@ -16,6 +16,8 @@
     { "name": "close-embrace", "text": "a close embrace, one hand resting at the other's hip", "text_short": "close hip embrace" },
     { "name": "hair-braiding", "text": "one slowly braiding the other's hair in the mirror light", "text_short": "braiding her hair" },
     { "name": "cheek-to-cheek", "text": "cheek to cheek, both meeting the camera with steady eyes", "text_short": "cheek to cheek" },
-    { "name": "silk-sheets-tangle", "text": "relaxed together on silk sheets, limbs loosely tangled", "text_short": "silk-sheet tangle" }
+    { "name": "silk-sheets-tangle", "text": "relaxed together on silk sheets, limbs loosely tangled", "text_short": "silk-sheet tangle" },
+    { "name": "zipper-assist", "text": "one easing the zipper at the back of the other's dress closed, fingertips steadying her shoulder", "text_short": "easing her zipper" },
+    { "name": "perfume-wrist", "text": "one lifting the other's wrist to breathe in her perfume, eyes closing", "text_short": "perfume at her wrist" }
   ]
 }

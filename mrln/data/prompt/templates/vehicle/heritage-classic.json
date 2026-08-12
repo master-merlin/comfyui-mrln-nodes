@@ -2,20 +2,19 @@
   "version": 1,
   "label": "Heritage Classic",
   "type": ["object", "vehicle", "car"],
-  "description": "Timeless classic-car portraiture in car-culture geography — bring your own car via {trigger}, exactly like the mined top prompts.",
+  "description": "Timeless classic-car portraiture in car-culture geography — bring your own car via {trigger}; paint, state and glass all period-correct.",
   "prefix": "A highly realistic, timeless portrait of a {trigger} — photographed with the reverence a numbers-matching legend deserves, in the very landscape that made its name.",
   "variables": [
     { "name": "trigger", "label": "Car / LoRA trigger", "default": "coachbuilt classic grand tourer" }
   ],
   "slots": [
-    { "id": "paint", "ref": "vehicle/car/color/paint", "label": "Primary Color", "emphasis": 1.15 },
-    { "id": "finish", "ref": "vehicle/car/finish", "label": "Finish" },
-    { "id": "state", "ref": "vehicle/car/state", "label": "State", "default": "engine-off" },
+    { "id": "paint", "ref": "vehicle/car/color/heritage", "label": "Paintwork", "emphasis": 1.15 },
+    { "id": "state", "ref": "vehicle/car/heritage-state", "label": "State", "default": "engine-ticking" },
     { "id": "scene", "ref": "location/automotive", "label": "Heritage Setting", "emphasis": 1.2 },
     { "id": "time", "ref": "atmosphere/time-of-day", "label": "Hour" },
     { "id": "view", "ref": "viewpoint/general", "label": "Viewing Angle", "emphasis": 1.15 },
-    { "id": "film", "ref": "camera/film", "label": "Emulsion", "default": "kodachrome-64" },
-    { "id": "lens", "ref": "camera/lens", "label": "Optics", "default": "135mm-compression" }
+    { "id": "film", "ref": "camera/film", "label": "Emulsion", "tags_none": ["night"], "default": "kodachrome-64" },
+    { "id": "lens", "ref": "vehicle/craft/optics", "label": "Optics", "tags_none": ["reach"], "default": "135mm-prime" }
   ],
   "suffix": "Heritage Rendering: (chrome depth and hand-polished paint rendered honestly:1.2), period-correct atmosphere free of modern clutter, panel gaps and badges historically faithful, (sharp focus on the car:1.15) with the setting breathing softly behind.",
   "negative": "modern traffic, plastic cladding, watermark, text, logo",

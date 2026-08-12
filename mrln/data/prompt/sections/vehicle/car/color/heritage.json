@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Heritage Paint",
+  "description": "Period-correct classic-car colors with their finishes folded in — coach paint, lacquer and early metallics, never modern effect coats.",
+  "suits": ["object", "vehicle", "car"],
+  "items": [
+    {
+      "name": "rosso-corsa",
+      "text": "Rosso Corsa red, decades of hand-rubbed lacquer giving the gloss real depth",
+      "text_short": "hand-rubbed Rosso Corsa red"
+    },
+    {
+      "name": "racing-green",
+      "text": "British Racing Green so deep it reads black in shade, flatted and polished to a quiet mirror",
+      "text_short": "deep British Racing Green"
+    },
+    {
+      "name": "silver-arrow",
+      "text": "bare-metal racing silver, panel-beaten aluminium showing faint hammer memory under thin clear lacquer",
+      "text_short": "bare-metal racing silver"
+    },
+    {
+      "name": "bleu-de-france",
+      "text": "Bleu de France racing blue with a soft period sheen, cooler at the shoulders where the light falls away",
+      "text_short": "Bleu de France racing blue"
+    },
+    {
+      "name": "old-english-white",
+      "text": "Old English White, a warm cream gloss that lets the chrome do the shining",
+      "text_short": "warm Old English White"
+    },
+    {
+      "name": "burgundy-lake",
+      "text": "deep burgundy lake, coach-painted and hand-lined with a single gold coachline along the swage",
+      "text_short": "coach-painted burgundy, gold coachline"
+    },
+    {
+      "name": "sable-coach-black",
+      "text": "coach-painted sable black so wet-looking the sky slides across the panels",
+      "text_short": "wet-look coach black"
+    },
+    {
+      "name": "ivory-over-midnight",
+      "text": "ivory over midnight blue, the two-tone split along a chrome swage line",
+      "text_short": "ivory-over-midnight two-tone"
+    },
+    {
+      "name": "powder-blue-marigold",
+      "text": "powder blue with a marigold center stripe, endurance-racing heritage colors under honest gloss",
+      "text_short": "powder blue, marigold stripe"
+    },
+    {
+      "name": "signal-orange",
+      "text": "1970s signal orange in period enamel, saturated and slightly soft at the highlights",
+      "text_short": "1970s signal orange enamel"
+    },
+    {
+      "name": "champagne-metallic",
+      "text": "warm champagne metallic with the fine even flake of an early 1980s factory coat",
+      "text_short": "early-80s champagne metallic"
+    },
+    {
+      "name": "opalescent-jade",
+      "text": "opalescent jade green, the fragile 1960s metallic that shifts silver-grey as the panel turns",
+      "text_short": "opalescent 1960s jade"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "label": "Still-Life Light",
+  "description": "Studio light built for objects and food rather than faces — texture, speculars, steam and glass. Low-key setups carry the 'dark' tag.",
+  "items": [
+    {
+      "name": "window-rake",
+      "text": "one tall window off to the side, light raking across the subject to carve every texture, a black flag deepening the shadow side into quiet cinematic contrast",
+      "text_short": "raking window light, black-flagged"
+    },
+    {
+      "name": "overhead-scrim-glow",
+      "text": "a large scrim directly overhead pooling soft toplight, one low backlight skimming from behind to lift steam and rim the edges",
+      "text_short": "overhead scrim with skimming backlight"
+    },
+    {
+      "name": "backlit-glass",
+      "text": "hard backlight burning through the subject, liquids and translucent edges glowing like stained glass, the front held up by a whisper of fill",
+      "text_short": "backlight through liquid and glass"
+    },
+    {
+      "name": "twin-strip-speculars",
+      "text": "two vertical strip softboxes flanking from behind, long unbroken highlights drawn down every curved and polished surface",
+      "text_short": "twin strip-light speculars"
+    },
+    {
+      "name": "mirror-bounce-build",
+      "text": "one hard key redirected through mirrors and white cards, every reflection placed deliberately, gradient highlights sweeping across glossy surfaces",
+      "text_short": "mirror-built gradient reflections"
+    },
+    {
+      "name": "dappled-gobo",
+      "text": "sunlight broken by a leafy gobo, organic shadow patterns wandering across set and surface, a warm outdoor feeling built indoors",
+      "text_short": "leaf-gobo dappled light"
+    },
+    {
+      "name": "strobe-freeze",
+      "text": "a bare strobe burst at action-freezing duration, liquid and motion arrested crystal-sharp, edges etched clean by twin rim lights",
+      "text_short": "high-speed strobe freeze"
+    },
+    {
+      "name": "soft-tent-wrap",
+      "text": "a full diffusion tent, shadowless wraparound light for flawless surface control, reflections reduced to one soft window shape",
+      "text_short": "diffusion-tent wrap light"
+    },
+    {
+      "name": "gridded-void",
+      "text": "a single gridded spot in a black studio, the subject carved out of darkness, the spill feathering to nothing at the beam edge",
+      "text_short": "gridded spot in black void",
+      "tags": ["dark"]
+    },
+    {
+      "name": "candle-dutch",
+      "text": "candle-warm light from one low source, deep amber shadows swallowing the edges of the set, the geometry of a Dutch still-life painting",
+      "text_short": "candle-warm Dutch still-life light",
+      "tags": ["dark"]
+    },
+    {
+      "name": "north-window-dark",
+      "text": "cool north-window light falling into a dark room, one side of the subject luminous and the other lost, dust visible in the beam",
+      "text_short": "north window into darkness",
+      "tags": ["dark"]
+    },
+    {
+      "name": "low-slash",
+      "text": "one hard low light slashing across the set just above table height, long dramatic shadows thrown behind every object, the background falling to black",
+      "text_short": "low hard slash light",
+      "tags": ["dark"]
+    }
+  ]
+}

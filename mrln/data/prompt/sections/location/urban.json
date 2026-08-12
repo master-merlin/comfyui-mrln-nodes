@@ -5,87 +5,102 @@
   "items": [
     {
       "name": "financial-district",
-      "text": "A wide, clean street in a modern financial district, surrounded by towering, contemporary skyscrapers made of reflective glass and steel."
+      "text": "A wide, immaculate street in a modern financial district, curtain-wall towers of green-tinted glass and brushed steel mirroring one another above granite plinths and flagpoles.",
+      "text_short": "glass financial district street"
     },
     {
       "name": "downtown-street",
-      "text": "A typical, clean downtown city street, flanked by a mix of modern and older office buildings."
+      "text": "A downtown street of mixed eras, cast-iron storefronts beneath 1980s office slabs, steam drifting from a manhole grate past hydrants and parked delivery vans.",
+      "text_short": "downtown street, manhole steam"
     },
     {
       "name": "brooklyn-brownstones",
-      "text": "A residential street lined with classic Brooklyn brownstone buildings and iron railings."
+      "text": "A residential street of Brooklyn brownstones, high stoops and carved lintels behind wrought-iron railings, London plane trees arching over the parked cars.",
+      "text_short": "brownstone stoops street"
     },
     {
       "name": "gardens-by-the-bay",
-      "text": "Amidst the futuristic \"Supertrees\" of Gardens by the Bay in Singapore, with elevated walkways visible."
+      "text": "Amid the towering steel Supertrees of Gardens by the Bay in Singapore, ferny vertical gardens climbing the lattice trunks and the aerial walkway strung between canopies.",
+      "text_short": "Supertree grove walkway"
     },
     {
       "name": "brutalist-concrete",
-      "text": "Against a backdrop of striking, monolithic brutalist concrete architecture, showing the stark geometry and textured board-formed concrete."
+      "text": "Against monolithic brutalist architecture, raw board-formed concrete with visible formwork grain, deep window recesses stacked in stark repeating geometry.",
+      "text_short": "brutalist concrete monolith"
     },
     {
       "name": "central-park-path",
-      "text": "A quiet path in a meticulously landscaped urban park like Central Park, with benches and ornate lampposts."
+      "text": "A curving path in a landscaped city park, cast-iron lampposts and wooden benches beneath mature elms, skyline towers rising beyond the treeline.",
+      "text_short": "city park path, skyline beyond"
     },
     {
       "name": "shibuya-crossing",
-      "text": "The center of Shibuya Crossing in Tokyo, surrounded by colossal, intensely bright, animated video screens.",
+      "text": "The center of the Shibuya scramble crossing, white zebra stripes radiating in every direction beneath stacked animated video screens and the station's glowing facade.",
+      "text_short": "Shibuya scramble crossing",
       "tags": [
         "night"
       ]
     },
     {
       "name": "rain-slicked-street",
-      "text": "A generic, rain-slicked (but not actively raining) urban street, with streetlights reflecting off the dark pavement.",
+      "text": "A rain-slicked urban street after the shower has passed, streetlights and shop signs doubled in the dark mirror of the wet asphalt.",
+      "text_short": "rain-mirrored city street",
       "tags": [
         "night"
       ]
     },
     {
       "name": "cobblestone-street",
-      "text": "A quiet, empty European cobblestone street, with the ancient stones reflecting the warm glow from window lights.",
+      "text": "A quiet European cobblestone lane, each worn sett crowned with warm light from the windows above, shutters closed over silent shopfronts.",
+      "text_short": "lamplit cobblestone lane",
       "tags": [
         "night"
       ]
     },
     {
       "name": "empty-boulevard",
-      "text": "A wide, empty boulevard in a major city, lined with closed shops and glowing traffic lights.",
+      "text": "A wide, empty boulevard in a major city, darkened shop windows and banks of traffic signals cycling green to red for no one.",
+      "text_short": "empty boulevard, cycling signals",
       "tags": [
         "night"
       ]
     },
     {
       "name": "rooftop-parking-deck",
-      "text": "The exposed rooftop level of a concrete open-air parking deck, offering an unobstructed, panoramic view of a dense, glittering city skyline.",
+      "text": "The exposed top level of a concrete parking structure, painted bay lines and low parapet walls opening onto a glittering high-rise skyline beyond the ramp housing.",
+      "text_short": "rooftop parking deck skyline",
       "tags": [
         "night"
       ]
     },
     {
       "name": "suspension-bridge-leds",
-      "text": "A sleek, modern suspension bridge, with the elegant geometry of the massive suspension cables and towers lit by programmed architectural LEDs against the dark sky.",
+      "text": "The deck of a modern suspension bridge, programmed LED washes climbing the main cables to the tower saddles, lane lines and expansion joints running into the dark.",
+      "text_short": "LED-washed suspension bridge",
       "tags": [
         "night"
       ]
     },
     {
       "name": "parking-garage-fluorescent",
-      "text": "An empty, multi-level concrete parking garage with stark, repeating fluorescent lighting.",
+      "text": "An empty multi-storey parking garage, ramped concrete decks under stark repeating fluorescent tubes, painted arrows and bay numbers on the floor.",
+      "text_short": "fluorescent parking garage",
       "tags": [
         "night"
       ]
     },
     {
       "name": "railway-station-forecourt",
-      "text": "The grand, empty forecourt of a historic railway station like St. Pancras International, its intricate ironwork ceiling visible.",
+      "text": "The grand, empty forecourt of a historic railway station, gothic brick clock tower and arched entrances washed in warm floodlight.",
+      "text_short": "floodlit station forecourt",
       "tags": [
         "night"
       ]
     },
     {
       "name": "neon-highway",
-      "text": "neon-lit highway through a cyberpunk metropolis, wet asphalt",
+      "text": "An elevated expressway through a cyberpunk metropolis at night, holographic billboards and stacked neon signage doubling in the wet asphalt between the lane lines.",
+      "text_short": "neon cyberpunk expressway",
       "tags": [
         "city",
         "neon"
@@ -113,7 +128,59 @@
     {
       "name": "streetlamp-avenue",
       "text": "A deserted avenue under warm streetlamps, pools of light marching down the empty sidewalks.",
-      "text_short": "streetlamp-lit avenue"
+      "text_short": "streetlamp-lit avenue",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "haussmann-boulevard",
+      "text": "A Parisian Haussmann boulevard, cream limestone facades with wrought-iron balconies under zinc mansard roofs, café awnings and a Morris column on the corner.",
+      "text_short": "Haussmann boulevard, zinc roofs"
+    },
+    {
+      "name": "amsterdam-canal",
+      "text": "An Amsterdam canal street, gabled brick houses leaning shoulder to shoulder, bicycles chained to the humpback bridge rail, houseboats moored on dark green water.",
+      "text_short": "Amsterdam canal, gabled houses"
+    },
+    {
+      "name": "london-mews",
+      "text": "A cobbled London mews, pastel-painted former carriage houses with glossy garage doors, climbing roses trained around coach lamps.",
+      "text_short": "cobbled London mews"
+    },
+    {
+      "name": "graffiti-alley",
+      "text": "A sanctioned graffiti alley, layer upon layer of wildstyle pieces and paste-ups climbing the brick, empty spray cans along the gutter line.",
+      "text_short": "layered graffiti alley"
+    },
+    {
+      "name": "elevated-rail-street",
+      "text": "A street beneath elevated rail tracks, riveted steel columns striping the road with hard parallel shadows, a train rumbling across overhead.",
+      "text_short": "street under elevated rail"
+    },
+    {
+      "name": "signboard-canyon",
+      "text": "A dense signboard canyon in the manner of old Kowloon, stacked neon and lightbox signs projecting over the roadway from both sides, cables sagging between them.",
+      "text_short": "stacked neon signboard canyon",
+      "tags": [
+        "night",
+        "neon"
+      ]
+    },
+    {
+      "name": "chinatown-gate",
+      "text": "A chinatown street through a tiled paifang gateway, red lanterns strung between bilingual shop signs, roast ducks hanging in a steamed-up restaurant window.",
+      "text_short": "chinatown paifang street"
+    },
+    {
+      "name": "european-tram-street",
+      "text": "A cobbled European street with tram tracks curving through it, catenary wires crosshatching the sky between pastel facades, a cream-and-red tram rounding the corner.",
+      "text_short": "tram tracks, catenary wires"
+    },
+    {
+      "name": "streetball-court",
+      "text": "A chain-link streetball court squeezed between brick buildings, painted key and faded sponsor lines on cracked asphalt, netless hoops below a full-wall mural.",
+      "text_short": "chain-link streetball court"
     }
   ]
 }

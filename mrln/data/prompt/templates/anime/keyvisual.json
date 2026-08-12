@@ -21,7 +21,8 @@
       "id": "medium",
       "ref": "style/medium",
       "label": "Medium",
-      "default": "anime"
+      "default": "anime",
+      "tags_any": ["anime"]
     },
     {
       "id": "style",

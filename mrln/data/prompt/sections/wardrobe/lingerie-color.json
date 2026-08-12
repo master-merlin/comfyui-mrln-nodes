@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Lingerie Color",
-  "description": "The source's full color range; warm/pale tags drive the duo palette split.",
+  "description": "Full lingerie color range — compact adjectives that stack before fabric and garment; warm/pale tags drive the duo palette split.",
   "suits": ["human"],
   "tags": ["boudoir"],
   "items": [

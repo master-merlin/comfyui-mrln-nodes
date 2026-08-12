@@ -11,6 +11,7 @@
     { "name": "fog-ghost", "text": "emerging half-seen from a fog bank", "text_short": "ghosting from fog" },
     { "name": "storm-run", "text": "running before a storm under a bruised sky", "text_short": "running before storm" },
     { "name": "golden-anchorage", "text": "swinging at anchor in a warm-lit anchorage", "text_short": "warm-lit anchorage" },
-    { "name": "ice-passage", "text": "threading a narrow passage between ice floes", "text_short": "threading ice floes" }
+    { "name": "ice-passage", "text": "threading a narrow passage between ice floes", "text_short": "threading ice floes" },
+    { "name": "night-passage", "text": "steaming a quiet passage after dark, red and green sidelights doubled on black water", "text_short": "night passage, sidelights doubled", "tags": ["night"] }
   ]
 }

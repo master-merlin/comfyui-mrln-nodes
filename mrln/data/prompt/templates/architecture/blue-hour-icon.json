@@ -2,21 +2,9 @@
   "version": 1,
   "label": "Blue Hour Icon",
   "type": ["architecture", "object"],
-  "description": "The classic architecture money shot: a landmark glowing warm against cobalt dusk.",
-  "prefix": "The definitive blue-hour photograph of an architectural icon — interior light burning warm gold against a deep cobalt sky, the fifteen minutes photographers plan whole trips around.",
+  "description": "The classic architecture money shot: a landmark glowing warm against cobalt dusk, long exposure on a locked tripod.",
+  "prefix": "The definitive blue-hour photograph of an architectural icon — the fifteen minutes photographers plan whole trips around, interior light burning warm gold against a deep cobalt sky, a long tripod exposure silking every moving element away.",
   "slots": [
-    {
-      "id": "icon",
-      "ref": "architecture",
-      "label": "The Icon",
-      "emphasis": 1.3
-    },
-    {
-      "id": "time",
-      "ref": "atmosphere/time-of-day",
-      "label": "Hour",
-      "default": "blue-hour"
-    },
     {
       "id": "weather",
       "ref": "atmosphere/weather",
@@ -24,26 +12,61 @@
       "default": "after-the-rain"
     },
     {
-      "id": "technique",
-      "ref": "camera/technique",
-      "label": "Technique",
-      "default": "long-exposure"
+      "id": "view",
+      "ref": "camera/architecture-view",
+      "label": "The View",
+      "tags_none": ["indoor"],
+      "default": "reflection-double"
     },
     {
       "id": "framing",
       "ref": "composition/framing",
       "label": "Composition",
       "default": "central-symmetry"
-    },
-    {
-      "id": "format",
-      "ref": "camera/format",
-      "label": "Capture",
-      "default": "medium-format-67"
     }
   ],
+  "variants": [
+    {
+      "name": "landmark-building",
+      "label": "Landmark building",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "architecture/building",
+          "label": "The Icon",
+          "emphasis": 1.3
+        }
+      ]
+    },
+    {
+      "name": "great-structure",
+      "label": "Engineering structure",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "architecture/structure",
+          "label": "The Icon",
+          "emphasis": 1.3
+        }
+      ]
+    },
+    {
+      "name": "ensemble",
+      "label": "Urban ensemble",
+      "slots": [
+        {
+          "id": "icon",
+          "ref": "architecture/ensemble",
+          "label": "The Icon",
+          "emphasis": 1.3
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["@variant", "weather", "view", "framing"],
   "suffix": "Blue-Hour Rendering: (the warm-cool color duel perfectly balanced:1.25), wet surfaces doubling every light, moving elements silked away by the long exposure, the building lit like a lantern from within.",
-  "negative": "watermark, text, blown highlights, daylight flatness, crowds",
+  "negative": "watermark, text, blown highlights, daylight flatness, midday sun, crowds",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",

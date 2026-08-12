@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "label": "War Host",
+  "description": "Massed armies read as one visual body — formation, materials and the light on them. The crowd layer of battle scenes; tags couple with genre.",
+  "items": [
+    {
+      "name": "shield-wall",
+      "text": "an interlocked shield-wall three ranks deep, round limewood shields overlapping like fish scales, spearpoints bristling over the painted rims, breath steaming through the eye-gaps",
+      "text_short": "interlocked shield-wall",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "cavalry-wedge",
+      "text": "a heavy cavalry wedge at full commit, caparisoned destriers packed shoulder to shoulder, couched lances dropping level in a rolling wave, clods of turf hanging in the air behind the hooves",
+      "text_short": "heavy cavalry wedge",
+      "tags": [
+        "historical",
+        "advancing"
+      ]
+    },
+    {
+      "name": "pike-square",
+      "text": "a pike square holding fast, sixteen-foot ash shafts staggered at three heights, the hedge of points swaying together like wind moving through a steel wheatfield",
+      "text_short": "bristling pike square",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "longbow-line",
+      "text": "a longbow line loosing at full draw, a thousand shafts climbing in one dark sheet, the next flight already nocked, waxed strings and leather bracers catching the light",
+      "text_short": "longbow volley line",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "knight-vanguard",
+      "text": "a vanguard of dismounted knights advancing at a walk, full plate mud-caked to the knee, visors down, poleaxes carried at port — an iron tide that does not hurry",
+      "text_short": "plate-armored vanguard",
+      "tags": [
+        "fantasy",
+        "historical",
+        "advancing"
+      ]
+    },
+    {
+      "name": "tusked-horde",
+      "text": "a tusked war-horde loping across the field in loose packs, crude iron plates lashed over scarred hides, ragged totems shaking overhead, drummers driving the pace",
+      "text_short": "loping tusked war-horde",
+      "tags": [
+        "fantasy",
+        "advancing"
+      ]
+    },
+    {
+      "name": "undead-legion",
+      "text": "an undead legion advancing in absolute silence, verdigris armor buckled over bare bone, rank after rank emerging from ground-mist with rusted spears all at the same angle",
+      "text_short": "silent undead legion",
+      "tags": [
+        "fantasy",
+        "advancing"
+      ]
+    },
+    {
+      "name": "elven-host",
+      "text": "an elven host moving like water flowing uphill, mirror-bright mail under grey travel cloaks, leaf-bladed spears rising and falling in step with no drumbeat to follow",
+      "text_short": "silver elven host",
+      "tags": [
+        "fantasy",
+        "advancing"
+      ]
+    },
+    {
+      "name": "dwarven-shield-fort",
+      "text": "a dwarven shield-fort grinding forward step by counted step, tower shields locked into a moving wall, war-hammers hooked over the rims, deep voices keeping the cadence",
+      "text_short": "dwarven shield-fort",
+      "tags": [
+        "fantasy",
+        "advancing"
+      ]
+    },
+    {
+      "name": "siege-column",
+      "text": "an assault column surging toward the breach under raised ladders and hide-covered mantlets, a battering ram swinging in its cradle, spent arrows standing thick in the timber",
+      "text_short": "assault column with ram",
+      "tags": [
+        "historical",
+        "advancing"
+      ]
+    },
+    {
+      "name": "levy-muster",
+      "text": "a peasant levy massed behind a row of sharpened stakes, billhooks and scythes held above patched gambesons, set faces under borrowed helmets",
+      "text_short": "levy behind stakes",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "griffin-wing",
+      "text": "a wing of griffin-riders stooping out of the cloud deck in echelon, lance pennons snapping, the shadows of their dive racing across the field below them",
+      "text_short": "diving griffin-riders",
+      "tags": [
+        "fantasy",
+        "advancing"
+      ]
+    }
+  ]
+}

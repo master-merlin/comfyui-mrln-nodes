@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "The Trove",
+  "description": "What a hoard is made of at arm's length — the material layer of treasure and how each surface returns light.",
+  "items": [
+    {
+      "name": "coin-slopes",
+      "text": "slopes of mixed coinage settled at their angle of repose, gold, silver and green-crusted bronze in layered drifts, a thin trickle of coins always sliding somewhere out of sight",
+      "text_short": "settling coin slopes"
+    },
+    {
+      "name": "crown-drift",
+      "text": "a snagged drift of crowns and circlets around a fallen candelabrum, velvet caps rotted away, gem settings dull with dust until the light finds them",
+      "text_short": "drift of crowns"
+    },
+    {
+      "name": "gem-scatter",
+      "text": "loose uncut gems scattered through the coin like embers through ash, each stone throwing its own small colored spark back toward the flame",
+      "text_short": "gem-fire scatter"
+    },
+    {
+      "name": "pearl-ropes",
+      "text": "ropes of pearls spilling from a split ivory casket, every pearl carrying its own tiny warped reflection of the single flame",
+      "text_short": "spilled pearl ropes"
+    },
+    {
+      "name": "blade-markers",
+      "text": "jeweled swords thrust point-down into the pile like grave-markers, scabbards long rotted off, gold-wire grips and pommel-stones catching light at head height",
+      "text_short": "sword-hilt grave-markers"
+    },
+    {
+      "name": "silver-avalanche",
+      "text": "an avalanche of tarnished silver service — ewers, chargers, toppled goblets — black in the hollows and sudden white at the rims where the tarnish has worn through",
+      "text_short": "tarnished silver avalanche"
+    },
+    {
+      "name": "king-masks",
+      "text": "hammered gold funeral masks of forgotten kings propped against a chest, serene faces staring upward, each one holding the light differently",
+      "text_short": "gold funeral masks"
+    },
+    {
+      "name": "ivory-amber",
+      "text": "carved ivory and lumps of raw amber heaped together, the amber lighting from within wherever the flame stands behind it, insects shadowed inside",
+      "text_short": "ivory and lit amber"
+    },
+    {
+      "name": "arcane-oddments",
+      "text": "enchanted oddments ticking among the gold — an orrery of unknown planets mid-spin, astrolabes turning to no hand, a caged glass sphere of slow lightning",
+      "text_short": "ticking arcane oddments",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "tribute-silk",
+      "text": "bolts of rotted tribute silk collapsed under spilled plate, the gold-thread embroidery outliving the cloth it was sewn on",
+      "text_short": "rotted silk, gold thread"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Sci-Fi Horizon",
+  "description": "Open-sky science-fiction stages — ground-level vistas with sky enough to hold a fleet, weather or a battle overhead. Time-neutral by design; the hour comes from its own dimension.",
+  "tags": ["scifi"],
+  "items": [
+    {
+      "name": "arcology-coast",
+      "text": "a crescent coastline dominated by a single arcology pyramid, terraced facades stepping down to a seawall promenade, breakers rolling white against the barrier",
+      "text_short": "coastal arcology pyramid"
+    },
+    {
+      "name": "landing-plain",
+      "text": "a fused-glass landing plain scored by decades of touchdown burns, beacon towers in ordered rows to the horizon, blast fences angled against the prevailing wind",
+      "text_short": "fused-glass landing plain"
+    },
+    {
+      "name": "tether-meadow",
+      "text": "rolling grassland pierced by a space-elevator ribbon, the line rising perfectly straight until it thins to nothing, cargo climbers strung along it like slow beads",
+      "text_short": "grassland under elevator ribbon"
+    },
+    {
+      "name": "flooded-district",
+      "text": "a half-flooded city district gone to reeds, elevated maglev viaducts striding across still water, tower facades reflected between rafts of lilies",
+      "text_short": "flooded district, maglev viaducts"
+    },
+    {
+      "name": "crater-refinery",
+      "text": "an open-pit crater refinery, spiral haul roads descending in terraces toward a molten glow at the floor, gantry cranes silhouetted along the rim",
+      "text_short": "spiral crater refinery"
+    },
+    {
+      "name": "dune-caravan-route",
+      "text": "a caravan route across engineered dunes, marker pylons half-buried in drift, sand streaming off every crest in one combed direction",
+      "text_short": "dune route, buried pylons"
+    },
+    {
+      "name": "glacier-array",
+      "text": "a dish antenna field set into blue glacier ice, radomes like a string of pearls along a groomed service road, pressure ridges glowing turquoise where the ice thins",
+      "text_short": "antenna field on glacier"
+    },
+    {
+      "name": "wreck-beach",
+      "text": "a beach where deorbited wreckage washes ashore, barnacled hull ribs rising from the sand like whale bones, tide pools standing in old impact dents",
+      "text_short": "orbital wreck beach"
+    },
+    {
+      "name": "mesa-farms",
+      "text": "terraced hydro-farms climbing a tabletop mesa, irrigation mist drifting off each shelf, service drones parked in neat chalk-marked squares",
+      "text_short": "terraced mesa hydro-farms"
+    },
+    {
+      "name": "relay-highlands",
+      "text": "highland moor studded with relay masts, warning beacons pulsing in synchronized rhythm, cloud shadows running fast across the heather",
+      "text_short": "relay masts on moorland"
+    }
+  ]
+}

@@ -4,15 +4,22 @@
   "description": "Hero drinks and pour moments.",
   "suits": ["food", "object"],
   "items": [
-    { "name": "espresso-crema", "text": "espresso pulling into a cup, tiger-striped crema swirling", "text_short": "tiger-crema espresso" },
-    { "name": "latte-art", "text": "a rosetta poured in silky latte microfoam", "text_short": "rosetta latte art" },
-    { "name": "old-fashioned", "text": "an old fashioned over one clear king cube, orange oils misting", "text_short": "old fashioned, king cube" },
-    { "name": "red-wine-pour", "text": "red wine arcing into a glass, legs streaking the bowl", "text_short": "red wine pour" },
-    { "name": "matcha-whisk", "text": "matcha mid-whisk, jade foam forming in a raku bowl", "text_short": "whisked jade matcha", "tags": ["anime"] },
-    { "name": "citrus-splash", "text": "sparkling citrus drink with a frozen splash crown and suspended fruit", "text_short": "citrus splash crown" },
-    { "name": "beer-pint", "text": "a condensation-beaded pint with a perfect two-finger head", "text_short": "beaded pint pour" },
-    { "name": "smoothie-swirl", "text": "a berry smoothie swirl layered in gradient purples", "text_short": "gradient berry swirl" },
-    { "name": "pour-over", "text": "a gooseneck pour-over blooming fresh grounds in slow spirals", "text_short": "blooming pour-over" },
-    { "name": "champagne-tower", "text": "champagne cascading down a coupe tower in golden threads", "text_short": "champagne coupe tower" }
+    { "name": "espresso-crema", "text": "espresso pulling from a bottomless portafilter, tiger-striped crema braiding as it lands in the cup", "text_short": "tiger-crema espresso" },
+    { "name": "latte-art", "text": "a rosetta poured in silky latte microfoam, leaves feathering out symmetrically as the pitcher lifts", "text_short": "rosetta latte art" },
+    { "name": "old-fashioned", "text": "an old fashioned over one crystal-clear king cube, orange oils misting from a flamed peel, amber gradient in cut glass", "text_short": "old fashioned, king cube" },
+    { "name": "red-wine-pour", "text": "red wine arcing into a wide-bowled glass, the stream folding into a crimson crown where it lands, backlight cutting a garnet rim through the rising swirl", "text_short": "red wine pour" },
+    { "name": "matcha-whisk", "text": "matcha mid-whisk, bamboo chasen blurring, jade foam tightening in a raku bowl", "text_short": "whisked jade matcha", "tags": ["anime"] },
+    { "name": "citrus-splash", "text": "a sparkling citrus drink at full splash crown, droplets strung razor-sharp around a tumbling lime wheel, bubble trails still climbing the glass beneath", "text_short": "citrus splash crown" },
+    { "name": "beer-pint", "text": "a condensation-beaded pint with a two-finger head, bubble trains rising in straight columns through the gold", "text_short": "beaded pint pour" },
+    { "name": "smoothie-swirl", "text": "a berry smoothie layered violet over mauve, chia seeds held in suspension, the marbled swirl frozen exactly where the spoon left it", "text_short": "gradient berry swirl" },
+    { "name": "pour-over", "text": "a gooseneck pour-over blooming fresh grounds in slow spirals, the bed doming, first amber drips threading into the carafe", "text_short": "blooming pour-over" },
+    { "name": "champagne-tower", "text": "champagne cascading down a coupe tower in golden threads, bubbles bursting in every catch", "text_short": "champagne coupe tower" },
+    { "name": "nitro-cold-brew", "text": "nitro cold brew cascading in reverse, a storm of micro-bubbles settling upward into a dense cream cap", "text_short": "nitro reverse cascade" },
+    { "name": "gin-and-tonic", "text": "a balloon-glass gin and tonic, juniper berries and a rosemary sprig among oversized clear cubes, bubbles beading on the botanicals", "text_short": "botanical gin tonic" },
+    { "name": "sake-overflow", "text": "chilled sake overflowing its glass into the cedar masu box below, the deliberate spill caught mid-brim", "text_short": "sake masu overflow", "tags": ["anime"] },
+    { "name": "mulled-wine", "text": "steaming mulled wine, star anise and orange wheels afloat, spiced steam curling up into cold air", "text_short": "steaming mulled wine", "tags": ["steam"] },
+    { "name": "bubble-tea", "text": "a brown-sugar bubble tea, dark tapioca pearls climbing streaks of caramelized syrup up the glass, milk marbling down through the cold tea", "text_short": "brown-sugar boba streaks" },
+    { "name": "espresso-martini", "text": "an espresso martini under a dense tan foam cap, three coffee beans centered, the chilled coupe fogged everywhere fingers have not touched", "text_short": "foam-capped espresso martini" },
+    { "name": "turkish-coffee", "text": "Turkish coffee rising in a long-handled copper cezve, fine foam doming at the exact second before overflow, steam threading off the surface, a lokum cube waiting on the tray", "text_short": "cezve turkish coffee", "tags": ["steam"] }
   ]
 }

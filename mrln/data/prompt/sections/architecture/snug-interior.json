@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "label": "Snug Interior",
+  "description": "Small warm rooms built for staying in — the hygge end of architecture, domestic and human-scaled.",
+  "suits": ["architecture", "object"],
+  "items": [
+    {
+      "name": "window-reading-nook",
+      "text": "a deep bay-window reading nook, cushions worn to the shape of habit, a wool throw and a book left face-down mid-chapter",
+      "text_short": "bay-window reading nook"
+    },
+    {
+      "name": "attic-eaves-bedroom",
+      "text": "an attic bedroom tucked under sloping eaves, exposed beams close overhead, a skylight framing the weather above a thick quilt",
+      "text_short": "attic bedroom under the eaves"
+    },
+    {
+      "name": "log-cabin-corner",
+      "text": "a log-cabin corner, notched timber walls glowing honey, enamel mugs on hooks and a ladder rising to a bunk under the ridge",
+      "text_short": "honey-toned log cabin corner"
+    },
+    {
+      "name": "farmhouse-range-kitchen",
+      "text": "a farmhouse kitchen gathered around a cast-iron range, drying herbs overhead, a kettle sighing and worn flagstones underfoot",
+      "text_short": "farmhouse kitchen with iron range"
+    },
+    {
+      "name": "canal-boat-cabin",
+      "text": "a narrowboat cabin lined in lacquered wood and painted roses, brass portholes, a tiny stove ticking with heat",
+      "text_short": "narrowboat cabin with tiny stove"
+    },
+    {
+      "name": "library-armchair-corner",
+      "text": "a library corner with one cracked leather armchair, shelves rising to the ceiling, a reading lamp pooling gold on the open page",
+      "text_short": "leather armchair library corner"
+    },
+    {
+      "name": "ski-lodge-fireside",
+      "text": "a ski-lodge fireside, a stone chimney breast, wet mittens steaming on the fender and a deep sofa turned toward the flames",
+      "text_short": "ski-lodge stone fireside"
+    },
+    {
+      "name": "garden-shed-studio",
+      "text": "a garden shed turned tiny studio, paint-stained workbench, seed packets pinned to the wall and a small heater purring in the corner",
+      "text_short": "garden-shed studio"
+    },
+    {
+      "name": "vintage-caravan",
+      "text": "a vintage caravan interior, curved birch ceiling, gingham curtains and a fold-down table laid for two",
+      "text_short": "vintage caravan interior"
+    },
+    {
+      "name": "keepers-room",
+      "text": "a lighthouse keeper's room, curved whitewashed walls, a brass barometer by the stair and one deep-set window onto the sea",
+      "text_short": "lighthouse keeper's round room"
+    },
+    {
+      "name": "stone-bothy",
+      "text": "a one-room stone mountain bothy, sleeping platform against the gable, boots drying by the hearth and a visitors' book on the ledge",
+      "text_short": "stone bothy refuge room"
+    },
+    {
+      "name": "winter-conservatory",
+      "text": "a small conservatory in winter, ferns pressing the glass from inside, a rattan chair and a folded blanket against the cold panes",
+      "text_short": "fern-filled winter conservatory"
+    }
+  ]
+}

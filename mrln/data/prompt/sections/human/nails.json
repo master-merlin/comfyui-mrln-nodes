@@ -10,6 +10,8 @@
     { "name": "burgundy-gel", "text": "deep burgundy gel nails", "text_short": "burgundy gel nails" },
     { "name": "chrome-silver", "text": "mirror chrome silver polished nails", "text_short": "chrome silver nails" },
     { "name": "nude-almond", "text": "nude almond-shaped manicured nails", "text_short": "nude almond nails" },
-    { "name": "plum-coffin", "text": "plum purple coffin-shaped nails", "text_short": "plum coffin nails" }
+    { "name": "plum-coffin", "text": "plum purple coffin-shaped nails", "text_short": "plum coffin nails" },
+    { "name": "glazed-pearl", "text": "glazed pearl-sheen nails with a soft chrome glow", "text_short": "glazed pearl nails" },
+    { "name": "milky-french", "text": "milky translucent French tips", "text_short": "milky French tips" }
   ]
 }

@@ -1,20 +1,23 @@
 {
   "version": 1,
   "label": "Flora",
-  "description": "Plant subjects (Civitai 'flower' category).",
+  "description": "Plant subjects (Civitai 'flower' category) — botany an editor could caption.",
   "suits": ["nature"],
   "items": [
-    { "name": "sakura-full-bloom", "text": "cherry trees in absolute peak bloom, petals already letting go", "text_short": "peak sakura bloom", "tags": ["anime"] },
-    { "name": "wildflower-meadow", "text": "an alpine meadow drowning in mixed wildflowers", "text_short": "wildflower meadow" },
-    { "name": "lavender-rows", "text": "purple lavender rows converging on a stone farmhouse", "text_short": "lavender rows" },
-    { "name": "ancient-oak", "text": "a solitary ancient oak, crown wider than tall", "text_short": "ancient solitary oak" },
-    { "name": "lotus-pond", "text": "pink lotus blooms standing over still dark water", "text_short": "lotus pond blooms" },
-    { "name": "sunflower-field", "text": "a sunflower field turned in perfect unison", "text_short": "unison sunflowers" },
-    { "name": "moss-world", "text": "a miniature moss world of stars and cushions in macro detail", "text_short": "macro moss world" },
-    { "name": "autumn-maple", "text": "a Japanese maple in impossible crimson against dark cedar", "text_short": "crimson maple", "tags": ["anime"] },
-    { "name": "wisteria-tunnel", "text": "a dripping wisteria tunnel in lilac cascade", "text_short": "wisteria tunnel", "tags": ["anime"] },
-    { "name": "single-rose", "text": "a single garden rose, petals heavy with water droplets", "text_short": "dew-heavy rose" },
-    { "name": "saguaro-sentinels", "text": "saguaro sentinels raising arms against a pastel sky", "text_short": "saguaro sentinels" },
-    { "name": "fern-unfurl", "text": "a fern fiddlehead unfurling in perfect spiral", "text_short": "unfurling fiddlehead" }
+    { "name": "sakura-full-bloom", "text": "cherry trees at absolute peak bloom, every crown opening in the same week, the first petals already letting go on the lightest air", "text_short": "peak sakura bloom", "tags": ["anime"] },
+    { "name": "wildflower-meadow", "text": "an alpine meadow in its brief high-summer flush, gentian, arnica and campion packed shoulder to shoulder, all racing to set seed before September snow", "text_short": "wildflower meadow" },
+    { "name": "lavender-rows", "text": "lavender rows combing a dry hillside in parallel purple cords, July heat lifting the oil scent in a visible shimmer, every spike bending under bees", "text_short": "lavender rows" },
+    { "name": "ancient-oak", "text": "a solitary ancient oak, crown wider than tall, lower limbs sagging to rest their elbows on the grass, dead stag-headed branches crowning five centuries of growth", "text_short": "ancient solitary oak" },
+    { "name": "lotus-pond", "text": "pink lotus blooms standing a meter above still dark water, rain beading into mercury drops and rolling off the unwettable leaves", "text_short": "lotus pond blooms" },
+    { "name": "sunflower-field", "text": "a sunflower field in disciplined unison, every mature head locked facing east where the young plants once tracked the sun", "text_short": "unison sunflowers" },
+    { "name": "moss-world", "text": "a macro moss world of star rosettes and cushion domes still holding yesterday's rain, spore capsules periscoping above on copper-wire stalks", "text_short": "macro moss world" },
+    { "name": "autumn-maple", "text": "a Japanese maple in full crimson against dark cedar, its finely cut leaves turning from the crown downward, a fallen red skirt doubling the tree on the moss", "text_short": "crimson maple", "tags": ["anime"] },
+    { "name": "wisteria-tunnel", "text": "a wisteria tunnel in full May cascade, meter-long flower chains opening from the top down so each one grades violet into green bud at the tip", "text_short": "wisteria tunnel", "tags": ["anime"] },
+    { "name": "single-rose", "text": "a single garden rose holding rain in its nested spiral of petals, every velvet edge beaded, each drop lensing the color beneath it", "text_short": "dew-heavy rose" },
+    { "name": "saguaro-sentinels", "text": "saguaro sentinels raising candelabra arms against a pastel sky — no arm before its seventieth year — pleated ribs swollen full with stored monsoon rain", "text_short": "saguaro sentinels" },
+    { "name": "fern-unfurl", "text": "a fern fiddlehead unfurling in a perfect logarithmic spiral, fine ginger fuzz on the coil, spring's fastest architecture caught mid-turn", "text_short": "unfurling fiddlehead" },
+    { "name": "giant-waterlily", "text": "giant Amazon waterlily pads two meters across, upturned rims ribbed like boat hulls, tiling the still backwater", "text_short": "giant waterlily pads" },
+    { "name": "dandelion-clock", "text": "a dandelion seed head backlit into a sphere of glass filaments, the first seeds already parachuting away", "text_short": "backlit dandelion clock" },
+    { "name": "bristlecone-pine", "text": "a bristlecone pine at the treeline, dead wood spiraled like driftwood around the one living strip of bark", "text_short": "twisted bristlecone pine" }
   ]
 }

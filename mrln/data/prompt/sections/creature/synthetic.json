@@ -1,18 +1,24 @@
 {
   "version": 1,
   "label": "Synthetic Being",
-  "description": "Robots, androids and non-biological beings (Civitai robot/alien categories).",
+  "description": "Robots, androids and non-biological beings (Civitai robot/alien categories) — material logic first.",
   "suits": ["creature", "object"],
   "items": [
-    { "name": "android-elegant", "text": "an elegant android with porcelain panel skin and visible joint seams", "text_short": "porcelain android", "tags": ["scifi"] },
-    { "name": "battle-mech-character", "text": "a battle-scarred mech with personality in its posture, kneeling dormant", "text_short": "dormant scarred mech", "tags": ["scifi"] },
-    { "name": "utility-drone", "text": "a hovering utility drone with a single expressive lens eye", "text_short": "one-eyed hover drone", "tags": ["scifi"] },
-    { "name": "clockwork-automaton", "text": "a brass clockwork automaton, exposed gears turning behind glass", "text_short": "brass automaton", "tags": ["historical"] },
-    { "name": "alien-emissary", "text": "a tall graceful alien emissary in bioluminescent robes", "text_short": "bioluminescent alien", "tags": ["scifi"] },
-    { "name": "stone-golem", "text": "a moss-grown stone golem waking from centuries of stillness", "text_short": "waking stone golem", "tags": ["fantasy"] },
-    { "name": "forest-spirit", "text": "a small glowing forest spirit, half-transparent in the dusk light", "text_short": "glowing forest spirit", "tags": ["fantasy", "anime"] },
-    { "name": "tiger-beastman", "text": "a muscular tiger beastman monk in tattered prayer robes", "text_short": "tiger beastman monk", "tags": ["fantasy"] },
-    { "name": "cyborg-fusion", "text": "a human-machine fusion, skin yielding to precision alloy midway", "text_short": "human-machine fusion", "tags": ["scifi"] },
-    { "name": "living-armor", "text": "an empty suit of living armor animated by faint inner light", "text_short": "living empty armor", "tags": ["fantasy"] }
+    { "name": "android-elegant", "text": "an elegant android with porcelain panel skin, hairline seams tracing the panel joins at wrist and jaw, a soft status glow breathing under the collarbone plate", "text_short": "porcelain-panel android", "tags": ["scifi"] },
+    { "name": "battle-mech-character", "text": "a battle-worn mech kneeling dormant, head bowed over one planted arm, armor panels mismatched from decades of field patches, a single optic still faintly lit", "text_short": "dormant battle-worn mech", "tags": ["scifi"] },
+    { "name": "utility-drone", "text": "a hovering utility drone with a single wide lens for a face, iris aperture blooming as it refocuses, rotor wash stirring rings in the dust below", "text_short": "one-eyed hover drone", "tags": ["scifi"] },
+    { "name": "clockwork-automaton", "text": "a brass clockwork automaton, gear trains turning behind a glass chest door, ruby escapement flickering with every measured tick", "text_short": "brass clockwork automaton", "tags": ["historical"] },
+    { "name": "alien-emissary", "text": "a tall alien emissary in robes of woven bioluminescent filament pulsing in patterns of speech, elongated limbs with one joint too many reading as grace", "text_short": "bioluminescent alien emissary", "tags": ["scifi"] },
+    { "name": "stone-golem", "text": "a moss-grown stone golem waking from centuries of stillness, soil pouring off its shoulders, saplings still rooted along one arm, amber light kindling deep in the eye sockets", "text_short": "waking stone golem", "tags": ["fantasy"] },
+    { "name": "forest-spirit", "text": "a small forest spirit hovering knee-high, body translucent as fogged glass, ferns glowing faint green wherever it drifts", "text_short": "glowing forest spirit", "tags": ["fantasy", "anime"] },
+    { "name": "tiger-beastman", "text": "a tiger beastman monk in tattered prayer robes, standing on digitigrade legs, striped forearms wrapped in prayer beads, claws blunted by discipline", "text_short": "tiger beastman monk", "tags": ["fantasy"] },
+    { "name": "cyborg-fusion", "text": "a human-machine fusion in profile, skin thinning into brushed alloy along the jaw and neck, dermal ports stitched in a line the way scars would be", "text_short": "human-machine fusion", "tags": ["scifi"] },
+    { "name": "living-armor", "text": "an empty suit of living armor holding a guard stance, faint hearth-light spilling from the visor slit and every joint gap, no body inside to cast a shadow", "text_short": "living empty armor", "tags": ["fantasy"] },
+    { "name": "nanite-swarm", "text": "a humanoid figure condensing out of a nanite swarm, solid at the core, edges still a glinting metallic murmuration", "text_short": "condensing nanite figure", "tags": ["scifi"] },
+    { "name": "holo-companion", "text": "a holographic companion projected knee-high above a table emitter, form scanlined and translucent, gesturing with light that spills color onto real objects", "text_short": "scanlined holo companion", "tags": ["scifi"] },
+    { "name": "gargoyle-sentinel", "text": "a gargoyle sentinel unfolding stiffly from its rooftop crouch, rain channels carved through its shoulders still draining, wings of pleated stone", "text_short": "waking gargoyle sentinel", "tags": ["fantasy"] },
+    { "name": "biomech-symbiote", "text": "a biomechanical symbiote seated across its host's shoulders, chitin-alloy plates layered like beetle wing cases, feed lines pulsing in time with a shared heartbeat", "text_short": "chitin-alloy symbiote", "tags": ["scifi"] },
+    { "name": "quadruped-scout", "text": "a headless quadruped scout robot picking its way across rubble, each footfall tested before it takes weight, a lidar pod spinning where a head would be, hydraulic lines routed along its legs like tendons", "text_short": "quadruped scout robot", "tags": ["scifi"] },
+    { "name": "greenhouse-keeper", "text": "a moss-grown groundskeeper robot kneeling in an overgrown greenhouse, chassis weathered to verdigris, one precise manipulator cupping a seedling it has tended since the people left", "text_short": "overgrown gardener robot", "tags": ["scifi"] }
   ]
 }

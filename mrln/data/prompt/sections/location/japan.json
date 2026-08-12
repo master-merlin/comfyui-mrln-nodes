@@ -65,6 +65,42 @@
       "name": "castle-and-sakura",
       "text": "A white-walled Japanese castle keep rising above a moat, framed by clouds of cherry blossom in full bloom.",
       "text_short": "castle keep framed by sakura"
+    },
+    {
+      "name": "torii-tunnel",
+      "text": "A tunnel of a thousand vermilion torii gates winding up a wooded hillside, black-lettered dedications on every pillar, dappled light between them.",
+      "text_short": "tunnel of vermilion torii"
+    },
+    {
+      "name": "countryside-bus-stop",
+      "text": "A lone countryside bus stop, a rusting sign and wooden bench beneath a persimmon tree, rice terraces climbing the hillside behind.",
+      "text_short": "rural bus stop, rice terraces"
+    },
+    {
+      "name": "matsuri-stalls",
+      "text": "A summer festival street of yatai food stalls, red paper lanterns strung overhead, goldfish-scoop pools and yukata crowds beneath the glow.",
+      "text_short": "matsuri lantern stalls",
+      "tags": ["night"]
+    },
+    {
+      "name": "zen-rock-garden",
+      "text": "A temple rock garden, ripples raked into white gravel around moss-collared stones, a low wooden viewing veranda in shadow.",
+      "text_short": "raked zen rock garden"
+    },
+    {
+      "name": "school-classroom",
+      "text": "An empty Japanese classroom, paired wooden desks facing the blackboard, the cleaning-duty roster pinned by the door and curtains breathing at the open windows.",
+      "text_short": "empty Japanese classroom"
+    },
+    {
+      "name": "river-embankment",
+      "text": "A grassy river embankment path below a steel truss bridge, baseball backstops on the floodplain diamond and the town's rooftops rising on the far bank.",
+      "text_short": "river embankment path"
+    },
+    {
+      "name": "ramen-counter",
+      "text": "A six-seat ramen counter behind a split noren curtain, a ticket machine by the door and steam rolling off the stockpots under handwritten menu strips.",
+      "text_short": "steamy ramen counter"
     }
   ]
 }

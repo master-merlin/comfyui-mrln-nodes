@@ -53,6 +53,26 @@
       "name": "throne-of-the-deep-king",
       "text": "A subterranean throne hall carved from a single obsidian seam, rivers of magma glowing far below open galleries.",
       "text_short": "obsidian throne hall over magma"
+    },
+    {
+      "name": "dwarven-forge-hall",
+      "text": "A dwarven forge hall under the mountain, anvils ringing between basalt pillars, channels of molten metal lighting bearded stone faces carved into the walls.",
+      "text_short": "dwarven forge hall"
+    },
+    {
+      "name": "alchemist-workshop",
+      "text": "An alchemist's workshop crowded with copper alembics and glass retorts, colored tinctures glowing on crooked shelves, chalk diagrams across the floorboards.",
+      "text_short": "alchemist workshop clutter"
+    },
+    {
+      "name": "world-tree-roots",
+      "text": "The root-city of a colossal world tree, bark ridges the size of cliffs sheltering lantern-lit dwellings, stairways carved along roots that climb into cloud.",
+      "text_short": "world-tree root city"
+    },
+    {
+      "name": "goblin-market",
+      "text": "A canopied goblin market crammed into a ruin's undercroft, stalls of bottled lightning and mismatched wares, coin scales and colored cage-lamps swinging from crooked poles.",
+      "text_short": "lantern-lit goblin market"
     }
   ]
 }

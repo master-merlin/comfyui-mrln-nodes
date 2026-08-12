@@ -68,6 +68,16 @@
       "name": "finger-bite-playful",
       "text": "gently biting an index finger with a playful sultry look",
       "text_short": "playful finger bite"
+    },
+    {
+      "name": "wrists-overhead",
+      "text": "arms raised overhead with wrists loosely crossed, framing the face",
+      "text_short": "wrists crossed overhead"
+    },
+    {
+      "name": "nape-hair-lift",
+      "text": "both hands lifting the hair off the nape, elbows high",
+      "text_short": "lifting hair off nape"
     }
   ]
 }

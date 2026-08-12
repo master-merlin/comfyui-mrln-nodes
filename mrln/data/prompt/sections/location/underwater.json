@@ -43,6 +43,18 @@
       "name": "seagrass-meadow",
       "text": "A gently waving seagrass meadow over white sand, dappled with moving light patterns.",
       "text_short": "waving seagrass meadow"
+    },
+    {
+      "name": "reef-wall-drop",
+      "text": "A vertical reef wall dropping into open blue, gorgonian fans and whip corals combing the current, exhaled bubbles ribboning up the rock face.",
+      "text_short": "reef wall drop-off"
+    },
+    {
+      "name": "bioluminescent-bay",
+      "text": "A shallow bay of bioluminescent plankton, every movement blooming cold blue light through the black water.",
+      "text_short": "glowing bioluminescent bay",
+      "tags": ["night"],
+      "requires": ["night"]
     }
   ]
 }

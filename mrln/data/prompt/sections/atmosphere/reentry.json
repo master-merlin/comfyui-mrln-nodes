@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Atmospheric Entry",
+  "description": "What entering an atmosphere does to a hull and the air around it — the physics layer that makes an arrival believable.",
+  "tags": ["scifi"],
+  "items": [
+    {
+      "name": "plasma-sheath",
+      "text": "a full plasma sheath wrapping the hull, magenta-white ionization streaming aft into an incandescent wake kilometers long",
+      "text_short": "plasma sheath, glowing wake"
+    },
+    {
+      "name": "shock-collar",
+      "text": "a conical condensation collar flashing in and out of existence around the bow shock, vapor rings peeling off and dissolving behind",
+      "text_short": "condensation shock collar"
+    },
+    {
+      "name": "ablative-shed",
+      "text": "ablative panels shedding in glowing flakes, a drizzle of orange-hot confetti raining off the heat-shield line",
+      "text_short": "shedding ablative sparks"
+    },
+    {
+      "name": "contrail-lattice",
+      "text": "dozens of parallel entry contrails scored across the sky, each a straight white incision ending in a bright descending point",
+      "text_short": "parallel entry contrails"
+    },
+    {
+      "name": "punched-clouds",
+      "text": "a clean circular hole punched through the cloud deck where the hull came down, cloud walls still curling into the vacuum of its wake",
+      "text_short": "hole punched through clouds"
+    },
+    {
+      "name": "boom-front",
+      "text": "the visible pressure front of a sonic boom expanding as a ring below the hull, flattening grass, dust and open water as it passes",
+      "text_short": "visible sonic boom ring"
+    },
+    {
+      "name": "drive-distortion",
+      "text": "the air beneath the hull wobbling with drive distortion, straight lines bending as if seen over a furnace, loose dust rising against gravity in slow columns",
+      "text_short": "gravity-drive air distortion"
+    },
+    {
+      "name": "braking-burn",
+      "text": "bow thrusters firing in staged sequence, hard blue-white braking jets stabbing forward, each pulse lighting the underside of the hull like a flashbulb",
+      "text_short": "staged braking burn"
+    },
+    {
+      "name": "cooling-hull",
+      "text": "leading edges still glowing dull cherry from entry heat, color draining from orange to iron grey as the hull cools, shimmer streaming off every fin",
+      "text_short": "cherry-hot cooling hull"
+    },
+    {
+      "name": "debris-halo",
+      "text": "a halo of shed debris falling with the ship in loose formation, panels and ice glittering as they tumble in the shared slipstream",
+      "text_short": "glittering debris halo"
+    }
+  ]
+}

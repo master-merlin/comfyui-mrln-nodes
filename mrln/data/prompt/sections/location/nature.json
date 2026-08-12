@@ -1,75 +1,92 @@
 {
   "version": 1,
   "label": "Nature Location",
-  "description": "Landscapes, coastal and mountain roads.",
+  "description": "Open landscapes and the roads through them — passes, coasts, forests, deserts and plains.",
   "items": [
     {
       "name": "coastal-cliff-highway",
-      "text": "A pristine, dark asphalt coastal highway carved into a sheer, granite cliffside, with the vast, open ocean on one side and rugged, salt-sprayed rocky outcrops on the other."
+      "text": "A pristine, dark asphalt coastal highway carved into a sheer, granite cliffside, with the vast, open ocean on one side and rugged, salt-sprayed rocky outcrops on the other.",
+      "text_short": "cliff-carved coastal highway"
     },
     {
       "name": "winding-coastal-road",
-      "text": "A simple, winding coastal road with the sea on one side and grassy bluffs on the other."
+      "text": "A two-lane coastal road tracing the shoreline, weathered guardrail posts, wind-bent grasses on the bluff and sea spray hazing the rocks below.",
+      "text_short": "winding shoreline road"
     },
     {
       "name": "great-ocean-road",
-      "text": "The Great Ocean Road in Australia, with the iconic Twelve Apostles limestone sea stacks visible from the winding, guard-railed clifftop road."
+      "text": "The Great Ocean Road in Australia, with the iconic Twelve Apostles limestone sea stacks visible from the winding, guard-railed clifftop road.",
+      "text_short": "Great Ocean Road sea stacks"
     },
     {
       "name": "white-sand-beach",
-      "text": "A road on a pristine white sand beach, with crystal turquoise water lapping just feet from the compacted sand path."
+      "text": "A hard-packed lane of white beach sand along the waterline, crystal turquoise shallows on one side and soft dune grass combed by the wind on the other.",
+      "text_short": "white-sand beach lane"
     },
     {
       "name": "mirror-mountain-lake",
-      "text": "A remote mountain lake with perfectly still, mirror-like water reflecting surrounding snowy peaks."
+      "text": "A remote mountain lake at dead calm, snowy peaks and shoreline pines doubled without a ripple, a lone gravel spit reaching into the reflection.",
+      "text_short": "mirror-still mountain lake"
     },
     {
       "name": "florida-keys-causeway",
-      "text": "A raised causeway road connecting islands in the Florida Keys, with the shimmering, shallow turquoise water of the gulf stretching for miles on both sides."
+      "text": "A raised causeway road connecting islands in the Florida Keys, with the shimmering, shallow turquoise water of the gulf stretching for miles on both sides.",
+      "text_short": "island causeway over shallows"
     },
     {
       "name": "stelvio-pass",
-      "text": "The serpentine Stelvio Pass in the Italian Alps, an intricate ribbon of worn asphalt with dozens of tight, numbered hairpin turns stacked closely together on a steep, scree-covered mountainside."
+      "text": "The serpentine Stelvio Pass in the Italian Alps, an intricate ribbon of worn asphalt with dozens of tight, numbered hairpin turns stacked closely together on a steep, scree-covered mountainside.",
+      "text_short": "Stelvio stacked hairpins"
     },
     {
       "name": "winding-mountain-road",
-      "text": "A generic winding mountain road with steep, rocky inclines and scattered pine trees."
+      "text": "A mountain road climbing through switchbacks between granite outcrops and scattered pines, gravel runouts and snow poles marking the verge.",
+      "text_short": "winding mountain switchbacks"
     },
     {
       "name": "black-forest-canopy",
-      "text": "A road through the dense, dark Schwarzwald (Black Forest) in Germany, where towering fir trees create a dramatic, tunnel-like canopy over the asphalt."
+      "text": "A road through the dense, dark Schwarzwald (Black Forest) in Germany, where towering fir trees create a dramatic, tunnel-like canopy over the asphalt.",
+      "text_short": "dark fir tunnel road"
     },
     {
       "name": "gravel-rally-stage",
-      "text": "A rough, dusty gravel rally stage winding through a dense pine forest."
+      "text": "A loose-gravel rally stage through dense pine forest, stones swept into pale berms on the outside of every corner, cut ruts through the apex soil and dust hanging between the trees.",
+      "text_short": "forest gravel rally stage"
     },
     {
       "name": "autumn-foliage-road",
-      "text": "A road covered in colorful, fallen leaves during peak autumn foliage in a deciduous forest."
+      "text": "A road drifted with fallen leaves at peak autumn color, maples and beeches in saturated red and gold arching over the centerline.",
+      "text_short": "peak-autumn foliage road"
     },
     {
       "name": "wooden-ravine-bridge",
-      "text": "A lonely, weathered wooden bridge spanning a deep, forested ravine with a clear river flowing below."
+      "text": "A lonely, weathered wooden bridge spanning a deep, forested ravine with a clear river flowing below.",
+      "text_short": "wooden bridge over ravine"
     },
     {
       "name": "endless-prairie-highway",
-      "text": "An endless, straight highway stretching through a vast, open prairie or grassland landscape."
+      "text": "A straight two-lane highway through open prairie, telegraph poles shrinking to the horizon and wind combing waves through the grass.",
+      "text_short": "endless prairie highway"
     },
     {
       "name": "salt-flat",
-      "text": "A vast, perfectly flat salt flat like the Salar de Uyuni, with a surface of dry, hexagonal cracked salt patterns stretching to an endless, clean horizon."
+      "text": "A vast, perfectly flat salt flat like the Salar de Uyuni, with a surface of dry, hexagonal cracked salt patterns stretching to an endless, clean horizon.",
+      "text_short": "cracked salt flat horizon"
     },
     {
       "name": "desert-highway",
-      "text": "A long, straight highway stretching to the horizon through an arid desert landscape."
+      "text": "A dead-straight desert highway, heat shimmer melting the vanishing point, layered red mesas on the horizon and cracked earth beyond the shoulder.",
+      "text_short": "heat-shimmer desert highway"
     },
     {
       "name": "lunar-landscape",
-      "text": "A stark, desolate landscape of craters and fine gray dust, resembling a lunar surface."
+      "text": "A stark volcanic ash plain of overlapping craters and fine gray dust, boot-deep regolith running unmarked to a curved, airless-looking horizon.",
+      "text_short": "gray crater dust plain"
     },
     {
       "name": "fjord-aurora-dock",
       "text": "On a quiet wooden dock on a Norwegian fjord, with the shimmering green and purple curtains of the aurora borealis reflecting in the still, dark water.",
+      "text_short": "aurora over fjord dock",
       "tags": [
         "night"
       ],
@@ -96,6 +113,51 @@
       "name": "valley-viaduct",
       "text": "A sky-high concrete viaduct spanning a forested valley, piers dropping away into the green below.",
       "text_short": "valley-spanning viaduct"
+    },
+    {
+      "name": "atlantic-ocean-road",
+      "text": "The Atlantic Ocean Road in Norway, low causeways skipping between bare skerries and the cambered Storseisundet bridge arcing over cold green sea.",
+      "text_short": "Atlantic Ocean Road bridges"
+    },
+    {
+      "name": "icelandic-lava-fields",
+      "text": "An Icelandic ring-road stretch across black volcanic sand plains, moss-green lava fields and a glacier tongue descending between dark ridges.",
+      "text_short": "Icelandic lava-field road"
+    },
+    {
+      "name": "redwood-corridor",
+      "text": "A road threading between coast redwood trunks wider than the lane itself, fog drifting through shafts of filtered light far overhead.",
+      "text_short": "redwood grove corridor"
+    },
+    {
+      "name": "red-rock-canyon",
+      "text": "A desert canyon road between sheer red sandstone walls, dark streaks of desert varnish down the cliffs and a dry wash braiding alongside.",
+      "text_short": "red sandstone canyon road"
+    },
+    {
+      "name": "lavender-field-lane",
+      "text": "A narrow Provençal lane between blooming lavender rows, purple furrows converging on a stone farmhouse and a lone umbrella pine.",
+      "text_short": "lavender rows, Provence lane"
+    },
+    {
+      "name": "savanna-acacia-plain",
+      "text": "An East African savanna in golden grass, flat-topped acacias spaced to the horizon and a red laterite track cutting toward distant blue hills.",
+      "text_short": "acacia savanna plain"
+    },
+    {
+      "name": "waterfall-gorge",
+      "text": "A mossy basalt gorge behind a plunging waterfall, spray drifting through shafts of light and wet black stone glistening around the plunge pool.",
+      "text_short": "waterfall plunge gorge"
+    },
+    {
+      "name": "glacier-lagoon",
+      "text": "A glacier lagoon scattered with stranded icebergs, ridged blue-white ice drifting past banks of black volcanic sand toward the outlet.",
+      "text_short": "iceberg glacier lagoon"
+    },
+    {
+      "name": "moorland-single-track",
+      "text": "A single-track moorland road with grass growing up the centreline, leaning passing-place posts, heather and peat hags rolling to a crag on the skyline.",
+      "text_short": "moorland single-track road"
     }
   ]
 }

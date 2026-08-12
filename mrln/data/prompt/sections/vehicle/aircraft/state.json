@@ -11,6 +11,8 @@
     { "name": "hangar-rest", "text": "at rest in the hangar under work lights, panels open", "text_short": "hangar rest" },
     { "name": "low-pass", "text": "in a thundering low pass along the display line", "text_short": "thundering low pass" },
     { "name": "water-touchdown", "text": "kissing the water on landing, twin spray fans trailing", "text_short": "water touchdown" },
-    { "name": "banked-turn", "text": "carving a steep banked turn, wing pointed at the ground", "text_short": "steep banked turn" }
+    { "name": "banked-turn", "text": "carving a steep banked turn, wing pointed at the ground", "text_short": "steep banked turn" },
+    { "name": "carrier-catapult", "text": "hurled off a carrier catapult, steam curling from the deck track, nose gear at full stretch over the bow", "text_short": "carrier catapult launch" },
+    { "name": "afterburner-climb", "text": "standing on its tail in a full-afterburner climb, shock diamonds stacked in the twin blue flames", "text_short": "afterburner climb", "tags": ["night"] }
   ]
 }

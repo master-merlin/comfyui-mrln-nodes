@@ -1,37 +1,42 @@
 {
   "version": 1,
   "label": "Age",
-  "description": "Adult age brackets only — factory policy, lint-enforced.",
+  "description": "Adult age brackets only — factory policy, lint-enforced. Each carries a light renderable maturity cue that composes with the skin pool.",
   "suits": ["human"],
   "items": [
     {
       "name": "early-twenties",
-      "text": "in the early twenties",
+      "text": "in the early twenties, fresh-faced and bright-eyed",
       "text_short": "early twenties"
     },
     {
       "name": "mid-twenties",
-      "text": "in the mid twenties",
+      "text": "in the mid twenties with softly rounded youthful features",
       "text_short": "mid twenties"
     },
     {
       "name": "late-twenties",
-      "text": "in the late twenties",
+      "text": "in the late twenties with fully settled adult features",
       "text_short": "late twenties"
     },
     {
       "name": "early-thirties",
-      "text": "in the early thirties",
+      "text": "in the early thirties with elegantly defined bone structure",
       "text_short": "early thirties"
     },
     {
+      "name": "mid-thirties",
+      "text": "in the mid thirties, poised, with the first faint smile lines",
+      "text_short": "mid thirties"
+    },
+    {
       "name": "late-thirties",
-      "text": "in the late thirties",
+      "text": "in the late thirties with graceful early laugh lines",
       "text_short": "late thirties"
     },
     {
       "name": "confident-forties",
-      "text": "in the confident mid forties",
+      "text": "in the confident mid forties, fine expression lines framing the eyes",
       "text_short": "mid forties"
     }
   ]

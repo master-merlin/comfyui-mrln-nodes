@@ -4,14 +4,16 @@
   "description": "Beach and pool wardrobe — the summer glamour staple between lingerie and casual.",
   "suits": ["human"],
   "items": [
-    { "name": "classic-one-piece", "text": "a sculpting classic one-piece swimsuit", "text_short": "classic one-piece" },
-    { "name": "high-waist-bikini", "text": "a retro high-waist bikini", "text_short": "high-waist bikini" },
-    { "name": "sporty-two-piece", "text": "a sporty athletic two-piece", "text_short": "sporty two-piece" },
-    { "name": "polka-halter", "text": "a fifties polka-dot halter swimsuit", "text_short": "polka-dot halter suit", "tags": ["historical"] },
-    { "name": "crochet-set", "text": "a boho crochet bikini set", "text_short": "crochet bikini" },
-    { "name": "plunge-one-piece", "text": "a deep-plunge glamour one-piece", "text_short": "plunge one-piece" },
-    { "name": "sarong-wrap", "text": "a bikini with a sheer sarong wrap at the hips", "text_short": "bikini with sarong" },
-    { "name": "boardshorts", "text": "boardshorts with a rash guard", "text_short": "boardshorts, rash guard", "tags": ["male"] },
-    { "name": "classic-trunks", "text": "tailored classic swim trunks", "text_short": "classic swim trunks", "tags": ["male"] }
+    { "name": "classic-one-piece", "text": "a sculpting classic one-piece swimsuit, high-cut leg, low scooped back in matte lycra", "text_short": "classic one-piece" },
+    { "name": "high-waist-bikini", "text": "a retro high-waist bikini, structured balconette top, waistband sitting at the navel", "text_short": "high-waist bikini" },
+    { "name": "sporty-two-piece", "text": "a sporty athletic two-piece, racerback crop top and fitted boy-short bottoms", "text_short": "sporty two-piece" },
+    { "name": "polka-halter", "text": "a fifties polka-dot halter swimsuit, ruched front panel, sweetheart neckline", "text_short": "polka-dot halter suit", "tags": ["historical"] },
+    { "name": "crochet-set", "text": "a boho hand-crocheted bikini set, scalloped edges, tassel ties at hip and neck", "text_short": "crochet bikini" },
+    { "name": "plunge-one-piece", "text": "a deep-plunge glamour one-piece, neckline open to the waist, gold hardware at the sternum", "text_short": "plunge one-piece" },
+    { "name": "sarong-wrap", "text": "a bikini under a sheer chiffon sarong knotted low on the hip, fabric lifting with the breeze", "text_short": "bikini with sarong" },
+    { "name": "monokini", "text": "a cutout monokini, front panels joined by gold rings at the waist, high-cut leg", "text_short": "cutout monokini" },
+    { "name": "boardshorts", "text": "quick-dry boardshorts with a fitted rash guard, salt-faded print", "text_short": "boardshorts, rash guard", "tags": ["male"] },
+    { "name": "classic-trunks", "text": "tailored mid-thigh swim trunks, flat drawstring waistband", "text_short": "classic swim trunks", "tags": ["male"] },
+    { "name": "bandeau-minimal", "text": "a minimal ribbed bandeau bikini, straight banded top, low-rise bottoms with thin side ties", "text_short": "ribbed bandeau bikini" }
   ]
 }

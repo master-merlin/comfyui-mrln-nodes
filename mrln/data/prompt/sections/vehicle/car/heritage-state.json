@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "label": "Heritage State",
+  "description": "Classic-car states and touches — period hardware only, nothing a coachbuilt legend could not actually do.",
+  "suits": ["object", "vehicle", "car"],
+  "items": [
+    {
+      "name": "bonnet-propped",
+      "text": "bonnet propped open on its rod over a spotless carburetted engine bay, braided lines and polished cam covers on display",
+      "text_short": "bonnet propped, polished engine bay"
+    },
+    {
+      "name": "wire-wheels-locked",
+      "text": "front wire wheels turned onto full lock, knock-off spinners catching the light",
+      "text_short": "wire wheels on full lock"
+    },
+    {
+      "name": "top-folded",
+      "text": "convertible top folded away under a fitted leather tonneau boot",
+      "text_short": "top folded under leather boot"
+    },
+    {
+      "name": "driving-lamps-lit",
+      "text": "auxiliary driving lamps lit, warm tungsten glow pooling ahead of the chrome bumper",
+      "text_short": "driving lamps lit, tungsten glow",
+      "tags": ["night"]
+    },
+    {
+      "name": "engine-ticking",
+      "text": "engine off and ticking as it cools, the faint smell of hot oil and warm chrome almost visible in the shot",
+      "text_short": "engine off, ticking warm"
+    },
+    {
+      "name": "rally-plates",
+      "text": "period rally plates and scrutineering stickers on the nose, a route book resting on the dash",
+      "text_short": "period rally plates, route book"
+    },
+    {
+      "name": "morning-dew",
+      "text": "overnight dew misted evenly across the brightwork, one clean wipe across the windscreen",
+      "text_short": "dew-misted brightwork"
+    },
+    {
+      "name": "picnic-touring",
+      "text": "a wicker picnic hamper strapped to the boot rack, tartan rug folded over the door top",
+      "text_short": "picnic hamper on boot rack"
+    },
+    {
+      "name": "just-waxed",
+      "text": "freshly hand-waxed, swirl-free reflections rolling unbroken across the coachwork",
+      "text_short": "hand-waxed, swirl-free reflections"
+    }
+  ]
+}

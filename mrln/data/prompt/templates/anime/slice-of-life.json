@@ -34,19 +34,13 @@
       "default": "watercolor-soft"
     },
     {
-      "id": "mood",
-      "ref": "atmosphere/mood",
-      "label": "Mood",
-      "default": "nostalgic"
-    },
-    {
       "id": "particles",
       "ref": "atmosphere/particles",
       "label": "Drifting",
       "allow_empty": true
     }
   ],
-  "suffix": "Scene Rendering: hand-painted background warmth, small human traces — a parked bicycle, drying laundry, a forgotten umbrella — light that makes the ordinary sacred.",
+  "suffix": "Scene Rendering: hand-painted background warmth, small human traces — a parked bicycle, drying laundry, a forgotten umbrella — a hush of settled nostalgia, colors faded like a memory that improved with age, light that makes the ordinary sacred.",
   "negative": "photorealistic, 3d render, watermark, text, dark horror tones",
   "render": {
     "format": "string_labeled",

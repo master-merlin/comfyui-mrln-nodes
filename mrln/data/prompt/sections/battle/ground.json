@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "The Field",
+  "description": "What the armies stand on — terrain as material, its weather-state, and the distance it opens toward the horizon.",
+  "items": [
+    {
+      "name": "churned-mud",
+      "text": "a field churned to shin-deep mud, wheel-ruts holding ribbons of reflected sky, lost horseshoes and split shield-boards half-swallowed, every footprint filling with water",
+      "text_short": "churned mud field"
+    },
+    {
+      "name": "trampled-wheat",
+      "text": "a ripe wheatfield flattened in great swathes where the lines passed, standing gold surviving only at the margins, loose chaff blowing across the ruts",
+      "text_short": "trampled wheatfield"
+    },
+    {
+      "name": "frost-moor",
+      "text": "an iron-hard frosted moor, heather rimed white, black peat showing through wherever boots have scuffed it, the far ridge knife-sharp in scoured air",
+      "text_short": "frost-rimed moor"
+    },
+    {
+      "name": "river-ford",
+      "text": "a wide gravel ford churned milky, shin-deep current dragging at the banners' reflections, the far bank rising in trampled terraces",
+      "text_short": "churned river ford"
+    },
+    {
+      "name": "cinder-plain",
+      "text": "a cinder plain still warm underfoot, ground cracked into slabs with a dull orange glow seeping through the seams, dead trees standing as black posts to the horizon",
+      "text_short": "smoldering cinder plain",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "trampled-snow",
+      "text": "a snowfield churned grey-brown along the lines of advance, drifts still clean in the hollows, spent arrows peppering the white like punctuation",
+      "text_short": "trampled snowfield"
+    },
+    {
+      "name": "barrow-downs",
+      "text": "grass downland studded with burial barrows and leaning standing stones, the armies flowing around the old mounds as if by unspoken agreement",
+      "text_short": "barrow-studded downs",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "marsh-causeway",
+      "text": "a single timber causeway across black marsh water, reeds bowing in the wind, room for six abreast and no more, the bog mirroring every banner",
+      "text_short": "causeway over black marsh"
+    },
+    {
+      "name": "chalk-scarp",
+      "text": "a chalk escarpment scarred white where hooves cut through the thin turf, long slopes funneling both lines together toward the valley floor",
+      "text_short": "scarred chalk slopes"
+    },
+    {
+      "name": "palisade-ground",
+      "text": "the open ground before a burned palisade, blackened stakes leaning outward, smoke still crawling low along the plough furrows",
+      "text_short": "field before burned palisade"
+    }
+  ]
+}

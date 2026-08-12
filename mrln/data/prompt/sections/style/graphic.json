@@ -52,6 +52,16 @@
       "name": "brand-board",
       "text": "brand identity board, the subject applied across mockups, swatches and typography specimens",
       "text_short": "brand identity board"
+    },
+    {
+      "name": "tarot-card",
+      "text": "ornate tarot-card design, symmetrical hieratic composition, engraved linework inside a symbolic border, roman-numeral and title cartouche, gold-accented flat color",
+      "text_short": "ornate tarot card"
+    },
+    {
+      "name": "sticker-diecut",
+      "text": "die-cut vinyl sticker design, thick white contour border, bold clean outlines, punchy flat shading on a plain background",
+      "text_short": "die-cut sticker"
     }
   ]
 }

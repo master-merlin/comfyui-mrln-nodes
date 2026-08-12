@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "label": "Apex Attack",
+  "type": ["object", "vehicle", "car"],
+  "description": "Daylight motorsport photography from the catch fencing: one car at ten tenths in real racing geography, long glass and honest tire physics.",
+  "prefix": "A professional motorsport photograph — one car at ten tenths, the circuit's geography doing the storytelling, the frame timed by someone who knows exactly where the grip runs out.",
+  "variables": [
+    { "name": "trigger", "label": "Car / LoRA trigger", "default": "race-prepared performance car" }
+  ],
+  "slots": [
+    { "id": "paint", "ref": "vehicle/car/color/paint", "label": "Livery Base", "emphasis": 1.1 },
+    { "id": "action", "ref": "vehicle/car/action", "label": "Caught", "tags_any": ["aggressive-dynamics"], "emphasis": 1.25 },
+    { "id": "scene", "ref": "location/automotive", "label": "Circuit", "emphasis": 1.2 },
+    { "id": "conditions", "ref": "atmosphere/weather", "label": "Conditions" },
+    { "id": "craft", "ref": "vehicle/craft/rig", "label": "Craft", "tags_any": ["motion"], "default": "panning-telephoto" },
+    { "id": "film", "ref": "camera/film", "label": "Press Stock", "tags_none": ["night"], "allow_empty": true }
+  ],
+  "suffix": "Motorsport Rendering: the {trigger} carrying visible load through the frame, (kerb paint, rubber marbles and gravel dust resolved:1.2), tire sidewalls deforming honestly, (absolute focus on the car:1.2) while the background surrenders to speed.",
+  "negative": "parked, static showroom feel, watermark, text, deformed wheels",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

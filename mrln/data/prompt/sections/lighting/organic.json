@@ -5,42 +5,42 @@
   "items": [
     {
       "name": "window-light",
-      "text": "soft directional daylight from a single large window, gentle falloff into shadow, dust visible in the beam",
+      "text": "soft directional daylight from a single large window, gentle falloff into shadow across the room, dust visible in the beam",
       "text_short": "soft window light"
     },
     {
       "name": "sheer-curtain-glow",
-      "text": "daylight diffused through sheer curtains, wrapping soft light with barely defined shadows",
+      "text": "daylight diffused through sheer curtains, wrapping soft light with barely defined shadows, the window turned into one glowing panel",
       "text_short": "curtain-diffused glow"
     },
     {
       "name": "blinds-slats",
-      "text": "low sun slicing through venetian blinds, parallel bands of warm light raking across the scene",
+      "text": "low sun slicing through venetian blinds, parallel bands of warm light raking across skin and wall, stripes bending over every curve",
       "text_short": "light bands through blinds"
     },
     {
       "name": "candlelight",
-      "text": "warm flickering candlelight, deep amber tones, intimate pools of light and soft darkness",
+      "text": "flickering candlelight glowing deep amber, steep intimate falloff pulling faces bright out of soft darkness, highlights trembling",
       "text_short": "warm candlelight"
     },
     {
       "name": "fireplace-glow",
-      "text": "the restless orange glow of a fireplace, warm highlights dancing on nearby surfaces",
+      "text": "the restless orange glow of a fireplace lighting the scene from low and to one side, warm highlights dancing on nearby surfaces",
       "text_short": "fireplace glow"
     },
     {
       "name": "string-lights",
-      "text": "warm fairy string lights, small soft points of glow and creamy bokeh in the background",
+      "text": "warm fairy string lights, small soft points of glow close to the subject and creamy bokeh circles in the background depth",
       "text_short": "warm string lights"
     },
     {
       "name": "bedside-lamp",
-      "text": "a single warm bedside lamp, cozy low-key light with soft shadow edges",
+      "text": "a single warm bedside lamp, cozy low-key pool of light with soft shadow edges fading into the dim room",
       "text_short": "single bedside lamp"
     },
     {
       "name": "golden-hour-window",
-      "text": "late golden-hour sun pouring horizontally through a window, long warm shadows and glowing edges",
+      "text": "late golden-hour sun pouring horizontally through a window, long warm shadows thrown deep into the room and glowing edges on everything it touches",
       "text_short": "golden hour through window",
       "tags": ["day"]
     },
@@ -52,9 +52,25 @@
     },
     {
       "name": "dappled-leaves",
-      "text": "sunlight dappled through foliage, shifting spots of light and leaf-shadow patterns",
+      "text": "sunlight dappled through foliage, shifting spots of light and leaf-shadow patterns sliding over the subject",
       "text_short": "dappled leaf light",
       "tags": ["day"]
+    },
+    {
+      "name": "campfire-circle",
+      "text": "a campfire as the only source, orange light flickering up from below waist height, faces modeled warm against the surrounding dark and sparks lifting on the heat column",
+      "text_short": "campfire underlight",
+      "tags": ["night"]
+    },
+    {
+      "name": "screen-glow",
+      "text": "the cool blue-white flicker of a screen lighting the face from just below eye line, a soft rectangular key in a dark room, its color shifting with the unseen picture",
+      "text_short": "cool screen glow"
+    },
+    {
+      "name": "north-window",
+      "text": "steady north-facing window light, the painter's source — cool, soft yet firmly directional, modeling form in long unchanging gradients that flatter skin and still life alike",
+      "text_short": "north-window painter's light"
     }
   ]
 }

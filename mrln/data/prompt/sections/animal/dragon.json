@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Dragon",
+  "description": "Dragons as material studies — every build names its scale substance and how light behaves on it. Environment-neutral, so any scene can host one.",
+  "suits": ["animal"],
+  "tags": ["fantasy"],
+  "items": [
+    {
+      "name": "obsidian-wyrm",
+      "text": "an obsidian-black wyrm, scales like knapped volcanic glass, light sliding along the fracture edges in thin oily rainbows, wing membranes swallowing light whole",
+      "text_short": "obsidian-scaled wyrm"
+    },
+    {
+      "name": "brass-dragon",
+      "text": "a brass-scaled dragon, plates gone tea-dark with patina except along the flex lines where motion keeps them mirror-bright, eyes like drops of molten metal",
+      "text_short": "patinated brass dragon"
+    },
+    {
+      "name": "nacre-dragon",
+      "text": "a nacre-scaled dragon, every plate holding the soft rainbow of mother-of-pearl, its whole flank changing color with each small shift of the light",
+      "text_short": "mother-of-pearl dragon"
+    },
+    {
+      "name": "ember-seamed",
+      "text": "a charcoal-hided dragon with molten seams glowing between its plates, heat-shimmer rising off its back, every breath brightening the light between the scales",
+      "text_short": "ember-seamed dragon"
+    },
+    {
+      "name": "frost-wyrm",
+      "text": "a frost-white wyrm furred with hoarfrost along its spine, breath rolling out as freezing fog, ice glazed thickest at the shoulders where it rarely moves",
+      "text_short": "hoarfrost wyrm"
+    },
+    {
+      "name": "verdigris-drake",
+      "text": "a bronze-green drake weathered like a harbor statue, verdigris streaking down from every scale edge, rain-polished highlights on the brow and knuckles",
+      "text_short": "verdigris bronze drake"
+    },
+    {
+      "name": "blind-white-wyrm",
+      "text": "a blind bone-white cave wyrm, eyeless skull smooth as porcelain, reading the air with a constantly moving forked tongue, veins faint through translucent wing-skin",
+      "text_short": "blind bone-white wyrm"
+    },
+    {
+      "name": "gilded-wyrm",
+      "text": "a gold-scaled dragon nearly invisible against treasure, coin-round scales lapped in strict rows, only the slow rise of its breathing telling hoard from hide",
+      "text_short": "coin-scaled gold dragon"
+    },
+    {
+      "name": "storm-drake",
+      "text": "a slate-grey storm drake, static crawling in blue threads along its wing edges, claw-tips sparking wherever they touch stone",
+      "text_short": "storm drake, static wings"
+    },
+    {
+      "name": "moss-elder",
+      "text": "an elder dragon grown over with moss and hanging ferns, so old and so still it reads as a mossy rise of ground until the eye finds the slow-breathing ribs",
+      "text_short": "moss-grown elder dragon"
+    }
+  ]
+}

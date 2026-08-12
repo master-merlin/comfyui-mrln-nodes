@@ -1,28 +1,10 @@
 {
   "version": 1,
   "label": "Wildlife Documentary",
-  "type": ["animal"],
-  "description": "Documentary formula: subject x behavior x habitat through long glass and patient light.",
+  "type": ["animal", "nature"],
+  "description": "Documentary formula: a wild subject drawn per taxon, weather and hour, made through taxon-matched wildlife fieldcraft.",
   "prefix": "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.",
   "slots": [
-    {
-      "id": "subject",
-      "ref": "animal",
-      "label": "Subject",
-      "emphasis": 1.25,
-      "tags_none": ["fantasy"]
-    },
-    {
-      "id": "behavior",
-      "ref": "animal/behavior",
-      "label": "Caught",
-      "emphasis": 1.15
-    },
-    {
-      "id": "habitat",
-      "ref": "location/nature",
-      "label": "Habitat"
-    },
     {
       "id": "weather",
       "ref": "atmosphere/weather",
@@ -32,23 +14,93 @@
     {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Hour"
-    },
-    {
-      "id": "lens",
-      "ref": "camera/lens",
-      "label": "Optics",
-      "default": "600mm-telephoto"
-    },
-    {
-      "id": "styleline",
-      "ref": "style/photography",
-      "label": "Discipline",
-      "default": "wildlife-documentary"
+      "label": "Hour",
+      "tags_any": ["day"]
     }
   ],
-  "suffix": "Field Rendering: authentic unstaged conditions, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), background compressed into a painterly wash, the animal's full attention on its world — never on us.",
-  "negative": "watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences",
+  "variants": [
+    {
+      "name": "mammal",
+      "label": "Mammals",
+      "slots": [
+        {
+          "id": "subject",
+          "ref": "animal/mammal",
+          "label": "Subject",
+          "emphasis": 1.25
+        },
+        {
+          "id": "fieldcraft",
+          "ref": "camera/wildlife-field",
+          "label": "Fieldcraft",
+          "tags_none": ["water"],
+          "default": "600mm-bag-hide"
+        }
+      ]
+    },
+    {
+      "name": "bird",
+      "label": "Birds",
+      "slots": [
+        {
+          "id": "subject",
+          "ref": "animal/bird",
+          "label": "Subject",
+          "emphasis": 1.25
+        },
+        {
+          "id": "fieldcraft",
+          "ref": "camera/wildlife-field",
+          "label": "Fieldcraft",
+          "tags_none": ["water", "ground"],
+          "default": "600mm-bag-hide"
+        }
+      ]
+    },
+    {
+      "name": "marine-surface",
+      "label": "Marine at the surface",
+      "slots": [
+        {
+          "id": "subject",
+          "ref": "animal/marine",
+          "label": "Subject",
+          "tags_none": ["underwater"],
+          "emphasis": 1.25
+        },
+        {
+          "id": "fieldcraft",
+          "ref": "camera/wildlife-field",
+          "label": "Fieldcraft",
+          "tags_any": ["water"],
+          "default": "boat-drift"
+        }
+      ]
+    },
+    {
+      "name": "reptile-amphibian",
+      "label": "Reptiles & amphibians",
+      "slots": [
+        {
+          "id": "subject",
+          "ref": "animal/reptile-amphibian",
+          "label": "Subject",
+          "emphasis": 1.25
+        },
+        {
+          "id": "fieldcraft",
+          "ref": "camera/wildlife-field",
+          "label": "Fieldcraft",
+          "tags_none": ["water"],
+          "default": "belly-crawl-stalk"
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["@variant", "weather", "time"],
+  "suffix": "Field Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us.",
+  "negative": "watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences, cages, collars, domestic pets",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",

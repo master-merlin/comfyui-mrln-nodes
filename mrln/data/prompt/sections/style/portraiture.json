@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "label": "Portraiture Style",
+  "description": "People-photography style lines — each item is a coherent portrait tradition with its own light and posing logic. Tagged studio/boudoir/street/night so templates keep the style on-genre.",
+  "items": [
+    {
+      "name": "studio-editorial",
+      "text": "polished studio editorial portraiture, one sculpted key with disciplined fill, immaculate styling and grooming, the confidence of a magazine-cover sitting",
+      "text_short": "studio editorial portraiture, sculpted key, cover confidence",
+      "tags": ["studio"]
+    },
+    {
+      "name": "fashion-flash",
+      "text": "high-energy fashion portraiture, hard on-axis flash against saturated seamless paper, the shadow pinned tight behind the figure, poses angular and deliberate",
+      "text_short": "hard-flash fashion portraiture, angular poses",
+      "tags": ["studio"]
+    },
+    {
+      "name": "beauty-clamshell",
+      "text": "beauty portraiture in tight crop, clamshell light wrapping the face from above and below, skin texture honest beneath the polish, lip and lash detail razor-sharp",
+      "text_short": "clamshell beauty portraiture, honest skin detail",
+      "tags": ["studio"]
+    },
+    {
+      "name": "old-hollywood",
+      "text": "old-Hollywood glamour portraiture, a hot hard key feathered through a fresnel, lacquered waves and satin sheen, every shadow placed like set dressing",
+      "text_short": "old-Hollywood glamour, hard fresnel key, satin sheen",
+      "tags": ["studio", "boudoir"]
+    },
+    {
+      "name": "boudoir-editorial",
+      "text": "editorial boudoir photography, intimacy directed with a fashion eye, a soft directional key falling away into warm shadow, elegance carried by suggestion",
+      "text_short": "editorial boudoir, soft directional key, suggestion over show",
+      "tags": ["boudoir"]
+    },
+    {
+      "name": "fine-art-figure",
+      "text": "fine-art figure photography, the body treated as sculpture, the long tonal range of a gallery print, composition pared back to line, light and skin",
+      "text_short": "fine-art figure study, gallery tonal range",
+      "tags": ["boudoir"]
+    },
+    {
+      "name": "quiet-lifestyle",
+      "text": "quiet lifestyle portraiture, believable in-between moments, available light and honest color, the frame left breathing around the subject",
+      "text_short": "quiet lifestyle portraiture, available light",
+      "tags": ["boudoir", "street"]
+    },
+    {
+      "name": "candid-reportage",
+      "text": "candid reportage portraiture, the subject unaware or unbothered, ambient light only, expression caught in the unguarded space between poses",
+      "text_short": "candid reportage, ambient light, unguarded expression",
+      "tags": ["street"]
+    },
+    {
+      "name": "environmental-portrait",
+      "text": "environmental portraiture, the subject anchored in the place that explains them, mid-distance framing with workplace detail sharing the plane of focus",
+      "text_short": "environmental portrait, subject in telling context",
+      "tags": ["street"]
+    },
+    {
+      "name": "noir-portrait",
+      "text": "low-key noir portraiture, one hard source and no mercy, highlights rationed to a cheekbone and one eye, everything else surrendered to black",
+      "text_short": "low-key noir portraiture, one hard source",
+      "tags": ["night"]
+    }
+  ]
+}

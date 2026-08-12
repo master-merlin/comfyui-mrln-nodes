@@ -60,6 +60,25 @@
       "text": "Lens Type: 40mm anamorphic\nAperture: T2.2\nShutter: 180-degree cinema shutter\nISO: 800\nCharacter: Oval bokeh, horizontal flares, gentle motion blur at cinematic cadence.",
       "text_short": "anamorphic T2.2 cinema recipe",
       "data": { "lens": "40mm anamorphic", "aperture": "T2.2", "iso": 800 }
+    },
+    {
+      "name": "zone-focus-street",
+      "text": "Lens Type: 28mm\nAperture: f/8 zone-focused at two meters\nShutter Speed: 1/500s\nISO: 400\nWhite Balance: Daylight\nFocus: Everything from one to four meters sharp, framed at walking pace with candid immediacy.",
+      "text_short": "28mm f/8 zone-focus street recipe",
+      "data": { "lens": "28mm", "aperture": "f/8", "shutter": "1/500s", "iso": 400 }
+    },
+    {
+      "name": "studio-strobe-product",
+      "text": "Lens Type: 105mm macro\nAperture: f/11\nShutter Speed: 1/200s flash sync\nISO: 100\nLighting: Strobes overpowering ambient to pure black\nWhite Balance: Flash\nFocus: Edge-to-edge crisp on the product, background controlled entirely by light.",
+      "text_short": "f/11 strobe product recipe",
+      "data": { "lens": "105mm macro", "aperture": "f/11", "shutter": "1/200s", "iso": 100 }
+    },
+    {
+      "name": "blue-hour-tripod",
+      "text": "Lens Type: 24mm wide\nAperture: f/8\nShutter Speed: 6s on tripod\nISO: 100\nWhite Balance: 4000K holding the sky cobalt against warm practicals\nFocus: Hyperfocal, moving lights ribboning into trails while the architecture stays etched.",
+      "text_short": "6s blue-hour tripod recipe",
+      "tags": ["night"],
+      "data": { "lens": "24mm", "aperture": "f/8", "shutter": "6s", "iso": 100 }
     }
   ]
 }

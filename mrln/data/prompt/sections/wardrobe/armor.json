@@ -1,16 +1,19 @@
 {
   "version": 1,
   "label": "Armor",
-  "description": "Fantasy and sci-fi armor for character design.",
+  "description": "Fantasy, historical and sci-fi armor for character design — tags couple with genre.",
   "suits": ["human"],
   "items": [
-    { "name": "plate-full", "text": "full plate armor with engraved pauldrons and a battle-worn finish", "text_short": "engraved plate armor", "tags": ["fantasy"] },
-    { "name": "leather-scout", "text": "hardened leather scout armor with buckled straps", "text_short": "leather scout armor", "tags": ["fantasy"] },
-    { "name": "chainmail-tabard", "text": "chainmail under a heraldic tabard", "text_short": "chainmail and tabard", "tags": ["fantasy", "historical"] },
-    { "name": "samurai-oyoroi", "text": "lacquered samurai o-yoroi armor with silk cords", "text_short": "lacquered samurai armor", "tags": ["historical"] },
-    { "name": "power-armor", "text": "sleek powered exo-armor with glowing seam lines", "text_short": "glowing power armor", "tags": ["scifi"] },
-    { "name": "scavenger-plate", "text": "improvised scavenger armor of stamped plates and rope", "text_short": "scavenger plate armor", "tags": ["scifi"] },
-    { "name": "elven-filigree", "text": "elegant elven filigree armor, silver leaf-curved plates", "text_short": "elven filigree armor", "tags": ["fantasy"] },
-    { "name": "gladiator", "text": "arena gladiator armor, one armored shoulder and greaves", "text_short": "gladiator armor", "tags": ["historical"] }
+    { "name": "plate-full", "text": "a full plate harness, fluted engraved pauldrons, articulated lames at every joint, battle-worn edges catching the light", "text_short": "engraved plate armor", "tags": ["fantasy"] },
+    { "name": "leather-scout", "text": "hardened leather scout armor, overlapping boiled-leather plates, buckled straps and a hooded half-cloak", "text_short": "leather scout armor", "tags": ["fantasy"] },
+    { "name": "chainmail-tabard", "text": "a riveted chainmail hauberk under a heraldic tabard, the quartered field bright against grey steel rings", "text_short": "chainmail and tabard", "tags": ["fantasy", "historical"] },
+    { "name": "samurai-oyoroi", "text": "lacquered samurai o-yoroi, kozane scale plates laced with silk cords, wide kusazuri skirts and a crested kabuto", "text_short": "lacquered samurai armor", "tags": ["historical"] },
+    { "name": "power-armor", "text": "sleek powered exo-armor, segmented composite plating, glowing seam lines tracing the servo joints", "text_short": "glowing power armor", "tags": ["scifi"] },
+    { "name": "scavenger-plate", "text": "improvised scavenger armor, stamped road-sign plates lashed with rope and wire over padded canvas", "text_short": "scavenger plate armor", "tags": ["scifi"] },
+    { "name": "elven-filigree", "text": "elegant elven filigree armor, silver leaf-curved plates chased with vine patterns, an articulated weightless fit", "text_short": "elven filigree armor", "tags": ["fantasy"] },
+    { "name": "gladiator", "text": "arena gladiator armor, one armored shoulder guard, bronze greaves and a wide studded belt over bare skin", "text_short": "gladiator armor", "tags": ["historical"] },
+    { "name": "brigandine", "text": "a brigandine of cloth-covered steel plates, rows of brass rivets across the chest, worn over mail sleeves", "text_short": "riveted brigandine", "tags": ["fantasy", "historical"] },
+    { "name": "winged-hussar", "text": "winged hussar armor, gilt-edged breastplate over mail sleeves, a leopard pelt slung across one shoulder, a frame of eagle-feather wings rising from the back", "text_short": "winged hussar armor", "tags": ["historical"] },
+    { "name": "hoplite-panoply", "text": "a Greek hoplite panoply, muscled bronze cuirass, crested Corinthian helmet pushed back on the head, bronze greaves and a heavy round aspis shield", "text_short": "bronze hoplite panoply", "tags": ["historical"] }
   ]
 }

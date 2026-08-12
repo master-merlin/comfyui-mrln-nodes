@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "label": "Anime Film Look",
+  "description": "Theatrical anime production looks — how a feature film's animation, backgrounds and photography pass actually read on screen. Characteristics only, no studio or artist names.",
+  "tags": ["anime"],
+  "items": [
+    {
+      "name": "painted-cel-classic",
+      "text": "classic cel-era feature look, hand-inked outlines photographed over gouache-painted backgrounds, the background a complete painting with visible brush texture while characters hold flat confident color, gentle rostrum-camera halation on the brightest highlights",
+      "text_short": "hand-painted cel feature"
+    },
+    {
+      "name": "modern-digital-feature",
+      "text": "modern digital feature look, razor-clean line art composited over multi-layered painted backgrounds, the photography pass adding depth-graded haze, soft bloom and a breath of chromatic offset in the frame corners",
+      "text_short": "digital feature composite"
+    },
+    {
+      "name": "watercolor-art-film",
+      "text": "art-house watercolor feature look, backgrounds left deliberately unfinished toward the frame edges, washes pooling into visible paper grain, characters drawn with a trembling pencil line that keeps the animator's hand",
+      "text_short": "watercolor art film"
+    },
+    {
+      "name": "effects-spectacle",
+      "text": "effects-animation spectacle look, hand-drawn fire, water and light rendered as bold graphic shapes with stepped shading, impact frames flashing to inverted color, speed lines carved through the paint",
+      "text_short": "hand-drawn effects spectacle"
+    },
+    {
+      "name": "photo-hybrid",
+      "text": "photography-heavy hybrid look, painted characters over near-photographic background plates, lens artifacts drawn in by hand — polygonal flares, breathing focus, a vignette that behaves like real glass",
+      "text_short": "photo-hybrid anime feature"
+    },
+    {
+      "name": "noir-feature",
+      "text": "monochrome noir feature look, heavy toned-paper blacks, figures emerging from crosshatched darkness, single highlights placed as if ink were expensive",
+      "text_short": "anime noir feature"
+    },
+    {
+      "name": "vintage-film-print",
+      "text": "aged theatrical print look, dye layers faded toward amber, faint gate weave and reel-change cue marks, grain dancing in the dark passages of every painted background",
+      "text_short": "aged anime film print"
+    },
+    {
+      "name": "flat-graphic-feature",
+      "text": "graphic modern feature look, flat poster-like color fields with hard shadow shapes, backgrounds simplified to bold geometry, characters placed like cutouts in a designed frame",
+      "text_short": "flat graphic feature"
+    },
+    {
+      "name": "storybook-feature",
+      "text": "storybook feature look, colored-pencil texture and soft rounded forms, edges lit with warm rim glow, every frame composed like a picture-book spread",
+      "text_short": "storybook feature look"
+    }
+  ]
+}

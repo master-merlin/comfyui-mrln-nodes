@@ -1,10 +1,12 @@
 {
   "version": 1,
   "label": "Wheel Finish",
+  "description": "Rim finish and construction; the wheels are large, fill the arches, and leave the calipers visible.",
   "items": [
     {
       "name": "reflective-chrome",
-      "text": "Reflective Chrome",
+      "text": "mirror-chrome rims, the environment wrapping and stretching across every polished spoke",
+      "text_short": "mirror-chrome rims",
       "weight": 0.2,
       "tags": [
         "bright-polished"
@@ -12,7 +14,8 @@
     },
     {
       "name": "platinum-silver",
-      "text": "Platinum Silver",
+      "text": "platinum-silver rims, bright neutral metal with finely machined spoke edges",
+      "text_short": "platinum-silver rims",
       "weight": 0.2,
       "tags": [
         "bright-polished"
@@ -20,7 +23,8 @@
     },
     {
       "name": "hyper-silver-metallic",
-      "text": "Hyper Silver metallic",
+      "text": "hyper-silver metallic rims, liquid-bright faces over shadowed spoke pockets",
+      "text_short": "hyper-silver rims",
       "weight": 0.2,
       "tags": [
         "bright-polished"
@@ -28,7 +32,8 @@
     },
     {
       "name": "diamond-cut-face",
-      "text": "Diamond Cut Face",
+      "text": "diamond-cut two-tone rims, machined bright faces over dark painted pockets, fine lathe lines just visible",
+      "text_short": "diamond-cut rims",
       "weight": 0.2,
       "tags": [
         "bright-polished"
@@ -36,7 +41,8 @@
     },
     {
       "name": "brushed-aluminum",
-      "text": "Brushed Aluminum",
+      "text": "brushed aluminum rims, directional grain pulling long soft highlights across each spoke",
+      "text_short": "brushed alloy rims",
       "weight": 0.2,
       "tags": [
         "bright-polished"
@@ -44,47 +50,62 @@
     },
     {
       "name": "glossy-black",
-      "text": "Glossy Black",
-      "weight": 0.2,
+      "text": "gloss-black rims with wet-look depth, spoke edges drawn purely by reflected light",
+      "text_short": "gloss-black rims",
+      "weight": 0.1667,
       "tags": [
         "dark-technical"
       ]
     },
     {
       "name": "exposed-carbon-fiber",
-      "text": "Exposed Carbon Fiber",
-      "weight": 0.2,
+      "text": "exposed carbon-fiber rims, twill weave readable under clear lacquer",
+      "text_short": "carbon-fiber rims",
+      "weight": 0.1667,
       "tags": [
         "dark-technical"
       ]
     },
     {
       "name": "matte-black",
-      "text": "Matte Black",
-      "weight": 0.2,
+      "text": "matte-black rims that swallow light, pure dark silhouettes framing bright calipers",
+      "text_short": "matte-black rims",
+      "weight": 0.1667,
       "tags": [
         "dark-technical"
       ]
     },
     {
       "name": "midnight-chrome-dark-metallic",
-      "text": "Midnight Chrome dark metallic",
-      "weight": 0.2,
+      "text": "midnight-chrome rims, smoked mirror finish reflecting the world in dark tones",
+      "text_short": "midnight-chrome rims",
+      "weight": 0.1667,
       "tags": [
         "dark-technical"
       ]
     },
     {
       "name": "titanium-metallic",
-      "text": "Titanium metallic",
-      "weight": 0.2,
+      "text": "titanium-metallic rims, warm grey aerospace sheen with a faint heat-treated tint",
+      "text_short": "titanium rims",
+      "weight": 0.1667,
+      "tags": [
+        "dark-technical"
+      ]
+    },
+    {
+      "name": "turbofan-aero-disc",
+      "text": "flat turbofan aero-disc wheel covers, smooth machined faces broken by a single slot vent, pure concept-car speed",
+      "text_short": "turbofan aero discs",
+      "weight": 0.1667,
       "tags": [
         "dark-technical"
       ]
     },
     {
       "name": "gold-metallic",
-      "text": "Gold metallic",
+      "text": "metallic gold rims, the warm motorsport gold of endurance racers against dark arches",
+      "text_short": "gold rims",
       "weight": 0.2,
       "tags": [
         "color-metallic"
@@ -92,7 +113,8 @@
     },
     {
       "name": "bronze-satin-finish",
-      "text": "Bronze Satin finish",
+      "text": "satin-bronze rims, the soft muted glow of forged track wheels",
+      "text_short": "satin-bronze rims",
       "weight": 0.2,
       "tags": [
         "color-metallic"
@@ -100,7 +122,8 @@
     },
     {
       "name": "anodized-gold-metallic",
-      "text": "Anodized Gold metallic",
+      "text": "anodized gold rims, rich electroplated tint with candy depth",
+      "text_short": "anodized gold rims",
       "weight": 0.2,
       "tags": [
         "color-metallic"
@@ -108,7 +131,8 @@
     },
     {
       "name": "contrasting-primary-color",
-      "text": "Contrasting Primary Color",
+      "text": "rims lacquered in a deliberate gloss counterpoint to the body color",
+      "text_short": "contrast-color rims",
       "weight": 0.2,
       "tags": [
         "color-metallic"
@@ -116,7 +140,8 @@
     },
     {
       "name": "neon-violet",
-      "text": "Neon Violet",
+      "text": "neon-violet rims, saturated candy glow filling the wheel arches",
+      "text_short": "neon-violet rims",
       "weight": 0.2,
       "tags": [
         "color-metallic"

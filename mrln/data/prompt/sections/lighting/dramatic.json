@@ -1,16 +1,16 @@
 {
   "version": 1,
   "label": "Dramatic Light",
-  "description": "High-contrast, moody, stylized light — the theatrical end of the spectrum.",
+  "description": "High-contrast, moody, stylized light — the theatrical end of the spectrum, every item naming direction, edge quality and what motivates the source.",
   "items": [
     {
       "name": "chiaroscuro",
-      "text": "chiaroscuro lighting, a single hard source carving the subject out of deep darkness",
+      "text": "chiaroscuro from a single hard source set high and to one side, lit planes emerging bright out of absolute black with no fill anywhere, the transition from highlight to darkness snapping within a finger's width",
       "text_short": "chiaroscuro single source"
     },
     {
       "name": "neon-rim",
-      "text": "electric neon rim light in magenta and cyan outlining the subject against darkness",
+      "text": "electric neon rim light, magenta tracing one edge of the silhouette and cyan the other, two colored contour lines burning against darkness while the front of the subject holds barely a stop above black",
       "text_short": "neon rim light",
       "tags": [
         "night",
@@ -19,7 +19,7 @@
     },
     {
       "name": "single-practical",
-      "text": "one bare practical bulb overhead, harsh pool of light, hard-edged noir shadows",
+      "text": "one bare practical bulb overhead, a harsh pool of light directly below it, hard-edged noir shadows dropping vertically down every face",
       "text_short": "bare bulb noir light",
       "tags": [
         "night"
@@ -27,17 +27,17 @@
     },
     {
       "name": "volumetric-shafts",
-      "text": "volumetric light shafts cutting through haze, crisp god-ray beams and glowing dust",
+      "text": "hard volumetric shafts cutting through drifting haze from high behind the scene, parallel god-ray beams made solid by the atmosphere, dust igniting to bright points as it crosses each blade of light",
       "text_short": "volumetric light shafts"
     },
     {
       "name": "silhouette-backlight",
-      "text": "powerful backlight reducing the subject to a rim-lit silhouette with a burning edge",
+      "text": "one powerful backlight aimed nearly into the lens from behind the subject, the figure reduced to a clean black cutout inside a burning halo, flare wrapping the contour where hair and edges eat into the light",
       "text_short": "backlit silhouette"
     },
     {
       "name": "police-strobe",
-      "text": "alternating red and blue emergency strobes sweeping the scene, hard color contrast",
+      "text": "alternating red and blue emergency strobes raking the scene from off-frame, hard-edged shadows swapping direction with every flash, wet surfaces throwing the two colors back in turn",
       "text_short": "red-blue strobe light",
       "tags": [
         "night"
@@ -45,28 +45,46 @@
     },
     {
       "name": "lightning-flash",
-      "text": "a frozen lightning flash, stark white illumination against a storm-dark scene",
+      "text": "a lightning strike frozen at peak, one instant of blinding blue-white top-light etching every edge against the charcoal storm, doubled shadows where the bolt overwhelms the ambient",
       "text_short": "lightning flash"
     },
     {
       "name": "underlight",
-      "text": "eerie light from below, inverted shadows giving an unsettling theatrical look",
+      "text": "hard light thrown upward from below the chin, every familiar shadow inverted — eye sockets lit, brows shading upward — the campfire-horror geometry that makes any face read wrong",
       "text_short": "eerie underlight"
     },
     {
       "name": "stage-spot",
-      "text": "a tight theatrical spotlight in haze, everything outside its cone falling to black",
+      "text": "a tight followspot from high front in a hazed theater, its cone visible in the air, one hard circle of light on the boards and everything outside the pool dropping to pure black",
       "text_short": "tight stage spotlight"
     },
     {
       "name": "split-lighting",
-      "text": "hard split lighting, one half of the subject lit, the other in full shadow",
+      "text": "hard split lighting from exactly ninety degrees, the terminator running down the centerline of the face, one eye in full light and the other in shadow with only a catchlight surviving",
       "text_short": "hard split light"
     },
     {
       "name": "ground-mist",
-      "text": "Ethereal mist clinging to the ground, soft diffused glow and low volumetric beams drifting knee-high, quietly mysterious.",
+      "text": "ethereal mist clinging to the ground, soft diffused glow and low volumetric beams drifting knee-high, quietly mysterious",
       "text_short": "ethereal ground mist"
+    },
+    {
+      "name": "window-gobo",
+      "text": "hard light through an unseen window frame, the tall shadow grid of panes and muntins projected across wall and subject, noir geometry sliding with the light angle",
+      "text_short": "projected window-frame shadow"
+    },
+    {
+      "name": "searchlight-beams",
+      "text": "searchlight beams sweeping up from below the horizon line, hard columns of light crossing overhead and silvering the underside of the cloud deck",
+      "text_short": "sweeping searchlight beams",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "eye-slash",
+      "text": "a noir slit of hard light laid precisely across the eyes while the rest of the face falls dark, one bright band making the gaze the only readable feature",
+      "text_short": "light slash across the eyes"
     }
   ]
 }

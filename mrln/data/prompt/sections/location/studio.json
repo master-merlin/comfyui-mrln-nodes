@@ -5,17 +5,17 @@
   "items": [
     {
       "name": "white-infinity-cove",
-      "text": "A clean white photography studio with a large, seamless infinity cove background.",
+      "text": "A seamless white cyclorama studio, coved corners erasing every edge so floor and wall read as one continuous shadowless void.",
       "text_short": "white infinity cove"
     },
     {
       "name": "dark-concrete-studio",
-      "text": "A minimalist photo studio with polished, dark concrete floors and raw, unpainted concrete walls.",
+      "text": "A minimalist photo studio of power-troweled dark concrete, the sealed floor holding long soft reflections beneath raw walls marked with faint formwork seams.",
       "text_short": "dark concrete studio"
     },
     {
       "name": "light-tent",
-      "text": "Inside a large, enclosed photography light tent, providing perfectly diffused, even illumination.",
+      "text": "Inside a walk-in photography light tent, translucent nylon walls turning every source into wraparound shadowless glow, seams and support poles faint at the corners.",
       "text_short": "diffused light tent"
     },
     {
@@ -51,7 +51,7 @@
     },
     {
       "name": "concrete-wall",
-      "text": "Parked against a clean, expansive cast-concrete wall, minimal shadow play across its raw surface.",
+      "text": "Before a clean, expansive cast-concrete wall, tie holes and shutter lines giving the raw surface a quiet grid.",
       "text_short": "bare concrete wall"
     },
     {
@@ -63,6 +63,31 @@
       "name": "corrugated-siding",
       "text": "Against rhythmic corrugated metal siding, its ribbed shadows striping the composition.",
       "text_short": "corrugated metal siding"
+    },
+    {
+      "name": "led-volume-stage",
+      "text": "Inside a virtual-production LED volume, the wraparound emissive wall casting real interactive reflections and soft ambient spill onto the subject.",
+      "text_short": "LED volume stage"
+    },
+    {
+      "name": "haze-gel-stage",
+      "text": "A hazed studio stage, colored gel beams cutting visible shafts through the atmosphere against a deep charcoal backdrop.",
+      "text_short": "gel beams through haze"
+    },
+    {
+      "name": "gobo-shadow-wall",
+      "text": "A studio wall raked by patterned gobo light, hard venetian-blind shadows slicing diagonally across the backdrop.",
+      "text_short": "gobo shadow patterns"
+    },
+    {
+      "name": "car-turntable-studio",
+      "text": "An automotive studio stage, a flush floor turntable centered beneath a room-length overhead softbox that lays one unbroken highlight line, black flags rigged to swallow stray reflections.",
+      "text_short": "turntable under strip softbox"
+    },
+    {
+      "name": "tabletop-product-set",
+      "text": "A tabletop product set, seamless acrylic sweep on a steel stand, mirror cards and black flags clamped to articulated arms around a single diffused key.",
+      "text_short": "tabletop acrylic product set"
     }
   ]
 }

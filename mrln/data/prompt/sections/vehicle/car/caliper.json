@@ -1,11 +1,12 @@
 {
   "version": 1,
   "label": "Brake Caliper Color",
-  "description": "Calipers are clearly visible behind the wheel spokes.",
+  "description": "Caliper color and finish — the calipers read clearly through the wheel spokes against the disc.",
   "items": [
     {
       "name": "racing-red",
-      "text": "Racing Red",
+      "text": "glossy racing-red six-piston monoblock calipers, white logo lettering crisp behind the spokes",
+      "text_short": "racing-red calipers",
       "weight": 0.25,
       "tags": [
         "traditional"
@@ -13,7 +14,8 @@
     },
     {
       "name": "performance-yellow",
-      "text": "Performance Yellow",
+      "text": "high-gloss performance-yellow calipers, the signature carbon-ceramic yellow glowing against dark drilled discs",
+      "text_short": "performance-yellow calipers",
       "weight": 0.25,
       "tags": [
         "traditional"
@@ -21,7 +23,8 @@
     },
     {
       "name": "gloss-black",
-      "text": "Gloss Black",
+      "text": "gloss-black monoblock calipers, stealthy against the rotor, logo picked out in white",
+      "text_short": "gloss-black calipers",
       "weight": 0.25,
       "tags": [
         "traditional"
@@ -29,7 +32,8 @@
     },
     {
       "name": "polished-silver",
-      "text": "Polished Silver",
+      "text": "polished silver calipers with machined bridge edges catching thin highlights",
+      "text_short": "polished silver calipers",
       "weight": 0.25,
       "tags": [
         "traditional"
@@ -37,7 +41,8 @@
     },
     {
       "name": "neon-green",
-      "text": "Neon Green",
+      "text": "acid neon-green calipers, the single brightest point inside the wheel",
+      "text_short": "neon-green calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -45,7 +50,8 @@
     },
     {
       "name": "electric-blue",
-      "text": "Electric Blue",
+      "text": "electric-blue calipers, saturated cobalt gleam over slotted rotors",
+      "text_short": "electric-blue calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -53,7 +59,8 @@
     },
     {
       "name": "vibrant-orange",
-      "text": "Vibrant Orange",
+      "text": "vibrant orange calipers, bold hazard-bright contrast behind dark rims",
+      "text_short": "orange calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -61,7 +68,8 @@
     },
     {
       "name": "gold-metallic",
-      "text": "Gold metallic",
+      "text": "metallic gold calipers, warm anodized sheen against carbon-ceramic discs",
+      "text_short": "gold calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -69,7 +77,8 @@
     },
     {
       "name": "lime-green",
-      "text": "Lime Green",
+      "text": "lime-green calipers, sharp citrus contrast filling the spoke windows",
+      "text_short": "lime-green calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -77,7 +86,8 @@
     },
     {
       "name": "purple",
-      "text": "Purple",
+      "text": "deep violet calipers with candy-metallic depth behind polished spokes",
+      "text_short": "violet calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"
@@ -85,7 +95,8 @@
     },
     {
       "name": "teal",
-      "text": "Teal",
+      "text": "teal calipers, cool turquoise accent glinting between the spokes",
+      "text_short": "teal calipers",
       "weight": 0.1429,
       "tags": [
         "high-impact"

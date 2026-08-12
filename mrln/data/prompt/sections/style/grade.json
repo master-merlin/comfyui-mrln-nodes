@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "label": "Style & Grade",
-  "description": "Finishing grade — the commercial polish layer.",
+  "label": "Color Grade",
+  "description": "Finishing color grade — the commercial polish layer over any medium.",
   "items": [
     {
       "name": "vibrant-high-class",
@@ -15,7 +15,7 @@
     },
     {
       "name": "clean-advertisement",
-      "text": "clean commercial advertisement look, crisp, polished and color-accurate",
+      "text": "clean commercial advertisement grade, neutral whites held true, crisp micro-contrast, color accurate to the product swatch",
       "text_short": "clean commercial grade"
     },
     {
@@ -42,6 +42,17 @@
       "name": "punchy-editorial",
       "text": "punchy editorial grade, deep contrast, controlled saturation and magazine-cover snap",
       "text_short": "punchy editorial grade"
+    },
+    {
+      "name": "cross-process",
+      "text": "cross-processed slide grade, cyan-shifted shadows, yellow-green highlight cast and unpredictable saturation spikes",
+      "text_short": "cross-processed grade"
+    },
+    {
+      "name": "high-key-airy",
+      "text": "high-key airy grade, luminous lifted exposure with whites held just below clipping, gentle pastel color, near-shadowless softness",
+      "text_short": "high-key airy grade",
+      "tags": ["pale"]
     }
   ]
 }

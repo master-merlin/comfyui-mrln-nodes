@@ -32,6 +32,11 @@
       "name": "steering-full-lock",
       "text": "Front wheels at full steering lock, rim faces presented to the camera in show-stance drama.",
       "text_short": "full steering lock"
+    },
+    {
+      "name": "forward-rake",
+      "text": "Nose-down forward rake, the front end sitting a finger lower than the rear, hunkered like a sprinter in the blocks.",
+      "text_short": "nose-down rake"
     }
   ]
 }

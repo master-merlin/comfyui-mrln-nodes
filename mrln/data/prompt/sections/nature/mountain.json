@@ -1,18 +1,20 @@
 {
   "version": 1,
   "label": "Mountain",
-  "description": "Mountain landforms as hero subjects.",
+  "description": "Mountain landforms as hero subjects — geology first: horns, aretes, moraines and the weather the peaks make for themselves.",
   "suits": ["nature"],
   "items": [
-    { "name": "matterhorn-pyramid", "text": "a solitary pyramid peak catching first alpenglow above shadowed valleys", "text_short": "alpenglow pyramid peak" },
-    { "name": "knife-ridge", "text": "a knife-edge arete dropping away into cloud on both sides", "text_short": "knife-edge arete" },
-    { "name": "glacier-tongue", "text": "a crevassed glacier tongue pouring between dark buttresses", "text_short": "crevassed glacier tongue" },
-    { "name": "dolomite-towers", "text": "pale dolomite towers rising sheer from green meadow benches", "text_short": "dolomite towers" },
-    { "name": "volcanic-cone", "text": "a perfect snow-striped volcanic cone above a cloud sea", "text_short": "snow-striped cone" },
-    { "name": "karst-pinnacles", "text": "drowned karst pinnacles rising from still jade water", "text_short": "jade karst pinnacles" },
-    { "name": "highland-tors", "text": "weathered granite tors on a heather-red moorland ridge", "text_short": "granite moorland tors" },
-    { "name": "cloud-inversion", "text": "summits islanded above a valley-filling cloud inversion", "text_short": "peaks above cloud sea" },
-    { "name": "basalt-mesa", "text": "a flat-topped basalt mesa banded with strata light", "text_short": "banded basalt mesa" },
-    { "name": "hanging-valley-falls", "text": "a hanging valley spilling a waterfall past cliff-rooted pines", "text_short": "hanging valley falls" }
+    { "name": "matterhorn-pyramid", "text": "a glacial horn carved to a four-faced pyramid by the cirques gnawing every flank, its summit catching first alpenglow while the valleys below stay in blue shadow", "text_short": "alpenglow pyramid peak" },
+    { "name": "knife-ridge", "text": "a knife-edge arete between two glacial cirques, snow cornices overhanging the leeward drop, cloud boiling up one face and pouring down the other", "text_short": "knife-edge arete" },
+    { "name": "glacier-tongue", "text": "a crevassed glacier tongue pouring between dark buttresses, twin medial moraines striping the ice, late-summer melt exposing bands of older, bluer ice", "text_short": "crevassed glacier tongue" },
+    { "name": "dolomite-towers", "text": "pale dolomite towers rising sheer from green meadow benches, scree fans spilling from every gully, the last strips of June snow holding in the shaded chimneys", "text_short": "dolomite towers" },
+    { "name": "volcanic-cone", "text": "a dormant stratovolcano of textbook symmetry above an undercast cloud sea, spring snow held in the radial gullies so the whole cone reads as striped", "text_short": "snow-striped cone" },
+    { "name": "karst-pinnacles", "text": "drowned tower-karst pinnacles rising from still jade water, each limestone spire undercut into a waist at the waterline and crowned with clinging green", "text_short": "jade karst pinnacles" },
+    { "name": "highland-tors", "text": "weathered granite tors stacked like dropped masonry on a moorland ridge, rounded along their ancient joint lines, autumn heather rusting red around the outcrops", "text_short": "granite moorland tors" },
+    { "name": "cloud-inversion", "text": "summits islanded above a valley-filling cloud inversion, the trapped undercast pouring through a low pass in slow motion like a tide between them", "text_short": "peaks above cloud sea" },
+    { "name": "basalt-mesa", "text": "a flat-topped basalt mesa, its dark caprock lava flow shielding the soft banded sediments beneath, talus skirts running down to the plain", "text_short": "banded basalt mesa" },
+    { "name": "hanging-valley-falls", "text": "a hanging valley stranded high on the glacial trough wall, its stream leaping the lip in one free-falling ribbon past cliff-rooted pines", "text_short": "hanging valley falls" },
+    { "name": "tablecloth-cloud", "text": "a flat-topped mountain pouring its white tablecloth cloud over the rim, evaporating exactly as fast as it falls", "text_short": "tablecloth cloud pouring" },
+    { "name": "avalanche-plume", "text": "a spring powder avalanche blooming down a couloir, the airborne plume overtaking its own slide", "text_short": "powder avalanche plume" }
   ]
 }

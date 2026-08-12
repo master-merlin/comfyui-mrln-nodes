@@ -25,12 +25,12 @@
     },
     {
       "name": "front-view",
-      "text": "straight-on front view, perfectly symmetrical and confrontational",
+      "text": "straight-on front view at eye level, perfectly symmetrical and confrontational, both flanks vanishing so one graphic face carries the frame",
       "text_short": "straight front view"
     },
     {
       "name": "rear-view",
-      "text": "straight-on rear view, symmetrical tail composition with light strips reading clean",
+      "text": "straight-on rear view, symmetrical tail composition with the light strips reading as one clean graphic line",
       "text_short": "straight rear view"
     },
     {
@@ -50,22 +50,22 @@
     },
     {
       "name": "top-down",
-      "text": "steep top-down view flattening the subject into graphic shapes against the ground",
+      "text": "steep top-down view flattening the subject into pure graphic shapes against the ground plane, its shadow the only clue to height",
       "text_short": "steep top-down"
     },
     {
       "name": "dutch-angle",
-      "text": "dramatic Dutch-tilt angle injecting restless motion into a static scene",
+      "text": "dramatic Dutch-tilt angle, the horizon canted hard enough that static mass reads as motion, diagonals doing the work of speed",
       "text_short": "Dutch tilt"
     },
     {
       "name": "extreme-wide-close",
-      "text": "extreme wide-angle from very close, near surfaces stretching dramatically toward the viewer",
+      "text": "extreme wide-angle from arm's length, the nearest surfaces ballooning toward the viewer while the far end rushes off to the vanishing point",
       "text_short": "close wide-angle stretch"
     },
     {
       "name": "through-foreground",
-      "text": "framed through out-of-focus foreground elements for layered voyeuristic depth",
+      "text": "framed through out-of-focus foreground elements, a soft dark vignette of blur layering the frame with stolen-glance depth",
       "text_short": "through-foreground frame"
     },
     {

@@ -1,68 +1,95 @@
 {
   "version": 1,
   "label": "Photography Style",
-  "description": "Professional photographic disciplines with their conventions.",
+  "description": "Professional photographic disciplines with their lighting, lens and craft conventions.",
   "items": [
     {
       "name": "editorial",
-      "text": "editorial photography style, considered styling and narrative polish for a magazine feature",
+      "text": "editorial photography style, considered styling, clean negative space left for type, the narrative polish of a magazine feature",
       "text_short": "editorial magazine style"
     },
     {
       "name": "glamour",
-      "text": "classic glamour photography, flattering light, polished retouch and confident poise",
+      "text": "classic glamour photography, butterfly beauty-dish key from above, catchlights set high in the eyes, polished retouch and confident poise",
       "text_short": "classic glamour"
     },
     {
       "name": "fashion-campaign",
-      "text": "high-fashion campaign photography, bold styling, strong art direction and graphic poses",
+      "text": "high-fashion campaign photography, bold art direction, hard direct flash against seamless color, graphic angular poses",
       "text_short": "fashion campaign"
     },
     {
       "name": "documentary",
-      "text": "documentary photography, unposed truthful moments, available light and honest texture",
+      "text": "documentary photography, unposed truthful moments, available light only, honest grain and imperfect framing that proves presence",
       "text_short": "documentary truth"
     },
     {
       "name": "street",
-      "text": "street photography, decisive candid moments, layered strangers and urban geometry",
+      "text": "street photography, decisive candid moments, zone-focused wide-lens closeness, layered strangers against hard urban geometry",
       "text_short": "candid street"
     },
     {
       "name": "fine-art",
-      "text": "fine-art photography, deliberate concept, gallery-print tonality and quiet formality",
+      "text": "fine-art photography, deliberate concept, long tonal range of a gallery print, quiet formal composition and generous negative space",
       "text_short": "fine-art print"
     },
     {
       "name": "product-commercial",
-      "text": "commercial product photography, flawless surfaces, controlled reflections and premium sheen",
+      "text": "commercial product photography, flawless swept surfaces, gradient reflections shaped with scrims and flags, premium sheen",
       "text_short": "commercial product"
     },
     {
       "name": "food-editorial",
-      "text": "editorial food photography, appetizing texture, styled props and directional soft light",
+      "text": "editorial food photography, raking directional soft light carving texture, styled crumbs and rising steam, shallow tabletop depth",
       "text_short": "editorial food"
     },
     {
       "name": "architectural",
-      "text": "architectural photography, corrected verticals, patient light and material honesty",
+      "text": "architectural photography, verticals corrected with a shifted lens, patient light at the day's edges, material honesty in stone and glass",
       "text_short": "architectural precision"
     },
     {
       "name": "sports-action",
-      "text": "sports action photography, peak-moment timing, tight telephoto isolation",
+      "text": "sports action photography, peak-moment timing frozen by a fast shutter, tight telephoto isolation, background compressed to pure color",
       "text_short": "peak-action sports"
     },
     {
       "name": "wildlife-documentary",
-      "text": "wildlife documentary photography, patient telephoto fieldcraft, animals unaware and natural",
+      "text": "wildlife documentary photography, patient telephoto fieldcraft at first light, eye-level with the animal, natural unaware behavior",
       "text_short": "wildlife documentary"
     },
     {
       "name": "boudoir-artistic",
-      "text": "artistic boudoir photography, tasteful intimate elegance, soft directional light and implied grace",
+      "text": "artistic boudoir photography, tasteful intimate elegance, soft window key with deep falloff, grace implied rather than shown",
       "text_short": "artistic boudoir",
       "tags": ["boudoir"]
+    },
+    {
+      "name": "beauty-closeup",
+      "text": "beauty photography, tight close crop, wraparound clamshell lighting, immaculate skin texture with visible pores, saturated lip color",
+      "text_short": "clamshell beauty close-up"
+    },
+    {
+      "name": "lifestyle",
+      "text": "lifestyle photography, sun-flared candid warmth, believable in-between moments, airy natural grade with soft highlights",
+      "text_short": "aspirational lifestyle candid"
+    },
+    {
+      "name": "macro",
+      "text": "macro photography, life-size 1:1 magnification, a razor-thin focal plane dissolving into creamy blur, micro-texture resolved beyond what the eye sees",
+      "text_short": "1:1 macro detail"
+    },
+    {
+      "name": "underwater",
+      "text": "underwater photography, cyan depth haze, sunbeams shafting down from the surface, suspended particulate glittering in the light",
+      "text_short": "underwater sunbeams",
+      "tags": ["underwater"]
+    },
+    {
+      "name": "astro-landscape",
+      "text": "astro-landscape photography, the Milky Way core arching over a dark foreground, long-exposure star detail, faint green airglow on the horizon",
+      "text_short": "Milky Way astroscape",
+      "tags": ["night"]
     }
   ]
 }

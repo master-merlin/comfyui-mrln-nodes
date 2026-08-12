@@ -2,14 +2,12 @@
   "version": 1,
   "label": "Storybook Whimsy",
   "type": ["animal"],
-  "description": "The trending whimsical-animal formula: a characterful pet in a handmade medium with storybook charm.",
-  "prefix": "A charming storybook illustration.",
+  "description": "The whimsical-animal formula: a characterful pet rendered in a genuinely handmade medium with storybook charm.",
+  "prefix": "A charming storybook illustration, whimsical and gently funny, drawn with the warmth of a beloved picture book.",
   "slots": [
     { "id": "star", "ref": "animal/pet", "label": "Star of the tale", "emphasis": 1.25 },
-    { "id": "medium", "ref": "style/medium", "label": "Handmade medium", "default": "paper-collage", "emphasis": 1.2 },
+    { "id": "medium", "ref": "style/craft-medium", "label": "Handmade medium", "default": "paper-collage-layers", "emphasis": 1.2 },
     { "id": "print", "ref": "style/print", "label": "Print process", "allow_empty": true, "empty_weight": 2.0 },
-    { "id": "aesthetic", "ref": "style/aesthetic", "label": "Aesthetic", "default": "whimsical-storybook" },
-    { "id": "mood", "ref": "atmosphere/mood", "label": "Mood", "default": "playful" },
     { "id": "particles", "ref": "atmosphere/particles", "label": "Floating detail", "allow_empty": true }
   ],
   "suffix": "gentle humor, cozy warmth, texture you can almost touch",

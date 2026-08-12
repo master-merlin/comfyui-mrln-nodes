@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "label": "Concept Interior",
+  "description": "Cockpit and interior design language — visible through glass in exterior shots or carrying a dedicated interior frame.",
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
+  "items": [
+    {
+      "name": "wraparound-display",
+      "text": "a wraparound cockpit display, one seamless curved screen flowing from door to door beneath the windshield",
+      "text_short": "wraparound display cockpit"
+    },
+    {
+      "name": "carbon-monocoque-tub",
+      "text": "an exposed carbon monocoque tub, the structural weave left visible along the sills and tunnel",
+      "text_short": "exposed carbon tub"
+    },
+    {
+      "name": "shell-seats-harness",
+      "text": "sculpted shell seats trimmed in perforated Alcantara, six-point harnesses routed through dedicated slots",
+      "text_short": "harnessed shell seats"
+    },
+    {
+      "name": "yoke-steering",
+      "text": "a flat-top yoke steering wheel dense with anodized rotary controls and a center-marked rim",
+      "text_short": "yoke steering wheel"
+    },
+    {
+      "name": "ambient-light-blade",
+      "text": "a single ambient light blade running the full width of the dash, its color echoing the exterior accents",
+      "text_short": "ambient light blade"
+    },
+    {
+      "name": "floating-center-console",
+      "text": "a floating center console bridged in brushed aluminum, crowned by a crystalline gear selector",
+      "text_short": "floating console"
+    },
+    {
+      "name": "minimalist-lounge",
+      "text": "a minimalist lounge cabin, pale wool and open-pore wood where the dials would be",
+      "text_short": "lounge-style cabin"
+    },
+    {
+      "name": "camera-mirror-screens",
+      "text": "slim door-mounted screens replacing the mirrors, camera feeds glowing at each A-pillar",
+      "text_short": "camera mirror screens"
+    }
+  ]
+}

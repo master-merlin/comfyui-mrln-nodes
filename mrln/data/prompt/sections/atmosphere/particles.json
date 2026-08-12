@@ -5,12 +5,12 @@
   "items": [
     {
       "name": "dust-motes",
-      "text": "fine dust motes drifting through the light",
+      "text": "fine dust motes hanging in the air, igniting to bright points where they cross the light and vanishing outside it",
       "text_short": "drifting dust motes"
     },
     {
       "name": "embers",
-      "text": "glowing embers rising and winking out in the air",
+      "text": "glowing embers rising on the heat, drifting in slow spirals and winking out one by one as they cool",
       "text_short": "rising embers"
     },
     {
@@ -52,6 +52,32 @@
       "name": "bokeh-orbs",
       "text": "soft out-of-focus light orbs floating in the background depth",
       "text_short": "floating bokeh orbs"
+    },
+    {
+      "name": "fireflies",
+      "text": "living fireflies blinking slow green-gold trails low over the ground",
+      "text_short": "blinking fireflies",
+      "tags": ["night"]
+    },
+    {
+      "name": "falling-leaves",
+      "text": "dry autumn leaves tumbling and seesawing down through the frame",
+      "text_short": "tumbling autumn leaves"
+    },
+    {
+      "name": "ash-fall",
+      "text": "grey ash falling silent as snow, dusting shoulders and edges",
+      "text_short": "silent ash fall"
+    },
+    {
+      "name": "incense-smoke",
+      "text": "a thin ribbon of incense smoke rising laminar and straight before curling into slow turbulent whorls where the air moves",
+      "text_short": "curling incense ribbon"
+    },
+    {
+      "name": "soap-bubbles",
+      "text": "drifting soap bubbles, iridescent films swirling across each sphere and every one carrying a tiny warped reflection of the scene",
+      "text_short": "iridescent soap bubbles"
     }
   ]
 }

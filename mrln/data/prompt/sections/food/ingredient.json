@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "label": "Ingredient",
+  "description": "Raw ingredients as still-life heroes — the market shot before the cooking starts.",
+  "suits": ["food", "object"],
+  "items": [
+    { "name": "heirloom-tomatoes", "text": "heirloom tomatoes split and whole, ribbed shoulders in oxblood, zebra-stripe and gold, seed jelly glistening in the cut faces, stems still peppery green", "text_short": "split heirloom tomatoes" },
+    { "name": "mackerel-on-ice", "text": "whole mackerel on crushed ice, tiger-striped backs iridescing blue-green, eyes clear and gills scarlet, each scale throwing its own tiny highlight", "text_short": "iridescent mackerel on ice" },
+    { "name": "citrus-wheels", "text": "a tiling of citrus wheels on white marble, blood orange, pomelo and lime, backlight turning every segment to stained glass", "text_short": "backlit citrus wheels" },
+    { "name": "chocolate-study", "text": "a dark-chocolate still life, snapped bar edges showing crisp temper, curled shavings, cocoa powder drifted like dune sand, one cacao pod split to its pale beans", "text_short": "dark chocolate still life" },
+    { "name": "honeycomb-slab", "text": "a slab of raw honeycomb on a wooden board, hexagon caps torn open and weeping gold, one slow drip stretching toward the dipper below", "text_short": "weeping honeycomb slab" },
+    { "name": "foraged-mushrooms", "text": "foraged mushrooms tumbled from a willow basket, chanterelle pleats and fat porcini caps still dusted with forest soil, a paring knife and brushed-off leaves beside", "text_short": "foraged mushroom tumble" },
+    { "name": "spice-pyramids", "text": "spice pyramids heaped in brass bowls, turmeric, smoked paprika and blue-grey poppy seed, a scoop mid-plunge, fine dust hazing the air above", "text_short": "spice pyramids in brass" },
+    { "name": "torn-burrata", "text": "a burrata torn open, cream spilling stracciatella across charred sourdough, olive oil beading on the milky surface, cracked pepper caught in the pool", "text_short": "torn burrata spill" },
+    { "name": "dry-aged-ribeye", "text": "a raw dry-aged ribeye on butcher paper, deep burgundy grain under a frost of aged fat, salt crystals just landed and not yet melting", "text_short": "dry-aged raw ribeye" },
+    { "name": "fresh-herb-bundle", "text": "just-picked herbs bundled with twine, basil, purple sage and flowering thyme, water droplets still standing on the leaves, scissors on the linen beside", "text_short": "bundled fresh herbs" }
+  ]
+}

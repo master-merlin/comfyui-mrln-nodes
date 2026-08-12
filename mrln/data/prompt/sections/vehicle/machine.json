@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "label": "Machine",
+  "description": "Blueprint-worthy machines across every family — state-neutral subjects written for technical-sheet and poster treatments.",
+  "suits": ["object", "vehicle"],
+  "items": [
+    {
+      "name": "longtail-hypercar",
+      "text": "a long-tail hypercar, teardrop glasshouse flowing into full-length venturi tunnels, the rear wing standing on slender swan-neck pylons",
+      "text_short": "long-tail hypercar",
+      "tags": ["car"]
+    },
+    {
+      "name": "group-b-special",
+      "text": "a boxy Group B rally homologation special, riveted arch extensions, roof vent and quad driving lamps in a mesh-guarded row",
+      "text_short": "Group B rally special",
+      "tags": ["car", "historical"]
+    },
+    {
+      "name": "50s-gp-single-seater",
+      "text": "a cigar-bodied 1950s grand prix single-seater, panel-beaten aluminium skin, wire wheels and a wood-rimmed steering wheel",
+      "text_short": "1950s grand prix single-seater",
+      "tags": ["car", "historical"]
+    },
+    {
+      "name": "land-speed-streamliner",
+      "text": "a land-speed streamliner motorcycle, its rider enclosed under a hand-formed alloy fairing drawn out to a torpedo taper",
+      "text_short": "land-speed streamliner motorcycle",
+      "tags": ["motorcycle"]
+    },
+    {
+      "name": "endurance-superbike",
+      "text": "a factory endurance superbike, quick-release fairings, wire-locked fasteners and stacked projector lights above the ram-air intake",
+      "text_short": "factory endurance superbike",
+      "tags": ["motorcycle"]
+    },
+    {
+      "name": "delta-interceptor",
+      "text": "a dartlike delta-wing interceptor, area-ruled fuselage and afterburner petals in raw heat-stained titanium",
+      "text_short": "delta-wing interceptor",
+      "tags": ["aircraft"]
+    },
+    {
+      "name": "flying-boat",
+      "text": "a four-engine flying boat, two-step planing hull, outboard wing floats and a forest of opened cowling flaps",
+      "text_short": "four-engine flying boat",
+      "tags": ["aircraft", "historical"]
+    },
+    {
+      "name": "coaxial-heavy-lift",
+      "text": "a coaxial-rotor heavy-lift helicopter, twin stacked rotor heads above a fully glazed crane-operator nose",
+      "text_short": "coaxial heavy-lift helicopter",
+      "tags": ["aircraft"]
+    },
+    {
+      "name": "ekranoplan",
+      "text": "a colossal ekranoplan ground-effect ship, stub wings and eight intake nacelles bunched at the nose, a tail the size of an airliner's",
+      "text_short": "ekranoplan ground-effect ship",
+      "tags": ["ship", "historical"]
+    },
+    {
+      "name": "research-submersible",
+      "text": "a deep-sea research submersible, syntactic-foam flanks, folded manipulator arms and a single thick acrylic view dome",
+      "text_short": "deep-sea research submersible",
+      "tags": ["ship"]
+    },
+    {
+      "name": "j-class-yacht",
+      "text": "a J-class racing yacht, towering Bermuda rig over a navy hull drawn to a knife-edge entry, deck hardware in polished bronze",
+      "text_short": "J-class racing yacht",
+      "tags": ["ship", "historical"]
+    },
+    {
+      "name": "express-steam-locomotive",
+      "text": "an express steam locomotive, driving wheels taller than a man, connecting rods and valve gear laid out in polished steel",
+      "text_short": "express steam locomotive",
+      "tags": ["train", "historical"]
+    },
+    {
+      "name": "maglev-trainset",
+      "text": "a bullet-nosed maglev trainset, flush glazing and levitation skirts riding a raised concrete guideway",
+      "text_short": "maglev trainset",
+      "tags": ["train", "scifi"]
+    },
+    {
+      "name": "crewed-lunar-rover",
+      "text": "a skeletal crewed lunar rover, woven-mesh wheels, gold foil insulation and exposed chassis trusses under twin seats",
+      "text_short": "crewed lunar rover",
+      "tags": ["scifi"]
+    }
+  ]
+}

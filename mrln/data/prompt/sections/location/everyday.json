@@ -55,6 +55,27 @@
       "name": "tram-interior",
       "text": "The interior of an old city tram, worn wooden seats, hand straps swaying, the city sliding past outside.",
       "text_short": "old tram interior"
+    },
+    {
+      "name": "metro-platform",
+      "text": "An underground metro platform, glazed enamel wall tiles, a curved tunnel mouth and the route map glowing in its lightbox.",
+      "text_short": "tiled metro platform"
+    },
+    {
+      "name": "barbershop",
+      "text": "A classic barbershop, worn leather-and-chrome chairs facing a long mirror, clippers hanging on hooks and a striped pole by the door.",
+      "text_short": "classic barbershop chairs"
+    },
+    {
+      "name": "petrol-station-canopy",
+      "text": "A petrol station on an empty road, the white canopy a box of light over the pumps, moths circling and the shop glowing behind glass.",
+      "text_short": "glowing petrol canopy",
+      "tags": ["night"]
+    },
+    {
+      "name": "flower-shop",
+      "text": "A florist's shop spilling onto the pavement, zinc buckets of cut stems banked in tiers, handwritten price tags and stray petals scattered on wet concrete.",
+      "text_short": "florist buckets on pavement"
     }
   ]
 }

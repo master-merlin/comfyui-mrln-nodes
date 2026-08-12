@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "label": "Night Road",
+  "description": "Drivable night stages — roads, ramps and lots a performance machine can actually own after dark. Every item bakes in night and declares it.",
+  "suits": ["object", "vehicle", "car", "motorcycle"],
+  "items": [
+    {
+      "name": "wet-arterial",
+      "text": "A rain-flooded six-lane arterial at three in the morning, signal heads stretching red and green ribbons down the lane grooves, spray still hanging where the last car passed.",
+      "text_short": "wet night arterial, stretched signal reflections",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "touge-descent",
+      "text": "A mountain touge descending in stacked hairpins, cat-eye reflectors tracing the camber through cedar darkness, valley fog pooling two corners below.",
+      "text_short": "night touge hairpins, cat-eye reflectors, valley fog",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "container-canyon",
+      "text": "A dockside lane walled in by stacked shipping containers, one gantry floodlight slicing the corridor into hard bands of glare and shadow, crane silhouettes overhead.",
+      "text_short": "container-canyon dock lane, gantry floodlight",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "onramp-spiral",
+      "text": "An elevated expressway onramp coiling upward through sodium light, banked concrete and painted chevrons wound into one glowing spiral.",
+      "text_short": "spiral expressway onramp, sodium glow",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "toll-plaza",
+      "text": "A deserted toll plaza after midnight, barriers raised, lane lights counting down the empty booths under a long steel canopy.",
+      "text_short": "empty midnight toll plaza, raised barriers",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "desert-interstate",
+      "text": "A dead-straight desert interstate under a bowl of stars, the centerline running out to a faint town glow on the horizon, heat still lifting off the blacktop.",
+      "text_short": "desert interstate under stars, distant town glow",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "canyon-guardrail",
+      "text": "A canyon road pinched between rock wall and battered guardrail, moonlight chalking the cliff faces above the dark ribbon of tarmac.",
+      "text_short": "moonlit canyon road, battered guardrail",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "concrete-underpass",
+      "text": "A multi-column concrete underpass, sodium pools spaced between the pillars, chain-link fencing and painted clearance markings catching the light.",
+      "text_short": "sodium underpass, concrete pillars",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "city-overlook",
+      "text": "A gravel overlook above the city, a low stone wall at the drop, the whole basin shimmering below like an amber circuit board.",
+      "text_short": "night city overlook, amber grid below",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "tram-street",
+      "text": "An old tram street of wet cobbles and inset steel rails, catenary wires sketched against the sky, the rails gleaming in twin lines toward a lit junction.",
+      "text_short": "wet tram street, gleaming rails, catenary wires",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "airport-perimeter",
+      "text": "An airport perimeter road along the fence line, approach strobes rippling out across the grass while a heavy jet thunders across low overhead.",
+      "text_short": "airport perimeter road, approach strobes, jet overhead",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "snow-switchbacks",
+      "text": "Freshly plowed alpine switchbacks between headlight-high snowbanks, sodium lamps steaming in the cold, grit scattered across the packed lane.",
+      "text_short": "plowed night switchbacks, high snowbanks",
+      "tags": ["night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "signage-junction",
+      "text": "A five-way junction crowded with stacked lightbox signage and cascading LED boards, every color restated once more in the wet asphalt.",
+      "text_short": "neon-signed junction, wet asphalt reflections",
+      "tags": ["night", "neon"],
+      "requires": ["night"]
+    }
+  ]
+}

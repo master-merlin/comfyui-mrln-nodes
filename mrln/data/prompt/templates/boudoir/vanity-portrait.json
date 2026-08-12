@@ -2,8 +2,8 @@
   "version": 1,
   "label": "Vanity Portrait",
   "type": ["human", "boudoir"],
-  "description": "Old-Hollywood glamour at the dressing mirror: warm bulbs, makeup ritual, doubled composition.",
-  "prefix": "An old-Hollywood vanity portrait — the model at her dressing mirror in the bulb-warm glow, the composition doubled by the reflection, glamour caught in its private ritual moment.",
+  "description": "Old-Hollywood glamour at the dressing mirror: warm bulbs, the makeup ritual mid-gesture, composition doubled by the reflection.",
+  "prefix": "An old-Hollywood vanity portrait — the model seated at the dressing mirror in the bulb-warm glow, spine long, face turned to catch both the light and the glass, the composition doubled by the reflection, glamour caught in its most private ritual.",
   "slots": [
     {
       "id": "model",
@@ -13,11 +13,11 @@
       "emphasis": 1.15
     },
     {
-      "id": "pose",
-      "ref": "pose/boudoir-solo",
-      "label": "Held In",
-      "default": "mirrored-beauty",
-      "emphasis": 1.2
+      "id": "ritual",
+      "ref": "human/gesture",
+      "label": "Mid-Ritual",
+      "default": "strand-play",
+      "emphasis": 1.15
     },
     {
       "id": "setting",
@@ -30,20 +30,15 @@
       "id": "light",
       "ref": "lighting/organic",
       "label": "Lighting Conditions",
-      "default": "bedside-lamp"
-    },
-    {
-      "id": "framing",
-      "ref": "viewpoint/portrait",
-      "label": "Framing",
-      "default": "mirror-shot",
-      "emphasis": 1.15
+      "default": "bedside-lamp",
+      "tags_none": ["night"]
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
+      "ref": "camera/portrait-glass",
       "label": "Optics",
-      "default": "50mm-f14"
+      "default": "50mm-f12",
+      "tags_any": ["boudoir"]
     },
     {
       "id": "grade",
@@ -52,7 +47,7 @@
       "default": "golden-luxury"
     }
   ],
-  "suffix": "Vanity Rendering: (warm bulb glow modeling the face from both sides:1.2), makeup and jewelry detail crisp in the mirror, (detailed natural skin texture:1.15), perfume bottles and pearls softly out of focus — glamour as a private ceremony.",
+  "suffix": "Vanity Rendering: (warm tungsten bulbs modeling the face from both sides:1.2), makeup and jewelry detail crisp in the mirror, (detailed natural skin texture:1.15), perfume bottles and pearls dissolving out of focus at the frame's edge — glamour as a private ceremony.",
   "negative": "child, chibi, underage, deformed reflection, extra fingers, watermark, text",
   "render": {
     "format": "string_labeled",

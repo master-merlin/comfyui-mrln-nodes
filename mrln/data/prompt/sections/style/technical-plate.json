@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Technical Plate",
+  "description": "Presentation treatments for technical subject sheets — teardowns, cutaways, blueprints and specimen plates.",
+  "items": [
+    {
+      "name": "exploded-orthographic",
+      "text": "an exploded orthographic teardown, every component floated apart along one axis in exact assembly order, fine leader lines running to numbered labels",
+      "text_short": "exploded orthographic teardown"
+    },
+    {
+      "name": "cutaway-half",
+      "text": "a half-section cutaway, the outer shell sliced open along one clean plane to expose the layered mechanism inside, cut faces rendered in flat section color",
+      "text_short": "half-section cutaway"
+    },
+    {
+      "name": "blueprint-plate",
+      "text": "a white-on-cyan blueprint plate, precise linework, dimension chains and hatched sections over deep drafting blue",
+      "text_short": "white-on-cyan blueprint plate"
+    },
+    {
+      "name": "museum-specimen",
+      "text": "a museum specimen plate, the subject pinned at center with satellite detail studies around it and a small engraved caption plaque below",
+      "text_short": "museum specimen plate"
+    },
+    {
+      "name": "patent-drawing",
+      "text": "a vintage patent-application drawing, fine stippled ink shading, reference numerals on curling leader lines, aged off-white paper",
+      "text_short": "vintage patent drawing"
+    },
+    {
+      "name": "isometric-assembly",
+      "text": "an isometric assembly diagram, parts marching down the sheet in build order, thin construction lines left deliberately visible",
+      "text_short": "isometric assembly diagram"
+    },
+    {
+      "name": "xray-ghost",
+      "text": "an X-ray ghost view, the housing rendered translucent so the internals glow in layered densities inside the intact silhouette",
+      "text_short": "translucent X-ray ghost view"
+    },
+    {
+      "name": "field-notes-plate",
+      "text": "a naturalist's field-notes plate, ink sketches from several angles, handwritten margin annotations and one taped-in material swatch",
+      "text_short": "annotated field-notes plate"
+    }
+  ]
+}

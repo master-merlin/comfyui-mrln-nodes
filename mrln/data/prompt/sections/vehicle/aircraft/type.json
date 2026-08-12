@@ -12,7 +12,7 @@
     { "name": "bush-plane", "text": "a tundra-tired bush plane built for gravel bars", "text_short": "tundra-tire bush plane" },
     { "name": "seaplane", "text": "a float-equipped seaplane resting on glassy water", "text_short": "floatplane on water" },
     { "name": "glider", "text": "a slender high-aspect glider riding silent lift", "text_short": "slender glider" },
-    { "name": "helicopter", "text": "a sleek helicopter, rotor disc shimmering", "text_short": "sleek helicopter" },
+    { "name": "helicopter", "text": "a sleek helicopter in a low hover, rotor disc blurred to a shimmering translucent ring", "text_short": "hovering helicopter" },
     { "name": "aerobatic-monoplane", "text": "a smoke-ready aerobatic monoplane in sponsor livery", "text_short": "aerobatic monoplane" },
     { "name": "cargo-lifter", "text": "a four-engine heavy cargo lifter with an open ramp", "text_short": "heavy cargo lifter" },
     { "name": "supersonic-concept", "text": "a needle-nosed supersonic concept jet in polished titanium", "text_short": "supersonic concept jet", "tags": ["scifi"] },

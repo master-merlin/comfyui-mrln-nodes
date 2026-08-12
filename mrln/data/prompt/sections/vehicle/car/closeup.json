@@ -27,6 +27,16 @@
       "name": "spoiler-closeup",
       "text": "An extreme close-up along the rear spoiler edge, its aero profile knifing across the frame.",
       "text_short": "rear spoiler close-up"
+    },
+    {
+      "name": "headlight-closeup",
+      "text": "A macro close-up into the headlight assembly, projector lenses and LED light-guides layered like optical jewelry.",
+      "text_short": "headlight macro"
+    },
+    {
+      "name": "engine-bay-closeup",
+      "text": "A close-up through the glass engine cover, intake plenums and machined linkages displayed like a museum piece.",
+      "text_short": "engine bay under glass"
     }
   ]
 }

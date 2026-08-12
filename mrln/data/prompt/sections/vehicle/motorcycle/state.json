@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Motorcycle State",
+  "description": "What the bike is doing: cornering physics, rest, or wrenching.",
+  "suits": ["object", "vehicle", "motorcycle"],
+  "items": [
+    { "name": "knee-down", "text": "heeled hard into a corner, knee slider skimming the apex paint, the tire edge feathered to its last millimeter", "text_short": "knee-down cornering" },
+    { "name": "wheelie-exit", "text": "lofting the front wheel out of a corner under power, forks fully extended, rear tire squatting into the tarmac", "text_short": "power wheelie" },
+    { "name": "kickstand-rest", "text": "parked on its kickstand with the front wheel tipped into the lean, engine cases ticking as they cool", "text_short": "kickstand rest" },
+    { "name": "bench-teardown", "text": "up on a workshop bench mid-service, tank off and wiring exposed, tools laid out in ordered rows", "text_short": "workshop teardown" },
+    { "name": "flat-track-slide", "text": "crossed up in a flat-track slide, handlebars at opposite lock, the rear wheel spinning a rooster tail of dirt", "text_short": "flat-track slide" },
+    { "name": "rain-ride", "text": "carving through rain, a fine cone of spray lifting off the rear tire, the headlight beam cutting the mist", "text_short": "rain ride, spray trailing" },
+    { "name": "stationary-burnout", "text": "holding a stationary burnout, rear tire boiling smoke while the clamped front brake buries the forks", "text_short": "stationary burnout" },
+    { "name": "alpine-sweeper", "text": "mid-lean through an alpine sweeper, suspension loaded evenly, the valley dropping away beyond the guardrail", "text_short": "alpine sweeper lean" }
+  ]
+}

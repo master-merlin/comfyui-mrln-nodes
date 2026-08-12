@@ -1,79 +1,102 @@
 {
   "version": 1,
   "label": "Film Stock",
-  "description": "Film emulsion looks — each item commits to one stock's palette and grain.",
+  "description": "Film emulsion looks — each item commits to one stock's real palette, grain structure and highlight behavior.",
   "items": [
     {
       "name": "portra-400",
-      "text": "Kodak Portra 400 look, warm forgiving skin tones, gentle pastel saturation and fine grain",
+      "text": "Kodak Portra 400 look, warm forgiving skin tones, fine tabular grain and highlights that roll off gently no matter how hard they are hit",
       "text_short": "Kodak Portra 400 look"
     },
     {
       "name": "ektar-100",
-      "text": "Kodak Ektar 100 look, punchy ultra-vivid color and razor-fine grain",
+      "text": "Kodak Ektar 100 look, the finest grain of any color negative, punchy saturated reds and blues with landscape-grade sharpness",
       "text_short": "Kodak Ektar vivid look"
     },
     {
       "name": "kodachrome-64",
-      "text": "Kodachrome 64 look, deep reds, archival mid-century saturation and crisp contrast",
+      "text": "Kodachrome 64 look, dense archival reds and warm mid-century saturation, crisp contrast with near-invisible grain",
       "text_short": "Kodachrome 64 look"
     },
     {
       "name": "kodak-gold-200",
-      "text": "Kodak Gold 200 look, honeyed consumer-film warmth, nostalgic summer cast",
+      "text": "Kodak Gold 200 look, honeyed consumer-film warmth, gentle visible grain and a nostalgic amber summer cast",
       "text_short": "Kodak Gold warmth"
     },
     {
       "name": "tri-x-400",
-      "text": "Kodak Tri-X 400 black and white, gritty classic reportage grain and strong midtones",
+      "text": "Kodak Tri-X 400 black and white, gritty classic cubic grain, strong open midtones and the forgiving push-processed contrast of street reportage",
       "text_short": "Tri-X black and white"
     },
     {
       "name": "ilford-hp5",
-      "text": "Ilford HP5 black and white, soft forgiving contrast and smoky greys",
+      "text": "Ilford HP5 black and white, soft forgiving contrast, smoky greys and modest grain that only tightens when pushed",
       "text_short": "Ilford HP5 greys"
     },
     {
       "name": "delta-3200",
-      "text": "Ilford Delta 3200 look, coarse expressive low-light grain, deep blacks",
+      "text": "Ilford Delta 3200 look, coarse expressive grain clumping in the shadows, deep blacks and soft halos swelling around night light sources",
       "text_short": "Delta 3200 grain",
       "tags": ["night"]
     },
     {
       "name": "velvia-50",
-      "text": "Fuji Velvia 50 slide-film look, supersaturated greens and blues, landscape-postcard punch",
+      "text": "Fuji Velvia 50 slide-film look, supersaturated greens and blues, hard slide contrast crushing shadows to velvet black, landscape-postcard punch",
       "text_short": "Velvia slide punch"
     },
     {
       "name": "provia-100f",
-      "text": "Fuji Provia 100F look, neutral clean slide color with quiet precision",
+      "text": "Fuji Provia 100F look, neutral clean slide color with quiet precision and restrained contrast",
       "text_short": "Provia neutral slide"
     },
     {
       "name": "pro-400h",
-      "text": "Fuji Pro 400H look, airy minty pastels and luminous highlights",
+      "text": "Fuji Pro 400H look, airy minty pastels, luminous open highlights and skin leaning cool and porcelain",
       "text_short": "Pro 400H pastels"
     },
     {
       "name": "cinestill-800t",
-      "text": "CineStill 800T tungsten look, teal shadows and red halation blooming around lights",
+      "text": "CineStill 800T look, tungsten-balanced cinema emulsion stripped of its anti-halation backing, teal shadows and red halation blooming around every bare light",
       "text_short": "CineStill 800T halation",
       "tags": ["night"]
     },
     {
       "name": "polaroid-600",
-      "text": "Polaroid 600 instant look, soft focus, milky shadows and the white instant frame feel",
+      "text": "Polaroid 600 instant look, soft dreamy focus, milky lifted shadows, slightly crossed color and the white instant frame feel",
       "text_short": "Polaroid instant look"
     },
     {
       "name": "aerochrome-ir",
       "text": "Kodak Aerochrome infrared look, foliage burning hot pink against cyan skies",
-      "text_short": "Aerochrome infrared pink"
+      "text_short": "Aerochrome infrared pink",
+      "weight": 0.5
     },
     {
       "name": "superia-xtra",
-      "text": "Fuji Superia look, cool-leaning consumer color with 90s snapshot character",
+      "text": "Fuji Superia look, cool green-leaning consumer color with 90s snapshot character and honest everyday grain",
       "text_short": "Superia 90s snapshot"
+    },
+    {
+      "name": "acros-100",
+      "text": "Fuji Acros 100 black and white, satin micro-grain, luminous mid-grey tonality and famously clean long exposures that keep shadow detail after dark",
+      "text_short": "Acros satin monochrome"
+    },
+    {
+      "name": "vision3-500t",
+      "text": "Kodak Vision3 500T motion-picture look, tungsten-balanced with enormous highlight latitude, neon rolling off softly into subdued cinematic grain",
+      "text_short": "Vision3 500T cine look",
+      "tags": ["night"]
+    },
+    {
+      "name": "ektachrome-e100",
+      "text": "Kodak Ektachrome E100 slide look, clean cool-neutral color with a signature clarity in the blues, tight grain and the crisp honest contrast of projected chrome",
+      "text_short": "Ektachrome cool slide"
+    },
+    {
+      "name": "infrared-bw",
+      "text": "black-and-white infrared look, foliage glowing snow-white, blue skies collapsing to near black and skin turning waxy-luminous, halation ghosting around the brightest leaves",
+      "text_short": "infrared white foliage",
+      "weight": 0.5
     }
   ]
 }

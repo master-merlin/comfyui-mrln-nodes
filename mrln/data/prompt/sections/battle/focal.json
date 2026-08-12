@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "label": "Focal Figure",
+  "description": "The single figure the eye lands on inside a massed battle — pose, gear-state and story in one glance. Full detail budget goes here.",
+  "items": [
+    {
+      "name": "standard-bearer",
+      "text": "a standard-bearer sprinting three strides ahead of the front rank, banner pole couched like a lance, the cloth cracking taut overhead",
+      "text_short": "sprinting standard-bearer"
+    },
+    {
+      "name": "mounted-commander",
+      "text": "a commander on a rearing grey destrier, sword flung out toward the enemy line, cloak and horsehair crest streaming the same direction as the banners",
+      "text_short": "commander on rearing destrier"
+    },
+    {
+      "name": "shield-maiden",
+      "text": "a shield-maiden braced in a gap of the wall, boots ploughed into the mud, shield rim split back to the boss, eyes level over its edge",
+      "text_short": "braced shield-maiden"
+    },
+    {
+      "name": "war-priest",
+      "text": "a war-priest striding through the press, a gilded reliquary raised overhead on both palms, its gold the single brightest point on the field",
+      "text_short": "war-priest with reliquary"
+    },
+    {
+      "name": "horn-caller",
+      "text": "a horn-caller stood on a broken cart, cheeks bellowed around a bronze war-horn taller than its bearer, heads turning down the ranks in a visible wave",
+      "text_short": "war-horn caller"
+    },
+    {
+      "name": "kneeling-veteran",
+      "text": "a grey-bearded veteran down on one knee, notched sword planted as a crutch, helm gone, free arm still waving the line forward",
+      "text_short": "kneeling veteran waving on"
+    },
+    {
+      "name": "battle-mage",
+      "text": "a battle-mage mid-incantation at the line's center, scorched coat-hems lifting in an updraft of the spell's own making, light gathering between spread hands",
+      "text_short": "casting battle-mage",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "berserker",
+      "text": "a bare-armed berserker vaulting the shield-rims into the press, axe trailing an arc of rainwater, mouth open around a shout the picture almost carries",
+      "text_short": "vaulting berserker"
+    },
+    {
+      "name": "champions-duel",
+      "text": "two champions locked blade-to-blade in a pocket of open ground the armies have left them, both hosts' banners planted at the circle's edge",
+      "text_short": "champions' duel"
+    },
+    {
+      "name": "braced-pike",
+      "text": "a lone soldier planting a barbed war-pike against a diving shadow, braced low with the butt-spike in the earth, the field's whole fate narrowed to one set point",
+      "text_short": "pike braced against the dive",
+      "tags": ["fantasy"]
+    },
+    {
+      "name": "healer-kneeling",
+      "text": "a healer kneeling in the churned mud beside a downed knight, satchel open, both hands steady in the middle of all that stillness",
+      "text_short": "healer beside the fallen",
+      "tags": ["aftermath"]
+    },
+    {
+      "name": "banner-gatherer",
+      "text": "a soldier walking the ruts with an armful of fallen banners, the wet bundled cloth hanging heavier across the shoulder than any shield",
+      "text_short": "gatherer of fallen banners",
+      "tags": ["aftermath"]
+    },
+    {
+      "name": "unhelmed-king",
+      "text": "a king walking the field unhelmed, dented crown carried in one gauntlet, picking a slow path between the fallen",
+      "text_short": "unhelmed king on the field",
+      "tags": ["aftermath"]
+    },
+    {
+      "name": "leaning-survivors",
+      "text": "two mud-caked survivors leaning helm to helm in the emptied field, propping each other upright, one shield doing for the both of them",
+      "text_short": "survivors leaning together",
+      "tags": ["aftermath"]
+    }
+  ]
+}

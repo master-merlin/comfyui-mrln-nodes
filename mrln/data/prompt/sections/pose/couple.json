@@ -5,13 +5,15 @@
   "suits": ["human"],
   "tags": ["couple", "boudoir"],
   "items": [
-    { "name": "couple-editorial", "text": "couple editorial pose", "text_short": "couple editorial" },
+    { "name": "couple-editorial", "text": "posed as a fashion-editorial couple, her back settled against his chest, both squared to the lens", "text_short": "couple editorial" },
     { "name": "cinematic-embrace", "text": "the man standing behind the woman with arms gently wrapped around her waist as she leans back", "text_short": "cinematic waist embrace" },
     { "name": "bedside-recline-pair", "text": "the woman reclining on the bed while the man sits on the edge, a hand resting on her knee", "text_short": "bedside recline pair" },
     { "name": "loft-sofa-couple", "text": "the man seated on the sofa with the woman leaning back comfortably between his knees", "text_short": "sofa lean-back couple" },
     { "name": "sidelight-window-couple", "text": "both standing near the window, the man in side profile while the woman turns toward the camera", "text_short": "window sidelight couple" },
     { "name": "lounge-booth-couple", "text": "the man resting an elbow on the leather booth backrest while the woman sits close beside him", "text_short": "lounge booth couple" },
     { "name": "slow-dance-dip", "text": "a slow-dance dip, her hand curled at the back of his neck", "text_short": "slow-dance dip" },
-    { "name": "forehead-touch", "text": "standing forehead to forehead, eyes closed, hands joined", "text_short": "forehead-to-forehead" }
+    { "name": "forehead-touch", "text": "standing forehead to forehead, eyes closed, hands joined", "text_short": "forehead-to-forehead" },
+    { "name": "mirror-couple", "text": "he stands behind her at the vanity mirror, hands resting on her waist, both regarding her reflection", "text_short": "vanity mirror couple" },
+    { "name": "hand-kiss", "text": "he bows his head to press a kiss to her extended knuckles, her fingers curved over his", "text_short": "kiss on the knuckles" }
   ]
 }

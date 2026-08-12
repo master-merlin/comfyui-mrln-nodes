@@ -58,6 +58,16 @@
       "name": "curvy-voluptuous",
       "text": "curvy voluptuous silhouette with {full hips|curvy feminine contours}",
       "text_short": "curvy voluptuous shape"
+    },
+    {
+      "name": "statuesque-tall",
+      "text": "statuesque tall silhouette with {long elegant leg lines|sculpted waistline}",
+      "text_short": "statuesque tall figure"
+    },
+    {
+      "name": "petite-delicate",
+      "text": "petite delicately-proportioned silhouette with {natural soft contours|defined waist}",
+      "text_short": "petite delicate frame"
     }
   ]
 }

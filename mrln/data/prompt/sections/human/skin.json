@@ -43,6 +43,16 @@
       "name": "shimmer-dusted",
       "text": "subtle golden shimmer dusted along the shoulders and collarbones",
       "text_short": "golden shimmer skin"
+    },
+    {
+      "name": "oiled-sheen",
+      "text": "lightly oiled skin with a satin sheen tracing every highlight",
+      "text_short": "oiled satin sheen"
+    },
+    {
+      "name": "rosy-flush",
+      "text": "a soft rosy flush warming the cheeks and upper chest",
+      "text_short": "soft rosy flush"
     }
   ]
 }

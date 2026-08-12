@@ -4,13 +4,14 @@
   "description": "Cozy-to-elegant nightwear (the SFW neighbor of the lingerie pools).",
   "suits": ["human"],
   "items": [
-    { "name": "silk-pajama-set", "text": "a piped silk pajama set in soft sheen", "text_short": "silk pajama set" },
-    { "name": "oversized-shirt", "text": "an oversized button-down shirt worn as sleepwear", "text_short": "oversized sleep shirt" },
-    { "name": "waffle-robe", "text": "a plush waffle-weave spa robe, loosely belted", "text_short": "waffle spa robe" },
-    { "name": "satin-slip", "text": "a knee-length satin slip with lace edging", "text_short": "satin slip" },
-    { "name": "flannel-set", "text": "a soft plaid flannel pajama set", "text_short": "flannel pajamas" },
-    { "name": "knit-lounge", "text": "a ribbed knit lounge set in muted tones", "text_short": "ribbed lounge set" },
-    { "name": "kimono-robe", "text": "a lightweight floral kimono robe over shorts", "text_short": "floral kimono robe" },
-    { "name": "cashmere-set", "text": "a cloud-soft cashmere lounge set", "text_short": "cashmere lounge set" }
+    { "name": "silk-pajama-set", "text": "a piped silk pajama set, contrast trim on the notch collar, soft sheen breaking at every fold", "text_short": "silk pajama set" },
+    { "name": "oversized-shirt", "text": "an oversized button-down shirt worn as sleepwear, cuffs undone, hem grazing the thighs", "text_short": "oversized sleep shirt" },
+    { "name": "waffle-robe", "text": "a plush waffle-weave spa robe, loosely belted, shawl collar slipping off one shoulder", "text_short": "waffle spa robe" },
+    { "name": "satin-slip", "text": "a knee-length satin slip, thin adjustable straps, delicate lace edging at the neckline", "text_short": "satin slip" },
+    { "name": "flannel-set", "text": "a soft brushed-flannel pajama set in muted plaid, buttons half-done", "text_short": "flannel pajamas" },
+    { "name": "knit-lounge", "text": "a ribbed knit lounge set, fitted tank and wide-leg pants in muted tones", "text_short": "ribbed lounge set" },
+    { "name": "kimono-robe", "text": "a lightweight floral kimono robe, sash tied loose, worn open over shorts", "text_short": "floral kimono robe" },
+    { "name": "cashmere-set", "text": "a cloud-soft cashmere lounge set, relaxed drape, sleeves pushed to the elbow", "text_short": "cashmere lounge set" },
+    { "name": "long-nightgown", "text": "a floor-length silk nightgown, empire seam, low draped back, the skirt moving like water", "text_short": "long silk nightgown" }
   ]
 }

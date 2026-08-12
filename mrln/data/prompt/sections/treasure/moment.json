@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "label": "Hoard Moment",
+  "description": "The story beat inside the hoard — items are tagged stealth / parley / wrath so template variants couple via tags_any.",
+  "items": [
+    {
+      "name": "held-breath",
+      "text": "the intruder frozen mid-step on the coin slope, one dislodged coin ringing away down the drift, the dragon's breathing unbroken somewhere above",
+      "text_short": "frozen mid-step",
+      "tags": ["stealth"]
+    },
+    {
+      "name": "shuttered-lantern",
+      "text": "the lantern shuttered to a single blade of light, swung slowly across the dark to find a path between the outstretched talons",
+      "text_short": "lantern cut to a sliver",
+      "tags": ["stealth"]
+    },
+    {
+      "name": "slow-reach",
+      "text": "a gloved hand a finger's width from the prize, sleeve pinched back so no cuff brushes the coins, eyes turned up toward the sleeping silhouette instead of the treasure",
+      "text_short": "the slow reach",
+      "tags": ["stealth"]
+    },
+    {
+      "name": "level-gaze",
+      "text": "the dragon's head lowered level with the intruder, a slit pupil taller than they are narrowing to appraise them, smoke curling politely from one nostril",
+      "text_short": "dragon's appraising gaze",
+      "tags": ["parley"]
+    },
+    {
+      "name": "coin-punctuation",
+      "text": "a bargain in progress, the intruder's palms open and empty, the dragon idly raking one talon through the coins so that every sentence ends in a slide of gold",
+      "text_short": "bargaining over gold",
+      "tags": ["parley"]
+    },
+    {
+      "name": "tribute-open",
+      "text": "an offered casket standing open on the coins between them, its contents the only thing in the vault the dragon is not looking at",
+      "text_short": "tribute casket open",
+      "tags": ["parley"]
+    },
+    {
+      "name": "coin-avalanche",
+      "text": "the hoard itself avalanching as the dragon surges up from underneath it, coins pouring off the wings in sheets, the whole slope going liquid underfoot",
+      "text_short": "waking coin avalanche",
+      "tags": ["wrath"]
+    },
+    {
+      "name": "furnace-throat",
+      "text": "the first furnace-glow kindling deep in the dragon's throat, rib-scales lighting from inside, every coin in the vault turning orange in sequence as the glow swings toward the intruder",
+      "text_short": "furnace-glow kindling",
+      "tags": ["wrath"]
+    },
+    {
+      "name": "tail-sweep",
+      "text": "a tail-sweep bursting through a mountain of stacked treasure in passing, the vault booming, coins and dust raining out of the dark above while the intruder dives clear",
+      "text_short": "tail-sweep through the hoard",
+      "tags": ["wrath"]
+    }
+  ]
+}

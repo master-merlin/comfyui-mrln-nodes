@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "label": "Dragon Hoard",
+  "description": "Inside the wyrm's vault: an interior lit by one flame reflected in ten thousand golden surfaces — stealth, parley or wrath via variants.",
+  "prefix": "Deep inside a dragon's hoard — a treasure-vault interior where nearly all light arrives as reflection, one small flame multiplied across coin, gold and gem. The dragon is the landscape; the intruder gives it scale.",
+  "slots": [
+    {
+      "id": "vault",
+      "ref": "location/hoard",
+      "label": "The Vault",
+      "emphasis": 1.15
+    },
+    {
+      "id": "trove",
+      "ref": "treasure/trove",
+      "label": "Underfoot",
+      "emphasis": 1.1
+    },
+    {
+      "id": "wyrm",
+      "ref": "animal/dragon",
+      "label": "The Wyrm",
+      "emphasis": 1.3
+    },
+    {
+      "id": "intruder",
+      "ref": "human/archetype",
+      "label": "The Intruder",
+      "tags_any": ["fantasy"],
+      "emphasis": 1.2
+    },
+    {
+      "id": "carried",
+      "ref": "product/prop",
+      "label": "Carried by the Intruder",
+      "tags_any": ["fantasy"],
+      "allow_empty": true,
+      "empty_weight": 4
+    }
+  ],
+  "variants": [
+    {
+      "name": "stealth",
+      "label": "The Heist",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "treasure/moment",
+          "label": "This Instant",
+          "tags_any": ["stealth"],
+          "default": "held-breath",
+          "emphasis": 1.2
+        }
+      ]
+    },
+    {
+      "name": "parley",
+      "label": "The Parley",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "treasure/moment",
+          "label": "This Instant",
+          "tags_any": ["parley"],
+          "default": "level-gaze",
+          "emphasis": 1.2
+        }
+      ]
+    },
+    {
+      "name": "wrath",
+      "label": "The Waking",
+      "slots": [
+        {
+          "id": "moment",
+          "ref": "treasure/moment",
+          "label": "This Instant",
+          "tags_any": ["wrath"],
+          "default": "furnace-throat",
+          "emphasis": 1.2
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "vault",
+    "trove",
+    "wyrm",
+    "intruder",
+    "carried",
+    "@variant"
+  ],
+  "suffix": "Hoard Rendering: (treasure-light — every lit surface fed by reflected gold, warm bounce stacked on warm bounce, darkness winning wherever the metal ends:1.25), (one believable flame as the sole light origin, gem-fire and coin-glints all agreeing on its direction:1.2), fine dust igniting to bright points where it drifts through the beam, painted in baroque hoard-tenebrism, the vault's true size told by how little of it the light can claim.",
+  "negative": "daylight, flat even lighting, electric light, modern objects, watermark, text, child, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

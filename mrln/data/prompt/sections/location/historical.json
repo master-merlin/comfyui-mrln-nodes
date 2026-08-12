@@ -60,6 +60,31 @@
       "name": "ruined-city-road",
       "text": "A crumbling ancient stone road weaving through the ruins of a forgotten city, ivy and moss reclaiming the fallen columns.",
       "text_short": "ancient ruined-city road"
+    },
+    {
+      "name": "gothic-cathedral-nave",
+      "text": "A Gothic cathedral nave, clustered columns rising into rib vaults, incense drifting through colored shafts of light from the stained-glass clerestory.",
+      "text_short": "Gothic cathedral nave"
+    },
+    {
+      "name": "grand-bazaar",
+      "text": "A vaulted grand bazaar, painted arches over lamplit stalls of carpets, brass and spice sacks, dust glowing in the air between the crowds.",
+      "text_short": "vaulted grand bazaar"
+    },
+    {
+      "name": "steam-era-platform",
+      "text": "A steam-era railway platform, a locomotive exhaling white clouds beneath the iron canopy, porters' trolleys stacked with leather trunks.",
+      "text_short": "steam railway platform"
+    },
+    {
+      "name": "coaching-inn-yard",
+      "text": "The galleried courtyard of a Tudor coaching inn, timber balconies on oak posts above cobbles rutted by carriage wheels, a mounting block beside the entrance arch.",
+      "text_short": "Tudor coaching-inn yard"
+    },
+    {
+      "name": "monastery-scriptorium",
+      "text": "A monastery scriptorium, slanted oak desks beneath high windows, inkhorns and quills beside gilded manuscripts weighted open under candle sconces.",
+      "text_short": "candlelit scriptorium"
     }
   ]
 }

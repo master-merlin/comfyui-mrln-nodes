@@ -2,8 +2,8 @@
   "version": 1,
   "label": "Teardown Sheet",
   "type": ["product", "object"],
-  "description": "The viral museum-teardown treatment: a product exploded into annotated floating components.",
-  "prefix": "A museum-quality technical teardown presentation — the product dismantled into a floating constellation of its own components, each part hovering in exact assembly order, annotated like a precious specimen.",
+  "description": "The viral museum-teardown treatment: a product presented as an annotated technical plate — exploded, cutaway or blueprint.",
+  "prefix": "A museum-quality technical presentation of a product — dismantled and annotated like a precious specimen, engineering beauty as the entire message.",
   "slots": [
     {
       "id": "product",
@@ -13,22 +13,10 @@
     },
     {
       "id": "treatment",
-      "ref": "style/graphic",
+      "ref": "style/technical-plate",
       "label": "Treatment",
-      "default": "exploded-teardown",
+      "default": "exploded-orthographic",
       "emphasis": 1.25
-    },
-    {
-      "id": "light",
-      "ref": "lighting/studio",
-      "label": "Lighting Conditions",
-      "default": "white-cyclorama"
-    },
-    {
-      "id": "framing",
-      "ref": "composition/framing",
-      "label": "Composition",
-      "default": "central-symmetry"
     },
     {
       "id": "palette",
@@ -37,7 +25,7 @@
       "allow_empty": true
     }
   ],
-  "suffix": "Technical Finish: (every screw, gasket and board rendered with catalog precision:1.25), fine leader lines to elegant labels, consistent soft shadows anchoring each floating part, engineering beauty as the message.",
+  "suffix": "Technical Finish: (every screw, gasket and board rendered with catalog precision:1.25), shadowless even studio light on a seamless ground, strict grid order and centered symmetry, fine leader lines to elegant labels, consistent soft shadows anchoring each floating part.",
   "negative": "clutter, watermark, chaotic arrangement, missing parts",
   "render": {
     "format": "string_labeled",

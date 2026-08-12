@@ -25,8 +25,9 @@
     },
     {
       "id": "attire",
-      "ref": "wardrobe/armor",
+      "ref": "wardrobe",
       "label": "Attire",
+      "tags_any": ["fantasy"],
       "allow_empty": true
     },
     {

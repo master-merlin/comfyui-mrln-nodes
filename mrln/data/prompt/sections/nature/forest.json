@@ -1,18 +1,20 @@
 {
   "version": 1,
   "label": "Forest",
-  "description": "Forest interiors as hero subjects.",
+  "description": "Forest interiors as hero subjects — season and succession readable in the trees.",
   "suits": ["nature"],
   "items": [
-    { "name": "redwood-cathedral", "text": "a cathedral grove of coastal redwoods, fog threading the columns", "text_short": "foggy redwood grove" },
-    { "name": "beech-bluebells", "text": "a spring beech wood floored wall-to-wall with bluebells", "text_short": "bluebell beech wood" },
-    { "name": "mossy-rainforest", "text": "temperate rainforest dripping in moss sleeves and ferns", "text_short": "moss-draped rainforest" },
-    { "name": "birch-graphic", "text": "a graphic stand of white birch trunks against dark undergrowth", "text_short": "white birch stand" },
-    { "name": "autumn-larch", "text": "golden larch forest burning against fresh early snow", "text_short": "golden larches in snow" },
-    { "name": "bamboo-sea", "text": "a rolling sea of bamboo swaying in green waves", "text_short": "rolling bamboo sea", "tags": ["anime"] },
-    { "name": "jungle-buttress", "text": "giant buttress roots fanning across a dim jungle floor", "text_short": "jungle buttress roots" },
-    { "name": "pine-snowload", "text": "boreal pines bowed under thick pillows of snow", "text_short": "snow-loaded pines" },
-    { "name": "olive-ancients", "text": "ancient olive trees, trunks twisted like rope over red earth", "text_short": "twisted ancient olives" },
-    { "name": "burned-regrowth", "text": "a burn-scarred forest hazed green with defiant regrowth", "text_short": "regrowth after fire" }
+    { "name": "redwood-cathedral", "text": "a cathedral grove of coastal redwoods in summer fog, the crowns combing water from the air to drip-feed their own roots, fire-blackened hollows healed over in living bark", "text_short": "foggy redwood grove" },
+    { "name": "beech-bluebells", "text": "a spring beech wood floored wall-to-wall with bluebells, flowering hard in the few weeks before the closing canopy takes the light, new leaves overhead still translucent lime", "text_short": "bluebell beech wood" },
+    { "name": "mossy-rainforest", "text": "temperate rainforest dripping after rain, every trunk sleeved in moss, ferns riding the branches, a fallen nurse log sprouting its own straight row of seedlings", "text_short": "moss-draped rainforest" },
+    { "name": "birch-graphic", "text": "a graphic stand of white birch against dark undergrowth, papery bark peeling in horizontal curls, black branch scars ticking every trunk", "text_short": "white birch stand" },
+    { "name": "autumn-larch", "text": "golden larch forest blazing against fresh early snow — the one conifer that drops its needles, turning whole mountainsides amber for a two-week window", "text_short": "golden larches in snow" },
+    { "name": "bamboo-sea", "text": "a rolling sea of bamboo swaying in green waves, polished culms clacking hollow where they cross, light strobing down the aisles between them", "text_short": "rolling bamboo sea", "tags": ["anime"] },
+    { "name": "jungle-buttress", "text": "giant buttress roots fanning like ship keels from a rainforest emergent, thin wooden walls bracing a canopy giant rooted in a hand-span of soil", "text_short": "jungle buttress roots" },
+    { "name": "pine-snowload", "text": "boreal spruce bowed under thick pillows of snowload, their narrow spire crowns built to shed it, the silence deep enough to hear a branch unload", "text_short": "snow-loaded pines" },
+    { "name": "olive-ancients", "text": "ancient olive trees on terraced red earth, trunks twisted into hollow silver rope by a thousand harvests, this year's leaves still grey-green and full", "text_short": "twisted ancient olives" },
+    { "name": "burned-regrowth", "text": "a burned forest one summer on, charred spars standing over a waist-high flood of magenta fireweed, pine cones sprung open by the very heat that killed them", "text_short": "regrowth after fire" },
+    { "name": "cloud-forest", "text": "a high cloud forest dripping in permanent mist, every branch upholstered in moss, orchids and hanging epiphytes", "text_short": "dripping cloud forest" },
+    { "name": "aspen-gold", "text": "an aspen grove turned uniform gold in one week, black-scarred white trunks — a single clonal organism changing color together", "text_short": "golden aspen clone grove" }
   ]
 }

@@ -1,19 +1,57 @@
 {
   "version": 1,
   "label": "Travel Poster",
-  "description": "Any place in the library becomes a vintage travel poster — location x graphic treatment x palette.",
-  "prefix": "A travel poster design.",
+  "description": "A destination distilled into a vintage travel poster — drawn per destination family, flavored by a real print process.",
+  "prefix": "A vintage travel poster design — one destination distilled into flat confident shapes and a single unforgettable view, the kind commissioned by a golden-age railway company.",
   "variables": [
     { "name": "caption", "label": "Poster caption", "default": "VISIT" }
   ],
   "slots": [
-    { "id": "destination", "ref": "location", "label": "Destination", "tags_none": ["boudoir"], "emphasis": 1.3 },
-    { "id": "treatment", "ref": "style/graphic", "label": "Treatment", "default": "vintage-travel-poster", "emphasis": 1.25 },
+    { "id": "print", "ref": "style/print", "label": "Print process", "default": "lithograph-vintage", "emphasis": 1.2 },
     { "id": "palette", "ref": "style/palette", "label": "Palette" },
     { "id": "season", "ref": "atmosphere/season", "label": "Season", "allow_empty": true },
     { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "horizon-low" }
   ],
-  "suffix": "elegant retro title block reading \"{caption}\", clean silkscreen-flat shapes, gallery-print quality",
+  "variants": [
+    {
+      "name": "city-break",
+      "label": "City break",
+      "slots": [
+        { "id": "destination", "ref": "location/urban", "label": "Destination", "emphasis": 1.3 }
+      ]
+    },
+    {
+      "name": "coastline",
+      "label": "Coastline",
+      "slots": [
+        { "id": "destination", "ref": "location/coastal", "label": "Destination", "emphasis": 1.3 }
+      ]
+    },
+    {
+      "name": "countryside",
+      "label": "Countryside",
+      "slots": [
+        { "id": "destination", "ref": "location/nature", "label": "Destination", "emphasis": 1.3 }
+      ]
+    },
+    {
+      "name": "japan",
+      "label": "Japan",
+      "slots": [
+        { "id": "destination", "ref": "location/japan", "label": "Destination", "emphasis": 1.3 }
+      ]
+    },
+    {
+      "name": "storied-places",
+      "label": "Storied places",
+      "slots": [
+        { "id": "destination", "ref": "location/historical", "label": "Destination", "emphasis": 1.3 }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["@variant", "print", "palette", "season", "framing"],
+  "suffix": "elegant retro title block reading \"{caption}\", flat confident poster shapes with clean registration, gallery-print quality",
   "negative": "photorealistic rendering, clutter, watermark",
   "render": { "format": "string", "joiner": ", " }
 }

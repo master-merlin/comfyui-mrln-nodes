@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Capital Fleet",
+  "description": "Capital-scale formations — whole fleets as a single subject, every item selling tonnage through concrete scale cues.",
+  "suits": ["object", "vehicle"],
+  "tags": ["scifi"],
+  "items": [
+    {
+      "name": "dreadnought-wedge",
+      "text": "a wedge of kilometer-class dreadnoughts in staggered echelon, gun batteries the size of city blocks along each flank, escort frigates holding tight to the hulls like pilot fish",
+      "text_short": "dreadnought wedge formation"
+    },
+    {
+      "name": "carrier-group",
+      "text": "a fleet carrier at the center of its screen, launch bays glowing along the ventral spine, fighter wings streaming out of the catapult decks in ordered threads",
+      "text_short": "carrier with fighter screen"
+    },
+    {
+      "name": "colony-ark",
+      "text": "a generation ark the size of a mountain range, habitat rings turning slowly amidships, its hull a geography of vents, domes and canyon-deep panel seams",
+      "text_short": "mountain-sized colony ark"
+    },
+    {
+      "name": "refugee-convoy",
+      "text": "a ragged refugee convoy of mismatched freighters and old liners, hull patches and improvised armor plating, holds strung with lit viewports like hillside villages",
+      "text_short": "ragged refugee convoy"
+    },
+    {
+      "name": "parade-escort",
+      "text": "a ceremonial escort fleet in parade formation, polished hulls mirror-bright, signal lamps blinking in synchronized welcome patterns down the line",
+      "text_short": "parade escort fleet"
+    },
+    {
+      "name": "scarred-battle-group",
+      "text": "a battle group limping home, scorched hulls open to vacuum in places, one cruiser under tow, running lights burning defiantly along every intact deck",
+      "text_short": "scarred returning battle group"
+    },
+    {
+      "name": "harvester-fleet",
+      "text": "a skimmer-harvester fleet trailing intake plumes, ram scoops glowing at the mouth, tanker bellies swollen and streaming condensate",
+      "text_short": "atmosphere harvester fleet"
+    },
+    {
+      "name": "leviathan-flagship",
+      "text": "one leviathan flagship alone, so long its bow and stern hang under different weather, antenna spires combing through the cloud tops as it moves",
+      "text_short": "lone leviathan flagship"
+    },
+    {
+      "name": "drop-armada",
+      "text": "an invasion drop armada disgorging landing craft in synchronized waves, drop pods streaking down ahead of it on parallel fire trails",
+      "text_short": "invasion drop armada"
+    },
+    {
+      "name": "survey-flotilla",
+      "text": "a quiet survey flotilla at high anchor, sensor booms unfolded like insect antennae, hulls painted in high-visibility science orange against the sky",
+      "text_short": "survey flotilla at anchor"
+    }
+  ]
+}

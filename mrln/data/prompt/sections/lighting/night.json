@@ -1,47 +1,81 @@
 {
   "version": 1,
   "label": "Night Lighting",
+  "description": "Night keys — ambient skylight, practicals and artificial sources, each with its color cast and falloff behavior.",
   "tags": [
     "night"
   ],
   "items": [
     {
       "name": "blue-hour",
-      "text": "The deep, cool, ambient glow of the blue hour."
+      "text": "The deep cool ambience of blue hour, the sky itself the only soft source bathing every surface in even cobalt, while any practical light burns warm orange by contrast.",
+      "text_short": "blue hour ambience"
     },
     {
       "name": "neon-wash",
-      "text": "A vibrant, complex wash of multi-colored light from dense, overlapping neon signs."
+      "text": "A layered wash of colored light from dense overlapping neon signs, magenta and cyan crossing from opposite sides, saturated reflections doubling in every glossy surface.",
+      "text_short": "overlapping neon wash",
+      "tags": [
+        "neon"
+      ]
+    },
+    {
+      "name": "single-neon-sign",
+      "text": "One buzzing neon sign as the only source, its saturated color modeling the near side of the subject and dying within a few meters, the sign burning a second time in reflection on wet ground or glass.",
+      "text_short": "single neon sign key",
+      "tags": [
+        "neon"
+      ]
     },
     {
       "name": "full-moon",
-      "text": "A clear, cold night illuminated by a full moon, casting long, soft, cool-toned shadows."
+      "text": "A clear cold night under a full moon, one soft blue-white key from high above casting long low-contrast shadows, highlights silvered and shadow detail still readable.",
+      "text_short": "full-moon key light"
     },
     {
       "name": "headlights-only",
-      "text": "A pitch-black environment illuminated solely by the car's own advanced headlights and taillights."
+      "text": "A pitch-black environment lit solely by the vehicle's own headlights and taillights, twin hard beams tunneling forward through the dark while red glow pools behind.",
+      "text_short": "own headlights only"
     },
     {
       "name": "chiaroscuro",
-      "text": "A dramatic, high-contrast chiaroscuro effect from a single, hard light source."
+      "text": "Dramatic chiaroscuro from a single hard practical, one side modeled in bright relief while the rest of the scene falls immediately to black.",
+      "text_short": "night chiaroscuro"
     },
     {
       "name": "aurora-curtains",
-      "text": "The ethereal curtains of a visible aurora borealis painting the sky."
+      "text": "Curtains of aurora rippling green and violet across the sky, enough skyglow to rim every upward-facing edge while the ground holds deep blue shadow.",
+      "text_short": "aurora skyglow"
     },
     {
       "name": "storm-light-break",
-      "text": "A moody, atmospheric scene under dark, heavy storm clouds, with dramatic, directional light breaking through a small gap."
+      "text": "Heavy night storm cloud with directional light breaking through one small gap, a single drifting pool of illumination surrounded by darkness.",
+      "text_short": "storm light break"
     },
     {
       "name": "sodium-vapor",
-      "text": "The characteristic warm orange wash of sodium-vapor streetlights, heavy color cast pooling beneath each mast with deep shadow between.",
+      "text": "The characteristic monochrome-orange wash of sodium-vapor streetlights, color collapsing to amber inside each pool beneath a mast, deep shadow gaps between them.",
       "text_short": "sodium-vapor streetlight glow"
     },
     {
       "name": "led-street",
-      "text": "Crisp cool-white LED streetlighting, clean hard-edged pools of illumination and modern, slightly clinical contrast.",
+      "text": "Crisp cool-white LED streetlighting, clean hard-edged pools of illumination with sharp cutoff lines and a modern, slightly clinical contrast.",
       "text_short": "cool LED streetlight pools"
+    },
+    {
+      "name": "gas-station-canopy",
+      "text": "The fluorescent island of a gas-station canopy at night, hard even downlight snapping color and specular detail inside its pool while blackness presses in beyond the apron.",
+      "text_short": "gas-station canopy light"
+    },
+    {
+      "name": "shop-window-glow",
+      "text": "Soft spill from a lit shop window, a broad warm side-key raking the subject on the dark street, display colors reflected back as gentle fill.",
+      "text_short": "shop-window spill"
+    },
+    {
+      "name": "stadium-floods",
+      "text": "Banks of stadium floodlights crossing from four high masts, every object throwing a rosette of overlapping pale hard-edged shadows, the air above the lamps glowing with insect-flecked haze.",
+      "text_short": "crossed stadium floodlights"
     }
   ]
 }

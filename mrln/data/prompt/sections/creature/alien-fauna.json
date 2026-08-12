@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Alien Fauna",
+  "description": "Speculative-zoology wildlife: invented animals whose anatomy obeys real physics — wing loading, gait, buoyancy.",
+  "suits": ["creature", "animal"],
+  "tags": ["scifi"],
+  "items": [
+    { "name": "lowgrav-glider", "text": "a low-gravity glider beast soaring between rock spires, membrane wings stretched across four elongated limb struts, its body little more than keel and lung", "text_short": "low-gravity membrane glider" },
+    { "name": "hexapod-grazer", "text": "a six-legged grazer crossing violet steppe in a rippling paired gait, middle limbs carrying the weight while stalked eyes sweep opposite horizons", "text_short": "six-legged steppe grazer" },
+    { "name": "filter-strider", "text": "a stilt-legged filter-strider wading a shallow alien lagoon, trailing a fringed feeding skirt through the water, knees flexing backward like a wader's", "text_short": "stilt-legged filter-strider" },
+    { "name": "lantern-pack", "text": "a pack of lantern-jawed predators coursing in silent formation, bioluminescent throat pouches flashing coordinated hunting signals", "text_short": "bioluminescent pack hunters", "tags": ["night"], "requires": ["night"] },
+    { "name": "armored-burrower", "text": "an armored burrower breaching the dune surface, overlapping plates shedding sand in sheets, spade-clawed forelimbs still churning", "text_short": "plated dune burrower" },
+    { "name": "sky-whale", "text": "a sky-whale drifting through the cloud deck, gas-bladder flanks translucent against the light, fin membranes rowing slowly — a floater, not a flier", "text_short": "drifting gas-bladder sky-whale" },
+    { "name": "spore-drifter", "text": "a jellyfish-light spore-drifter riding slope thermals, trailing meters of glassy feeding filament over the fungal canopy", "text_short": "thermal-riding spore-drifter" },
+    { "name": "highgrav-titan", "text": "a high-gravity grazer built like a bridge, four columnar legs under a compressed body, browsing through a low trunk because on this world raising a head is a structural expense", "text_short": "high-gravity graviportal grazer" },
+    { "name": "vent-reef-grazer", "text": "a blind vent-reef grazer mowing bacterial mats at the base of a black smoker, plated back shrugging off the scalding updraft, rows of tube-feet gripping the chimney rock", "text_short": "vent-mat grazer", "tags": ["underwater"] },
+    { "name": "canopy-brachiator", "text": "a six-limbed brachiator swinging through the alien canopy on its middle and hind pairs, forelimbs freed to cradle an infant, hands worn down to permanent hooks", "text_short": "six-limbed canopy brachiator" }
+  ]
+}

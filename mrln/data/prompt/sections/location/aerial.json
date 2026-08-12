@@ -43,6 +43,33 @@
       "name": "interchange-knot",
       "text": "A multi-level motorway interchange from above, sweeping ramps knotted into concrete calligraphy.",
       "text_short": "motorway interchange knot"
+    },
+    {
+      "name": "volcano-caldera",
+      "text": "A volcanic caldera from above, a turquoise crater lake ringed by bare ash slopes and faint threads of fumarole steam.",
+      "text_short": "caldera lake from above"
+    },
+    {
+      "name": "star-dunes",
+      "text": "A sea of star dunes from above, wind-sharpened ridges casting crisp sinuous shadows across apricot sand.",
+      "text_short": "star dunes from above"
+    },
+    {
+      "name": "terraced-rice-paddies",
+      "text": "Flooded rice terraces from above, stepped water surfaces mirroring the sky between mud bunds that contour every fold of the hillside.",
+      "text_short": "mirrored rice terraces"
+    },
+    {
+      "name": "tulip-field-stripes",
+      "text": "Bulb fields from above, saturated stripes of red, yellow and violet running arrow-straight to a windmill on a drainage canal.",
+      "text_short": "tulip field color stripes"
+    },
+    {
+      "name": "city-lights-grid",
+      "text": "A city at night from high above, amber and white street grids branching like circuitry around a dark river bend.",
+      "text_short": "city light grid from above",
+      "tags": ["night"],
+      "requires": ["night"]
     }
   ]
 }

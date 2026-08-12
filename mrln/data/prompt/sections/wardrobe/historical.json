@@ -1,19 +1,24 @@
 {
   "version": 1,
   "label": "Historical Wardrobe",
-  "description": "Period costume. Tagged 'historical' for genre coupling.",
+  "description": "Period costume with era-accurate construction. Tagged 'historical' for genre coupling.",
   "suits": ["human"],
   "tags": ["historical"],
   "items": [
-    { "name": "victorian-gown", "text": "a high-collared Victorian gown with jet buttons and a bustle", "text_short": "Victorian gown" },
-    { "name": "victorian-gentleman", "text": "a Victorian frock coat, waistcoat, cravat and pocket watch", "text_short": "Victorian frock coat" },
-    { "name": "medieval-kirtle", "text": "a laced medieval kirtle over a linen chemise", "text_short": "medieval kirtle" },
-    { "name": "medieval-doublet", "text": "a padded medieval doublet with a sword belt", "text_short": "medieval doublet" },
-    { "name": "twenties-flapper", "text": "a 1920s beaded flapper dress with a feather headband", "text_short": "1920s flapper look" },
-    { "name": "twenties-suit", "text": "a 1920s three-piece pinstripe suit with a fedora", "text_short": "1920s pinstripe suit" },
-    { "name": "regency-empire", "text": "a Regency empire-waist muslin gown with long gloves", "text_short": "Regency muslin gown" },
-    { "name": "fifties-swing", "text": "a 1950s polka-dot swing dress with a cinched belt", "text_short": "1950s swing dress" },
-    { "name": "pirate-coat", "text": "a weathered age-of-sail captain's coat with brass buttons", "text_short": "age-of-sail coat" },
-    { "name": "edwardian-lace", "text": "an Edwardian high-neck lace blouse with a long walking skirt", "text_short": "Edwardian lace blouse" }
+    { "name": "victorian-gown", "text": "a high-collared 1880s Victorian gown, boned bodice closed with jet buttons, draped overskirt gathered into a bustle", "text_short": "Victorian bustle gown" },
+    { "name": "victorian-gentleman", "text": "a Victorian frock coat over a brocade waistcoat, silk cravat pinned at the throat, pocket watch on an albert chain", "text_short": "Victorian frock coat" },
+    { "name": "medieval-kirtle", "text": "a front-laced medieval wool kirtle over a linen chemise, fitted through the torso, skirt falling in deep gathered folds", "text_short": "medieval kirtle" },
+    { "name": "medieval-doublet", "text": "a padded medieval doublet, pewter buttons and lacing points at the waist, sword belt slung across the hip", "text_short": "medieval doublet" },
+    { "name": "twenties-flapper", "text": "a 1920s drop-waist flapper dress, tiers of beaded fringe, marabou feather headband over finger-waved hair", "text_short": "1920s flapper look" },
+    { "name": "twenties-suit", "text": "a 1920s three-piece pinstripe suit, high-waisted trousers on braces, fedora brim snapped low", "text_short": "1920s pinstripe suit" },
+    { "name": "regency-empire", "text": "a Regency empire-waist gown of sheer white muslin, short puffed sleeves, long kidskin gloves", "text_short": "Regency muslin gown" },
+    { "name": "fifties-swing", "text": "a 1950s polka-dot swing dress, cinched patent belt, full circle skirt floating on crinoline petticoats", "text_short": "1950s swing dress" },
+    { "name": "pirate-coat", "text": "a weathered age-of-sail captain's justacorps, deep turned-back cuffs, tarnished brass buttons and a leather baldric", "text_short": "age-of-sail coat" },
+    { "name": "edwardian-lace", "text": "an Edwardian high-neck blouse of pin-tucked cotton lace, leg-of-mutton sleeves, long walking skirt over an S-bend silhouette", "text_short": "Edwardian lace blouse" },
+    { "name": "renaissance-gown", "text": "an Italian Renaissance gown of crimson velvet and gold brocade, square neckline, pearl-strung sleeves tied on with points", "text_short": "Renaissance velvet gown" },
+    { "name": "sixties-mod", "text": "a 1960s mod shift minidress in color-block wool, white go-go boots, geometric drop earrings", "text_short": "60s mod shift dress" },
+    { "name": "rococo-court-gown", "text": "a 1750s robe à la française, sack-back pleats falling from the shoulders, skirts spread wide over panniers, ruched silk trim and a stomacher laced with bows", "text_short": "rococo court gown" },
+    { "name": "seventies-disco", "text": "a 1970s halter jumpsuit in liquid gold lamé, plunging neckline, wide flared legs over platform sandals, stacks of thin bangles", "text_short": "70s disco jumpsuit" },
+    { "name": "greek-chiton", "text": "an ancient Greek chiton of fine pleated linen, pinned at the shoulders with bronze fibulae, girdled twice at the waist, a himation draped over one arm", "text_short": "Greek pleated chiton" }
   ]
 }

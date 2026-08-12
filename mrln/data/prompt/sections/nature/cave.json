@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "label": "Cave / Underground",
+  "description": "Underground landforms as hero subjects — the light is always borrowed, single-source or self-made.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "stalactite-hall", "text": "a limestone hall where stalactites and stalagmites meet in full columns, every surface wet-glossed with flowstone", "text_short": "stalactite column hall" },
+    { "name": "sea-cave-shaft", "text": "a sea cave under a collapsed roof, one shaft of light dropping onto turquoise water, the walls black around the glow", "text_short": "sea cave light shaft" },
+    { "name": "crystal-beams", "text": "selenite crystal beams the size of felled trees crossing a cave void, faces glassy above hot mineral haze", "text_short": "giant selenite beams" },
+    { "name": "lava-tube", "text": "a basalt lava tube running arrow-straight, walls ribbed with frozen flow lines, a green-lit skylight breach far ahead", "text_short": "ribbed lava tube" },
+    { "name": "jungle-cenote", "text": "a jungle cenote, roots and vines dropping thirty meters from the rim to still ultramarine water", "text_short": "root-draped cenote" },
+    { "name": "glowworm-grotto", "text": "a grotto ceiling constellated with blue glowworm lures, each hanging its beaded silk snare, doubled in black still water", "text_short": "glowworm ceiling grotto" },
+    { "name": "cave-pearls", "text": "a nest of cave pearls in a shallow flowstone pool, each stone sphere polished into concentric shells by centuries of dripwater turning it in place", "text_short": "polished cave pearls" }
+  ]
+}

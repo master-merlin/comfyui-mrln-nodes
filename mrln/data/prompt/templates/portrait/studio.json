@@ -9,7 +9,8 @@
       "id": "subject",
       "ref": "human/profile",
       "label": "The subject is",
-      "default": "female-glamour"
+      "default": "female-glamour",
+      "tags_none": ["boudoir"]
     },
     {
       "id": "expression",
@@ -41,15 +42,17 @@
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
+      "ref": "camera/portrait-glass",
       "label": "Optics",
-      "default": "85mm-f12"
+      "default": "85mm-f14",
+      "tags_any": ["studio"]
     },
     {
       "id": "film",
       "ref": "camera/film",
       "label": "Film Character",
-      "allow_empty": true
+      "allow_empty": true,
+      "tags_none": ["night"]
     },
     {
       "id": "grade",

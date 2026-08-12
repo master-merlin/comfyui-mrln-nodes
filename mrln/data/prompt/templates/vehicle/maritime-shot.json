@@ -2,12 +2,12 @@
   "version": 1,
   "label": "Maritime Shot",
   "type": ["object", "vehicle", "ship"],
-  "description": "Maritime photography: vessel and sea state, weather doing half the work.",
+  "description": "Maritime photography: a state-neutral vessel portrait meets an independent sea state, weather doing half the work.",
   "prefix": "A powerful maritime photograph — vessel and ocean locked in the old conversation, the sea state as much the subject as the ship riding it.",
   "slots": [
     {
       "id": "vessel",
-      "ref": "vehicle/ship/type",
+      "ref": "vehicle/ship/vessel",
       "label": "Vessel",
       "emphasis": 1.2
     },
@@ -15,6 +15,7 @@
       "id": "state",
       "ref": "vehicle/ship/state",
       "label": "Sea State",
+      "tags_none": ["night"],
       "emphasis": 1.15
     },
     {
@@ -34,9 +35,9 @@
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
+      "ref": "vehicle/craft/optics",
       "label": "Optics",
-      "default": "135mm-compression"
+      "default": "135mm-prime"
     },
     {
       "id": "framing",

@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "label": "Camera Craft",
+  "description": "Field camera craft for machines: motion rigs and tracking work (tag 'motion') and static night-exposure discipline (tag 'static').",
+  "suits": ["object", "vehicle"],
+  "items": [
+    {
+      "name": "car-to-car-boom",
+      "text": "shot car-to-car from a gyro-stabilized boom arm, the lens held a metre off the bodywork at speed, road and lights ripping past in long streaks",
+      "text_short": "car-to-car gyro boom",
+      "tags": ["motion"]
+    },
+    {
+      "name": "panning-telephoto",
+      "text": "a disciplined telephoto pan at 1/125s, the body razor sharp against a background dragged into pure horizontal streaks",
+      "text_short": "telephoto pan, streaked background",
+      "tags": ["motion"]
+    },
+    {
+      "name": "rear-curtain-chase",
+      "text": "slow shutter from the chase vehicle with rear-curtain sync, ambient light smearing into trailing ribbons that snap into one crisp machine at the flash",
+      "text_short": "rear-curtain chase blur",
+      "tags": ["motion"]
+    },
+    {
+      "name": "invisible-rig",
+      "text": "the classic rig shot, a long exposure at walking pace with the support arm retouched away, wheels turning and ground flowing while the body stays still-life sharp",
+      "text_short": "invisible rig shot, flowing ground",
+      "tags": ["motion"]
+    },
+    {
+      "name": "fpv-dive",
+      "text": "an FPV drone threading past mid-corner, ultra-wide lens inches from the aero, the horizon rolling with the line of the chase",
+      "text_short": "FPV drone chase pass",
+      "tags": ["motion"]
+    },
+    {
+      "name": "helicopter-tracking",
+      "text": "an aerial long lens tracking from a helicopter holding formation above the road, the machine pinned to its own racing line",
+      "text_short": "helicopter tracking long lens",
+      "tags": ["motion"]
+    },
+    {
+      "name": "ground-remote",
+      "text": "a remote camera bolted centimetres above the tarmac at the apex, the machine arriving huge over the front element",
+      "text_short": "apex ground remote",
+      "tags": ["motion"]
+    },
+    {
+      "name": "tripod-trail-weave",
+      "text": "an eight-second tripod exposure, passing traffic woven into red and white ribbons around the stationary machine",
+      "text_short": "long-exposure traffic ribbons",
+      "tags": ["static", "night"]
+    },
+    {
+      "name": "underexposed-practicals",
+      "text": "exposure keyed two stops under to the practical lights alone, the machine held in their glow while the rest of the frame falls away to black",
+      "text_short": "underexposed to practicals",
+      "tags": ["static", "night"]
+    },
+    {
+      "name": "puddle-skim",
+      "text": "the lens skimmed at puddle level, machine and reflection stacked into one symmetrical composition",
+      "text_short": "puddle-level reflection stack",
+      "tags": ["static"]
+    },
+    {
+      "name": "wand-orbit",
+      "text": "a slow orbital light-painting walk with an LED wand, one seamless highlight traced around the parked silhouette",
+      "text_short": "LED wand orbit",
+      "tags": ["static", "night"]
+    }
+  ]
+}

@@ -1,32 +1,37 @@
 {
   "version": 1,
   "label": "Futuristic Location",
+  "description": "Near-future cityscapes and megastructures. Tagged 'scifi' for genre-filtered templates.",
   "tags": ["scifi"],
   "items": [
     {
       "name": "blade-runner-district",
-      "text": "A wide, multi-lane street in a futuristic financial district like 'Blade Runner', where monolithic skyscrapers are adorned with massive, animated holographic advertisements.",
+      "text": "A rain-hazed street in a future financial district, monolithic towers faced with colossal animated holographic advertisements, their colors pooling on the wet lanes below.",
+      "text_short": "holo-ad tower district",
       "tags": [
         "night"
       ]
     },
     {
       "name": "high-tech-street",
-      "text": "A generic high-tech city street, with glowing architectural elements and clean, minimalist lines.",
+      "text": "A high-tech city street, seamless glass facades with glowing architectural seams, embedded light strips guiding silent traffic between minimalist towers.",
+      "text_short": "glowing high-tech street",
       "tags": [
         "night"
       ]
     },
     {
       "name": "space-station-hangar",
-      "text": "Inside a futuristic space station hangar bay with a large viewport showing a view of Earth or a nebula.",
+      "text": "Inside an orbital station hangar bay, deck lighting strips converging on the open aperture where the blue curve of Earth hangs, service drones docked along the gantry walls.",
+      "text_short": "orbital hangar, Earth in view",
       "tags": [
         "night"
       ]
     },
     {
       "name": "underwater-tunnel",
-      "text": "A transparent, acrylic underwater tunnel, surrounded by the dark water and deep-sea marine life of a massive aquarium.",
+      "text": "A transparent acrylic tunnel through a vast dark aquarium, rays and silver bait balls drifting over the curved ceiling, caustic light rippling along the walkway.",
+      "text_short": "acrylic underwater tunnel",
       "tags": [
         "night",
         "underwater"
@@ -52,6 +57,22 @@
       "text": "The cathedral hall of a fusion plant, the torus vessel glowing faint blue behind layered containment glass.",
       "text_short": "glowing fusion hall",
       "tags": ["night"]
+    },
+    {
+      "name": "rooftop-vertiport",
+      "text": "A rooftop vertiport at tower height, illuminated landing rings and windsocks among antenna masts, numbered pads waiting for air taxis.",
+      "text_short": "rooftop vertiport pads"
+    },
+    {
+      "name": "charging-plaza",
+      "text": "A canopied hypercharging plaza, light-guide strips pulsing along each stall as liquid-cooled cables arc to waiting vehicles, status rings glowing beneath a photovoltaic roof.",
+      "text_short": "glowing EV charging plaza",
+      "tags": ["night"]
+    },
+    {
+      "name": "seawall-crest-road",
+      "text": "A service road along the crest of a megastructure tidal seawall, marker lights embedded in the parapet, turbine halls humming below and open ocean stretching to the far side.",
+      "text_short": "megastructure seawall road"
     }
   ]
 }

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "label": "Pour Shot",
-  "type": ["food"],
-  "description": "High-speed liquid commercial: a drink frozen mid-pour at 1/4000s.",
-  "prefix": "A high-speed commercial liquid photograph — the pour frozen at its most beautiful millisecond, physics turned into sculpture.",
+  "type": ["food", "object"],
+  "description": "High-speed liquid commercial: a drink frozen mid-pour at 1/4000s on a purpose-built tabletop surface.",
+  "prefix": "A high-speed commercial liquid photograph — the pour frozen at its most beautiful millisecond at 1/4000 second, physics turned into sculpture.",
   "slots": [
     {
       "id": "hero",
@@ -12,28 +12,17 @@
       "emphasis": 1.3
     },
     {
-      "id": "staging",
-      "ref": "product/staging",
-      "label": "Staged",
-      "default": "splash-freeze"
+      "id": "surface",
+      "ref": "product/surface",
+      "label": "On",
+      "default": "wet-slate"
     },
     {
       "id": "light",
-      "ref": "lighting/studio",
+      "ref": "lighting/still-life",
       "label": "Lighting Conditions",
-      "default": "rim-kicker"
-    },
-    {
-      "id": "particles",
-      "ref": "atmosphere/particles",
-      "label": "Suspended",
-      "default": "frozen-splash"
-    },
-    {
-      "id": "settings",
-      "ref": "camera/settings",
-      "label": "Camera",
-      "default": "sports-freeze"
+      "tags_none": ["dark"],
+      "default": "strobe-freeze"
     },
     {
       "id": "palette",

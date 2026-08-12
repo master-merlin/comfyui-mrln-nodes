@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "label": "Food Moment",
+  "description": "The frozen action frame appetite campaigns are built on.",
+  "suits": ["food", "object"],
+  "items": [
+    { "name": "cheese-pull", "text": "a slow cheese pull, ropes of molten mozzarella stretching between slice and pie, strands thinning to glass threads", "text_short": "molten cheese pull" },
+    { "name": "honey-ribbon", "text": "honey ribboning off a wooden dipper, the falling ribbon folding on itself in slow amber coils", "text_short": "amber honey ribbon" },
+    { "name": "ganache-pour", "text": "warm ganache poured over a cake, the glossy flood front advancing and curtaining down the sides", "text_short": "glossy ganache pour" },
+    { "name": "brulee-crack", "text": "a spoon breaking through crème brûlée, the amber sugar glass shattering over trembling custard", "text_short": "crème brûlée crack" },
+    { "name": "flambe-flare", "text": "a pan flambé at full flare, blue-rooted flames rolling over caramelizing fruit", "text_short": "pan flambé flare" },
+    { "name": "sugar-dust", "text": "powdered sugar sifting down through raking light, settling on dark chocolate like first snow", "text_short": "sifting sugar dust" },
+    { "name": "yolk-break", "text": "a golden yolk broken open, slow yellow lava finding every crevice of the dish below", "text_short": "golden yolk break" },
+    { "name": "butter-baste", "text": "butter-basting mid-spoonful, foaming brown butter and thyme riding over a searing crust", "text_short": "foaming butter baste" },
+    { "name": "torch-sear", "text": "a chef's torch kissing the surface, fat blistering and pearling at the exact line of the flame", "text_short": "torch sear line" },
+    { "name": "steam-burst", "text": "a bao torn open, a backlit plume of steam bursting from the soft white interior", "text_short": "torn bao steam burst", "tags": ["steam"] },
+    { "name": "oil-drizzle", "text": "olive oil drizzled in one thin gold thread, catching the light as it pools into a green-gold coin", "text_short": "gold oil drizzle" },
+    { "name": "noodle-lift", "text": "noodles lifted high on chopsticks, broth streaming back into the bowl below, backlit steam wrapping every strand", "text_short": "chopstick noodle lift", "tags": ["steam"] },
+    { "name": "wok-toss", "text": "a wok toss at full flame, rice and scallions airborne in one sheet, a tongue of fire climbing the rim, smoke rolling off the carbon steel", "text_short": "flaming wok toss" },
+    { "name": "salt-pinch", "text": "a chef's pinch of flaky salt falling from height, crystals catching the light like slow confetti over the sliced crust below", "text_short": "falling salt pinch" },
+    { "name": "sauce-nappe", "text": "sauce spooned in a slow nappe over the plated fillet, the coat thick enough to hold its edge, the excess drawing one clean line to the rim", "text_short": "spooned sauce nappe" }
+  ]
+}

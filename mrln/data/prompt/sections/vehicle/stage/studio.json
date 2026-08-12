@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Vehicle Stage",
+  "description": "Automotive studio stages — architecture, floor and backdrop only; the light rig is a separate dimension.",
+  "suits": ["object", "vehicle", "car", "motorcycle"],
+  "items": [
+    {
+      "name": "turntable-reveal-hall",
+      "text": "A reveal hall with a flush recessed turntable, its brushed-steel ring set into seamless resin flooring, matte charcoal walls curving away without a single corner.",
+      "text_short": "recessed turntable reveal hall"
+    },
+    {
+      "name": "clay-atelier",
+      "text": "An automotive design atelier, full-size clay bucks shrouded in muslin behind the finished machine, tape drawings and section templates pinned along the wall rails.",
+      "text_short": "design atelier, shrouded clay bucks"
+    },
+    {
+      "name": "black-water-stage",
+      "text": "A light-sealed black stage flooded with five millimetres of still water, every line of the machine restated in a perfect dark mirror.",
+      "text_short": "black water-mirror stage"
+    },
+    {
+      "name": "concrete-plinth-hall",
+      "text": "A brutalist gallery hall of power-floated concrete, the machine raised on a low board-marked plinth, shadow gaps in place of skirtings.",
+      "text_short": "brutalist concrete plinth hall"
+    },
+    {
+      "name": "led-hoop-tunnel",
+      "text": "A tunnel of programmable LED hoops receding behind the machine, each ring a clean addressable circle of light shrinking toward black.",
+      "text_short": "LED hoop tunnel receding"
+    },
+    {
+      "name": "gallery-rotunda",
+      "text": "A white museum rotunda beneath a glazed oculus, the machine centered on inlaid stone paving that radiates from its footprint.",
+      "text_short": "museum rotunda under oculus"
+    },
+    {
+      "name": "drape-stage",
+      "text": "A stage hung with heavy charcoal molton drapes that swallow every wall, the bare polished floor holding the only reflections in the room.",
+      "text_short": "charcoal drape stage, polished floor"
+    },
+    {
+      "name": "atrium-showcase",
+      "text": "A double-height glass atrium showcase, slender steel columns and a book-matched marble floor spreading beneath the machine.",
+      "text_short": "glass atrium, book-matched marble floor"
+    }
+  ]
+}

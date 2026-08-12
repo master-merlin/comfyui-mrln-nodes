@@ -2,16 +2,14 @@
   "version": 1,
   "label": "Blueprint Sheet",
   "type": ["object", "vehicle"],
-  "description": "The trending infographic treatment aimed at machines: any vehicle rendered as an annotated technical sheet.",
+  "description": "The trending infographic treatment aimed at machines: a blueprint-worthy subject rendered in a complete technical-sheet graphic language.",
   "prefix": "A technical presentation sheet.",
   "slots": [
-    { "id": "subject", "ref": "vehicle", "label": "Machine", "emphasis": 1.25 },
-    { "id": "treatment", "ref": "style/graphic", "label": "Graphic treatment", "default": "blueprint-annotation", "emphasis": 1.3 },
-    { "id": "light", "ref": "lighting/studio", "label": "Light", "default": "white-cyclorama" },
-    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "central-symmetry" },
-    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "f8-deep" }
+    { "id": "subject", "ref": "vehicle/machine", "label": "Machine", "emphasis": 1.25 },
+    { "id": "treatment", "ref": "vehicle/technical-sheet", "label": "Graphic treatment", "default": "cyanotype-blueprint", "emphasis": 1.3 },
+    { "id": "light", "ref": "vehicle/craft/studio-light", "label": "Light", "tags_none": ["car"], "default": "bounce-cove-wrap" }
   ],
-  "suffix": "precise draftsman linework, labeled callouts, engineering-poster clarity",
-  "negative": "clutter, watermark, illegible scribbles",
+  "suffix": "precise draftsman linework, labeled callouts, engineering-poster clarity, every annotation legible",
+  "negative": "clutter, watermark, illegible scribbles, warped linework",
   "render": { "format": "string", "joiner": ", " }
 }

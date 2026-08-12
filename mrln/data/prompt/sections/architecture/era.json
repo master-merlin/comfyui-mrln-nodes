@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "label": "Era Language",
+  "description": "Buildings speaking one era's design language fluently.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "romanesque-priory", "text": "a Romanesque priory, round arches on squat drum columns, fortress-thick walls letting in arrow-slit light", "text_short": "romanesque priory", "tags": ["historical"] },
+    { "name": "palladian-villa", "text": "a Palladian villa in honey stone, temple portico and shallow dome in perfect bilateral symmetry above terraced lawns", "text_short": "palladian villa", "tags": ["historical"] },
+    { "name": "victorian-gothic", "text": "a High Victorian Gothic hall, polychrome brick banding, pointed arcades, iron roof cresting bristling with finials", "text_short": "victorian gothic hall", "tags": ["historical"] },
+    { "name": "streamline-moderne", "text": "a streamline-moderne seaside pavilion, rounded white decks stacked like an ocean liner, porthole windows and tubular chrome rails", "text_short": "streamline moderne pavilion", "tags": ["historical"] },
+    { "name": "bauhaus-block", "text": "a Bauhaus workshop block, crisp white render, ribbon windows, a glass curtain corner turned without a single column", "text_short": "bauhaus white block" },
+    { "name": "googie-diner", "text": "a googie roadside diner, upswept butterfly roof on splayed steel legs, starburst sign and acres of plate glass", "text_short": "googie butterfly diner" },
+    { "name": "metabolist-capsules", "text": "a metabolist tower of bolted-on living capsules, round portholes stacked in a concrete crate, seams and service cores left exposed", "text_short": "metabolist capsule tower" },
+    { "name": "deconstructivist-museum", "text": "a deconstructivist museum, torqued titanium sheets colliding at impossible angles, reflections sliding off every non-parallel wall", "text_short": "titanium deconstructivist folds" },
+    { "name": "beaux-arts-station", "text": "a Beaux-Arts railway terminal, coffered barrel vault on paired Corinthian columns, clerestory lunettes laying wide bands of light across the marble concourse", "text_short": "beaux-arts terminal", "tags": ["historical"] },
+    { "name": "georgian-terrace", "text": "a Georgian terrace in soot-warmed brick, sash windows diminishing floor by floor in strict proportion, fanlights over paneled doors, wrought-iron railings guarding the basement areas", "text_short": "georgian brick terrace", "tags": ["historical"] },
+    { "name": "high-tech-exoskeleton", "text": "a high-tech building worn inside-out, structural exoskeleton and color-coded service ducts hung on the facade, glass lifts climbing the frame in plain view", "text_short": "high-tech exoskeleton" },
+    { "name": "prairie-house", "text": "a Prairie-style house hugging its ground line, deep cantilevered eaves stretched horizontal, ribbon casement windows under low hipped roofs, brick joints raked to stress the long courses", "text_short": "prairie horizontal house", "tags": ["historical"] }
+  ]
+}

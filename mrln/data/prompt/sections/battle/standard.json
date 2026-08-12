@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "War Banners",
+  "description": "Standards and their wind — cloth physics, heraldry, and what a banner's state says about the fight around it.",
+  "items": [
+    {
+      "name": "torn-lion",
+      "text": "a quartered lion banner ripped to streamers by arrow-strikes, every strip still pulling the same direction from a bowing pole",
+      "text_short": "arrow-torn lion banner"
+    },
+    {
+      "name": "pennon-forest",
+      "text": "a forest of swallow-tailed pennons above the lance ranks, hundreds of small flags rolling in sequence as one gust combs down the line",
+      "text_short": "rolling pennon forest"
+    },
+    {
+      "name": "raven-standard",
+      "text": "a black raven standard on a tar-dark pole, the bird sewn wings-spread so that every gust makes it fly",
+      "text_short": "black raven standard"
+    },
+    {
+      "name": "sunburst-gold",
+      "text": "a cloth-of-gold sunburst banner, bullion thread throwing hard glints with every ripple, readable from the far ridge",
+      "text_short": "cloth-of-gold sunburst"
+    },
+    {
+      "name": "dragon-windsock",
+      "text": "a sewn dragon windsock standard, wind pouring through its bronze jaw and filling the silk body until it writhes like a living thing",
+      "text_short": "howling dragon windsock",
+      "tags": ["historical"]
+    },
+    {
+      "name": "burning-banner",
+      "text": "a standard alight along its top edge, flame eating downwind through the heraldry, embers streaming leeward over the ranks",
+      "text_short": "burning standard"
+    },
+    {
+      "name": "planted-fallen",
+      "text": "a fallen banner planted at a hard angle in the mud, cloth soaked heavy and stirring only at the corners, a rallying point with nobody yet around it",
+      "text_short": "planted fallen banner"
+    },
+    {
+      "name": "white-hart",
+      "text": "a white hart banner on a moss-green field, the heavy cloth bellying and snapping in slow deep waves above the spear-points",
+      "text_short": "white hart banner"
+    },
+    {
+      "name": "horsehair-tug",
+      "text": "a horsehair tug standard, black and white tails streaming horizontal from a gilded disc, hissing at every gust",
+      "text_short": "horsehair tug standard",
+      "tags": ["historical"]
+    },
+    {
+      "name": "prayer-streamers",
+      "text": "spear-shafts down the whole line tied with script-inked prayer streamers, hundreds of thin cloth strips all pointing the wind's way",
+      "text_short": "prayer-streamer spears"
+    }
+  ]
+}

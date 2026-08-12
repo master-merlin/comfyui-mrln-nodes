@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "deep-glossy-black",
-      "text": "Deep Glossy Black",
+      "text": "deep gloss black with wet-look depth",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -13,7 +13,7 @@
     },
     {
       "name": "woven-carbon",
-      "text": "woven carbon fiber",
+      "text": "woven carbon fiber, twill weave readable under gloss lacquer",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -21,7 +21,7 @@
     },
     {
       "name": "hyper-chrome",
-      "text": "reflective hyper chrome",
+      "text": "reflective hyper chrome, mirror-bright edges",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -29,7 +29,7 @@
     },
     {
       "name": "platinum-silver",
-      "text": "Platinum Silver",
+      "text": "platinum silver, bright machined metal",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -37,7 +37,7 @@
     },
     {
       "name": "midnight-chrome-dark-metallic",
-      "text": "Midnight Chrome dark metallic",
+      "text": "midnight chrome, a smoked dark mirror finish",
       "weight": 0.2,
       "tags": [
         "classic-neutral"
@@ -61,7 +61,7 @@
     },
     {
       "name": "crimson-energy-red",
-      "text": "Crimson Energy Red",
+      "text": "crimson energy red",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -69,7 +69,7 @@
     },
     {
       "name": "glowing-circuitry-lines",
-      "text": "Glowing Circuitry Lines",
+      "text": "glowing circuitry lines traced along the aero edges",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -77,7 +77,7 @@
     },
     {
       "name": "anodized-red-metallic",
-      "text": "Anodized Red metallic",
+      "text": "anodized red metallic with candy depth",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -85,7 +85,7 @@
     },
     {
       "name": "anodized-blue-metallic",
-      "text": "Anodized Blue metallic",
+      "text": "anodized cobalt-blue metallic",
       "weight": 0.1667,
       "tags": [
         "bold-high-tech"
@@ -101,7 +101,7 @@
     },
     {
       "name": "titanium-metallic",
-      "text": "Titanium metallic",
+      "text": "titanium metallic, warm grey sheen",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -109,7 +109,7 @@
     },
     {
       "name": "copper-metallic",
-      "text": "Copper metallic",
+      "text": "copper metallic, warm reflective glow",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -117,7 +117,7 @@
     },
     {
       "name": "bronze-metallic",
-      "text": "Bronze metallic",
+      "text": "bronze metallic, muted satin warmth",
       "weight": 0.2,
       "tags": [
         "metallic"
@@ -125,7 +125,7 @@
     },
     {
       "name": "rose-gold-metallic",
-      "text": "Rose Gold Metallic",
+      "text": "rose gold metallic, soft pink-gold luster",
       "weight": 0.2,
       "tags": [
         "metallic"

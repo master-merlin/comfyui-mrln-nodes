@@ -74,6 +74,12 @@
       "text": "flat overcast noon, shadowless even grey light rendering true colors and textures",
       "text_short": "flat overcast noon",
       "tags": ["day"]
+    },
+    {
+      "name": "afterglow",
+      "text": "the quarter hour after sundown, the western sky banked in ember orange while opposite it the pink Belt of Venus floats above the rising blue band of Earth's own shadow",
+      "text_short": "post-sunset afterglow",
+      "tags": ["day"]
     }
   ]
 }

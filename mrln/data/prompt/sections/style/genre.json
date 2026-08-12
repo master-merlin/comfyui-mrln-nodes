@@ -87,6 +87,18 @@
       "text": "space-opera aesthetic, vast fleets, glowing nebulae and operatic galactic scale",
       "text_short": "space opera scale",
       "tags": ["scifi"]
+    },
+    {
+      "name": "dieselpunk",
+      "text": "dieselpunk aesthetic, interwar machine age, riveted steel and oiled brass, roaring prop engines over smog-stained deco cities",
+      "text_short": "dieselpunk riveted steel",
+      "tags": ["historical"]
+    },
+    {
+      "name": "afrofuturism",
+      "text": "afrofuturist aesthetic, gleaming chrome fused with kente geometry and beadwork, regal silhouettes against orbital skylines",
+      "text_short": "afrofuturist chrome pattern",
+      "tags": ["scifi"]
     }
   ]
 }

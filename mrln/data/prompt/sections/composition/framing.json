@@ -1,67 +1,92 @@
 {
   "version": 1,
   "label": "Framing",
-  "description": "Compositional structure — how the frame is organized.",
+  "description": "Compositional structure — how the frame is organized and where it sends the eye.",
   "items": [
     {
       "name": "rule-of-thirds",
-      "text": "composed on the rule of thirds, subject set on a power point with directional space",
+      "text": "composed on the rule of thirds, the subject seated on a power point with directional space opening ahead of it",
       "text_short": "rule of thirds"
     },
     {
       "name": "central-symmetry",
-      "text": "dead-center symmetrical composition, formal and confrontational",
+      "text": "dead-center symmetrical composition, the two halves of the frame mirroring within a hair, formal, frontal and confrontational",
       "text_short": "central symmetry"
     },
     {
       "name": "negative-space",
-      "text": "vast negative space dwarfing a small subject, minimalist breathing room",
+      "text": "vast empty negative space dwarfing one small, precisely placed subject, the emptiness itself carrying the composition",
       "text_short": "vast negative space"
     },
     {
       "name": "leading-lines",
-      "text": "strong leading lines converging on the subject from the frame edges",
+      "text": "strong leading lines — road edges, rails, cables — converging from the frame corners onto the subject",
       "text_short": "leading lines"
     },
     {
       "name": "golden-spiral",
-      "text": "golden-spiral composition, the eye swept along a natural curl to the focal point",
+      "text": "golden-spiral composition, the eye swept along a natural curl of elements to land exactly on the focal point",
       "text_short": "golden spiral flow"
     },
     {
       "name": "frame-in-frame",
-      "text": "frame within a frame, the subject enclosed by arch, window or branches",
+      "text": "a frame within the frame, the subject enclosed by arch, window or overhanging branches, the inner border held a stop darker so the eye funnels inward",
       "text_short": "frame in frame"
     },
     {
       "name": "diagonal-energy",
-      "text": "aggressive diagonal composition, tension pulling corner to corner",
+      "text": "aggressive diagonal composition, the main mass running corner to corner so the frame never settles",
       "text_short": "diagonal tension"
     },
     {
       "name": "layered-depth",
-      "text": "three distinct planes, foreground anchor, midground subject, atmospheric background",
+      "text": "three distinct planes, foreground anchor, midground subject, atmospheric background, each a step lighter and softer than the last",
       "text_short": "layered depth planes"
     },
     {
       "name": "pattern-break",
-      "text": "a repeating pattern broken by a single interrupting subject",
+      "text": "a repeating pattern filling the frame — windows, columns, waves — broken by a single interrupting subject the eye snaps to",
       "text_short": "pattern with a break"
     },
     {
       "name": "horizon-low",
-      "text": "horizon pinned low, the sky claiming most of the frame",
+      "text": "horizon pinned in the lowest quarter of the frame, the sky claiming everything above and tipping the scale toward atmosphere",
       "text_short": "low horizon, big sky"
     },
     {
       "name": "horizon-high",
-      "text": "horizon pinned high, the foreground ground plane dominating",
+      "text": "horizon pinned in the highest quarter, the foreground ground plane unrolling toward the viewer in deep textured perspective",
       "text_short": "high horizon, deep ground"
     },
     {
       "name": "tight-crop",
-      "text": "aggressively tight crop cutting into the subject, claustrophobic immediacy",
+      "text": "aggressively tight crop slicing into the subject at the frame edges, claustrophobic immediacy with nowhere for the eye to leave",
       "text_short": "aggressive tight crop"
+    },
+    {
+      "name": "one-point-perspective",
+      "text": "strict one-point perspective, every line of the space converging on a single vanishing point behind the subject, corridor symmetry pulling the eye in",
+      "text_short": "one-point perspective"
+    },
+    {
+      "name": "triangle-composition",
+      "text": "elements arranged in a stable triangle, the broad base grounding the frame while the apex carries the key detail",
+      "text_short": "triangle arrangement"
+    },
+    {
+      "name": "gaze-room",
+      "text": "subject placed off-center with open space in the direction of the gaze, the look given room to land",
+      "text_short": "space for the gaze"
+    },
+    {
+      "name": "scale-contrast",
+      "text": "scale contrast, one tiny figure set against a single colossal element so the size gap between them becomes the story of the frame",
+      "text_short": "tiny figure, colossal element"
+    },
+    {
+      "name": "radial-composition",
+      "text": "radial composition, spokes, petals or converging streets raying outward from a bright hub that anchors the eye at the center",
+      "text_short": "radial spokes from center"
     }
   ]
 }

@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "label": "Architectural View",
+  "description": "How architectural photographers approach built form — optics, camera position and the geometry discipline of the view. Indoor-only approaches carry the 'indoor' tag.",
+  "items": [
+    {
+      "name": "shifted-wide",
+      "text": "a 24mm shift lens with the camera held dead level, verticals perfectly parallel, the rise dialed in to take the full height without tilting",
+      "text_short": "shift lens, verticals held true"
+    },
+    {
+      "name": "one-point-axis",
+      "text": "a strict one-point perspective straight down the central axis, every line converging on a single vanishing point, symmetry held to the millimeter",
+      "text_short": "one-point axial symmetry"
+    },
+    {
+      "name": "telephoto-stack",
+      "text": "a long telephoto from a distant vantage, perspective compressed until the receding planes stack flat like sheets of cut paper",
+      "text_short": "telephoto-compressed elevation"
+    },
+    {
+      "name": "raking-detail",
+      "text": "a tight detail study in raking light, the surface thrown into relief, joints and texture reading like topography",
+      "text_short": "raking-light detail study"
+    },
+    {
+      "name": "worms-eye",
+      "text": "a worm's-eye view aimed straight up, converging lines deliberately embraced, the geometry wheeling overhead into near-abstraction",
+      "text_short": "worm's-eye vertical view"
+    },
+    {
+      "name": "reflection-double",
+      "text": "composed on a still reflection — flood water, wet paving, polished stone — the geometry doubled into perfect bilateral symmetry",
+      "text_short": "mirror-reflection symmetry"
+    },
+    {
+      "name": "frontal-elevation",
+      "text": "a flat-on frontal elevation, the surface square and parallel to the sensor like an architect's drawing, no convergence anywhere in the frame",
+      "text_short": "flat frontal elevation"
+    },
+    {
+      "name": "three-quarter-hero",
+      "text": "the classic three-quarter view, two faces of the form carrying two different light values, volume modeled by the corner between them",
+      "text_short": "three-quarter volume view"
+    },
+    {
+      "name": "doorway-frame",
+      "text": "shot through a doorway aligned as a frame within the frame, room opening beyond room in nested thresholds of light",
+      "text_short": "nested doorway framing",
+      "tags": ["indoor"]
+    },
+    {
+      "name": "window-light-axis",
+      "text": "composed across the fall of window light, the camera square to the wall, bright shafts striking diagonally through the standing space",
+      "text_short": "across the window-light fall",
+      "tags": ["indoor"]
+    },
+    {
+      "name": "stairwell-spiral",
+      "text": "looking straight up the open eye of a stairwell, the handrail spiraling into a nautilus of repeating treads",
+      "text_short": "stairwell spiral look-up",
+      "tags": ["indoor"]
+    },
+    {
+      "name": "ceiling-mandala",
+      "text": "camera aimed at the ceiling from dead center of the room, vault ribs or coffer grid resolving into a mandala of structure",
+      "text_short": "centered ceiling mandala",
+      "tags": ["indoor"]
+    },
+    {
+      "name": "corner-two-point",
+      "text": "a quiet two-point view into the corner of the space, both walls receding evenly, furniture and fittings kept exactly square",
+      "text_short": "balanced two-point corner view",
+      "tags": ["indoor"]
+    }
+  ]
+}

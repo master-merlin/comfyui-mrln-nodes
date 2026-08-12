@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "label": "Fleet Arrival",
+  "type": [
+    "object",
+    "vehicle"
+  ],
+  "description": "Capital ships making atmospheric entry over an open-sky world — scale sold from the ground up, with day-raid and night-siege variants.",
+  "prefix": "The one-sheet frame of a capital fleet making atmospheric entry — tonnage the sky was never meant to carry, arriving anyway. Witnessed from the ground, production design coherent from rivet to skyline, an image read twice: first the scale, then the detail.",
+  "slots": [
+    {
+      "id": "armada",
+      "ref": "vehicle/scifi-fleet",
+      "label": "The Fleet",
+      "emphasis": 1.3
+    },
+    {
+      "id": "entry",
+      "ref": "atmosphere/reentry",
+      "label": "Entry State",
+      "emphasis": 1.2
+    },
+    {
+      "id": "stage",
+      "ref": "location/scifi-horizon",
+      "label": "The Ground Below",
+      "emphasis": 1.15
+    },
+    {
+      "id": "witness",
+      "ref": "vehicle/scifi-craft",
+      "label": "Small Craft for Scale",
+      "allow_empty": true,
+      "tags_none": [
+        "capital"
+      ]
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "scale-contrast"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "variants": [
+    {
+      "name": "day-raid",
+      "label": "Day Raid",
+      "slots": [
+        {
+          "id": "light",
+          "ref": "lighting/epic",
+          "label": "Light",
+          "tags_none": [
+            "night"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "night-siege",
+      "label": "Night Siege",
+      "slots": [
+        {
+          "id": "light",
+          "ref": "lighting/epic",
+          "label": "Light",
+          "tags_any": [
+            "night"
+          ]
+        },
+        {
+          "id": "barrage",
+          "ref": "atmosphere/battle-debris",
+          "label": "Siege Fire",
+          "emphasis": 1.1
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "armada",
+    "entry",
+    "stage",
+    "@variant",
+    "witness",
+    "weather",
+    "framing",
+    "grade"
+  ],
+  "suffix": "Scale Rendering: (planetary-scale mass made legible — hull lengths measured in city blocks, running lights in ordered rows, tiny craft and ground figures for reference:1.25), the fleet's shadow crossing the land like weather, atmospheric perspective staging each hull a step paler than the last, filmic tonemapping with disciplined highlights.",
+  "negative": "watermark, text, toy-like scale, miniature model look, blurry, low detail",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

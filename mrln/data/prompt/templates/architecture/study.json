@@ -2,7 +2,7 @@
   "version": 1,
   "label": "Architecture Study",
   "type": ["architecture", "object"],
-  "description": "Architectural photography: building, interior or structure under patient light.",
+  "description": "Architectural photography: building, interior or structure under patient light, approached with real view-discipline.",
   "prefix": "A masterful architectural photography study — built form treated as sculpture, geometry and material given the patience they were designed for, light arriving at exactly the right hour.",
   "slots": [
     {
@@ -23,21 +23,16 @@
       "label": "Hour"
     },
     {
+      "id": "view",
+      "ref": "camera/architecture-view",
+      "label": "The View",
+      "tags_none": ["indoor"],
+      "default": "shifted-wide"
+    },
+    {
       "id": "framing",
       "ref": "composition/framing",
       "label": "Composition"
-    },
-    {
-      "id": "lens",
-      "ref": "camera/lens",
-      "label": "Optics",
-      "default": "24mm-wide"
-    },
-    {
-      "id": "styleline",
-      "ref": "style/photography",
-      "label": "Discipline",
-      "default": "architectural"
     }
   ],
   "suffix": "Architectural Standard: (perfectly corrected verticals:1.2), material honesty in every surface — concrete pores, stone grain, glass truth — shadow edges tracking the geometry, human scale implied rather than shown.",

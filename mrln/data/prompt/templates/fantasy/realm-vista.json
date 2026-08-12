@@ -9,6 +9,7 @@
       "ref": "location",
       "label": "The Realm",
       "tags_any": ["fantasy"],
+      "tags_none": ["interior"],
       "emphasis": 1.3
     },
     {

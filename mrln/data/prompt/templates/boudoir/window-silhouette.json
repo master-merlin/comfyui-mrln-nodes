@@ -2,8 +2,8 @@
   "version": 1,
   "label": "Window Silhouette",
   "type": ["human", "boudoir"],
-  "description": "The most tasteful boudoir formula: a solo figure as silhouette against blown window light — implied, elegant, gallery-safe.",
-  "prefix": "A fine-art boudoir silhouette photograph — the figure reduced to a single elegant line against a wall of glowing window light, everything sensual carried by shape and restraint alone.",
+  "description": "The most tasteful boudoir formula: a solo figure as silhouette against blown window light — the backlight is the template's fixed concept, so every draw stays implied, elegant, gallery-safe.",
+  "prefix": "A fine-art boudoir silhouette photograph — the figure reduced to a single elegant line against one wall of blown window light, the exposure metered for the glass so the body falls to pure shape, everything sensual carried by contour and restraint alone.",
   "slots": [
     {
       "id": "model",
@@ -26,13 +26,6 @@
       "default": "corner-atelier"
     },
     {
-      "id": "light",
-      "ref": "lighting/dramatic",
-      "label": "Lighting Conditions",
-      "default": "silhouette-backlight",
-      "emphasis": 1.25
-    },
-    {
       "id": "palette",
       "ref": "style/palette",
       "label": "Palette",
@@ -40,18 +33,13 @@
     },
     {
       "id": "lens",
-      "ref": "camera/lens",
+      "ref": "camera/portrait-glass",
       "label": "Optics",
-      "default": "135mm-compression"
-    },
-    {
-      "id": "styleline",
-      "ref": "style/photography",
-      "label": "Photographic Style",
-      "default": "fine-art"
+      "default": "135mm-headshot",
+      "tags_any": ["boudoir"]
     }
   ],
-  "suffix": "Silhouette Rendering: (the body's outline rendered as one continuous elegant line:1.25), window light blooming around the edges, interior detail dissolved to darkness, sensuality entirely implied — a print for a gallery wall.",
+  "suffix": "Silhouette Rendering: (the body's outline one continuous elegant line, window backlight burning around its edges:1.25), stray hairs igniting as filaments of light, interior detail dissolved to darkness, sensuality entirely implied — a print for a gallery wall.",
   "negative": "explicit detail, harsh frontal light, child, chibi, underage, watermark, text",
   "render": {
     "format": "string_labeled",

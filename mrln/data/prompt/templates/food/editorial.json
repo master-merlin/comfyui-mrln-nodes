@@ -1,47 +1,76 @@
 {
   "version": 1,
   "label": "Food Editorial",
-  "type": ["food"],
-  "description": "Editorial food photography: hero dish or drink, styling and appetizing light.",
+  "type": ["food", "object"],
+  "description": "Editorial food photography: a hero dish, drink or kitchen moment under purpose-built still-life light and optics.",
   "prefix": "A cover-worthy editorial food photograph — the dish so present you can smell it, every texture begging to be touched, styled with restraint that lets the food do the talking.",
   "slots": [
     {
-      "id": "hero",
-      "ref": "food",
-      "label": "The Hero",
-      "emphasis": 1.25
-    },
-    {
-      "id": "styling",
-      "ref": "food/styling",
-      "label": "Styled",
-      "emphasis": 1.15
-    },
-    {
       "id": "light",
-      "ref": "lighting/studio",
+      "ref": "lighting/still-life",
       "label": "Lighting Conditions",
-      "default": "window-flag-negative"
+      "tags_none": ["dark"],
+      "default": "window-rake"
     },
     {
-      "id": "lens",
-      "ref": "camera/lens",
+      "id": "optics",
+      "ref": "camera/still-life-optics",
       "label": "Optics",
-      "default": "100mm-macro"
-    },
-    {
-      "id": "styleline",
-      "ref": "style/photography",
-      "label": "Discipline",
-      "default": "food-editorial"
-    },
-    {
-      "id": "particles",
-      "ref": "atmosphere/particles",
-      "label": "In the Air",
-      "allow_empty": true
+      "default": "100mm-tabletop"
     }
   ],
+  "variants": [
+    {
+      "name": "dish",
+      "label": "Hero dish",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/dish",
+          "label": "The Hero",
+          "emphasis": 1.25
+        },
+        {
+          "id": "styling",
+          "ref": "food/styling",
+          "label": "Styled",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "drink",
+      "label": "Hero drink",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/drink",
+          "label": "The Hero",
+          "emphasis": 1.25
+        },
+        {
+          "id": "styling",
+          "ref": "product/surface",
+          "label": "Served on",
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "kitchen-moment",
+      "label": "Kitchen action moment",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/moment",
+          "label": "The Hero",
+          "emphasis": 1.25
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["@variant", "light", "optics"],
   "suffix": "Appetite Rendering: (glistening surface moisture and crumb texture resolved:1.2), steam behaving physically, honest saturated-but-real color, tactile depth that triggers hunger on sight.",
   "negative": "watermark, text, plastic-looking food, artificial gloss, grey unappetizing tones",
   "render": {

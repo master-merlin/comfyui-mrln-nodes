@@ -8,6 +8,7 @@
       "id": "being",
       "ref": "creature/synthetic",
       "label": "The Being",
+      "tags_any": ["scifi"],
       "emphasis": 1.3
     },
     {
@@ -29,13 +30,15 @@
       "id": "light",
       "ref": "lighting",
       "label": "Lighting Conditions",
-      "default": "studio/gelled-duotone"
+      "default": "studio/gelled-duotone",
+      "tags_none": ["epic"]
     },
     {
       "id": "genre",
       "ref": "style/genre",
       "label": "Design Language",
-      "default": "cyberpunk"
+      "default": "cyberpunk",
+      "tags_any": ["scifi"]
     },
     {
       "id": "lens",

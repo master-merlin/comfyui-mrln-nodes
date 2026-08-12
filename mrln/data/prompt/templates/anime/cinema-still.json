@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "label": "Anime Cinema Still",
+  "description": "A theatrical anime feature's master shot — film look, setting, season and hour staged as one held frame, with day and night reels.",
+  "prefix": "A master shot from a theatrical anime feature — the frame the whole film was storyboarded around, held long enough to read every painted layer.",
+  "slots": [
+    {
+      "id": "look",
+      "ref": "style/anime-cinema",
+      "label": "Film Look",
+      "default": "painted-cel-classic",
+      "emphasis": 1.2
+    },
+    {
+      "id": "scene",
+      "ref": "location",
+      "label": "The Setting",
+      "tags_any": ["anime"],
+      "emphasis": 1.25
+    },
+    {
+      "id": "season",
+      "ref": "atmosphere/season",
+      "label": "Season",
+      "emphasis": 1.1
+    },
+    {
+      "id": "air",
+      "ref": "atmosphere/particles",
+      "label": "In the Air",
+      "allow_empty": true
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Emotional Register"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition"
+    }
+  ],
+  "variants": [
+    {
+      "name": "day-reel",
+      "label": "Day Reel",
+      "slots": [
+        {
+          "id": "hour",
+          "ref": "atmosphere/time-of-day",
+          "label": "Hour",
+          "tags_any": ["day"]
+        }
+      ]
+    },
+    {
+      "name": "night-reel",
+      "label": "Night Reel",
+      "slots": [
+        {
+          "id": "hour",
+          "ref": "atmosphere/time-of-day",
+          "label": "Hour",
+          "tags_any": ["night"]
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["look", "scene", "season", "@variant", "air", "mood", "framing"],
+  "suffix": "Frame Rendering: (painted-background depth in three clean layers, character light and background light agreeing on one source:1.2), halation blooming only where a source actually burns, 2.35:1 letterboxed breathing room, the stillness of a frame meant to be paused on.",
+  "negative": "photorealistic, 3d render, live-action, watermark, text, signature, chibi, child",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

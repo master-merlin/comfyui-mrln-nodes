@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "label": "Field Optics",
+  "description": "Lens choices for machine photography in the field — long glass carries the 'reach' tag, character glass carries 'retro'.",
+  "suits": ["object", "vehicle"],
+  "items": [
+    {
+      "name": "600mm-f4",
+      "text": "shot on a 600mm f/4 super-telephoto, distance stacked flat, heat shimmer between lens and subject rendered honestly",
+      "text_short": "600mm super-telephoto",
+      "tags": ["reach"]
+    },
+    {
+      "name": "400mm-f28",
+      "text": "shot on a 400mm f/2.8, the subject isolated clean against melted background color, the professional sideline standard",
+      "text_short": "400mm f/2.8 isolation",
+      "tags": ["reach"]
+    },
+    {
+      "name": "70-200-zoom",
+      "text": "shot on a 70-200mm f/2.8 workhorse zoom, framing ridden tight as the subject moves through the scene",
+      "text_short": "70-200mm zoom, tight framing",
+      "tags": ["reach"]
+    },
+    {
+      "name": "500mm-mirror",
+      "text": "shot on a 500mm catadioptric mirror lens, flat stacked planes and bright-ringed donut bokeh, a proud retro signature",
+      "text_short": "500mm mirror lens, donut bokeh",
+      "tags": ["reach", "retro"]
+    },
+    {
+      "name": "135mm-prime",
+      "text": "shot on a 135mm f/2 prime, classic three-quarter compression pulling the setting close in behind the subject",
+      "text_short": "135mm compression prime"
+    },
+    {
+      "name": "85mm-detail",
+      "text": "shot on an 85mm prime stopped to f/4, honest mid-telephoto drawing for tight sections and hardware detail",
+      "text_short": "85mm detail prime"
+    },
+    {
+      "name": "50mm-document",
+      "text": "shot on a 50mm at f/5.6, documentary neutrality, proportions rendered exactly as the eye reads them",
+      "text_short": "50mm documentary neutral"
+    },
+    {
+      "name": "35mm-reportage",
+      "text": "shot on a 35mm f/1.4, reportage framing that keeps the machine in its world, foreground life allowed into the edges",
+      "text_short": "35mm reportage environmental"
+    },
+    {
+      "name": "24mm-proximity",
+      "text": "shot on a 24mm from arm's length, near surfaces stretched dramatic while the setting sweeps away to the vanishing point",
+      "text_short": "24mm dramatic proximity",
+      "tags": ["wide"]
+    },
+    {
+      "name": "vintage-uncoated",
+      "text": "shot on an uncoated vintage prime, gentle veiling flare, swirling edges and highlights that bloom like memory",
+      "text_short": "uncoated vintage prime, blooming highlights",
+      "tags": ["retro"]
+    }
+  ]
+}

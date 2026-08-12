@@ -5,44 +5,54 @@
   "items": [
     {
       "name": "hdr-cinematic",
-      "text": "HDR cinematic lighting, volumetric light, strong sculpted contrast between light and shadow",
+      "text": "cinematic high-dynamic-range lighting, anchored deep blacks and controlled specular highlights held in the same frame, volumetric depth between key and shadow",
       "text_short": "HDR cinematic contrast"
     },
     {
       "name": "soft-diffused",
-      "text": "soft diffused light with gentle gradual falloff and open readable shadows",
+      "text": "soft diffused light from a broad source, gradual inverse-square falloff and open readable shadows with feathered edges",
       "text_short": "soft diffused light"
     },
     {
       "name": "studio-softbox",
-      "text": "perfect studio lighting from large softboxes, controlled highlights and clean shadow edges",
+      "text": "perfect studio lighting from large softboxes, controlled highlight roll-off and clean soft-edged shadow transitions",
       "text_short": "studio softbox light"
     },
     {
       "name": "hard-specular",
-      "text": "hard specular light snapping crisp highlights off every glossy surface, knife-edged shadows",
+      "text": "hard specular light from a small distant source, crisp highlights snapping off every glossy surface, knife-edged parallel shadows",
       "text_short": "hard specular snap"
     },
     {
       "name": "bounced-ambient",
-      "text": "soft bounced ambient light filling from every direction, shadows barely whispering",
+      "text": "soft bounced ambient light filling from every direction, shadows barely whispering, form modeled by occlusion alone",
       "text_short": "bounced ambient fill"
     },
     {
       "name": "glowing-low-key",
-      "text": "low-key lighting, small islands of glow floating in expansive darkness",
+      "text": "low-key lighting, small islands of glow floating in expansive darkness, falloff doing the framing",
       "text_short": "low-key glow islands",
       "tags": ["night"]
     },
     {
       "name": "high-key-airy",
-      "text": "high-key lighting, luminous airy whites with detail floating in brightness",
+      "text": "high-key lighting, luminous airy whites with detail floating in brightness, shadows lifted to pale grey",
       "text_short": "high-key airy light"
     },
     {
       "name": "mixed-temperature",
-      "text": "mixed color-temperature light, warm practicals fighting cool ambient for every surface",
+      "text": "mixed color-temperature light, warm tungsten practicals fighting cool ambient for every surface, skin caught between amber and blue",
       "text_short": "warm-cool mixed light"
+    },
+    {
+      "name": "raking-texture",
+      "text": "hard light raking almost parallel to the surface, every ridge, pore and fiber throwing its own long micro-shadow, texture exaggerated into relief",
+      "text_short": "raking texture light"
+    },
+    {
+      "name": "subsurface-glow",
+      "text": "strong backlight pushed through translucent material, subsurface scattering turning leaves, fabric edges and the rims of ears and fingers into glowing membranes lit from within",
+      "text_short": "translucent subsurface backlight"
     }
   ]
 }

@@ -1,38 +1,70 @@
 {
   "version": 1,
   "label": "Day Lighting",
+  "description": "Daylight keys — sun angle, cloud cover and daylight-balanced studio looks, each with its shadow behavior spelled out.",
   "tags": [
     "day"
   ],
   "items": [
     {
       "name": "golden-hour",
-      "text": "The warm, low-angled light of the long summer golden hour, casting extremely long and soft shadows."
+      "text": "The last full hour before sunset, sunlight arriving nearly horizontal and amber-warm, raking extremely long soft-edged shadows and wrapping every contour in glow.",
+      "text_short": "golden hour light"
     },
     {
       "name": "backlit-rim-light",
-      "text": "Strong, direct backlighting from a low sun, creating a brilliant, sharp rim-light effect that silhouettes the vehicle."
+      "text": "Strong direct backlight from a low sun, a brilliant rim burning along the subject's upper edges while the camera side falls into open readable shadow, flare held just off-axis.",
+      "text_short": "low-sun rim backlight"
     },
     {
       "name": "volumetric-god-rays",
-      "text": "Hazy, atmospheric daylight with visible volumetric sunbeams (god rays)."
+      "text": "Hazy atmospheric daylight, the sun hidden behind broken cloud or canopy, visible volumetric beams slanting through moisture-laden air and pooling in bright patches on the ground.",
+      "text_short": "volumetric god rays"
     },
     {
       "name": "overcast-softbox",
-      "text": "Soft, perfectly even light from a bright but uniformly overcast sky, acting as a giant natural softbox."
+      "text": "A bright, uniformly overcast sky acting as one giant softbox: even wraparound light, shadows reduced to a soft contact core under the subject, colors reading true without specular glare.",
+      "text_short": "overcast softbox sky"
     },
     {
       "name": "high-key-studio",
-      "text": "Flawless high-key studio lighting from massive softboxes and a cyclorama."
+      "text": "Flawless high-key studio daylight, massive overlapping softboxes on a white cyclorama dissolving shadows to a faint grounding shade directly beneath the subject.",
+      "text_short": "high-key studio wash"
     },
     {
       "name": "hard-spotlight",
-      "text": "A dramatic, single, hard-edged spotlight in an otherwise dark studio."
+      "text": "A single hard-edged spotlight in an otherwise dark studio, one focused beam with knife-edge shadow cutoff and steep circular falloff into black.",
+      "text_short": "single hard spotlight"
     },
     {
       "name": "storm-shafts",
-      "text": "Gathering storm clouds stacked dark overhead, intense shafts of light breaking through onto the scene in high-contrast pools.",
+      "text": "Gathering storm clouds stacked charcoal-dark overhead, intense shafts of sunlight breaking through gaps and igniting the scene in moving high-contrast pools.",
       "text_short": "storm-cloud light shafts"
+    },
+    {
+      "name": "open-shade",
+      "text": "Open shade just beyond the sunline, the subject lit only by blue skylight and ground bounce, a soft directional wash with cool clean color and no squinting highlights.",
+      "text_short": "soft open shade"
+    },
+    {
+      "name": "backlit-bounce-fill",
+      "text": "Low sun behind the subject as a rim light with a large silver bounce lifting the shadow side from camera left, the classic daylight sandwich of burning edge and readable face.",
+      "text_short": "sun rim, silver bounce fill"
+    },
+    {
+      "name": "noon-toplight",
+      "text": "Cloudless noon sun almost directly overhead, hard top-light compressing shadows into short dense pools beneath every overhang, specular glare standing on the horizontal surfaces while the verticals fall half a stop darker.",
+      "text_short": "hard noon top-light"
+    },
+    {
+      "name": "veiled-sun",
+      "text": "Sun filtering through a thin high veil of cirrus, still clearly directional but its shadow edges widened to a soft penumbra, highlights tamed enough to hold detail — the whole sky working as one stretched silk.",
+      "text_short": "cirrus-veiled directional sun"
+    },
+    {
+      "name": "urban-canyon-bounce",
+      "text": "Direct sun blocked by tall buildings, the subject lit instead by a glass tower bouncing a broad second sun into the shade, a soft warm directional wash carrying a faint grid of window reflections.",
+      "text_short": "glass-tower bounce light"
     }
   ]
 }

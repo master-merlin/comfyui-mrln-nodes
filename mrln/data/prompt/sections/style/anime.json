@@ -53,6 +53,11 @@
       "name": "retro-manga",
       "text": "retro manga style, screentone dots, expressive brush lines and black-and-white drama",
       "text_short": "retro manga screentone"
+    },
+    {
+      "name": "webtoon-gloss",
+      "text": "modern webtoon style, glossy gradient shading over clean digital lines, luminous skin highlights and soft ambient glow",
+      "text_short": "glossy webtoon shading"
     }
   ]
 }

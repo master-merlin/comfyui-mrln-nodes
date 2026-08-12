@@ -5,43 +5,43 @@
   "items": [
     {
       "name": "photorealistic",
-      "text": "hyper-realistic photograph, natural skin and material detail",
+      "text": "hyper-realistic photograph, true-color optics, skin showing pores and fine vellus hair, every material keeping its real reflectance — metal cool, fabric matte, glass sharp",
       "text_short": "hyper-realistic photo"
     },
     {
       "name": "cinematic-still",
-      "text": "cinematic film still, anamorphic framing, subtle grain",
+      "text": "cinematic film still, wide anamorphic framing with oval bokeh and a faint horizontal flare, subtle grain, the composed stillness of a paused frame",
       "text_short": "cinematic film still"
     },
     {
       "name": "analog-film",
-      "text": "analog film photograph, Kodak Portra palette, soft halation",
+      "text": "analog 35mm film photograph, warm negative-stock color, gentle halation blooming around highlights, organic grain riding the shadows",
       "text_short": "analog film photo"
     },
     {
       "name": "anime",
-      "text": "high-quality anime illustration, clean line art, cel shading",
+      "text": "anime illustration, confident clean line art, flat cel shading split by crisp shadow terminators, large expressive eyes with layered specular highlights",
       "text_short": "anime illustration",
       "tags": ["anime"]
     },
     {
       "name": "oil-painting",
-      "text": "classical oil painting, visible brushwork, rich impasto",
+      "text": "classical oil painting, transparent glazes over visible brushwork, impasto highlights catching raking light",
       "text_short": "oil painting"
     },
     {
       "name": "watercolor",
-      "text": "delicate watercolor painting, soft washes, paper texture",
+      "text": "delicate watercolor painting, wet-on-wet washes blooming into each other, granulating pigment, the white of the paper left as light",
       "text_short": "watercolor painting"
     },
     {
       "name": "3d-render",
-      "text": "polished 3D render, physically-based materials, global illumination",
+      "text": "polished 3D render, physically-based materials with correct fresnel falloff, soft global-illumination bounce, crisp contact shadows grounding every object",
       "text_short": "polished 3D render"
     },
     {
       "name": "comic-ink",
-      "text": "bold comic ink illustration, dramatic hatching, halftone shading",
+      "text": "bold comic ink illustration, brush-inked outlines swelling and tapering with pressure, dramatic feathered hatching, halftone dot shading",
       "text_short": "comic ink illustration"
     },
     {
@@ -51,12 +51,12 @@
     },
     {
       "name": "charcoal",
-      "text": "expressive charcoal drawing, smudged shadow masses and rough paper tooth",
+      "text": "expressive charcoal drawing, smudged shadow masses, highlights lifted out with an eraser, rough paper tooth",
       "text_short": "charcoal drawing"
     },
     {
       "name": "colored-pencil",
-      "text": "layered colored-pencil illustration, visible strokes and waxy blended color",
+      "text": "layered colored-pencil illustration, directional strokes following the form, waxy burnished blends, paper tooth flecking white through the pigment",
       "text_short": "colored pencil art"
     },
     {
@@ -93,6 +93,38 @@
       "name": "embroidery",
       "text": "embroidered textile artwork, visible stitch directions and raised thread texture",
       "text_short": "embroidered textile"
+    },
+    {
+      "name": "fresco",
+      "text": "buon fresco mural painting, pigment sunk into wet lime plaster, chalky matte surface, hairline craquelure and faint sinopia underdrawing",
+      "text_short": "fresco mural"
+    },
+    {
+      "name": "airbrush",
+      "text": "80s airbrush illustration, seamless sprayed gradients, chrome highlights with starburst glints, frisket-masked razor edges",
+      "text_short": "airbrush chrome gradients"
+    },
+    {
+      "name": "claymation",
+      "text": "stop-motion claymation still, hand-sculpted plasticine characters with visible thumbprints, miniature set depth of field",
+      "text_short": "claymation still"
+    },
+    {
+      "name": "marker-concept",
+      "text": "industrial-design marker rendering, confident sweeping alcohol-marker strokes on warm grey paper, white gel-pen edge highlights, loose construction lines left showing",
+      "text_short": "marker concept sketch"
+    },
+    {
+      "name": "tintype",
+      "text": "wet-plate collodion tintype, silver image on blackened metal, shallow chemical focus, swirled emulsion flaws at the edges, pale luminous skin against inky darkness",
+      "text_short": "wet-plate tintype",
+      "tags": ["historical"]
+    },
+    {
+      "name": "illuminated-manuscript",
+      "text": "medieval illuminated manuscript page, mineral pigments and burnished gold leaf on vellum, ornamented initial letters, vine-scroll borders inhabited by tiny creatures",
+      "text_short": "illuminated manuscript page",
+      "tags": ["historical", "fantasy"]
     }
   ]
 }

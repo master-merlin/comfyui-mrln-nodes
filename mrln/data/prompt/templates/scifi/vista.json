@@ -27,7 +27,7 @@
     },
     {
       "id": "light",
-      "ref": "lighting/dramatic",
+      "ref": "lighting/epic",
       "label": "Lighting Conditions"
     },
     {
@@ -38,9 +38,9 @@
     },
     {
       "id": "medium",
-      "ref": "style/rendering",
-      "label": "Render Pipeline",
-      "default": "cinematic-engine"
+      "ref": "style/grade",
+      "label": "Finish",
+      "default": "moody-cinematic"
     },
     {
       "id": "framing",

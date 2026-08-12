@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "label": "Hearthside Companion",
+  "description": "Companion animals doing indoor things — vignettes written for warm interior scenes, never for the wild.",
+  "suits": ["animal"],
+  "items": [
+    {
+      "name": "cat-loaf-windowsill",
+      "text": "a cat folded into a perfect loaf on the windowsill, eyes shut to contented slits, tail wrapped neatly over both front paws",
+      "text_short": "cat loafing on the windowsill"
+    },
+    {
+      "name": "old-dog-hearth-rug",
+      "text": "an old dog collapsed full-length on the hearth rug with a theatrical sigh, one ear folded inside-out, coat glowing warm at the edges",
+      "text_short": "old dog sprawled on the hearth rug"
+    },
+    {
+      "name": "kitten-yarn-crime",
+      "text": "a kitten mid-crime in a toppled basket of yarn, one thread unspooled across the floorboards, eyes enormous with rehearsed innocence",
+      "text_short": "kitten tangled in stolen yarn"
+    },
+    {
+      "name": "cat-raindrop-watcher",
+      "text": "a cat tracking raindrops down the windowpane with tiny head-flicks, silhouetted against the soft grey light outside",
+      "text_short": "cat watching raindrops on the glass"
+    },
+    {
+      "name": "dog-blanket-burrow",
+      "text": "a small dog burrowed into a knitted blanket until only the nose and one questioning eyebrow remain visible",
+      "text_short": "dog burrowed into a knitted blanket"
+    },
+    {
+      "name": "cat-teacup-steam",
+      "text": "a cat inspecting the steam curling off a fresh cup of tea, nose extended, one careful paw already on the table edge",
+      "text_short": "cat investigating teacup steam"
+    },
+    {
+      "name": "rabbit-slipper-flop",
+      "text": "a lop-eared rabbit flopped against a sheepskin slipper, ears spilled flat across the floor in total surrender",
+      "text_short": "lop rabbit flopped by a slipper"
+    },
+    {
+      "name": "dog-window-vigil",
+      "text": "a dog keeping solemn vigil on the window seat, chin resting on the sill, breath fogging one small circle of glass",
+      "text_short": "dog on window-seat vigil"
+    },
+    {
+      "name": "cat-bookshelf-wedge",
+      "text": "a cat wedged into the exact bookshelf gap it does not fit, one paw hanging over the shelf edge, profoundly unbothered",
+      "text_short": "cat wedged into a bookshelf gap"
+    },
+    {
+      "name": "canary-lamp-puff",
+      "text": "a canary puffed into a warm yellow sphere on its perch near the lamp, one eye half-open, feathers loosened with sleep",
+      "text_short": "canary puffed up by the lamp"
+    }
+  ]
+}

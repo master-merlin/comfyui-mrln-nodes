@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Automotive Venue",
-  "description": "Car-specific places: showrooms, garages, test facilities.",
+  "description": "Car-specific places: showrooms, garages, test facilities and the pilgrimage roads and circuits of car culture.",
   "suits": [
     "object",
     "vehicle",
@@ -10,43 +10,48 @@
   "items": [
     {
       "name": "dealership-showroom",
-      "text": "Inside a bright, empty, and modern car dealership showroom with polished tile floors."
+      "text": "Inside a flagship dealership showroom, mirror-gloss porcelain tile, floor-to-ceiling curtain glass and slender spotlit display plinths under recessed track lighting.",
+      "text_short": "flagship showroom floor"
     },
     {
       "name": "wind-tunnel",
-      "text": "Inside a high-tech wind tunnel, with visible, non-staining streamlines of smoke flowing gracefully over the car's static body."
+      "text": "Inside an aeroacoustic wind tunnel on the rolling-road balance, a smoke-wand streamline tracing clean laminar flow over the static body toward the great turbine grille.",
+      "text_short": "wind tunnel smoke streamlines"
     },
     {
       "name": "robotic-integration-bay",
-      "text": "A sterile, high-tech vehicle integration bay with polished floors and poised robotic arms in the background."
+      "text": "A sterile vehicle integration bay, epoxy-white floors gridded with alignment markings, orange robotic arms poised over the line under shadowless panel lighting.",
+      "text_short": "robotic assembly bay"
     },
     {
       "name": "underground-hypercar-garage",
       "text": "An exclusive minimalist underground hypercar garage, with walls of obsidian-like polished stone and concrete, lit by sharp architectural light strips in the floor and ceiling.",
+      "text_short": "underground hypercar vault",
       "tags": [
         "night"
       ]
     },
     {
       "name": "deserted-racetrack",
-      "text": "A deserted racetrack, with the empty grandstands and pit lane creating a lonely, silent atmosphere under stark floodlights.",
+      "text": "A deserted racetrack under stark floodlights, rubber marbles swept off the racing line, empty grandstand rows climbing behind the catch fencing and a silent, shuttered pit lane.",
+      "text_short": "empty floodlit racetrack",
       "tags": [
         "night"
       ]
     },
     {
       "name": "modena-road",
-      "text": "A sun-warmed road outside Modena, cypress rows and terracotta farmhouses lining the route of legends.",
+      "text": "A sun-warmed provincial road outside Modena, poplar and cypress rows between terracotta farmhouses, Lambrusco vines strung on wires along the flat Emilian verge.",
       "text_short": "road outside Modena"
     },
     {
       "name": "roman-piazza",
-      "text": "A cobbled Roman piazza, baroque facades and fountain glow framing the parked machine.",
+      "text": "A Roman piazza paved in fanned sampietrini setts, a travertine fountain at its centre and baroque facades in burnt sienna and ochre washed by warm lamplight.",
       "text_short": "cobbled Roman piazza"
     },
     {
       "name": "munich-street",
-      "text": "A clean Munich boulevard, Wilhelminian facades and linden trees flanking wide lanes.",
+      "text": "A clean Munich boulevard, Wilhelminian stucco facades and linden rows flanking wide lanes, the twin copper domes of the Frauenkirche on the skyline.",
       "text_short": "Munich boulevard"
     },
     {
@@ -56,12 +61,12 @@
     },
     {
       "name": "monaco-tunnel",
-      "text": "The famous curved harbor tunnel of Monaco, sodium light rolling over the fairing walls.",
+      "text": "The curved harbor tunnel at Monaco, amber sodium light strobing across ribbed concrete walls toward the bright arch opening onto the sea.",
       "text_short": "Monaco harbor tunnel"
     },
     {
       "name": "goodwood-paddock",
-      "text": "A festival hillclimb paddock, hay bales, white tents and privileged machinery in casual rows.",
+      "text": "A festival hillclimb paddock, hay bales, white marquee tents and priceless machinery parked in casual rows on trodden grass.",
       "text_short": "hillclimb festival paddock"
     },
     {
@@ -73,6 +78,11 @@
       "name": "amalfi-corniche",
       "text": "A cliff-hugging Amalfi corniche, pastel villages tumbling to a glittering sea below the guardrail.",
       "text_short": "Amalfi cliff corniche"
+    },
+    {
+      "name": "villa-deste-lawn",
+      "text": "The terraced concours lawn of a grand Lake Como hotel, raked gravel walks and umbrella pines stepping down to the mosaic waterfront, mist softening the far shore behind the rope lines.",
+      "text_short": "Lake Como concours terrace"
     },
     {
       "name": "maranello-gates",
@@ -150,6 +160,11 @@
       "text_short": "Cotswold stone lane"
     },
     {
+      "name": "brooklands-banking",
+      "text": "The surviving concrete banking at Brooklands, weeds threading the expansion joints as the Members' Banking rears above the trees and ends mid-air where the old circuit was severed.",
+      "text_short": "Brooklands Members' Banking"
+    },
+    {
       "name": "le-mans-mulsanne",
       "text": "The endless tree-lined Mulsanne straight, rumble strips, marshal posts and kilometer boards shrinking to a vanishing point.",
       "text_short": "Mulsanne straight"
@@ -171,13 +186,21 @@
     },
     {
       "name": "hakone-turnpike",
-      "text": "The Hakone Turnpike climbing through cedar forest, vermilion guardrails and a distant cone of Mount Fuji over the crest.",
+      "text": "The Hakone Turnpike sweeping up through cedar forest toward the Daikanzan crest, the cone of Mount Fuji rising beyond Lake Ashi.",
       "text_short": "Hakone Turnpike climb"
     },
     {
       "name": "wangan-expressway",
       "text": "The elevated Bayshore expressway over Tokyo harbor, lane markers strobing past gantries and container cranes.",
       "text_short": "Tokyo Bayshore expressway"
+    },
+    {
+      "name": "shuto-c1-loop",
+      "text": "The tight elevated curves of Tokyo's inner C1 loop, sound-barrier walls skimming past the guardrail, illuminated office towers stacked close enough to touch beyond the expressway lamps.",
+      "text_short": "Tokyo C1 inner loop",
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "daikoku-parking",
@@ -195,9 +218,19 @@
       "text_short": "Fuji Speedway straight"
     },
     {
+      "name": "irohazaka-switchbacks",
+      "text": "The one-way Irohazaka switchbacks at Nikkō, numbered hairpins signed with kana characters climbing through dense maple forest.",
+      "text_short": "Irohazaka numbered hairpins"
+    },
+    {
       "name": "woodward-avenue",
       "text": "Wide lanes of Woodward Avenue, drive-in signage, brick storefronts and the boulevard heritage of American muscle.",
       "text_short": "Woodward Avenue cruise"
+    },
+    {
+      "name": "cars-and-coffee",
+      "text": "A cars-and-coffee meet filling a shopping-plaza lot, folding chairs behind open trunks, paper cups resting on fenders and phone photographers crouched at every bumper.",
+      "text_short": "cars-and-coffee meet"
     },
     {
       "name": "laguna-seca-corkscrew",
@@ -208,6 +241,66 @@
       "name": "mulholland-overlook",
       "text": "A Mulholland Drive overlook, canyon guardrail and the endless grid of Los Angeles spread out far below.",
       "text_short": "Mulholland overlook"
+    },
+    {
+      "name": "pebble-beach-lawn",
+      "text": "The concours lawn at Pebble Beach, clipped fairway grass running to wind-bent Monterey cypress above the Pacific, rope lines and judges' ribbons between entrants.",
+      "text_short": "Pebble Beach concours lawn"
+    },
+    {
+      "name": "pikes-peak-summit",
+      "text": "The upper switchbacks of Pikes Peak above the treeline, red gravel shoulders and no guardrail between the tarmac and a mile of blue air.",
+      "text_short": "Pikes Peak summit switchbacks"
+    },
+    {
+      "name": "bonneville-salt-course",
+      "text": "The Bonneville salt course, blinding white crust running to the curve of the horizon, the black guide line and mile-marker flags dissolving into mirage.",
+      "text_short": "Bonneville salt course"
+    },
+    {
+      "name": "tail-of-the-dragon",
+      "text": "A tree-tunneled Appalachian pass road of relentless linked curves, double-yellow centreline snaking through green shade with no straight in sight.",
+      "text_short": "tree-tunnel dragon road"
+    },
+    {
+      "name": "transfagarasan-ramps",
+      "text": "The northern ramps of the Transfăgărășan, switchbacks stacked up a glacial valley wall with the full route visible winding kilometers below.",
+      "text_short": "Transfăgărășan switchbacks"
+    },
+    {
+      "name": "furka-pass",
+      "text": "The Furka Pass hairpins, the shuttered Belvédère hotel wedged into its famous curve, scree slopes and glacier ice hanging above the valley.",
+      "text_short": "Furka Pass Belvédère curve"
+    },
+    {
+      "name": "grossglockner-road",
+      "text": "The Grossglockner High Alpine Road, smooth tar sweeping between numbered granite kilometer pillars and snow poles, the cobbled Edelweissspitze spur corkscrewing above the treeline.",
+      "text_short": "Grossglockner alpine road"
+    },
+    {
+      "name": "spa-eau-rouge",
+      "text": "The Eau Rouge-Raidillon compression at Spa, the track plunging then hurling itself uphill between pine banks and painted curbs.",
+      "text_short": "Eau Rouge compression"
+    },
+    {
+      "name": "nardo-ring",
+      "text": "The Nardò high-speed ring, a perfect 12.6-kilometer circle of banked lanes cutting through Puglian olive groves.",
+      "text_short": "Nardò banked speed ring"
+    },
+    {
+      "name": "ehra-lessien-straight",
+      "text": "The hidden proving straight at Ehra-Lessien, nearly nine kilometers of dead-flat concrete walled in by pine forest, a vanishing point that never arrives.",
+      "text_short": "Ehra-Lessien top-speed straight"
+    },
+    {
+      "name": "drag-strip",
+      "text": "A prepared drag strip, rubber-darkened launch pads behind the burnout box, the Christmas-tree light gantry and quarter-mile boards down the lane.",
+      "text_short": "drag strip Christmas tree"
+    },
+    {
+      "name": "barn-find",
+      "text": "A dusty timber barn interior, shafts of light through gapped plank walls, straw drifts, an oil-stained workbench and enamel signs in the gloom.",
+      "text_short": "barn-find timber barn"
     },
     {
       "name": "pit-lane",

@@ -1,18 +1,26 @@
 {
   "version": 1,
   "label": "Food Styling",
-  "description": "How the food scene is styled and propped.",
+  "description": "How the food scene is styled, plated and propped.",
   "suits": ["food", "object"],
   "items": [
-    { "name": "rustic-board", "text": "styled on a scarred wooden board with scattered flour and herb sprigs", "text_short": "rustic board styling" },
-    { "name": "fine-dining-void", "text": "centered on an oversize plate in a dark void, single spotlight", "text_short": "dark fine-dining void" },
-    { "name": "overhead-spread", "text": "a full overhead table spread, hands reaching in from the edges", "text_short": "overhead table spread" },
-    { "name": "marble-minimal", "text": "on veined marble with one linen napkin and vintage cutlery", "text_short": "marble minimal styling" },
-    { "name": "steam-backlit", "text": "backlit so every wisp of steam glows against shadow", "text_short": "backlit steam" },
-    { "name": "ingredient-scatter", "text": "surrounded by an artful scatter of its raw ingredients", "text_short": "ingredient scatter" },
-    { "name": "market-context", "text": "styled amid a bustling market stall context, produce crates behind", "text_short": "market stall context" },
-    { "name": "picnic-blanket", "text": "laid out on a checked blanket in dappled orchard light", "text_short": "orchard picnic styling" },
-    { "name": "neon-diner", "text": "on a chrome diner counter washed in neon signage glow", "text_short": "neon diner counter", "tags": ["neon", "night"] },
-    { "name": "action-crumbs", "text": "caught in action, crumbs and drips suspended mid-fall", "text_short": "suspended crumbs action" }
+    { "name": "rustic-board", "text": "styled on a scarred wooden board, scattered flour, herb sprigs and a worn-handled knife laid casually off-axis", "text_short": "rustic board styling" },
+    { "name": "fine-dining-void", "text": "centered on an oversize plate in a dark void, a single spotlight carving the food out of blackness", "text_short": "dark fine-dining void" },
+    { "name": "overhead-spread", "text": "a full overhead table spread, dishes almost touching, hands reaching in from the edges mid-serve", "text_short": "overhead table spread" },
+    { "name": "marble-minimal", "text": "on veined marble with one rumpled linen napkin and vintage silver cutlery, everything else cleared away", "text_short": "marble minimal styling" },
+    { "name": "steam-backlit", "text": "backlit so every wisp of steam glows against shadow, rim light tracing the food's silhouette", "text_short": "backlit steam", "requires": ["steam"] },
+    { "name": "ingredient-scatter", "text": "surrounded by an artful scatter of its raw ingredients, whole spices and torn leaves leading the eye inward", "text_short": "ingredient scatter" },
+    { "name": "market-context", "text": "styled amid a bustling market stall, produce crates and hanging scales softly out of focus behind", "text_short": "market stall context" },
+    { "name": "picnic-blanket", "text": "laid out on a checked blanket in dappled orchard light, wicker basket open, jam jar glinting", "text_short": "orchard picnic styling" },
+    { "name": "neon-diner", "text": "on a chrome diner counter washed in neon signage glow, the napkin-dispenser steel doubling every color", "text_short": "neon diner counter", "tags": ["neon", "night"], "negative": "daylight" },
+    { "name": "action-crumbs", "text": "caught in action, crumbs and drips suspended mid-fall, the bite or break happening right now", "text_short": "suspended crumbs action" },
+    { "name": "nouvelle-plating", "text": "plated in nouvelle-cuisine geometry — one perfect quenelle, a comma of sauce, acres of white porcelain negative space", "text_short": "nouvelle quenelle plating" },
+    { "name": "nordic-plating", "text": "New Nordic plating on rough stoneware — foraged leaves, edible flowers and a dust of dried berry over muted food", "text_short": "new nordic stoneware" },
+    { "name": "family-style", "text": "served family-style in dented well-loved pans set straight on the table, serving spoons standing, trivets scorched", "text_short": "family-style pans" },
+    { "name": "izakaya-counter", "text": "on a crowded izakaya counter, small plates overlapping, a beer glass and chopstick rest crowding the frame edge", "text_short": "izakaya counter clutter", "tags": ["anime"] },
+    { "name": "hard-light-pop", "text": "hard-light editorial styling, deep graphic shadows thrown across a saturated color-pop seamless", "text_short": "hard-light color pop" },
+    { "name": "kaiseki-course", "text": "one kaiseki course on black lacquer, three precise elements and a seasonal leaf, negative space doing half the plating, a single rough ceramic accent against the gloss", "text_short": "kaiseki lacquer course", "tags": ["anime"] },
+    { "name": "bistro-tablecloth", "text": "on a bistro's paper-over-linen tablecloth, a carafe of house red and stemless glasses crowding in, the handwritten bill tucked under the salt cellar", "text_short": "bistro paper tablecloth" },
+    { "name": "patisserie-case", "text": "styled as the star shelf of a patisserie vitrine, neighboring éclairs and glazed tartes defocused through the curved glass, hand-lettered price cards on picks", "text_short": "patisserie vitrine shelf" }
   ]
 }

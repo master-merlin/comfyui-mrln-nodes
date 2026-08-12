@@ -30,7 +30,7 @@
     },
     {
       "name": "voxel",
-      "text": "voxel art render, the world assembled from tiny glowing cubes",
+      "text": "voxel art render, the scene assembled from uniform cubic blocks, stepped silhouettes, soft ambient occlusion pooling in every notch",
       "text_short": "voxel cubes"
     },
     {
@@ -54,6 +54,11 @@
       "name": "diorama-render",
       "text": "miniature diorama render, a self-contained floating world slice with tiny perfect props",
       "text_short": "floating diorama render"
+    },
+    {
+      "name": "retro-console-3d",
+      "text": "retro fifth-gen console 3D look, low-poly models with affine texture warping, per-vertex lighting, dithered 15-bit color and fog swallowing the draw distance",
+      "text_short": "retro console 3D"
     }
   ]
 }

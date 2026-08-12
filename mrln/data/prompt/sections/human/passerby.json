@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "label": "Passerby",
+  "description": "A street photographer's cast of strangers — ordinary adults mid-life, each carrying their occupation and story in clothing, posture and props. Night-shift characters are tagged night.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "bike-courier",
+      "text": "a bike courier in a rain-slicked shell jacket, radio clipped to the chest strap, a fixed-gear bike leaned against one hip, courier bag heavy across the back",
+      "text_short": "a bike courier, shell jacket, fixed-gear bike"
+    },
+    {
+      "name": "pigeon-gentleman",
+      "text": "an elderly gentleman in a pressed three-piece suit scattering seed for a churn of pigeons, hat brim low, a cane hooked over one forearm",
+      "text_short": "an elderly suited gentleman feeding pigeons"
+    },
+    {
+      "name": "flower-seller",
+      "text": "a flower seller in a canvas apron hauling zinc buckets of cut tulips onto the pavement, petals stuck to her wet forearms",
+      "text_short": "a flower seller with zinc buckets of tulips"
+    },
+    {
+      "name": "street-violinist",
+      "text": "a street violinist mid-phrase with eyes closed, instrument case open at her feet, loose coins and a single folded note catching the light",
+      "text_short": "a street violinist mid-phrase, open case at her feet"
+    },
+    {
+      "name": "cook-smoke-break",
+      "text": "a line cook in stained whites on a smoke break, back against the alley brick, one knee bent, apron strings hanging loose",
+      "text_short": "a line cook in whites on an alley smoke break"
+    },
+    {
+      "name": "commuter-umbrella",
+      "text": "a businesswoman mid-stride under a black umbrella, phone pressed between ear and shoulder, coat belt trailing behind her",
+      "text_short": "a businesswoman under a black umbrella, phone at her ear"
+    },
+    {
+      "name": "newspaper-reader",
+      "text": "a man in a worn overcoat reading a folded newspaper at the bus stop, a leather satchel wedged between his ankles",
+      "text_short": "a man reading a folded newspaper at the bus stop"
+    },
+    {
+      "name": "skater",
+      "text": "a skateboarder in a faded hoodie carving a slow line between pedestrians, grip tape worn pale at the tail",
+      "text_short": "a skateboarder weaving between pedestrians"
+    },
+    {
+      "name": "fishmonger",
+      "text": "a fishmonger in rubber boots and a wet apron laying silver mackerel across fresh ice, steel scaling knife tucked in the apron tie",
+      "text_short": "a fishmonger in rubber boots arranging mackerel on ice"
+    },
+    {
+      "name": "night-nurse",
+      "text": "a nurse in creased scrubs at the end of a night shift, lanyard and paper coffee cup in one hand, dawn light on tired features",
+      "text_short": "a night-shift nurse with coffee, tired in dawn light",
+      "tags": ["night"]
+    },
+    {
+      "name": "hotel-doorman",
+      "text": "a uniformed doorman under a hotel canopy, white gloves and double rows of brass buttons catching the lamplight, posture parade-straight",
+      "text_short": "a uniformed hotel doorman under the canopy",
+      "tags": ["night"]
+    },
+    {
+      "name": "dog-walker",
+      "text": "a dog walker tangled in six taut leads, arm crossed over arm, the pack pulling in three directions at once",
+      "text_short": "a dog walker tangled in six leads"
+    },
+    {
+      "name": "window-cleaner",
+      "text": "a window cleaner halfway up a ladder, squeegee raised, a sheet of soap water sliding down the glass in front of his face",
+      "text_short": "a window cleaner on a ladder, soap sheeting down the glass"
+    },
+    {
+      "name": "umbrella-couple",
+      "text": "a couple pressed together under one small umbrella, his jacket draped over her shoulders, both laughing at the rain",
+      "text_short": "a couple sharing one umbrella, laughing at the rain"
+    }
+  ]
+}

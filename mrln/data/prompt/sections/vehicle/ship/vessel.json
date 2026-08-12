@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "label": "Vessel",
+  "description": "State-neutral vessel portraits — hull, rig and character only, so the sea-state dimension stays free to contradict nothing.",
+  "suits": ["object", "vehicle", "ship"],
+  "items": [
+    {
+      "name": "j-class-yacht",
+      "text": "a J-class racing yacht, towering Bermuda rig over a lacquered navy hull, deck hardware in polished bronze",
+      "text_short": "J-class racing yacht",
+      "tags": ["historical"]
+    },
+    {
+      "name": "ocean-salvage-tug",
+      "text": "a deep-sea salvage tug, massive towing winch aft, fendered bow scarred from working alongside, funnel streaked with soot",
+      "text_short": "ocean salvage tug"
+    },
+    {
+      "name": "iron-clipper",
+      "text": "a three-masted iron clipper, black riveted hull with a gilded sheer line, yards crossed square and rigging drawn taut",
+      "text_short": "three-masted iron clipper",
+      "tags": ["historical"]
+    },
+    {
+      "name": "north-sea-trawler",
+      "text": "a rust-streaked North Sea trawler, net drums and a stern gantry over a working deck lit by sodium floods",
+      "text_short": "rust-streaked North Sea trawler"
+    },
+    {
+      "name": "stealth-destroyer",
+      "text": "a stealth-faceted guided-missile destroyer in haze grey, angular superstructure unbroken by a single right angle, hull number in shadowed white",
+      "text_short": "stealth guided-missile destroyer"
+    },
+    {
+      "name": "rescue-lifeboat",
+      "text": "a self-righting all-weather rescue lifeboat in signal orange and navy, spray rails and grab lines around a sealed wheelhouse",
+      "text_short": "all-weather rescue lifeboat"
+    },
+    {
+      "name": "polar-icebreaker",
+      "text": "a polar icebreaker, crimson hull worn to silver along the waterline where the ice has scoured it, bridge wings glassed against the cold",
+      "text_short": "polar icebreaker, ice-scoured hull"
+    },
+    {
+      "name": "pilot-cutter",
+      "text": "a gaff-rigged pilot cutter, tanbark sails furled along the boom, varnished spars over a workmanlike black hull",
+      "text_short": "gaff-rigged pilot cutter",
+      "tags": ["historical"]
+    },
+    {
+      "name": "harbor-fireboat",
+      "text": "a harbor fireboat, monitor cannons ranked along the upper deck, brass fittings kept bright against fire-engine red plating",
+      "text_short": "harbor fireboat, monitor cannons"
+    },
+    {
+      "name": "island-ferry",
+      "text": "a double-ended island car ferry, open vehicle deck amidships, twin wheelhouses and a livery faded by decades of salt",
+      "text_short": "double-ended island ferry"
+    },
+    {
+      "name": "explorer-yacht",
+      "text": "an ice-class explorer yacht, high flared bow, helicopter deck aft and a tender crane folded against the superstructure",
+      "text_short": "ice-class explorer yacht"
+    },
+    {
+      "name": "steam-launch",
+      "text": "a Victorian steam launch, tall brass funnel, varnished counter stern and a striped canvas awning on turned posts",
+      "text_short": "Victorian steam launch",
+      "tags": ["historical"]
+    }
+  ]
+}

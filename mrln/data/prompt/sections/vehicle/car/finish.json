@@ -1,10 +1,12 @@
 {
   "version": 1,
   "label": "Paint Finish",
+  "description": "How the primary color behaves in light — from light-swallowing matte to poured-mercury gloss.",
   "items": [
     {
       "name": "matte",
-      "text": "matte finish",
+      "text": "matte finish, a zero-gloss surface that swallows reflections so the body reads as pure sculpted form",
+      "text_short": "matte finish",
       "weight": 0.3333,
       "tags": [
         "standard"
@@ -12,7 +14,8 @@
     },
     {
       "name": "glossy-high-reflectance",
-      "text": "glossy high-reflectance finish",
+      "text": "deep gloss finish, high-reflectance clear coat stretching crisp mirror highlights along every panel line",
+      "text_short": "deep gloss finish",
       "weight": 0.3333,
       "tags": [
         "standard"
@@ -20,7 +23,8 @@
     },
     {
       "name": "satin-sheen",
-      "text": "satin sheen finish",
+      "text": "satin finish, a soft directional sheen that follows the body curvature without hard reflections",
+      "text_short": "satin finish",
       "weight": 0.3333,
       "tags": [
         "standard"
@@ -28,7 +32,8 @@
     },
     {
       "name": "metallic-flake",
-      "text": "Metallic Flake",
+      "text": "metallic-flake paint, coarse aluminum sparkle shifting grain by grain as the light moves",
+      "text_short": "metallic-flake paint",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -36,7 +41,8 @@
     },
     {
       "name": "pearlescent",
-      "text": "pearlescent finish",
+      "text": "pearlescent paint, mica underglow flipping between warm and cool as the panels turn",
+      "text_short": "pearlescent paint",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -44,7 +50,8 @@
     },
     {
       "name": "color-shifting-iridescent",
-      "text": "Color-shifting Iridescent",
+      "text": "iridescent color-shift paint, the hue sliding across the spectrum between highlight and shadow",
+      "text_short": "color-shift paint",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -52,7 +59,8 @@
     },
     {
       "name": "liquid-metal",
-      "text": "Liquid Metal",
+      "text": "liquid-metal finish, mirror-smooth as poured mercury, reflections running unbroken across the body",
+      "text_short": "liquid-metal finish",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -60,7 +68,8 @@
     },
     {
       "name": "chameleon-flip",
-      "text": "chameleon color-flip paint",
+      "text": "chameleon flip paint, its two-tone color flop splitting sharply along each character line",
+      "text_short": "chameleon flip paint",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -68,7 +77,8 @@
     },
     {
       "name": "anodized-matte",
-      "text": "Anodized Matte",
+      "text": "anodized matte metal finish, fine-grained satin with a machined aerospace tone",
+      "text_short": "anodized matte finish",
       "weight": 0.1429,
       "tags": [
         "special"
@@ -76,7 +86,8 @@
     },
     {
       "name": "panther-black-matte",
-      "text": "Panther Black Matte",
+      "text": "panther-black matte, a light-absorbing velvet black that turns the body into pure silhouette",
+      "text_short": "velvet matte black",
       "weight": 0.1429,
       "tags": [
         "special"

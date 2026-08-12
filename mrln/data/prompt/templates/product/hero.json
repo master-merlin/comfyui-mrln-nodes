@@ -2,7 +2,7 @@
   "version": 1,
   "label": "Product Hero",
   "type": ["product", "object"],
-  "description": "Commercial hero shot: product, staging and studio light — advertising-grade.",
+  "description": "Commercial hero shot: product, staging and object-built studio light — advertising-grade surface control.",
   "prefix": "A premium advertising hero photograph — the product presented like an object of desire, staged with the confidence of a global campaign, every reflection placed on purpose.",
   "slots": [
     {
@@ -19,8 +19,9 @@
     },
     {
       "id": "light",
-      "ref": "lighting/studio",
-      "label": "Lighting Conditions"
+      "ref": "lighting/still-life",
+      "label": "Lighting Conditions",
+      "default": "twin-strip-speculars"
     },
     {
       "id": "palette",
@@ -29,10 +30,10 @@
       "allow_empty": true
     },
     {
-      "id": "lens",
-      "ref": "camera/lens",
+      "id": "optics",
+      "ref": "camera/still-life-optics",
       "label": "Optics",
-      "default": "100mm-macro"
+      "default": "stopped-down-true"
     },
     {
       "id": "grade",

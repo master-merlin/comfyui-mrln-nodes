@@ -1,83 +1,113 @@
 {
   "version": 1,
   "label": "Art Movement",
-  "description": "Historical art movements as style directives — characteristics, never artist names.",
+  "description": "Historical art movements as style directives — era, technique, surface quality and palette behavior; characteristics, never artist names.",
   "items": [
     {
       "name": "impressionism",
-      "text": "impressionist rendering, broken color dabs, fleeting light over precise form",
-      "text_short": "impressionist dabs"
+      "text": "impressionist rendering, 1870s plein-air manner, broken dabs of unmixed color, violet-grey shadows instead of black, edges dissolving in vibrating light",
+      "text_short": "impressionist broken color"
     },
     {
       "name": "expressionism",
-      "text": "expressionist rendering, distorted forms and raw color carrying emotion over accuracy",
+      "text": "expressionist rendering, early-1900s manner, jagged angular drawing, acid clashing color dragged on thick, emotion bending anatomy and perspective",
       "text_short": "expressionist distortion"
     },
     {
       "name": "art-nouveau",
-      "text": "art-nouveau styling, whiplash organic curves, ornamental florals and elegant flat framing",
+      "text": "art-nouveau styling, 1900 poster manner, whiplash organic curves, flat decorative color held inside dark contour lines, floral borders framing the figure",
       "text_short": "art nouveau curves"
     },
     {
       "name": "art-deco",
-      "text": "art-deco styling, stepped geometry, gilded fans and machine-age symmetry",
+      "text": "art-deco styling, 1920s machine-age glamour, stepped ziggurat geometry, gilded sunburst fans, lacquer-smooth surfaces in black, gold and jade",
       "text_short": "art deco geometry"
     },
     {
       "name": "ukiyo-e",
-      "text": "ukiyo-e woodblock styling, flat color planes, bold outlines and stylized waves",
+      "text": "ukiyo-e woodblock styling, Edo-period manner, flat color planes with bokashi gradient skies, bold carved keyblock outlines, stylized waves and drifting blossom",
       "text_short": "ukiyo-e woodblock",
       "tags": ["anime"]
     },
     {
       "name": "surrealism",
-      "text": "surrealist composition, dream-logic juxtapositions rendered with realistic precision",
+      "text": "surrealist composition, 1930s dream-logic juxtapositions painted with tight academic finish, long shadows across empty plazas, scale quietly wrong",
       "text_short": "surrealist dream logic"
     },
     {
       "name": "cubism",
-      "text": "cubist rendering, the subject fractured into simultaneous geometric viewpoints",
+      "text": "analytic cubist rendering, 1910s manner, the subject fractured into simultaneous faceted viewpoints, muted ochre-and-grey palette, shallow collaged space",
       "text_short": "cubist fracture"
     },
     {
       "name": "bauhaus",
-      "text": "bauhaus design language, primary colors, elemental shapes, form strictly following function",
+      "text": "bauhaus design language, 1920s workshop modernism, elemental circle-square-triangle geometry, primary red-yellow-blue on neutral grounds, form strictly following function",
       "text_short": "bauhaus primaries"
     },
     {
       "name": "de-stijl",
-      "text": "de-stijl abstraction, black grids with primary color planes",
+      "text": "de-stijl abstraction, 1920s neoplasticism, asymmetric black grids locking flat planes of primary color into white space",
       "text_short": "de stijl grid"
     },
     {
       "name": "romanticism",
-      "text": "romanticist grandeur, sublime nature overwhelming small human figures",
+      "text": "romanticist grandeur, early-1800s sublime, storm-lit skies in glazed atmospheric depth, tiny human figures dwarfed by mountains and wreck-strewn seas",
       "text_short": "romantic sublime"
     },
     {
       "name": "baroque",
-      "text": "baroque drama, sweeping diagonals, rich fabrics and theatrical divine light",
-      "text_short": "baroque drama"
+      "text": "baroque drama, 1600s tenebrism, sweeping diagonal composition, candlelit figures emerging from deep brown darkness, rich fabrics in saturated crimson and gold",
+      "text_short": "baroque tenebrism"
     },
     {
       "name": "minimalism",
-      "text": "minimalist reduction, few elements, exact placement, maximal restraint",
+      "text": "minimalist reduction, few elements placed at exact intervals of empty space, flat even light, disciplined near-monochrome palette",
       "text_short": "minimalist restraint"
     },
     {
       "name": "pop-art",
-      "text": "pop-art treatment, flat commercial color, halftone dots and bold outlines",
+      "text": "pop-art treatment, 1960s commercial manner, flat CMYK color, enlarged benday halftone dots, hard black keyline outlines",
       "text_short": "pop art halftone"
     },
     {
       "name": "brutalism",
-      "text": "brutalist aesthetic, raw monolithic concrete masses and unapologetic weight",
+      "text": "brutalist aesthetic, 1960s béton brut, raw board-marked concrete masses, deep shadow reveals, monumental repetition against a grey sky",
       "text_short": "brutalist mass"
     },
     {
       "name": "abstract-expressionism",
-      "text": "abstract-expressionist energy, gestural sweeps and dripped texture at mural scale",
+      "text": "abstract-expressionist energy, 1950s action painting, gestural housepainter-brush sweeps, dripped and flung skeins of enamel at mural scale",
       "text_short": "gestural abstraction"
+    },
+    {
+      "name": "fauvism",
+      "text": "fauvist rendering, 1905 manner, non-local color at full saturation, vermilion shadows and viridian skin, drawing simplified to confident strokes",
+      "text_short": "fauvist wild color"
+    },
+    {
+      "name": "pointillism",
+      "text": "pointillist rendering, 1880s divisionism, the scene built from small uniform dots of pure color mixing optically at distance, luminous still haze",
+      "text_short": "pointillist dots"
+    },
+    {
+      "name": "rococo",
+      "text": "rococo styling, 1740s boudoir elegance, pastel pinks and powder blues, gilt scrollwork frames, silk sheen and powdered curls in soft garden light",
+      "text_short": "rococo pastel gilt"
+    },
+    {
+      "name": "pre-raphaelite",
+      "text": "pre-raphaelite manner, 1850s jewel-toned naturalism, botanically exact flowers, loose flowing auburn hair, luminous glazes over a white ground",
+      "text_short": "pre-raphaelite jewel tones"
+    },
+    {
+      "name": "constructivism",
+      "text": "constructivist poster styling, 1920s agitprop, dynamic diagonal photomontage, red-black-cream palette, bold geometric wedges and stencil type",
+      "text_short": "constructivist diagonals"
+    },
+    {
+      "name": "futurism",
+      "text": "italian futurist rendering, 1910s dynamism, the subject multiplied into sequential motion phases, force-lines slicing space, machine speed in steel grey and hot vermilion",
+      "text_short": "futurist motion lines"
     }
   ]
 }

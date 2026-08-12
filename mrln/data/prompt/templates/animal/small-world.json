@@ -2,18 +2,14 @@
   "version": 1,
   "label": "Small World",
   "type": ["animal", "nature"],
-  "description": "Macro photography where textures become landscapes: tiny subject, dew, stacked focus.",
-  "prefix": "A breathtaking macro photograph.",
+  "description": "Field macro photography where textures become landscapes: a tiny subject, real macro craft and daylight hour.",
+  "prefix": "A breathtaking field-macro photograph — a thumbnail-sized world rendered at life size, its textures becoming landscapes.",
   "slots": [
-    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "maximal-8k" },
     { "id": "subject", "ref": "animal/insect-macro", "label": "Tiny subject", "emphasis": 1.25 },
-    { "id": "stage", "ref": "nature/flora", "label": "Its world", "allow_empty": true },
-    { "id": "particles", "ref": "atmosphere/particles", "label": "Suspended detail", "default": "frozen-splash" },
-    { "id": "light", "ref": "lighting/organic", "label": "Light", "default": "dappled-leaves" },
-    { "id": "lens", "ref": "camera/lens", "label": "Lens", "default": "100mm-macro" },
-    { "id": "technique", "ref": "camera/technique", "label": "Technique", "default": "focus-stack" }
+    { "id": "rig", "ref": "camera/macro-rig", "label": "Macro rig", "default": "100mm-lifesize" },
+    { "id": "hour", "ref": "atmosphere/time-of-day", "label": "Hour", "tags_any": ["day"], "default": "morning-mist" }
   ],
-  "suffix": "surface textures resolved into landscapes, jewel-like specular highlights",
-  "negative": "watermark, text, motion blur on the subject",
+  "suffix": "surface textures resolved into landscapes, jewel-like specular highlights, spherical dew beads acting as tiny lenses where they cling",
+  "negative": "watermark, text, motion blur on the subject, studio backdrop, pins, specimen mounts",
   "render": { "format": "string", "joiner": ", " }
 }

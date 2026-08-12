@@ -1,47 +1,75 @@
 {
   "version": 1,
   "label": "Capture Format",
-  "description": "The capture system's rendering signature.",
+  "description": "The capture system's rendering signature — negative area, tonality and the discipline each format imposes.",
   "items": [
     {
       "name": "35mm-full-frame",
-      "text": "full-frame 35mm capture, the versatile reportage standard",
+      "text": "full-frame 35mm capture, the versatile reportage standard, honest grain and quick handheld framing",
       "text_short": "35mm full frame"
     },
     {
       "name": "medium-format-67",
-      "text": "6x7 medium format capture, cavernous tonal depth and slow deliberate framing",
+      "text": "6x7 medium format capture, a negative five times the area of 35mm, cavernous tonal depth, gentle depth-of-field falloff and slow deliberate framing",
       "text_short": "6x7 medium format"
     },
     {
       "name": "large-format-4x5",
-      "text": "4x5 large format capture, immense resolving detail and formal composed stillness",
+      "text": "4x5 large format capture, immense resolving detail, shallow focus even at portrait apertures and the formal stillness of tripod-bound composition",
       "text_short": "4x5 large format"
     },
     {
       "name": "digital-mf-back",
-      "text": "digital medium-format back, clinical 16-bit color and endless highlight latitude",
+      "text": "digital medium-format back, clinical 16-bit color that refuses to clip, micro-contrast so fine that fabric weave and skin texture separate without any sharpening",
       "text_short": "digital medium format"
     },
     {
       "name": "instant-pack-film",
-      "text": "peel-apart instant pack film, imperfect chemistry edges and creamy tonality",
+      "text": "peel-apart instant pack film, creamy tonality with chemistry roller streaks and ragged developer edges framing the image, every frame a one-off object",
       "text_short": "peel-apart instant film"
     },
     {
       "name": "half-frame",
-      "text": "half-frame 35mm capture, grainy diaristic snapshot energy",
+      "text": "half-frame 35mm capture, grain doubled by the small negative and a loose diaristic snapshot energy, framed vertically as if torn from a contact sheet",
       "text_short": "half-frame snapshot"
     },
     {
       "name": "8x10-contact",
-      "text": "8x10 contact-print rendering, continuous tone with no visible grain at all",
+      "text": "8x10 contact-print rendering, continuous tone with no enlargement step and no visible grain at all, the deepest tonal scale photography offers",
       "text_short": "8x10 contact print"
     },
     {
       "name": "cinema-super35",
-      "text": "Super 35 cinema capture, motion-picture color science and gate weave charm",
+      "text": "Super 35 motion-picture capture, cinema color science with a gentle highlight shoulder, faint gate weave and frame-line jitter lending the still a lifted-from-footage feel",
       "text_short": "Super 35 cinema"
+    },
+    {
+      "name": "617-panoramic",
+      "text": "6x17 panoramic capture, one sweeping three-to-one frame reading like a scroll, the eye forced to travel across layered scenery",
+      "text_short": "6x17 panoramic frame"
+    },
+    {
+      "name": "16mm-cine",
+      "text": "16mm cine capture, coarse dancing grain, softened resolution and documentary immediacy, blacks slightly lifted and alive",
+      "text_short": "grainy 16mm cine look"
+    },
+    {
+      "name": "wet-plate-collodion",
+      "text": "wet-plate collodion capture, blue-sensitive rendering that darkens skies and warms skin toward shadow, silvery chemical pours and artifacts at the edges, shallow swirling antique focus",
+      "text_short": "wet-plate collodion look",
+      "weight": 0.6
+    },
+    {
+      "name": "pinhole",
+      "text": "lensless pinhole capture, infinite depth of field with everything equally and softly unsharp, exposures running to seconds so anything moving thins to a ghost, corners falling into deep natural vignette",
+      "text_short": "soft pinhole vignette",
+      "weight": 0.5
+    },
+    {
+      "name": "smartphone-vernacular",
+      "text": "modern smartphone computational capture, everything in focus, multi-frame HDR holding sky and shadow in the same slightly flattened exposure, edges a touch over-sharpened — the candid vernacular of the camera that is always in a pocket",
+      "text_short": "candid smartphone look",
+      "weight": 0.6
     }
   ]
 }

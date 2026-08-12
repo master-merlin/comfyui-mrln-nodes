@@ -5,52 +5,52 @@
   "items": [
     {
       "name": "full-body",
-      "text": "full-body shot, the entire figure in frame with breathing room",
+      "text": "full-body shot, the entire figure in frame with breathing room, camera at chest height so proportions stay true from head to feet",
       "text_short": "full body shot"
     },
     {
       "name": "three-quarter-figure",
-      "text": "three-quarter figure shot, framed from head to mid-thigh",
+      "text": "three-quarter figure shot framed from head to mid-thigh, the crop falling between joints so the figure reads whole",
       "text_short": "three-quarter figure"
     },
     {
       "name": "waist-up",
-      "text": "waist-up medium shot, natural conversational framing",
+      "text": "waist-up medium shot, natural conversational framing with the hands free to enter the frame",
       "text_short": "waist-up shot"
     },
     {
       "name": "bust-portrait",
-      "text": "classic head-and-shoulders portrait framing",
+      "text": "classic head-and-shoulders portrait framing, headroom tight and the eyes on the upper third line",
       "text_short": "head and shoulders"
     },
     {
       "name": "close-up-face",
-      "text": "intimate close-up of the face, eyes carrying the frame",
+      "text": "intimate close-up of the face, focus nailed to the nearest eye, lips and lashes drifting soft behind the focus plane",
       "text_short": "face close-up"
     },
     {
       "name": "extreme-detail",
-      "text": "extreme close-up detail shot, lips, lashes or hands filling the frame",
+      "text": "extreme close-up detail shot, lips, lashes or laced fingers filling the whole frame, the focus plane a millimeter deep",
       "text_short": "extreme detail crop"
     },
     {
       "name": "over-the-shoulder",
-      "text": "over-the-shoulder framing, the subject glancing back toward the viewer",
+      "text": "over-the-shoulder framing, the subject glancing back toward the viewer, the near shoulder soft in the foreground",
       "text_short": "over-shoulder glance"
     },
     {
       "name": "profile",
-      "text": "clean side profile, features rendered in silhouette-sharp relief",
+      "text": "clean side profile, features rendered in silhouette-sharp relief against a simple ground",
       "text_short": "side profile"
     },
     {
       "name": "back-view",
-      "text": "view from behind, the line of the back and shoulders leading the eye",
+      "text": "view from directly behind, the line of spine and shoulders leading the eye up to the turn of the head",
       "text_short": "view from behind"
     },
     {
       "name": "mirror-shot",
-      "text": "composed through a mirror, subject and reflection sharing the frame",
+      "text": "composed through a mirror, subject and reflection sharing the frame, focus committed to the reflection while the near shoulder blurs",
       "text_short": "mirror reflection shot"
     },
     {
@@ -60,8 +60,23 @@
     },
     {
       "name": "lying-overhead",
-      "text": "directly overhead looking down at the reclining subject",
+      "text": "directly overhead looking down at the reclining subject, hair fanned across the surface below",
       "text_short": "overhead reclining shot"
+    },
+    {
+      "name": "low-hero-angle",
+      "text": "camera just below chin height looking slightly up, the jawline strengthened and the figure lent quiet authority",
+      "text_short": "low hero angle"
+    },
+    {
+      "name": "high-beauty-angle",
+      "text": "camera a hand's width above eye level angled gently down, the eyes enlarged and the jaw slimmed, the classic beauty angle",
+      "text_short": "high beauty angle"
+    },
+    {
+      "name": "fashion-full-length",
+      "text": "full-length fashion framing with the camera dropped to hip height, the subtle up-angle lengthening the legs and setting the figure against more sky than floor",
+      "text_short": "hip-height fashion full-length"
     }
   ]
 }

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Still-Life Optics",
+  "description": "Tabletop and studio optics for food and product work — where the plane of focus lives and how the set falls away around it.",
+  "items": [
+    {
+      "name": "100mm-tabletop",
+      "text": "a 100mm macro at tabletop distance, one plane of critical sharpness placed deliberately on the hero, the rest of the set folding into soft falloff",
+      "text_short": "100mm macro, one placed focus plane"
+    },
+    {
+      "name": "tilt-swing-surface",
+      "text": "a tilt lens swung so the plane of focus lies along the subject's top surface, sharpness following the form instead of the distance",
+      "text_short": "tilt lens, focus along the surface"
+    },
+    {
+      "name": "overhead-flat-lay",
+      "text": "a 50mm mounted directly overhead for a graphic flat-lay, the set arranged like a page layout, zero convergence and honest proportions",
+      "text_short": "overhead 50mm flat-lay"
+    },
+    {
+      "name": "35mm-in-scene",
+      "text": "a 35mm environmental view from a natural standing angle, the hero sharp inside a believable scene that blurs gently toward the edges",
+      "text_short": "35mm environmental tabletop view"
+    },
+    {
+      "name": "long-lens-compression",
+      "text": "a 135mm from across the set, perspective flattened, background props swelling into large soft shapes behind the hero",
+      "text_short": "135mm compressed set"
+    },
+    {
+      "name": "probe-through-set",
+      "text": "a probe lens weaving through the set at subject height, impossibly close perspective with foreground elements brushing past the frame edges",
+      "text_short": "probe lens through the set"
+    },
+    {
+      "name": "wide-open-slice",
+      "text": "an 85mm at f/1.4, a millimeter-thin slice of focus on the single most important edge, everything else surrendered to atmosphere",
+      "text_short": "f/1.4 single-edge focus"
+    },
+    {
+      "name": "stopped-down-true",
+      "text": "stopped down to f/11 on a tripod, front-to-back sharpness across the hero, every material surface reading true to swatch",
+      "text_short": "f/11 tripod, front-to-back sharp"
+    }
+  ]
+}

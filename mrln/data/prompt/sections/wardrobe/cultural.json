@@ -1,18 +1,21 @@
 {
   "version": 1,
   "label": "Cultural Wardrobe",
-  "description": "Traditional garments, phrased respectfully.",
+  "description": "Traditional garments with authentic construction details, phrased respectfully.",
   "suits": ["human"],
   "items": [
-    { "name": "kimono-furisode", "text": "an elegant silk furisode kimono with a hand-tied obi", "text_short": "silk furisode kimono", "tags": ["anime"] },
-    { "name": "yukata-summer", "text": "a light cotton summer yukata with a simple obi", "text_short": "summer yukata", "tags": ["anime"] },
-    { "name": "hanbok", "text": "a flowing hanbok with a high jeogori bodice in bright silk", "text_short": "flowing hanbok" },
-    { "name": "sari-silk", "text": "a richly embroidered silk sari with gold border draping", "text_short": "embroidered silk sari" },
-    { "name": "qipao", "text": "a fitted brocade qipao with a mandarin collar", "text_short": "brocade qipao" },
-    { "name": "dirndl", "text": "a traditional dirndl with a laced bodice and apron", "text_short": "traditional dirndl" },
-    { "name": "kaftan", "text": "an embroidered flowing kaftan in saturated tones", "text_short": "embroidered kaftan" },
-    { "name": "vyshyvanka", "text": "a vibrant embroidered vyshyvanka dress with intricate patterns", "text_short": "embroidered vyshyvanka" },
-    { "name": "kilt-formal", "text": "a formal tartan kilt outfit with a wool jacket", "text_short": "formal tartan kilt" },
-    { "name": "agbada", "text": "a flowing embroidered agbada in rich fabric", "text_short": "embroidered agbada" }
+    { "name": "kimono-furisode", "text": "an elegant silk furisode kimono, long swinging sleeves, hand-tied brocade obi finished in an otaiko knot", "text_short": "silk furisode kimono", "tags": ["anime"] },
+    { "name": "yukata-summer", "text": "a light indigo-dyed cotton yukata, crisp pressed folds, simple contrast obi tied at the back", "text_short": "summer yukata", "tags": ["anime"] },
+    { "name": "hanbok", "text": "a flowing hanbok, short jeogori jacket with a long otgoreum ribbon over a full high-waisted chima skirt in bright silk", "text_short": "flowing hanbok" },
+    { "name": "sari-silk", "text": "a richly embroidered silk sari, gold zari border, pallu draped over the shoulder in even pleats", "text_short": "embroidered silk sari" },
+    { "name": "qipao", "text": "a fitted silk-brocade qipao, mandarin collar, knotted frog closures and a high side slit", "text_short": "brocade qipao" },
+    { "name": "dirndl", "text": "a traditional dirndl, laced velvet bodice over a full skirt and apron, white puff-sleeve blouse", "text_short": "traditional dirndl" },
+    { "name": "kaftan", "text": "an embroidered flowing kaftan in saturated jewel tones, wide sleeves, metallic thread tracing the neckline", "text_short": "embroidered kaftan" },
+    { "name": "vyshyvanka", "text": "a vyshyvanka dress of white linen, dense red-and-black cross-stitch bands at the sleeves and collar", "text_short": "embroidered vyshyvanka" },
+    { "name": "kilt-formal", "text": "a formal tartan kilt with a horsehair sporran, Prince Charlie jacket and polished ghillie brogues", "text_short": "formal tartan kilt" },
+    { "name": "agbada", "text": "a flowing embroidered agbada in rich damask, wide draped sleeves over matching trousers and cap", "text_short": "embroidered agbada" },
+    { "name": "flamenco", "text": "a traje de flamenca fitted through the hips into cascading ruffled tiers, polka-dot fabric and a long fringed shawl", "text_short": "flamenco ruffled dress" },
+    { "name": "ao-dai", "text": "a silk áo dài, high-collared fitted tunic split to the waist over flowing white trousers, the panels streaming behind each step", "text_short": "silk ao dai" },
+    { "name": "lederhosen", "text": "traditional lederhosen of embossed deer leather, drop-front flap, embroidered H-bar braces over a checked shirt, wool socks and haferl shoes", "text_short": "traditional lederhosen", "tags": ["male"] }
   ]
 }

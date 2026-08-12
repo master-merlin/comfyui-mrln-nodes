@@ -2,17 +2,76 @@
   "version": 1,
   "label": "Astro Nightscape",
   "type": ["nature"],
-  "description": "Astrophotography: a celestial hero over a dark landform, long exposure on serious formats.",
-  "prefix": "An astrophotography nightscape.",
+  "description": "Astrophotography: a celestial hero over a dark landform drawn per biome, a tracked high-ISO exposure under true night.",
+  "prefix": "An astrophotography nightscape — a fast wide prime on a star tracker, a long high-ISO exposure made far from any town, the whole scene held in true darkness.",
   "slots": [
-    { "id": "quality", "ref": "style/quality", "label": "Quality boost", "default": "maximal-8k" },
-    { "id": "sky", "ref": "nature/sky-celestial", "label": "Celestial hero", "tags_any": ["night"], "emphasis": 1.3 },
-    { "id": "foreground", "ref": "nature", "label": "Dark foreground", "tags_none": ["night"], "emphasis": 1.1 },
-    { "id": "technique", "ref": "camera/technique", "label": "Technique", "default": "long-exposure" },
-    { "id": "format", "ref": "camera/format", "label": "Capture format", "default": "35mm-full-frame" },
-    { "id": "framing", "ref": "composition/framing", "label": "Composition", "default": "horizon-low" }
+    {
+      "id": "sky",
+      "ref": "nature/sky-celestial",
+      "label": "Celestial hero",
+      "tags_any": ["night"],
+      "emphasis": 1.3
+    },
+    {
+      "id": "framing",
+      "ref": "composition/vista",
+      "label": "Composition",
+      "default": "low-horizon-sky"
+    }
   ],
-  "suffix": "pinpoint stars, natural night-sky color balance, foreground silhouetted clean against the glow",
-  "negative": "light pollution glow, daylight, watermark, text",
+  "variants": [
+    {
+      "name": "desert",
+      "label": "Desert foreground",
+      "slots": [
+        {
+          "id": "foreground",
+          "ref": "nature/desert",
+          "label": "Dark foreground",
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "mountain",
+      "label": "Mountain foreground",
+      "slots": [
+        {
+          "id": "foreground",
+          "ref": "nature/mountain",
+          "label": "Dark foreground",
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "ice",
+      "label": "Ice & polar foreground",
+      "slots": [
+        {
+          "id": "foreground",
+          "ref": "nature/ice-polar",
+          "label": "Dark foreground",
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
+      "name": "water",
+      "label": "Water foreground",
+      "slots": [
+        {
+          "id": "foreground",
+          "ref": "nature/water",
+          "label": "Dark foreground",
+          "emphasis": 1.1
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["sky", "@variant", "framing"],
+  "suffix": "Night Rendering: stars rendered faithfully — crisp points or clean trails exactly as the exposure dictates, natural night-sky color with faint green airglow at the horizon, the foreground held as a deep clean silhouette against the glow.",
+  "negative": "light pollution glow, daylight, blue sky, watermark, text",
   "render": { "format": "string", "joiner": ", " }
 }

@@ -2,7 +2,7 @@
   "version": 1,
   "label": "Character Concept",
   "type": ["human"],
-  "description": "Character-design sheet energy: archetype, wardrobe, prop and action over any backdrop.",
+  "description": "Character-design sheet energy: archetype, signature prop and action over any backdrop — the costume lives inside the archetype so the design always stays coherent.",
   "prefix": "Professional character concept art for a AAA production — a single fully-realized character whose silhouette, costume and attitude tell their whole story at a glance.",
   "slots": [
     {
@@ -15,13 +15,6 @@
       "id": "expression",
       "ref": "human/expression",
       "label": "Expression"
-    },
-    {
-      "id": "outfit",
-      "ref": "wardrobe",
-      "label": "Costume Accent",
-      "tags_none": ["boudoir"],
-      "allow_empty": true
     },
     {
       "id": "prop",

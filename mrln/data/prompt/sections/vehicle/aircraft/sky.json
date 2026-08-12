@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Sky Stage",
+  "description": "The sky as an aviation stage — cloud architecture and air, written from altitude rather than from the ground.",
+  "suits": ["object", "vehicle", "aircraft"],
+  "items": [
+    {
+      "name": "cumulus-canyons",
+      "text": "towering cumulus canyons, sunlit cauliflower walls with shadowed gorges of clear air running between them",
+      "text_short": "cumulus canyon sky"
+    },
+    {
+      "name": "anvil-distance",
+      "text": "a single anvil-topped thunderhead standing at distance, its shadow laid across the haze layer below",
+      "text_short": "distant anvil thunderhead"
+    },
+    {
+      "name": "cirrus-sheet",
+      "text": "a high mackerel sheet of cirrus, thin silver light spread perfectly even across the frame",
+      "text_short": "mackerel cirrus sheet"
+    },
+    {
+      "name": "polar-blue",
+      "text": "hard polar blue, air so dry and clean the horizon shows its faint curve at altitude",
+      "text_short": "hard polar blue altitude"
+    },
+    {
+      "name": "broken-stratus-rays",
+      "text": "broken stratus with god-rays dropping through the gaps to a patchwork of ground far below",
+      "text_short": "broken stratus, god-rays below"
+    },
+    {
+      "name": "golden-haze-layer",
+      "text": "a golden haze layer lying on the horizon, the low sun ballooning soft and enormous where it meets it",
+      "text_short": "golden haze horizon"
+    },
+    {
+      "name": "lenticular-stack",
+      "text": "a stack of lenticular clouds hovering lens-on-lens in the mountain wave, edges machined smooth by the wind",
+      "text_short": "stacked lenticular clouds"
+    },
+    {
+      "name": "squall-line",
+      "text": "an advancing squall line, a rolling shelf cloud dragging its grey curtain of rain across half the sky",
+      "text_short": "advancing squall line"
+    },
+    {
+      "name": "contrail-lattice",
+      "text": "deep blue crossed by an old lattice of spreading contrails, fresh white lines cutting the softened ones",
+      "text_short": "contrail-crossed deep blue"
+    },
+    {
+      "name": "moonlit-cloud-floor",
+      "text": "a moonlit cloud floor rolling silver to the horizon under hard unblinking stars",
+      "text_short": "moonlit cloud floor, hard stars",
+      "tags": ["night"]
+    }
+  ]
+}

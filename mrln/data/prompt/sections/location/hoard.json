@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Treasure Vault",
+  "description": "Hoard interiors — treasure-filled spaces built for reflected light. Tagged 'interior' so open-sky templates can filter them out.",
+  "tags": ["fantasy", "interior"],
+  "items": [
+    {
+      "name": "mountain-vault",
+      "text": "A vault hollowed from the mountain's heart, coin-drifts rising in dunes between basalt pillars, the ceiling lost beyond the reach of any light.",
+      "text_short": "mountain-heart coin vault"
+    },
+    {
+      "name": "sunken-treasury",
+      "text": "A flooded cathedral treasury, gold blurring and shimmering under a meter of still clear water, columns climbing out of the flood into dark air.",
+      "text_short": "flooded gold treasury"
+    },
+    {
+      "name": "counting-hall",
+      "text": "A dwarven counting-hall where the treasure is sorted with terrible neatness — coin in graded bins, ingots stacked in courses, beam-scales at rest beside one open ledger.",
+      "text_short": "dwarven counting-hall"
+    },
+    {
+      "name": "shipwreck-hold",
+      "text": "The split hold of an ancient shipwreck beached deep inside a sea-cave, treasure spilled down the tilted deck between barnacled ribs, salt crystals glittering on every chest.",
+      "text_short": "sea-cave shipwreck hold"
+    },
+    {
+      "name": "barrow-treasury",
+      "text": "A king's barrow chamber, grave-gold laid out in strict ceremony — torcs on stone shelves, a chariot's bronze fittings, amber beads in spirals nobody has disturbed.",
+      "text_short": "king's barrow gold"
+    },
+    {
+      "name": "tower-strongroom",
+      "text": "A wizard tower's strongroom, artifacts spaced on velvet pedestals under glass bells, thin chains of warding script strung from wall to wall between them.",
+      "text_short": "warded tower strongroom"
+    },
+    {
+      "name": "reliquary-crypt",
+      "text": "A reliquary crypt beneath a ruined abbey, hammered gold masks and jeweled caskets crowded along stone shelving, incense ash still velvet on the floor.",
+      "text_short": "gold reliquary crypt"
+    },
+    {
+      "name": "glacier-cache",
+      "text": "A hoard sealed inside a glacier crevasse, coins and crowns suspended at every depth in blue ice, the walls bending each glint into slow curves.",
+      "text_short": "hoard frozen in blue ice"
+    }
+  ]
+}

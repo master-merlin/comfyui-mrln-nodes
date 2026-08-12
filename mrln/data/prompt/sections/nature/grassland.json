@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "label": "Grassland",
+  "description": "Open-country landforms as hero subjects — savanna, prairie, steppe, tundra. Prime wildlife habitat.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "acacia-savanna", "text": "an umbrella acacia flat-topped over red-gold savanna grass, end-of-dry-season dust hazing the herds beyond", "text_short": "dry-season acacia savanna" },
+    { "name": "tallgrass-prairie", "text": "tallgrass prairie in high summer, bluestem head-high and heavy with seed, wind waves rolling to the horizon", "text_short": "rolling tallgrass prairie" },
+    { "name": "steppe-shadows", "text": "treeless shortgrass steppe running unbroken to the horizon, cloud shadows racing across it faster than anything on the ground", "text_short": "cloud shadows on steppe" },
+    { "name": "termite-cathedral-plain", "text": "red cathedral termite mounds studding the grassland like standing stones, all aligned along the same axis", "text_short": "termite mound plain" },
+    { "name": "autumn-tundra", "text": "autumn tundra burning red and orange at ankle height, dwarf birch and bearberry turned, first snow dusting the far ridge", "text_short": "red autumn tundra" },
+    { "name": "chalk-downland", "text": "sheep-cropped chalk downland rolling in green whale-backs, a bare white path curving over the crest", "text_short": "chalk downland path" },
+    { "name": "pampas-plumes", "text": "silver pampas plumes nodding head-high over wind-flattened grass, backlit into soft fire", "text_short": "backlit pampas plumes" },
+    { "name": "dew-web-meadow", "text": "a rough autumn meadow strung with hundreds of dew-loaded orb webs sagging between the seed heads", "text_short": "dew-web meadow" },
+    { "name": "postfire-green-flush", "text": "savanna two weeks after a grass fire, a flush of green regrowth spreading across the black burn scar, the first grazers already working the new blades", "text_short": "green flush after fire" }
+  ]
+}

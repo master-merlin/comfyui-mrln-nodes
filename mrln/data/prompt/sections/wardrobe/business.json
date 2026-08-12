@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "label": "Business & Tailored",
+  "description": "Office and power-dressing wardrobe — sharp tailoring between casual and glamour; male-tagged items serve male draws.",
+  "suits": ["human"],
+  "items": [
+    { "name": "power-suit", "text": "a sharply tailored power suit, padded shoulders, nipped waist, cropped cigarette trousers", "text_short": "tailored power suit" },
+    { "name": "pencil-silk", "text": "a high-waist pencil skirt with a tucked silk blouse, covered buttons, back-slit hem", "text_short": "pencil skirt, silk blouse" },
+    { "name": "blazer-dress", "text": "a double-breasted blazer dress, gilt buttons, sharp peak lapels, hem at mid-thigh", "text_short": "blazer dress" },
+    { "name": "tweed-set", "text": "a bouclé tweed jacket and skirt set, fringed braid trim, a gilt chain sewn into the hem to weight the drape", "text_short": "bouclé tweed set" },
+    { "name": "shirtdress", "text": "a crisp poplin shirtdress cinched with a wide belt, cuffs folded back", "text_short": "belted poplin shirtdress" },
+    { "name": "pinstripe-waistcoat", "text": "a fitted pinstripe waistcoat worn over bare arms with matching wide-leg trousers", "text_short": "pinstripe waistcoat set" },
+    { "name": "turtleneck-tailored", "text": "a fine merino turtleneck tucked into high-waist pleated trousers, slim leather belt", "text_short": "turtleneck, pleated trousers" },
+    { "name": "silk-bow-blouse", "text": "a silk pussy-bow blouse, deep cuffs, bow tied loose at the throat, tucked into tailored trousers", "text_short": "bow blouse, trousers" },
+    { "name": "charcoal-three-piece", "text": "a charcoal three-piece suit, notch lapels, waistcoat buttoned over a knotted grenadine tie", "text_short": "charcoal three-piece", "tags": ["male"] },
+    { "name": "navy-blazer-chinos", "text": "a soft-shouldered navy blazer, open-collar shirt and pressed chinos", "text_short": "navy blazer, chinos", "tags": ["male"] },
+    { "name": "camel-overcoat", "text": "a double-faced camel-hair overcoat draped cape-style over the shoulders, sleeves hanging empty, over slim black tailoring", "text_short": "draped camel overcoat" }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Macro Rig",
+  "description": "Working macro setups — optics, magnification and field technique for photographing very small subjects.",
+  "items": [
+    {
+      "name": "100mm-lifesize",
+      "text": "a 100mm macro lens at life-size 1:1, the razor-thin focal plane laid exactly through the eyes, everything beyond melting into creamy color",
+      "text_short": "100mm macro at 1:1, plane on the eyes"
+    },
+    {
+      "name": "twin-flash-diffused",
+      "text": "twin macro flashes fired through heavy diffusion, wraparound light with tiny jewel speculars, every hair and scale edge cleanly separated from the background",
+      "text_short": "diffused twin macro flash"
+    },
+    {
+      "name": "focus-stack-rail",
+      "text": "a sixty-frame focus stack shot on a rack-and-pinion rail, impossible front-to-back sharpness at high magnification, texture resolved beyond what the eye can see",
+      "text_short": "deep focus-stacked macro"
+    },
+    {
+      "name": "probe-lens",
+      "text": "a tubular probe lens threaded in at subject height, bug's-eye wide-angle perspective, the small world curving away huge behind the subject",
+      "text_short": "probe-lens bug's-eye perspective"
+    },
+    {
+      "name": "reversed-fifty",
+      "text": "a reversed 50mm prime on extension tubes, focus found by leaning in millimeter by millimeter, vintage rendering around one fragile sliver of sharpness",
+      "text_short": "reversed 50mm on tubes"
+    },
+    {
+      "name": "backlit-low-sun",
+      "text": "shot low against the low sun, wings, hairs and filaments rim-lit into glowing fibers, a deep shaded background keeping the halo clean",
+      "text_short": "rim-lit against the low sun"
+    },
+    {
+      "name": "cold-still-tripod",
+      "text": "worked in the first cold light while the subject sits chilled and motionless, tripod and cable release, windless air, dew held mirror-still on every surface",
+      "text_short": "tripod macro on a cold-still subject"
+    },
+    {
+      "name": "silver-reflector-fill",
+      "text": "one silver reflector held close, field light bounced back into the shadow side, natural single-source modelling with complete readable detail",
+      "text_short": "silver-reflector fill macro"
+    },
+    {
+      "name": "ground-pod",
+      "text": "camera on a ground pod at soil level, shooting through the moss horizon, near foreground blur washing the frame edges in soft green",
+      "text_short": "ground-pod soil-level macro"
+    },
+    {
+      "name": "aperture-slice",
+      "text": "shot nearly wide open for a single knife-edge plane of focus, everything before and behind dissolving into smooth graduated color fields",
+      "text_short": "wide-open single-plane macro"
+    }
+  ]
+}

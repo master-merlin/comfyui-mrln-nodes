@@ -60,6 +60,16 @@
       "name": "environment-reflections",
       "text": "The surrounding environment mirrored crisply along the bodywork, reflections tracing every character line.",
       "text_short": "environment mirrored on body"
+    },
+    {
+      "name": "drl-signature",
+      "text": "a jewel-sharp LED daytime-running-light signature drawn as one unbroken line across the nose",
+      "text_short": "signature DRL light line"
+    },
+    {
+      "name": "titanium-blued-exhaust",
+      "text": "titanium exhaust tips heat-blued into burnt blues and purples from hard running",
+      "text_short": "heat-blued titanium tips"
     }
   ]
 }

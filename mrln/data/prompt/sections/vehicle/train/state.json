@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Train State",
+  "description": "What the train is doing on the rail.",
+  "suits": ["object", "vehicle", "train"],
+  "items": [
+    { "name": "full-speed-pass", "text": "passing at full line speed, rails singing and ballast dust whipped into the slipstream", "text_short": "full-speed pass" },
+    { "name": "mountain-grade", "text": "curving up a mountain grade, the full length of the train visible around the horseshoe bend", "text_short": "climbing horseshoe curve" },
+    { "name": "snow-run", "text": "punching through fresh drifts, snow exploding off the plow in a white bow wave", "text_short": "snowplow run" },
+    { "name": "night-yard", "text": "at rest in a freight yard under sodium floodlights, signal lamps red and green down the ladder tracks", "text_short": "sodium-lit freight yard", "tags": ["night"] },
+    { "name": "station-dwell", "text": "paused at the platform with doors open, heat shimmer rising from beneath the car bodies", "text_short": "platform dwell" },
+    { "name": "viaduct-crossing", "text": "crossing a tall stone viaduct, arches striding across the valley below", "text_short": "crossing the viaduct" },
+    { "name": "pantograph-arc", "text": "running dark territory after sundown, blue-white arcs flashing where the pantograph skates the catenary", "text_short": "pantograph arcs", "tags": ["night"] },
+    { "name": "desert-straight", "text": "running a dead-straight desert mainline to the vanishing point, heat mirage floating the distant rails", "text_short": "desert straight" }
+  ]
+}

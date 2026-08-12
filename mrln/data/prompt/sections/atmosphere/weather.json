@@ -5,7 +5,7 @@
   "items": [
     {
       "name": "clear-sky",
-      "text": "crystal-clear sky, crisp visibility to the horizon",
+      "text": "crystal-clear cloudless sky, dry transparent air and crisp visibility all the way to the horizon line",
       "text_short": "clear sky"
     },
     {
@@ -32,7 +32,7 @@
     },
     {
       "name": "thunderstorm",
-      "text": "a brooding thunderstorm, lightning forking through charcoal clouds",
+      "text": "a brooding thunderstorm, charcoal cumulonimbus stacked overhead and lightning forking between cloud base and ground",
       "text_short": "thunderstorm, forked lightning"
     },
     {
@@ -64,6 +64,21 @@
       "name": "after-the-rain",
       "text": "freshly rained-out air, puddled reflections, drips falling from edges under a clearing sky",
       "text_short": "wet streets after rain"
+    },
+    {
+      "name": "freezing-fog",
+      "text": "freezing fog, hoarfrost feathering every twig, wire and edge in white crystal needles, the air itself a pale veil",
+      "text_short": "hoarfrost freezing fog"
+    },
+    {
+      "name": "strong-wind",
+      "text": "hard steady wind made visible, trees bowing in one direction, fabric and hair streaming, loose leaves and grit carried across the frame",
+      "text_short": "visible driving wind"
+    },
+    {
+      "name": "dust-storm",
+      "text": "an advancing dust storm, a rust-brown wall swallowing the horizon, the sun reduced to a pale disc and every edge fading with distance",
+      "text_short": "advancing dust wall"
     }
   ]
 }

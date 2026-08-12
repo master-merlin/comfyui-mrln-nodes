@@ -117,7 +117,7 @@
     },
     {
       "name": "emissive-white",
-      "text": "Emissive White",
+      "text": "emissive white, softly glowing light-guide trim",
       "weight": 0.3333,
       "tags": [
         "classic"

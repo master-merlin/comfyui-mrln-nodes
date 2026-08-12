@@ -1,48 +1,65 @@
 {
   "version": 1,
   "label": "Dark Mood Food",
-  "type": ["food"],
-  "description": "Chiaroscuro food photography: one dish glowing out of Rembrandt darkness.",
-  "prefix": "A dramatic dark-mood food photograph in the chiaroscuro tradition — a single dish emerging from deep shadow like a Dutch still-life, indulgent and a little dangerous.",
+  "type": ["food", "object"],
+  "description": "Chiaroscuro food photography: one hero glowing out of Rembrandt darkness, drawn as dish, raw still-life or drink.",
+  "prefix": "A dramatic dark-mood food photograph in the chiaroscuro tradition — a single hero emerging from deep shadow like a Dutch still-life, indulgent and a little dangerous.",
   "slots": [
     {
-      "id": "hero",
-      "ref": "food",
-      "label": "The Hero",
-      "emphasis": 1.25
-    },
-    {
-      "id": "styling",
-      "ref": "food/styling",
-      "label": "Styled",
-      "default": "rustic-board"
-    },
-    {
       "id": "light",
-      "ref": "lighting/dramatic",
+      "ref": "lighting/still-life",
       "label": "Lighting Conditions",
-      "default": "chiaroscuro"
+      "tags_any": ["dark"],
+      "default": "candle-dutch"
     },
     {
-      "id": "particles",
-      "ref": "atmosphere/particles",
-      "label": "In the Air",
-      "default": "dust-motes"
-    },
-    {
-      "id": "lens",
-      "ref": "camera/lens",
+      "id": "optics",
+      "ref": "camera/still-life-optics",
       "label": "Optics",
-      "default": "100mm-macro"
-    },
-    {
-      "id": "palette",
-      "ref": "style/palette",
-      "label": "Palette",
-      "default": "jewel-tones"
+      "default": "wide-open-slice"
     }
   ],
-  "suffix": "Still-Life Rendering: (highlights carved out of blackness:1.25), texture luminous where the light grazes, backgrounds swallowed whole, the plate holding court alone.",
+  "variants": [
+    {
+      "name": "dish",
+      "label": "Plated dish",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/dish",
+          "label": "The Hero",
+          "emphasis": 1.25
+        }
+      ]
+    },
+    {
+      "name": "raw-still-life",
+      "label": "Raw ingredient still-life",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/ingredient",
+          "label": "The Hero",
+          "emphasis": 1.25
+        }
+      ]
+    },
+    {
+      "name": "drink",
+      "label": "Dark drink",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/drink",
+          "label": "The Hero",
+          "emphasis": 1.25
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["@variant", "light", "optics"],
+  "suffix": "Still-Life Rendering: (highlights carved out of blackness:1.25), styled sparse on time-worn props — pewter, crumpled linen, a knife left mid-gesture — dust hanging in the single beam, color glowing like gems only where the light grazes, backgrounds swallowed whole, the hero holding court alone.",
   "negative": "flat bright lighting, watermark, text, clinical white background",
   "render": {
     "format": "string_labeled",

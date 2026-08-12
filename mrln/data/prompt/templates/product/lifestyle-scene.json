@@ -1,27 +1,15 @@
 {
   "version": 1,
   "label": "Lifestyle Scene",
-  "type": ["product", "object"],
-  "description": "The product living in a real place — context marketing with film warmth.",
-  "prefix": "An aspirational lifestyle product photograph — the product at home in a beautiful real moment, belonging there so naturally the advertisement disappears.",
+  "type": ["product"],
+  "description": "The product living in a real place — context marketing with film warmth, the world drawn per setting family.",
+  "prefix": "An aspirational lifestyle product photograph — the product at home in a beautiful real moment, belonging there so naturally the advertisement disappears, shot on a fast 35mm prime.",
   "slots": [
     {
       "id": "product",
       "ref": "product/category",
       "label": "The Product",
       "emphasis": 1.25
-    },
-    {
-      "id": "setting",
-      "ref": "location",
-      "label": "Living In",
-      "tags_none": ["boudoir", "scifi"],
-      "emphasis": 1.15
-    },
-    {
-      "id": "light",
-      "ref": "lighting/organic",
-      "label": "Lighting Conditions"
     },
     {
       "id": "time",
@@ -32,15 +20,74 @@
       "id": "film",
       "ref": "camera/film",
       "label": "Film Character",
+      "tags_none": ["night"],
       "default": "portra-400"
-    },
-    {
-      "id": "lens",
-      "ref": "camera/lens",
-      "label": "Optics",
-      "default": "50mm-f14"
     }
   ],
+  "variants": [
+    {
+      "name": "at-home",
+      "label": "Everyday places",
+      "slots": [
+        {
+          "id": "setting",
+          "ref": "location/everyday",
+          "label": "Living In",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "luxury-weekend",
+      "label": "Luxury settings",
+      "slots": [
+        {
+          "id": "setting",
+          "ref": "location/luxury",
+          "label": "Living In",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "city",
+      "label": "City streets",
+      "slots": [
+        {
+          "id": "setting",
+          "ref": "location/urban",
+          "label": "Living In",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "coast",
+      "label": "Coastal escape",
+      "slots": [
+        {
+          "id": "setting",
+          "ref": "location/coastal",
+          "label": "Living In",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "japan",
+      "label": "Japan wandering",
+      "slots": [
+        {
+          "id": "setting",
+          "ref": "location/japan",
+          "label": "Living In",
+          "emphasis": 1.15
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": ["product", "@variant", "time", "film"],
   "suffix": "Lifestyle Rendering: (the product tack-sharp while the scene breathes softly around it:1.2), lived-in styling with human traces just out of frame, warmth that sells a feeling before a feature.",
   "negative": "sterile studio look, watermark, text, catalog stiffness",
   "render": {

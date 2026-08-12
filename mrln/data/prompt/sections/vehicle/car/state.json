@@ -13,6 +13,8 @@
     { "name": "engine-off", "text": "engine off, stationary and settled", "text_short": "stationary, engine off" },
     { "name": "idling", "text": "engine idling, faint heat shimmer at the exhaust", "text_short": "idling, heat shimmer" },
     { "name": "doors-up", "text": "scissor doors raised", "text_short": "scissor doors up" },
-    { "name": "fresh-rain-beads", "text": "fresh rain beading on the paintwork", "text_short": "rain-beaded paint" }
+    { "name": "fresh-rain-beads", "text": "fresh rain beading on the paintwork", "text_short": "rain-beaded paint" },
+    { "name": "active-wing-raised", "text": "active rear wing raised into its high-downforce position", "text_short": "active wing raised" },
+    { "name": "charge-port-open", "text": "charge port open, status ring glowing around the attached charging tether", "text_short": "charge port glowing" }
   ]
 }

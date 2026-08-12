@@ -12,6 +12,7 @@
     { "name": "lean-doorframe", "text": "leaning a shoulder into the doorframe, ankles crossed", "text_short": "doorframe lean" },
     { "name": "hand-on-hip", "text": "one hand on the hip, chin lifted, editorial angles", "text_short": "hand-on-hip editorial" },
     { "name": "walking-toward", "text": "walking toward the camera mid-stride, unposed energy", "text_short": "walking toward camera" },
-    { "name": "looking-up", "text": "standing with the face tilted up into the light, eyes closed", "text_short": "face tilted to light" }
+    { "name": "looking-up", "text": "standing with the face tilted up into the light, eyes closed", "text_short": "face tilted to light" },
+    { "name": "hands-clasped-back", "text": "standing square to the lens, hands clasped behind the back, chest open, chin level", "text_short": "hands clasped behind" }
   ]
 }

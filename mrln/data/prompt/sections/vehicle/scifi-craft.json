@@ -2,20 +2,79 @@
   "version": 1,
   "label": "Sci-Fi Craft",
   "description": "Speculative vehicles. Tagged 'scifi' throughout.",
-  "suits": ["object", "vehicle"],
-  "tags": ["scifi"],
+  "suits": [
+    "object",
+    "vehicle"
+  ],
+  "tags": [
+    "scifi"
+  ],
   "items": [
-    { "name": "hover-car", "text": "a sleek hover car floating on shimmering repulsor fields", "text_short": "floating hover car" },
-    { "name": "starfighter", "text": "a battle-scarred starfighter with folded strike wings", "text_short": "scarred starfighter" },
-    { "name": "mech-walker", "text": "a towering bipedal mech walker with hydraulic joints and warning chevrons", "text_short": "towering mech walker" },
-    { "name": "grav-bike", "text": "an open-frame grav bike leaning through the air", "text_short": "leaning grav bike" },
-    { "name": "dropship", "text": "a heavy dropship on final descent, thrusters washing the pad", "text_short": "descending dropship" },
-    { "name": "explorer-rover", "text": "a six-wheeled pressurized exploration rover caked in alien dust", "text_short": "pressurized rover" },
-    { "name": "cargo-hauler", "text": "a container-slung orbital cargo hauler, all engines and frame", "text_short": "orbital cargo hauler" },
-    { "name": "speeder-skiff", "text": "a low desert speeder skiff kicking up twin dust ribbons", "text_short": "desert speeder skiff" },
-    { "name": "capital-ship", "text": "a kilometer-long capital ship blotting out the stars", "text_short": "kilometer capital ship" },
-    { "name": "sub-orbital-plane", "text": "a scramjet sub-orbital plane glowing at the leading edges", "text_short": "glowing scramjet" },
-    { "name": "walker-tank", "text": "a quadruped walker tank picking through ruins", "text_short": "quadruped walker tank" },
-    { "name": "solar-sailer", "text": "a gossamer solar sailer unfurling mirror-bright sails", "text_short": "gossamer solar sailer" }
+    {
+      "name": "hover-car",
+      "text": "a sleek hover car floating on shimmering repulsor fields",
+      "text_short": "floating hover car"
+    },
+    {
+      "name": "starfighter",
+      "text": "a battle-scarred starfighter with folded strike wings",
+      "text_short": "scarred starfighter"
+    },
+    {
+      "name": "mech-walker",
+      "text": "a towering bipedal mech walker with hydraulic joints and warning chevrons",
+      "text_short": "towering mech walker"
+    },
+    {
+      "name": "grav-bike",
+      "text": "an open-frame grav bike leaning through the air",
+      "text_short": "leaning grav bike"
+    },
+    {
+      "name": "dropship",
+      "text": "a heavy dropship on final descent, thrusters washing the pad",
+      "text_short": "descending dropship"
+    },
+    {
+      "name": "explorer-rover",
+      "text": "a six-wheeled pressurized exploration rover caked in alien dust",
+      "text_short": "pressurized rover"
+    },
+    {
+      "name": "cargo-hauler",
+      "text": "a container-slung orbital cargo hauler, all engines and frame",
+      "text_short": "orbital cargo hauler",
+      "tags": [
+        "capital"
+      ]
+    },
+    {
+      "name": "speeder-skiff",
+      "text": "a low desert speeder skiff kicking up twin dust ribbons",
+      "text_short": "desert speeder skiff"
+    },
+    {
+      "name": "capital-ship",
+      "text": "a kilometer-long capital ship blotting out the stars",
+      "text_short": "kilometer capital ship",
+      "tags": [
+        "capital"
+      ]
+    },
+    {
+      "name": "sub-orbital-plane",
+      "text": "a scramjet sub-orbital plane glowing at the leading edges",
+      "text_short": "glowing scramjet"
+    },
+    {
+      "name": "walker-tank",
+      "text": "a quadruped walker tank picking through ruins",
+      "text_short": "quadruped walker tank"
+    },
+    {
+      "name": "solar-sailer",
+      "text": "a gossamer solar sailer unfurling mirror-bright sails",
+      "text_short": "gossamer solar sailer"
+    }
   ]
 }

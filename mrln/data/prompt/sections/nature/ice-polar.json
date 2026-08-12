@@ -1,16 +1,18 @@
 {
   "version": 1,
   "label": "Ice / Polar",
-  "description": "Frozen landforms as hero subjects.",
+  "description": "Frozen landforms as hero subjects — ice behaving as slow-motion rock.",
   "suits": ["nature"],
   "items": [
-    { "name": "glacier-cave", "text": "inside a glacier cave of rippled sapphire ice", "text_short": "sapphire glacier cave" },
-    { "name": "iceberg-arch", "text": "a sculpted iceberg arch drifting in slate-grey water", "text_short": "drifting iceberg arch" },
-    { "name": "pancake-ice", "text": "rafts of pancake ice tiling a freezing sea", "text_short": "pancake ice rafts" },
-    { "name": "frozen-bubbles", "text": "methane bubbles stacked frozen in black lake ice", "text_short": "frozen lake bubbles" },
-    { "name": "blue-crevasse", "text": "a blue crevasse field folding into depth", "text_short": "blue crevasse field" },
-    { "name": "rime-forest", "text": "trees armored entirely in wind-built rime feathers", "text_short": "rime-armored trees" },
-    { "name": "polar-plateau", "text": "the polar plateau, sastrugi carved to the horizon", "text_short": "sastrugi plateau" },
-    { "name": "ice-shelf-edge", "text": "the sheer edge of an ice shelf meeting dark water in a hundred-meter wall", "text_short": "ice shelf wall" }
+    { "name": "glacier-cave", "text": "inside a glacier's meltwater cave, walls scalloped smooth by vanished water, the light arriving deep sapphire after meters of dense bubble-free ice", "text_short": "sapphire glacier cave" },
+    { "name": "iceberg-arch", "text": "a sculpted iceberg arch drifting in slate-grey water, a wave-cut notch undercutting the waterline, nine-tenths of its mass invisible below", "text_short": "drifting iceberg arch" },
+    { "name": "pancake-ice", "text": "rafts of pancake ice tiling an autumn freeze-up sea, every disc's rim raised by a thousand soft collisions with its neighbors", "text_short": "pancake ice rafts" },
+    { "name": "frozen-bubbles", "text": "columns of methane bubbles stacked in black lake ice, each stack rising from rotting matter on the bed, caught layer by layer as the winter ice grew downward", "text_short": "frozen lake bubbles" },
+    { "name": "blue-crevasse", "text": "a crevasse field torn open where the glacier accelerates over a buried rock step, blue slots folding into depth, snow bridges sagging between them", "text_short": "blue crevasse field" },
+    { "name": "rime-forest", "text": "trees armored entirely in wind-built rime feathers — ice grown into the wind, not with it — whole crowns fused into white flags", "text_short": "rime-armored trees" },
+    { "name": "polar-plateau", "text": "the high polar plateau carved into sastrugi by one relentless prevailing wind, chisel-marked snow running unbroken to the horizon", "text_short": "sastrugi plateau" },
+    { "name": "ice-shelf-edge", "text": "the sheer front of an ice shelf meeting dark water in a hundred-meter wall, old snowfall strata banding the cliff, brash ice riding the swell at its foot", "text_short": "ice shelf wall" },
+    { "name": "frost-flowers", "text": "frost flowers blooming across new black sea ice, each spiky cluster grown overnight from a single brine seed", "text_short": "sea-ice frost flowers" },
+    { "name": "calving-front", "text": "a glacier calving front mid-collapse, a tower of ice folding into the sea inside its own wall of spray", "text_short": "calving glacier front" }
   ]
 }

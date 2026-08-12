@@ -1,46 +1,46 @@
 {
   "version": 1,
   "label": "Season",
-  "description": "Seasonal dressing for any outdoor scene.",
+  "description": "Seasonal dressing for any outdoor scene — palette, ground state and air named in every item.",
   "items": [
     {
       "name": "spring-bloom",
-      "text": "early spring, fresh green shoots and drifting blossom petals",
+      "text": "early spring, fresh chartreuse shoots on dark wet branches and drifting blossom petals gathering in pale drifts along every edge",
       "text_short": "spring blossom"
     },
     {
       "name": "high-summer",
-      "text": "high summer, saturated greens, strong sun and deep cool shade",
+      "text": "high summer, saturated deep greens under a strong high sun, cool blue shade pooling beneath heavy canopies",
       "text_short": "high summer"
     },
     {
       "name": "late-summer-gold",
-      "text": "late summer, dry golden grasses and low warm dusty light",
+      "text": "late summer, dry golden grasses gone to seed, low warm sun and fine dust hanging in the air",
       "text_short": "late summer gold"
     },
     {
       "name": "autumn-foliage",
-      "text": "peak autumn, crimson and amber foliage, fallen leaves carpeting the ground",
+      "text": "peak autumn, crimson and amber foliage overhead and a fresh leaf-fall carpeting the ground in the same palette",
       "text_short": "peak autumn colors"
     },
     {
       "name": "late-autumn-bare",
-      "text": "late autumn, bare branches, low pale sun and long blue shadows",
+      "text": "late autumn, bare black branches against a pale sky, low colorless sun and long blue shadows across frosted grass",
       "text_short": "bare late autumn"
     },
     {
       "name": "deep-winter",
-      "text": "deep winter, thick snow cover, frozen stillness and breath-fog cold",
+      "text": "deep winter, thick unbroken snow rounding every shape, breath hanging as fog in the frozen stillness",
       "text_short": "deep winter snow"
     },
     {
       "name": "winter-thaw",
-      "text": "the first thaw, patchy melting snow, dripping icicles and dark wet earth",
+      "text": "the first thaw, patchy grey snow receding into dark soaked earth, icicles dripping and every gutter running",
       "text_short": "melting winter thaw"
     },
     {
       "name": "monsoon-lush",
-      "text": "monsoon season, dripping oversaturated greenery and heavy humid air",
+      "text": "monsoon season, dripping oversaturated greenery, heavy humid air and warm rain streaking through it",
       "text_short": "lush monsoon green"
     }
   ]

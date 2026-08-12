@@ -1,38 +1,43 @@
 {
   "version": 1,
   "label": "Tattoos",
-  "description": "Source-faithful 60/40 clean-to-inked split via weights (five clean at 2.7 vs nine inked at 1.0).",
+  "description": "Source-faithful 60/40 clean-to-inked split via weights (five clean at 3.3 vs eleven inked at 1.0); clean draws push 'tattoos' into the negative.",
   "suits": ["human"],
   "items": [
     {
       "name": "clean-pristine",
       "text": "no tattoos, pristine natural skin",
       "text_short": "no tattoos",
-      "weight": 2.7
+      "negative": "tattoos, inked skin",
+      "weight": 3.3
     },
     {
       "name": "clean-unblemished",
       "text": "completely clean unblemished skin, zero tattoos",
       "text_short": "clean skin",
-      "weight": 2.7
+      "negative": "tattoos, inked skin",
+      "weight": 3.3
     },
     {
       "name": "clean-flawless",
       "text": "flawless smooth natural skin, clean body",
       "text_short": "flawless clean skin",
-      "weight": 2.7
+      "negative": "tattoos, inked skin",
+      "weight": 3.3
     },
     {
       "name": "clean-porcelain",
       "text": "pristine porcelain skin, no tattoos",
       "text_short": "porcelain clean skin",
-      "weight": 2.7
+      "negative": "tattoos, inked skin",
+      "weight": 3.3
     },
     {
       "name": "clean-natural",
       "text": "clean unblemished body, natural skin texture",
       "text_short": "natural clean skin",
-      "weight": 2.7
+      "negative": "tattoos, inked skin",
+      "weight": 3.3
     },
     {
       "name": "botanical-sleeve",
@@ -78,6 +83,16 @@
       "name": "constellation-wrist",
       "text": "fine-line constellation map tattoo on the inner wrist and forearm",
       "text_short": "constellation wrist tattoo"
+    },
+    {
+      "name": "sternum-ornament",
+      "text": "delicate ornamental dotwork tattoo tracing the sternum line beneath the bust",
+      "text_short": "ornamental sternum tattoo"
+    },
+    {
+      "name": "garter-thigh-band",
+      "text": "fine-line garter band tattoo circling the upper thigh with a small bow detail",
+      "text_short": "garter band thigh tattoo"
     }
   ]
 }

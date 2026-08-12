@@ -2,7 +2,7 @@
   "version": 1,
   "label": "Golden Interior",
   "type": ["architecture", "object"],
-  "description": "Interior editorial: a beautiful room at its most flattering hour.",
+  "description": "Interior editorial: a beautiful room at its most flattering hour, composed with real interior view-craft.",
   "prefix": "An interior-design editorial photograph — a beautiful room caught at the exact hour its architect imagined, atmosphere thick enough to step into.",
   "slots": [
     {
@@ -15,25 +15,15 @@
       "id": "light",
       "ref": "lighting/organic",
       "label": "Lighting Conditions",
+      "tags_none": ["night"],
       "default": "golden-hour-window"
     },
     {
-      "id": "particles",
-      "ref": "atmosphere/particles",
-      "label": "In the Air",
-      "default": "dust-motes"
-    },
-    {
-      "id": "mood",
-      "ref": "atmosphere/mood",
-      "label": "Mood",
-      "default": "serene"
-    },
-    {
-      "id": "lens",
-      "ref": "camera/lens",
-      "label": "Optics",
-      "default": "24mm-wide"
+      "id": "view",
+      "ref": "camera/architecture-view",
+      "label": "The View",
+      "tags_any": ["indoor"],
+      "default": "doorway-frame"
     },
     {
       "id": "framing",
@@ -42,8 +32,8 @@
       "default": "frame-in-frame"
     }
   ],
-  "suffix": "Interior Rendering: (material warmth in every surface — wood grain, textile weave, stone cool:1.2), verticals held true, light pooling exactly where the eye should rest, a space that smells of itself.",
-  "negative": "watermark, text, clutter, flat lighting, fisheye distortion",
+  "suffix": "Interior Rendering: (material warmth in every surface — wood grain, textile weave, stone cool:1.2), fine dust motes drifting where the light shafts stand, verticals held true, light pooling exactly where the eye should rest, a space that smells of itself.",
+  "negative": "watermark, text, clutter, flat lighting, fisheye distortion, people",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",

@@ -10,17 +10,17 @@
     },
     {
       "name": "motion-panning",
-      "text": "panning with the subject, background streaked into horizontal speed lines, subject sharp",
+      "text": "panning with the subject at a slow shutter, background streaked into horizontal speed lines, subject sharp",
       "text_short": "panning speed streaks"
     },
     {
       "name": "freeze-flash",
-      "text": "high-speed flash freeze, motion stopped absolutely mid-action, every droplet crisp",
+      "text": "high-speed flash freeze at a hair-fine flash duration, motion stopped absolutely mid-action, droplets standing as glass beads and fabric caught in impossible suspended folds",
       "text_short": "high-speed freeze"
     },
     {
       "name": "double-exposure",
-      "text": "double exposure, two scenes blended into one silhouetted composite",
+      "text": "in-camera double exposure, a dark silhouette holding a second scene inside itself, the two exposures sharing the frame where the shadows of one let the highlights of the other through",
       "text_short": "double exposure blend"
     },
     {
@@ -36,22 +36,22 @@
     },
     {
       "name": "focus-stack",
-      "text": "focus-stacked capture, impossible front-to-back macro sharpness",
+      "text": "dozens of focus-bracketed frames blended into impossible front-to-back macro sharpness, crisp from the nearest bristle to the farthest edge with no focus falloff anywhere",
       "text_short": "focus-stacked sharpness"
     },
     {
       "name": "lens-whacking",
-      "text": "freelensing light leaks, tilted dreamy focus and warm streaks bleeding into frame",
+      "text": "freelensing with the lens detached and tilted against the mount, one drifting sliver of the frame in focus, warm light leaks bleeding in across the edges where stray light enters the gap",
       "text_short": "freelens light leaks"
     },
     {
       "name": "zoom-burst",
-      "text": "zoom burst during exposure, the scene exploding outward in radial streaks",
+      "text": "zoom pulled through its range mid-exposure, the scene exploding outward in radial streaks that converge on one sharp island at the center where the exposure lingered",
       "text_short": "zoom burst streaks"
     },
     {
       "name": "through-prism",
-      "text": "shot through a handheld prism, refracted rainbow edges and doubled fragments",
+      "text": "shot through a handheld glass prism held at the lens edge, refracted rainbow fringes and a ghosted duplicate of the scene folded across one side of the frame",
       "text_short": "prism refractions"
     },
     {
@@ -63,6 +63,31 @@
       "name": "overexposed-airy",
       "text": "deliberately overexposed high-key, blown airy whites and floating detail",
       "text_short": "airy high-key overexposure"
+    },
+    {
+      "name": "intentional-camera-movement",
+      "text": "intentional camera movement through a slow exposure, the scene smeared into painterly directional strokes, color masses surviving where detail dissolves",
+      "text_short": "ICM painterly blur"
+    },
+    {
+      "name": "stroboscopic-multi",
+      "text": "stroboscopic multi-flash exposure, one motion frozen as overlapping phases marching across a single dark frame",
+      "text_short": "stroboscopic motion phases"
+    },
+    {
+      "name": "scheimpflug-plane",
+      "text": "view-camera front tilt laying the plane of focus along the ground itself, near flowers and far peaks sharp together at a wide-open aperture",
+      "text_short": "tilted focus-plane sharpness"
+    },
+    {
+      "name": "shift-verticals",
+      "text": "architectural shift movement, the lens rising instead of the camera tilting, verticals held perfectly parallel from foundation to roofline",
+      "text_short": "shift-corrected verticals"
+    },
+    {
+      "name": "rear-curtain-sync",
+      "text": "slow shutter dragged with rear-curtain flash, ambient light smearing into trails that stream behind the subject before the closing flash snaps one sharp image at the end of the movement",
+      "text_short": "rear-curtain flash drag"
     }
   ]
 }

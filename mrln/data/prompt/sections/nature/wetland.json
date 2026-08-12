@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "label": "Wetland",
+  "description": "Marsh, swamp and bog landforms as hero subjects — water and land refusing to choose.",
+  "suits": ["nature"],
+  "items": [
+    { "name": "reed-labyrinth", "text": "a vast reed bed parted by winding open-water leads, head-high stems silver with seed in the wind", "text_short": "reed bed labyrinth" },
+    { "name": "cypress-swamp", "text": "a flooded cypress swamp, buttressed trunks and woody knees rising from tea-dark water, spanish moss hanging dead still", "text_short": "flooded cypress swamp" },
+    { "name": "peat-bog", "text": "a raised peat bog quilted red and green with sphagnum hummocks, early-summer cotton grass tufting white between dark pools", "text_short": "sphagnum peat bog" },
+    { "name": "salt-marsh-creeks", "text": "a salt marsh veined with branching tidal creeks at low water, exposed mud banks shining like poured pewter", "text_short": "tidal salt marsh creeks" },
+    { "name": "sawgrass-sheet", "text": "a sawgrass plain flooded ankle-deep to the horizon, tree-island hammocks floating in the heat shimmer", "text_short": "flooded sawgrass plain" },
+    { "name": "oxbow-lilies", "text": "an oxbow lake looped beside the river that abandoned it, waterlily pads tiling the still arm", "text_short": "oxbow lake lilies" },
+    { "name": "soda-lake", "text": "a soda lake crusted white at its rim and stained flamingo-pink across the shallows, heat shimmer doubling the horizon", "text_short": "pink soda lake" },
+    { "name": "igapo-flooded-forest", "text": "a blackwater forest in flood season, tea-dark water risen ten meters up the trunks until the canopy becomes an archipelago, fish rising to fruit falling from the crowns", "text_short": "flooded blackwater forest" }
+  ]
+}

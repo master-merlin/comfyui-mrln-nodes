@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "label": "Roadside",
+  "description": "Machine-culture places off the tarmac — pullouts, workshops and stops where riders and drivers actually gather.",
+  "suits": ["object", "vehicle", "car", "motorcycle"],
+  "items": [
+    {
+      "name": "pass-summit-pullout",
+      "text": "A gravel pullout at a mountain pass summit, the elevation sign crusted with faded stickers, valley haze stacked in blue layers below.",
+      "text_short": "mountain pass pullout, stickered elevation sign"
+    },
+    {
+      "name": "desert-diner",
+      "text": "A chrome-trimmed desert diner on a dusty gravel lot, screen door propped open, power lines sagging away toward the heat-blurred horizon.",
+      "text_short": "chrome desert diner, gravel lot"
+    },
+    {
+      "name": "workshop-doorway",
+      "text": "The open roller door of a back-street workshop, tool chests and a two-post lift in the shadows behind, sunlight cutting a clean line across the oil-stained threshold.",
+      "text_short": "workshop roller door, oil-stained threshold"
+    },
+    {
+      "name": "coastal-layby",
+      "text": "A layby on a coastal switchback, a low drystone wall between the tarmac and the drop, surf glittering far below the guardrail posts.",
+      "text_short": "coastal switchback layby, surf below"
+    },
+    {
+      "name": "old-filling-station",
+      "text": "A preserved 1950s filling station, round-top pumps and enamel signs under a slim cantilevered canopy, oil bottles racked by the office door.",
+      "text_short": "vintage filling station, round-top pumps",
+      "tags": ["historical"]
+    },
+    {
+      "name": "logging-spur",
+      "text": "A gravel logging spur through cathedral firs, mist drifting between the trunks, a fresh berm of graded stone along the verge.",
+      "text_short": "gravel logging spur, misty firs"
+    },
+    {
+      "name": "river-quay",
+      "text": "A cobbled river quay with iron mooring bollards, stone bridge arches upstream and houseboats breathing smoke across the water.",
+      "text_short": "cobbled river quay, bridge arches"
+    },
+    {
+      "name": "riders-cafe",
+      "text": "The car park of a legendary riders' cafe, helmets hung on mirrors, mugs steaming on the window ledge, decades of club stickers layered on the door glass.",
+      "text_short": "riders' cafe car park, helmets on mirrors"
+    },
+    {
+      "name": "salt-flat-camp",
+      "text": "A cracked white salt flat running to the curvature of the earth, a canvas awning and fuel drums making a small camp under an enormous sky.",
+      "text_short": "salt flat camp, endless white pan"
+    },
+    {
+      "name": "paddy-switchbacks",
+      "text": "A narrow road switchbacking between terraced rice paddies, each flooded terrace holding its own mirror of the sky.",
+      "text_short": "rice-terrace switchbacks, mirrored paddies"
+    }
+  ]
+}

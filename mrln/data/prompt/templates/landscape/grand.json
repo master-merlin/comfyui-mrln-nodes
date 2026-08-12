@@ -2,8 +2,8 @@
   "version": 1,
   "label": "Grand Landscape",
   "type": ["nature"],
-  "description": "The landform as hero: nature subject x weather x season x light, on serious capture formats.",
-  "prefix": "A grand landscape photograph in the tradition of the great large-format masters — a landform portrayed with the patience and reverence usually reserved for portraiture. Nothing man-made in frame.",
+  "description": "The landform as hero: nature subject x weather x light on a large-format field camera, printed at gallery scale.",
+  "prefix": "A grand landscape photograph in the tradition of the great large-format masters — a heavy field camera on a tripod, one sheet exposed after hours of waiting, the landform portrayed with the patience and reverence usually reserved for portraiture. Nothing man-made in frame.",
   "slots": [
     {
       "id": "hero",
@@ -17,35 +17,27 @@
       "label": "Weather"
     },
     {
-      "id": "season",
-      "ref": "atmosphere/season",
-      "label": "Season"
-    },
-    {
       "id": "time",
       "ref": "atmosphere/time-of-day",
-      "label": "Hour"
+      "label": "Hour",
+      "tags_any": ["day"]
     },
     {
       "id": "framing",
-      "ref": "composition/framing",
-      "label": "Composition"
-    },
-    {
-      "id": "format",
-      "ref": "camera/format",
-      "label": "Capture",
-      "default": "large-format-4x5"
+      "ref": "composition/vista",
+      "label": "Composition",
+      "default": "foreground-anchor"
     },
     {
       "id": "film",
       "ref": "camera/film",
       "label": "Emulsion",
+      "tags_none": ["night"],
       "default": "velvia-50"
     }
   ],
-  "suffix": "Print Standard: front-to-back critical sharpness, faithful natural color with no artificial saturation push, tonal depth that survives a two-meter gallery print, the light doing all the drama.",
-  "negative": "watermark, text, people, buildings, powerlines, HDR halos",
+  "suffix": "Print Standard: front-to-back critical sharpness from the tilted 4x5 focal plane, tonal honesty — in color or monochrome — with no artificial saturation push, depth that survives a two-meter gallery print, the light doing all the drama.",
+  "negative": "watermark, text, people, buildings, powerlines, roads, vehicles, HDR halos",
   "render": {
     "format": "string_labeled",
     "labeled_line": "{label}: {text}",

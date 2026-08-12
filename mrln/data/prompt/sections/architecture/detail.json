@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "label": "Detail",
+  "description": "Close structural details — the tight second shot of every architecture essay.",
+  "suits": ["architecture", "object"],
+  "items": [
+    { "name": "spiral-stair-eye", "text": "a stone spiral staircase seen straight down its own eye, treads fanning into a nautilus curve, the handrail drawing one continuous line", "text_short": "spiral stair nautilus" },
+    { "name": "fan-vault", "text": "fan vaulting spreading from clustered piers, stone ribs opening like palm fronds to meet in carved bosses", "text_short": "fan vault ribs", "tags": ["historical"] },
+    { "name": "dome-oculus", "text": "a coffered dome pierced by an open oculus, one solid beam of light crossing the interior dark", "text_short": "oculus light beam", "tags": ["historical"] },
+    { "name": "muqarnas-vault", "text": "a muqarnas vault dripping honeycomb tiers of carved plaster, each cell cupping its own gradation of shadow", "text_short": "muqarnas honeycomb", "tags": ["historical"] },
+    { "name": "cast-iron-capital", "text": "a cast-iron column capital of painted acanthus leaves, bolt heads honest beneath the ornament, factory glazing behind", "text_short": "cast-iron capital", "tags": ["historical"] },
+    { "name": "cantilever-stair", "text": "floating stone stair treads cantilevered from a bare wall, shadow gaps beating a rising rhythm", "text_short": "cantilevered stair treads" },
+    { "name": "shoji-track", "text": "shoji screens sliding on worn timber tracks, paper panes glowing with even diffused light", "text_short": "glowing shoji grid", "tags": ["anime"] },
+    { "name": "rose-window-interior", "text": "a rose window seen from inside, tracery in black silhouette, colored light staining the stone floor below", "text_short": "rose window silhouette", "tags": ["historical"] },
+    { "name": "space-frame-node", "text": "a machined steel space-frame node, eight tube struts meeting in bolted precision against the skylight", "text_short": "steel space-frame node" },
+    { "name": "hammer-beam-roof", "text": "a medieval hammer-beam roof, blackened oak trusses flying across the hall on carved angel corbels", "text_short": "hammer-beam oak roof", "tags": ["historical"] },
+    { "name": "flying-buttress", "text": "a rank of flying buttresses leaping from nave wall to outer pier, each arc carrying the vault's thrust down to the ground, crockets bristling along the copings", "text_short": "flying buttress rank", "tags": ["historical"] },
+    { "name": "waffle-slab", "text": "a raw concrete waffle-slab ceiling, square coffers in a strict grid, clerestory light sliding a diagonal of shadow across one cell after another", "text_short": "waffle-slab coffers" },
+    { "name": "catalan-vault", "text": "a thin-shell Catalan brick vault, herringbone tile courses curving overhead without a single formwork mark, the whole shell barely a hand-span thick at the crown", "text_short": "catalan brick vault" },
+    { "name": "dovetail-log-corner", "text": "a dovetailed log-cabin corner, axe-hewn timbers interlocking without a nail, moss chinking pressed into the gaps between courses", "text_short": "dovetail log corner", "tags": ["historical"] }
+  ]
+}

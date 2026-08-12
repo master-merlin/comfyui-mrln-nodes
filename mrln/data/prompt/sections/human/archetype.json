@@ -19,6 +19,9 @@
     { "name": "monk", "text": "a mountain monk in simple robes with prayer beads", "text_short": "mountain monk" },
     { "name": "rockstar", "text": "a stage-worn rockstar, leather, rings and smeared eyeliner", "text_short": "stage-worn rockstar" },
     { "name": "scientist", "text": "a field scientist, sample cases and annotated notebooks in hand", "text_short": "field scientist" },
-    { "name": "gunslinger", "text": "a frontier gunslinger, dust-caked duster and a low-brimmed hat", "text_short": "frontier gunslinger", "tags": ["historical"] }
+    { "name": "gunslinger", "text": "a frontier gunslinger, dust-caked duster and a low-brimmed hat", "text_short": "frontier gunslinger", "tags": ["historical"] },
+    { "name": "opera-diva", "text": "an opera diva in a velvet gown, elbow-length gloves and a jeweled collar", "text_short": "opera diva" },
+    { "name": "pirate-captain", "text": "a pirate captain, salt-crusted coat, brass-buckled baldric and a weathered tricorne", "text_short": "pirate captain", "tags": ["historical", "fantasy"] },
+    { "name": "vampire-noble", "text": "a vampire noble in a high-collared brocade coat, bloodless pale complexion", "text_short": "vampire noble", "tags": ["fantasy"] }
   ]
 }
