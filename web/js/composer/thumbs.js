@@ -315,11 +315,22 @@ export function createThumbs(hub) {
         loading: "lazy",
         decoding: "async",
         onload: () => {
-          mount(tile, img);
+          // the glyph was the placeholder UNDER the image; drop it now
+          for (const child of [...tile.children]) if (child !== img) child.remove();
           tile.classList.remove("mrln-thumb-empty");
         },
-        onerror: () => attempt(index + 1, urls),
+        onerror: () => {
+          img.remove();
+          attempt(index + 1, urls);
+        },
       });
+      // ATTACH BEFORE SETTING src. `loading="lazy"` on an element that is not
+      // in the document has no viewport to be measured against, so the browser
+      // defers it forever: neither onload nor onerror ever fires (verified in
+      // Chromium — the same URL on a detached img WITHOUT the lazy hint loads
+      // immediately). The tile used to mount the image inside onload, so every
+      // thumbnail in the panel silently stayed a glyph.
+      tile.append(img);
       img.src = urls[index]; // last: the handlers must be attached first
     }
 

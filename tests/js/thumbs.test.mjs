@@ -378,3 +378,41 @@ describe("the routes this module posts to are registered", () => {
     assert.ok(!/\("delete",/.test(routes), "a DELETE route appeared — SPEC §6.1's wording");
   });
 });
+
+// ---------------------------------------------------------------------------
+// The lazy-image trap. This one is a source scan rather than a behaviour test
+// because it can only be observed in a real browser — and it WAS observed
+// there: every thumbnail in the panel silently stayed a glyph.
+//
+// `loading="lazy"` defers loading until the element can be measured against
+// the viewport. An <img> that is not in the document has no such measurement,
+// so the browser waits forever and NEITHER onload NOR onerror ever fires
+// (verified in Chromium: the same URL on a detached img without the lazy hint
+// loads immediately). The tile used to mount the image inside its own onload
+// handler, which therefore never ran.
+//
+// The invariant: attach first, set src second.
+// ---------------------------------------------------------------------------
+
+describe("thumbTile's <img> lifecycle", () => {
+  const src = readFileSync(SRC, "utf8");
+
+  test("the image is attached to the tile BEFORE its src is set", () => {
+    const append = src.indexOf("tile.append(img)");
+    const setSrc = src.indexOf("img.src = urls[index]");
+    assert.ok(append !== -1, "the tile no longer attaches the img — see the note above");
+    assert.ok(setSrc !== -1, "the img src assignment moved; re-check the lazy-loading trap");
+    assert.ok(
+      append < setSrc,
+      "img.src is set before the img is in the DOM: with loading='lazy' that never loads"
+    );
+  });
+
+  test("mounting no longer happens inside onload", () => {
+    // the shape of the original bug: mount(tile, img) as the onload body
+    assert.ok(
+      !/onload:\s*\(\)\s*=>\s*\{\s*mount\(tile,\s*img\)/.test(src),
+      "the image is mounted from onload again — that handler cannot fire for a detached lazy img"
+    );
+  });
+});

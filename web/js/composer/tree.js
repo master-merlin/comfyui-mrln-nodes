@@ -298,6 +298,31 @@ export function createTree(hub) {
     );
   }
 
+  function revealForCards() {
+    // The tree opens with every group COLLAPSED, and cards live inside those
+    // groups — so switching to card view while nothing is expanded changes the
+    // button label and not one visible pixel, which reads exactly like a dead
+    // button (it did, in UAT). Open the first group of each kind, but only
+    // when the user has nothing open there: an expansion they chose is theirs
+    // and must survive the switch.
+    for (const kind of ["templates", "sections"]) {
+      const entries = (kind === "templates" ? state.library?.templates : state.library?.sections) ?? [];
+      const groups = [...new Set(entries.map((entry) => entry.slug.split("/")[0]))].sort();
+      if (!groups.length) continue;
+      if (groups.some((group) => state.libGroups.has(`${kind}:${group}`))) continue;
+      // Prefer a group that actually HAS thumbnails. Alphabetically first is
+      // 'animal', where only a couple of curated sections carry a tile — so
+      // the first thing card view showed was a wall of identical glyphs, which
+      // undersells the mode it just switched into.
+      const withThumb = groups.find((group) =>
+        entries.some((entry) => entry.has_thumb && entry.slug.split("/")[0] === group)
+      );
+      state.libGroups.add(`${kind}:@block`); // the block, or its groups stay hidden
+      state.libGroups.add(`${kind}:${withThumb ?? groups[0]}`);
+      state.libGroups.add(`${kind}:@block:touched`); // don't re-apply the default
+    }
+  }
+
   function viewToggle() {
     return el(
       "button",
@@ -308,6 +333,7 @@ export function createTree(hub) {
           : "Browse as thumbnail cards — rows without a thumbnail show their domain glyph",
         onclick: () => {
           state.grid = !state.grid;
+          if (state.grid) revealForCards();
           renderLibraryTab();
         },
       },
