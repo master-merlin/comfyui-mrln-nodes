@@ -621,3 +621,100 @@ def test_endpoints_answer_with_a_fingerprint_and_status_200(lib, folder, styles_
     status, report = importers.handle_import_styles(lib, {"path": str(styles_csv)})
     assert status == 200 and report["fingerprint"] == lib.fingerprint()
     assert report["source"] == str(styles_csv)
+
+
+# -- zip archives -------------------------------------------------------------
+# Every published wildcard pack is distributed as a .zip (Civitai's 'Wildcards'
+# model type ships nothing else), so the importer reads one directly. An
+# archive is UNTRUSTED input, which is what most of these tests are about.
+
+
+def make_zip(path, entries):
+    import zipfile
+
+    with zipfile.ZipFile(path, "w") as zf:
+        for name, text in entries.items():
+            zf.writestr(name, text)
+    return path
+
+
+def test_a_wildcard_zip_imports_like_a_folder(lib, tmp_path):
+    archive = make_zip(
+        tmp_path / "pack.zip",
+        {
+            "photographers.txt": "by Ansel Adams\nby Diane Arbus\n",
+            "nested/mood.txt": "3::brooding\nserene\n",
+            "readme.md": "# not a wildcard file",
+            "preview.png": "not text either",
+        },
+    )
+    report = importers.import_wildcards(lib, str(archive), dry_run=True)
+    slugs = [w["slug"] for w in report["written"]]
+    assert slugs == ["wildcards/nested/mood", "wildcards/photographers"]
+    assert report["source"] == str(archive)  # the archive, never the temp dir
+    # the weighted line survives the trip: 2 options in mood, 2 in photographers
+    assert report["planned_items"] == 4
+
+
+def test_a_zip_cannot_write_outside_the_extraction_folder(lib, tmp_path):
+    """Zip-slip. Both spellings: a '..' segment and an absolute path — the
+    second is the one that bit, because Path('C:/x').parts starts with a DRIVE
+    that ends in a separator, and joinpath() with an anchored part discards the
+    base entirely."""
+    archive = make_zip(
+        tmp_path / "hostile.zip",
+        {
+            "ok.txt": "kept\n",
+            "../escape.txt": "escaped\n",
+            "C:/abs.txt": "escaped\n",
+            "/root/abs2.txt": "escaped\n",
+        },
+    )
+    report = importers.import_wildcards(lib, str(archive), dry_run=True)
+    for entry in report["written"]:
+        assert entry["slug"].startswith("wildcards/")
+        assert ".." not in entry["slug"] and ":" not in entry["slug"]
+    assert not (tmp_path.parent / "escape.txt").exists()
+    # and the tidy-up is REPORTED — a silently renamed hostile entry hides that
+    # the archive tried something
+    assert sum("named it outside its own folder" in w for w in report["warnings"]) == 3
+
+
+def test_a_zip_with_no_wildcard_files_is_refused(lib, tmp_path):
+    archive = make_zip(tmp_path / "empty.zip", {"readme.md": "#", "cover.png": "x"})
+    with pytest.raises(importers.ImporterError) as err:
+        importers.import_wildcards(lib, str(archive), dry_run=True)
+    assert "no .txt" in str(err.value) or "no .txt / .yaml" in str(err.value)
+    assert err.value.status == 404
+
+
+def test_html_pretending_to_be_a_zip_says_what_actually_happened(lib, tmp_path):
+    """A Civitai download that needed an API key answers with a login PAGE
+    under a .zip name. 'not a readable zip archive' alone would send the user
+    hunting for a corrupt file."""
+    fake = tmp_path / "wildcards.zip"
+    fake.write_bytes(b"<!DOCTYPE html><html><body>log in</body></html>")
+    with pytest.raises(importers.ImporterError) as err:
+        importers.import_wildcards(lib, str(fake), dry_run=True)
+    assert "not a readable zip" in str(err.value)
+    assert "API key" in err.value.remediation
+
+
+def test_a_zip_bomb_is_refused_before_anything_is_written(lib, tmp_path):
+    archive = make_zip(
+        tmp_path / "bomb.zip",
+        {f"w{i}.txt": "x" * 200_000 for i in range(120)},  # ~24 MB unpacked
+    )
+    with pytest.raises(importers.ImporterError) as err:
+        importers.import_wildcards(lib, str(archive), dry_run=True)
+    assert "unpacks to" in str(err.value)
+
+
+def test_zip_entries_over_the_single_file_cap_are_skipped_not_fatal(lib, tmp_path):
+    archive = make_zip(
+        tmp_path / "mixed.zip",
+        {"small.txt": "fine\n", "huge.txt": "x" * (importers.MAX_FILE_BYTES + 10)},
+    )
+    report = importers.import_wildcards(lib, str(archive), dry_run=True)
+    assert [w["slug"] for w in report["written"]] == ["wildcards/small"]
+    assert warned(report, "larger than")

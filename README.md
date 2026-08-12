@@ -189,10 +189,13 @@ rather than approximates) and copy-prompt. A batch collapses to one row.
 Recording and retention are settings, clearing is a two-step confirm, and a
 failed history write can never break a render that already succeeded.
 
-**Coming from A1111 or a wildcard collection?** Two importers read a folder
-of `.txt`/`.yaml` wildcards or an A1111 `styles.csv` and dry-run the result
-through the same plan preview the bundle importer uses, so you see exactly
-what would be written before anything is.
+**Coming from A1111 or a wildcard collection?** Two importers read wildcards
+— a folder of `.txt`/`.yaml` files, or the `.zip` a published pack actually
+ships as — or an A1111 `styles.csv`, and dry-run the result through the same
+plan preview the bundle importer uses, so you see exactly what would be
+written before anything is. Weighted lines (`3::rare option`) are honored,
+and the plan says plainly which third-party syntax survives the trip and
+which does not.
 
 The Settings tab holds the local backend URLs (Ollama / LM Studio,
 auto-validated with installed-model lists), the cloud API keys — stored

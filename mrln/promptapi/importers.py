@@ -3,7 +3,10 @@
 Two sources, because between them they hold most of the prompt content that
 exists in ComfyUI installs today:
 
-  wildcard folders   `.txt` / `.yaml` files (the dynamic-prompts ecosystem)
+  wildcard folders   `.txt` / `.yaml` files (the dynamic-prompts ecosystem),
+  and .zip archives  or a .zip of them, which is how every published pack is
+                     actually distributed — Civitai's 'Wildcards' model type
+                     ships nothing else
                      -> user sections under 'wildcards/…'
   A1111 styles.csv   name / prompt / negative rows
                      -> a user TEMPLATE per '{prompt}' row (prefix + suffix),
@@ -906,7 +909,156 @@ def _capped(warnings):
     ]
 
 
+def extract_wildcard_archive(archive, dest):
+    """Unpack the wildcard files of a .zip into `dest`, and nothing else.
+
+    An archive is UNTRUSTED input — it is downloaded from a model site or
+    handed over by someone else — so this is an allowlist, not an unpack:
+
+    * only WILDCARD_SUFFIXES entries are written at all; everything else
+      (executables, .url files, nested archives, the readme's images) is
+      ignored rather than extracted and then skipped later;
+    * every name is re-derived from its own parts, so an absolute path, a
+      drive letter, a '..' segment or a backslash separator cannot escape
+      `dest` (zip-slip). ZipFile.extract sanitises too — this does not rely
+      on that, because the check is one line and the failure is arbitrary
+      file write;
+    * directory entries and anything ZIP flags as a symlink are skipped: a
+      symlink in an archive is a link into the reader's filesystem;
+    * the caps are the folder importer's own, applied to the UNCOMPRESSED
+      sizes declared in the central directory, so a zip bomb is refused
+      before a byte is written. The declared size is then verified against
+      what is actually read — a lying header is the other half of that trick.
+
+    Returns (file count, warnings).
+    """
+    import zipfile
+
+    warnings = []
+    written = 0
+    total = 0
+    try:
+        with zipfile.ZipFile(archive) as zf:
+            members = [i for i in zf.infolist() if not i.is_dir()]
+            wanted = [
+                info for info in members if Path(info.filename).suffix.lower() in WILDCARD_SUFFIXES
+            ]
+            if not wanted:
+                raise ImporterError(
+                    f"'{Path(archive).name}' contains no {' / '.join(WILDCARD_SUFFIXES)} file",
+                    "that archive is not a wildcard pack — open it and check, or point "
+                    "the import at the folder you extracted it to",
+                    404,
+                )
+            if len(wanted) > MAX_WILDCARD_FILES:
+                raise ImporterError(
+                    f"'{Path(archive).name}' holds {len(wanted)} wildcard files, over the "
+                    f"{MAX_WILDCARD_FILES} limit",
+                    LIMIT_REMEDIATION,
+                )
+            declared = sum(info.file_size for info in wanted)
+            if declared > MAX_WILDCARD_BYTES:
+                raise ImporterError(
+                    f"'{Path(archive).name}' unpacks to {declared / 1024 / 1024:.1f} MB of "
+                    f"wildcard text, over the {MAX_WILDCARD_BYTES / 1024 / 1024:.0f} MB limit",
+                    LIMIT_REMEDIATION,
+                )
+            for info in wanted:
+                # 0xA000 in the high 16 bits of external_attr is S_IFLNK
+                if (info.external_attr >> 16) & 0xF000 == 0xA000:
+                    warnings.append(f"skipped '{info.filename}': it is a symlink")
+                    continue
+                # Split on the separator MYSELF instead of via Path: on Windows
+                # Path('C:/x').parts is ('C:\\', 'x') — a drive part that ends
+                # in a separator, not a colon — and joinpath() with an anchored
+                # part DISCARDS the base, which is a write to C:\ (found by the
+                # hostile-archive test, not by reading this code).
+                parts = [
+                    part
+                    for part in info.filename.replace("\\", "/").split("/")
+                    if part not in ("", ".", "..") and ":" not in part
+                ]
+                if not parts:
+                    warnings.append(f"skipped '{info.filename}': unusable name")
+                    continue
+                if "/".join(parts) != info.filename.replace("\\", "/"):
+                    # It is now safe, but it was not written the way the archive
+                    # asked. Say so: an entry named '../x.txt' or 'C:/x.txt' is
+                    # either hostile or broken, and silently importing it under
+                    # a tidied name would hide both.
+                    warnings.append(
+                        f"'{info.filename}': imported as '{'/'.join(parts)}' — the archive "
+                        "named it outside its own folder"
+                    )
+                if info.file_size > MAX_FILE_BYTES:
+                    warnings.append(
+                        f"skipped '{info.filename}': larger than "
+                        f"{MAX_FILE_BYTES / 1024 / 1024:.0f} MB"
+                    )
+                    continue
+                target = dest.joinpath(*parts)
+                # Belt and braces: the filter above is a rule ABOUT names, this
+                # is a fact about the resulting path. Only one of them has to
+                # hold for the extraction to stay inside dest.
+                if not target.resolve().is_relative_to(dest.resolve()):
+                    warnings.append(f"skipped '{info.filename}': it points outside the archive")
+                    continue
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with zf.open(info) as src:
+                    data = src.read(info.file_size + 1)
+                if len(data) > info.file_size:
+                    # the central directory under-reported this entry, which is
+                    # how a bomb gets past a size pre-check
+                    warnings.append(f"skipped '{info.filename}': larger than its zip header says")
+                    continue
+                total += len(data)
+                if total > MAX_WILDCARD_BYTES:
+                    raise ImporterError(
+                        f"'{Path(archive).name}' unpacks to more than "
+                        f"{MAX_WILDCARD_BYTES / 1024 / 1024:.0f} MB",
+                        LIMIT_REMEDIATION,
+                    )
+                target.write_bytes(data)
+                written += 1
+    except zipfile.BadZipFile:
+        raise ImporterError(
+            f"'{Path(archive).name}' is not a readable zip archive",
+            "re-download it — a Civitai download that needed an API key returns an "
+            "HTML page with a .zip name, which is the usual cause",
+        ) from None
+    except OSError as exc:
+        raise ImporterError(f"could not read '{Path(archive).name}': {exc}", "") from None
+    if not written:
+        raise ImporterError(
+            f"'{Path(archive).name}' held no usable wildcard file",
+            "every entry was skipped — see the warnings",
+            404,
+        )
+    return written, warnings
+
+
 def import_wildcards(lib, path, *, overwrite=False, dry_run=False):
+    """Import a folder of wildcard files — or a .zip of them, which is how
+    every published pack is actually distributed."""
+    import tempfile
+
+    raw = path.strip().strip('"').strip("'") if isinstance(path, str) else path
+    if isinstance(raw, str) and raw.lower().endswith(".zip"):
+        archive = resolve_source(raw, kind="file")
+        with tempfile.TemporaryDirectory(prefix="mrln-wildcards-") as tmp:
+            root = Path(tmp)
+            _, warnings = extract_wildcard_archive(archive, root)
+            drafts, more = wildcard_drafts(root)
+            # the archive path is what the user recognises; the temp dir is
+            # noise they never chose
+            return apply_drafts(
+                lib,
+                drafts,
+                warnings + more,
+                source=str(archive),
+                overwrite=overwrite,
+                dry_run=dry_run,
+            )
     root = resolve_source(path, kind="folder")
     drafts, warnings = wildcard_drafts(root)
     if not drafts:
