@@ -14,7 +14,7 @@ import re
 from dataclasses import dataclass, replace
 
 from .errors import SelectionError
-from .render import render
+from .render import RenderPolicy, render
 from .resolve import resolve_template, walk_slots
 
 _log = logging.getLogger(__name__)
@@ -210,6 +210,11 @@ def compose(
         prof = _normalize_profile(name, available[name])
     tpl = apply_template_overrides(tpl, prof.get("overrides"), profile=name)
     cfg = _effective_render(tpl.render, prof)
+    # block order + negative policy are NOT RenderConfig fields: they shape one
+    # render, never the template on disk, so they ride beside cfg. None when the
+    # profile names neither — then render() takes its pre-Phase-3 path exactly.
+    # Built BEFORE resolving so malformed policy data fails before the work.
+    policy = RenderPolicy.from_render(prof.get("render") or {}, profile=name)
     effective_length = text_length if text_length not in _WIDGET_DEFAULT else cfg.text_length
     resolved = resolve_template(
         lib,
@@ -221,7 +226,7 @@ def compose(
         text_length=effective_length,
     )
     fmt = format if format not in _WIDGET_DEFAULT else cfg.format
-    out = render(resolved, fmt, cfg, conflict_policy=conflict_policy)
+    out = render(resolved, fmt, cfg, conflict_policy=conflict_policy, policy=policy)
 
     scaffold = prof.get("json_template")
     if scaffold:
