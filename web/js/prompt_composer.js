@@ -1,9 +1,22 @@
 // MRLN Prompt Composer — extension entry. Registers the sidebar tab on
 // frontends that support it and no-ops (with a console note) everywhere
 // else; the nodes themselves never depend on this file.
+//
+// This is the ONLY file in the composer allowed top-level side effects (CSS
+// link, registerExtension, api instance). Everything it hands to the panel
+// travels in the `ctx` object at the bottom — that object is a contract:
+// additive changes only, never a rename or a removal.
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 import { createComposerPanel } from "./prompt_composer_panel.js";
+import {
+  CUSTOM_ENTRY,
+  PULL_PREFIX,
+  buildModelValues,
+  createApi,
+  isNoteEntry,
+  isSentinelEntry,
+} from "./composer/api.js";
 
 const cssUrl = new URL("./prompt_composer.css", import.meta.url).href;
 if (!document.querySelector(`link[href="${cssUrl}"]`)) {
@@ -12,31 +25,11 @@ if (!document.querySelector(`link[href="${cssUrl}"]`)) {
   );
 }
 
-async function apiJson(route, options = {}) {
-  const started = performance.now();
-  const resp = await api.fetchApi(route, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-  });
-  const ms = performance.now() - started;
-  if (ms > 400) {
-    // surfaces WHERE first-open time goes (busy boot loop, AV first-touch…)
-    console.debug(`[MRLN] slow request ${route.split("?")[0]} took ${Math.round(ms)}ms`);
-  }
-  let data = null;
-  try {
-    data = await resp.json();
-  } catch {
-    /* non-JSON error page */
-  }
-  if (!resp.ok) {
-    const err = new Error(data?.error ?? `HTTP ${resp.status}`);
-    err.remediation = data?.remediation;
-    throw err;
-  }
-  return data;
-}
+// The fetch layer: JSON wrapper, library fingerprint cache, LLM model/key
+// caches with in-flight dedup, one query encoder. Injected transport keeps
+// composer/api.js free of ComfyUI imports (and unit-testable under node).
+const mrln = createApi({ fetchApi: (route, init) => api.fetchApi(route, init) });
+const { apiJson } = mrln;
 
 function toast(severity, summary, detail = "") {
   const mgr = app.extensionManager;
@@ -73,45 +66,22 @@ function getWidget(node, name) {
   return (node.widgets ?? []).find((w) => w.name === name)?.value;
 }
 
+function enhanceNodes() {
+  const all = app.graph?._nodes ?? app.graph?.nodes ?? [];
+  return all.filter((n) => (n.comfyClass ?? n.type) === "MRLN_PromptEnhance");
+}
+
 // ---- Prompt Enhance: model dropdown (progressive enhancement) --------------
 // Server-side the model widget stays a plain STRING, so the node works
 // headless and via the API. In the browser it becomes a dropdown listing
 // the backend's installed models plus curated "⬇ pull" suggestions that
 // Ollama downloads in the background when picked.
-const PULL_PREFIX = "⬇ pull ";
-const CLOUD_BACKENDS = ["anthropic", "openai", "gemini", "openrouter"];
-const llmModels = {}; // provider -> {models, suggested, fetchedAt, error}
-let llmKeysSet = { fetchedAt: 0, keys: {} }; // which cloud backends hold a key
-
-async function refreshLlmModels(provider) {
-  try {
-    const body = await apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
-    llmModels[provider] = {
-      models: body.models ?? [],
-      suggested: body.suggested ?? [],
-      fetchedAt: Date.now(),
-      error: null,
-    };
-  } catch (err) {
-    llmModels[provider] = {
-      models: [],
-      suggested: llmModels[provider]?.suggested ?? [],
-      fetchedAt: Date.now(),
-      error: err.message,
-    };
-  }
-  return llmModels[provider];
-}
-
-async function refreshLlmKeys() {
-  try {
-    const body = await apiJson("/mrln/prompt/settings");
-    llmKeysSet = { fetchedAt: Date.now(), keys: body.llm_keys_set ?? {} };
-  } catch {
-    llmKeysSet = { fetchedAt: Date.now(), keys: llmKeysSet.keys };
-  }
-  return llmKeysSet;
-}
+//
+// Model lists, curated suggestions and key flags all come from the server
+// through composer/api.js: llm-validate answers cloud providers offline with
+// its own curated `suggested` list (llm.py CLOUD_MODEL_SUGGESTIONS, "edit
+// freely"), so there is deliberately NO copy of that list here any more — the
+// documented customization point is the server constant.
 
 function backendValue(node) {
   return (node.widgets ?? []).find((w) => w.name === "backend")?.value ?? "ollama";
@@ -124,23 +94,56 @@ function enhanceProvider(node) {
   return backend; // cloud backends carry their own name
 }
 
+// model name -> being watched. ONE watcher per model for the life of the
+// page: the server answers an already-running pull with 200 "already
+// running", so without this every re-pick added another 4 s poller and
+// another completion toast.
+const activePulls = new Set();
+
 function watchPull(provider, model) {
+  if (activePulls.has(model)) return;
+  activePulls.add(model);
   const started = Date.now();
+  let unknown = 0;
+  const stop = (severity, summary, detail = "") => {
+    activePulls.delete(model);
+    toast(severity, summary, detail);
+  };
   const poll = async () => {
-    if (Date.now() - started > 45 * 60 * 1000) return; // stop polling silently
+    if (Date.now() - started > 45 * 60 * 1000) {
+      stop(
+        "warn",
+        `Stopped watching ${model}`,
+        "45 minutes without a result — check `ollama list`, the download may still be running"
+      );
+      return;
+    }
     let body = null;
     try {
-      body = await apiJson(`/mrln/prompt/llm-pull?model=${encodeURIComponent(model)}`);
+      body = await mrln.pullStatus(model);
     } catch {
       /* transient — keep polling */
     }
     if (body?.status === "done") {
-      toast("success", "Model pulled", `${model} is installed — the next Enhance run uses it`);
-      refreshLlmModels(provider);
+      stop("success", "Model pulled", `${model} is installed — the next Enhance run uses it`);
+      mrln.refreshLlmModels(provider);
       return;
     }
     if (body?.status === "error") {
-      toast("error", `Pull failed: ${model}`, body.detail ?? "");
+      stop("error", `Pull failed: ${model}`, body.detail ?? "");
+      return;
+    }
+    // "unknown" = the server holds no state for this model. The POST claims
+    // the status before it answers, so this cannot race a fresh pull — it
+    // means the state was lost (ComfyUI restarted, or the bounded status map
+    // evicted it). Three consecutive polls guard against a transient blip.
+    unknown = body?.status === "unknown" ? unknown + 1 : 0;
+    if (unknown >= 3) {
+      stop(
+        "warn",
+        "Pull state lost",
+        `${model} is no longer tracked (did ComfyUI restart?) — pick it again to resume`
+      );
       return;
     }
     setTimeout(poll, 4000);
@@ -148,13 +151,39 @@ function watchPull(provider, model) {
   setTimeout(poll, 4000);
 }
 
-const CUSTOM_ENTRY = "✏ custom…";
-const CLOUD_MODEL_SUGGESTIONS = {
-  anthropic: ["claude-haiku-4-5-20251001", "claude-sonnet-5"],
-  openai: ["gpt-4o-mini", "gpt-4o"],
-  gemini: ["gemini-2.5-flash", "gemini-2.5-pro"],
-  openrouter: [],
-};
+function installBackendCombo(node) {
+  // Only keyed cloud backends are offered (locals always); the node's current
+  // value stays listed so foreign workflows load intact. The cloud list itself
+  // is the server's — the keys of llm_keys_set — not a hardcoded copy.
+  //
+  // Re-assertable ON PURPOSE: app.refreshComboInNodes() re-applies option
+  // values from the fetched node definition, and on some frontend versions
+  // that overwrites this values FUNCTION with the definition's static array
+  // (unkeyed backends would reappear). Whether a given frontend does that is
+  // only decidable live, so this is called from three places — after the
+  // enhancement, after every refreshCombos, and on every model-menu open —
+  // and is idempotent so it is correct under either behavior.
+  const backendWidget = (node.widgets ?? []).find((w) => w.name === "backend");
+  if (!backendWidget) return;
+  backendWidget.options = backendWidget.options ?? {};
+  backendWidget.options.values = () => {
+    mrln.llmKeys(); // TTL + in-flight dedup live in the api layer
+    const values = ["ollama", "lm studio", ...mrln.keyedCloudBackends()];
+    const current = String(backendWidget.value ?? "");
+    if (current && !values.includes(current)) values.push(current);
+    return values;
+  };
+  if (!backendWidget.__mrlnPatched) {
+    // wrap once: a re-assert must not stack N callbacks on one widget
+    const inner = backendWidget.callback;
+    backendWidget.callback = function (...args) {
+      const result = inner?.apply(this, args);
+      mrln.refreshLlmModels(enhanceProvider(node));
+      return result;
+    };
+    backendWidget.__mrlnPatched = true;
+  }
+}
 
 function enhanceModelDropdown(node) {
   // Mutating a text widget's `type` does NOT change its behavior — the
@@ -163,9 +192,11 @@ function enhanceModelDropdown(node) {
   // exact same index: widgets_values are positional and workflow loads
   // assign them by index.
   const old = (node.widgets ?? []).find((w) => w.name === "model");
-  if (!old || old.__mrlnCombo) return;
+  if (!old || old.__mrlnCombo) {
+    if (old?.__mrlnCombo) installBackendCombo(node); // already enhanced: re-assert only
+    return;
+  }
   const index = node.widgets.indexOf(old);
-  const isCloud = () => CLOUD_BACKENDS.includes(backendValue(node));
   let combo;
   let lastReal = String(old.value ?? "");
   const callback = (value) => {
@@ -175,12 +206,23 @@ function enhanceModelDropdown(node) {
       combo.value = model; // widget is set now; the pull lands in the background
       lastReal = model;
       const provider = enhanceProvider(node);
-      apiJson("/mrln/prompt/llm-pull", { method: "POST", body: { model, start: true } })
-        .then(() => {
-          toast("info", "Pulling model", `${model} — Ollama downloads it in the background`);
+      mrln
+        .startPull(model)
+        .then((body) => {
+          toast(
+            "info",
+            body?.detail === "already running" ? "Already downloading" : "Pulling model",
+            `${model} — Ollama downloads it in the background`
+          );
           watchPull(provider, model);
         })
         .catch((err) => toast("error", "Pull failed to start", err.message));
+      return;
+    }
+    if (isNoteEntry(value)) {
+      // the ⚠ line explaining an empty list is informational — picking it
+      // must never become the model name
+      combo.value = lastReal;
       return;
     }
     if (value === CUSTOM_ENTRY) {
@@ -223,58 +265,27 @@ function enhanceModelDropdown(node) {
   };
   combo = node.addWidget("combo", "model", lastReal, callback, {
     values: () => {
+      installBackendCombo(node); // cheap re-assert (see the note there)
       const provider = enhanceProvider(node);
       const current = String(combo.value ?? "").trim();
-      if (current && current !== CUSTOM_ENTRY) lastReal = current;
-      if (isCloud()) {
-        const values = current && current !== CUSTOM_ENTRY ? [current] : [];
-        for (const m of CLOUD_MODEL_SUGGESTIONS[provider] ?? []) {
-          if (!values.includes(m)) values.push(m);
-        }
-        values.push(CUSTOM_ENTRY);
-        return values;
-      }
-      // sync return from cache; kick an async refresh when stale so the
-      // NEXT open is current (the combo needs its list immediately)
-      const entry = llmModels[provider];
-      if (!entry || Date.now() - entry.fetchedAt > 30000) refreshLlmModels(provider);
-      const values = [...(entry?.models ?? [])];
-      if (current && !values.includes(current)) values.unshift(current);
-      if (provider === "ollama") {
-        values.push(...(entry?.suggested ?? []).map((m) => `${PULL_PREFIX}${m}`));
-      }
-      values.push(CUSTOM_ENTRY);
-      return values;
+      if (current && !isSentinelEntry(current)) lastReal = current;
+      // sync return from cache; the api layer kicks an async refresh when
+      // stale (deduped while one is in flight) so the NEXT open is current
+      mrln.llmModels(provider);
+      return buildModelValues({
+        provider,
+        current: lastReal,
+        entry: mrln.llmModelsCached(provider),
+      });
     },
   });
   combo.__mrlnCombo = true;
   if (old.tooltip) combo.tooltip = old.tooltip;
   node.widgets.splice(node.widgets.indexOf(combo), 1);
   node.widgets.splice(index, 1, combo);
-  const backendWidget = (node.widgets ?? []).find((w) => w.name === "backend");
-  if (backendWidget) {
-    // only keyed cloud backends are offered (locals always); the node's
-    // current value stays listed so foreign workflows load intact
-    backendWidget.options = backendWidget.options ?? {};
-    backendWidget.options.values = () => {
-      if (Date.now() - llmKeysSet.fetchedAt > 30000) refreshLlmKeys();
-      const values = ["ollama", "lm studio"];
-      for (const cloud of CLOUD_BACKENDS) {
-        if (llmKeysSet.keys[cloud]) values.push(cloud);
-      }
-      const current = String(backendWidget.value ?? "");
-      if (current && !values.includes(current)) values.push(current);
-      return values;
-    };
-    const backendCallback = backendWidget.callback;
-    backendWidget.callback = function (...args) {
-      const result = backendCallback?.apply(this, args);
-      if (!isCloud()) refreshLlmModels(enhanceProvider(node));
-      return result;
-    };
-  }
-  refreshLlmKeys();
-  if (!isCloud()) refreshLlmModels(enhanceProvider(node));
+  installBackendCombo(node);
+  mrln.refreshLlmKeys();
+  mrln.refreshLlmModels(enhanceProvider(node));
 }
 
 app.registerExtension({
@@ -329,8 +340,18 @@ app.registerExtension({
             app.graph?.change?.();
             app.graph?.setDirtyCanvas(true, true);
           },
-          refreshCombos: () => app.refreshComboInNodes?.(),
+          refreshCombos: async () => {
+            await app.refreshComboInNodes?.();
+            // a definition refresh can drop our enhancements (see
+            // installBackendCombo) — re-assert them on every Enhance node
+            for (const node of enhanceNodes()) enhanceModelDropdown(node);
+          },
           dialog: app.extensionManager?.dialog,
+          // ADDITIVE (the ctx contract is append-only): the shared fetch
+          // layer, so the panel's own llm-validate / llm-pull calls can use
+          // the same cache and the same single URL encoding instead of a
+          // second implementation.
+          api: mrln,
         });
       },
     });
