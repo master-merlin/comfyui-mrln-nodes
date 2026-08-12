@@ -397,7 +397,13 @@ export function createTree(hub) {
         ),
         el(
           "button",
-          { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, newTemplate) },
+          {
+            // from HERE it opens the template editor, like 'New section…'
+            // opens the section editor — busy() passes no arguments, so the
+            // choice has to ride a closure
+            class: "mrln-btn",
+            onclick: (e) => busy(e.currentTarget, () => newTemplate({ open: "editor" })),
+          },
           "New template…"
         ),
         el(

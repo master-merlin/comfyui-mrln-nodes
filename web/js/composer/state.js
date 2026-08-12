@@ -552,9 +552,15 @@ export function createStore(hub) {
     return window.prompt(`${title}\n${message}`, defaultValue);
   }
 
-  async function newTemplate() {
+  async function newTemplate({ open = "compose" } = {}) {
     // Net-new composition: create a blank user-tier template and drop into
     // the normal compose flow — '+ Add section' builds it up, Save persists.
+    //
+    // `open` is where the user was standing. From the Compose tab's ＋ the
+    // answer is Compose. From the LIBRARY tab it is the template editor: the
+    // button right next to it, 'New section…', opens its editor in place, so
+    // ending up on another tab with an empty slot list reads as "nothing
+    // happened" (UAT). Same creation either way — only the landing differs.
     if (!confirmDiscardEdits("new-template")) return; // it ends in selectTemplate
     const slug = await askString(
       "New template",
@@ -587,7 +593,18 @@ export function createStore(hub) {
     );
     ctx.refreshCombos();
     await loadLibrary();
+    // Select it either way, so the Compose tab already points at the new
+    // template whenever the user gets there.
     await selectTemplate(clean);
+    if (open === "editor") {
+      // reveal it in the tree as well — an editor for a row the user cannot
+      // see is half an answer
+      state.libGroups.add("templates:@block");
+      state.libGroups.add(`templates:${clean.split("/")[0]}`);
+      renderLibraryTab();
+      await hub.openTemplateEditor(clean);
+      return;
+    }
     switchTab("compose");
   }
 
