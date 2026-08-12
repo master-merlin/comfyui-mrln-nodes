@@ -109,7 +109,20 @@ each item's tier (F/U), factory items can be hidden/restored, and saving
 defaults to a thin "extend factory" diff that survives pack updates (full
 replace available per save) — and templates as validated raw JSON;
 **New section…** and **New template…** start net-new compositions from a
-blank slate (the green ＋ next to the template picker does the same). The
+blank slate (the green ＋ next to the template picker does the same).
+**New combine…** groups several sections into one draw pool: pick the
+sections, give each a weight, and every entry delegates to its source —
+one slot then draws "urban *or* nature *or* studio". Re-opening such a
+section returns to that pick-and-weight view rather than a table of
+delegations.
+
+A template that draws LoRA items warns you *before* you render: the
+Compose tab lists any `.safetensors` this machine is missing and offers
+a one-click fetch for the ones carrying a Civitai AIR. The same audit
+runs at server start (it logs what is missing), and **LoRA Apply** has an
+`on_missing` choice — stop with a named file, skip it and render without,
+or download it by its AIR — so a shared workflow can heal itself without
+the Composer ever being opened. The
 De-compose tab works the other way around: paste a finished prompt and it
 is decomposed against your library — matched fragments become slots pinned
 to their items, the residue becomes new items, new sections, or

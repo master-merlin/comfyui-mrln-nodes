@@ -3560,6 +3560,18 @@ export function createComposerPanel(root, ctx) {
           },
           "New section…"
         ),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            title: "Group several sections into ONE draw pool — each picked "
+              + "section becomes a weighted entry that delegates to it",
+            onclick: () => {
+              if (confirmReplaceEditor()) newCombineSection();
+            },
+          },
+          "New combine…"
+        ),
         el("button", { class: "mrln-btn", onclick: () => newTemplate() }, "New template…"),
         el(
           "button",
@@ -3988,6 +4000,164 @@ export function createComposerPanel(root, ctx) {
     );
   }
 
+  // ---- combine sections ----------------------------------------------------
+  // A "combine" is an ordinary section whose every item just delegates to
+  // ANOTHER section through a child slot. Drawing it picks which source to
+  // draw from (weights included), which is how you group several sections
+  // into one pool. The engine has always supported this; only building one
+  // by hand was tedious, so this generates the structure and hands it to the
+  // normal section editor — no new schema, no new save path.
+
+  function combineItem(slug, weight) {
+    const item = {
+      name: jsSlugify(slug.split("/").slice(-2).join("-")),
+      text: "{pick}",
+      slots: [{ id: "pick", ref: slug }],
+    };
+    if (weight && weight !== 1) item.weight = weight;
+    return item;
+  }
+
+  function isCombineItem(item) {
+    return (
+      (item?.text ?? "").trim() === "{pick}" &&
+      (item?.slots ?? []).length === 1 &&
+      item.slots[0].id === "pick"
+    );
+  }
+
+  function newCombineSection(existing = null) {
+    // existing: {slug, body} when re-opening a section that IS a combine
+    const chosen = new Map(); // section slug -> weight
+    if (existing) {
+      for (const item of existing.body.items ?? []) {
+        if (isCombineItem(item)) chosen.set(item.slots[0].ref, Number(item.weight) || 1);
+      }
+    }
+    const labelInput = el("input", {
+      type: "text",
+      value: existing?.body.label ?? "",
+      placeholder: "e.g. Anywhere — urban, nature or studio",
+    });
+    const filterInput = el("input", {
+      type: "text",
+      placeholder: "Filter sections…",
+      oninput: () => renderPicks(),
+    });
+    const pickList = el("div", { class: "mrln-combine-picks" });
+    const chosenList = el("div", { class: "mrln-combine-chosen" });
+    const errorLine = el("div", { class: "mrln-error" });
+
+    function renderChosen() {
+      const rows = [...chosen.entries()].map(([slug, weight]) =>
+        el(
+          "div",
+          { class: "mrln-inline" },
+          el("span", {}, slug),
+          el("input", {
+            type: "number",
+            class: "mrln-narrow",
+            min: "0.1",
+            step: "0.1",
+            value: String(weight),
+            title: "Draw weight — 2 means twice as likely as a 1",
+            oninput: (e) => chosen.set(slug, Math.max(0.1, Number(e.target.value) || 1)),
+          }),
+          smallBtn("Remove from the combine", "✕", () => {
+            chosen.delete(slug);
+            renderChosen();
+            renderPicks();
+          })
+        )
+      );
+      chosenList.replaceChildren(
+        el("div", { class: "mrln-field-name" }, `Combining ${chosen.size} section(s)`),
+        ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "nothing picked yet")])
+      );
+    }
+
+    function renderPicks() {
+      const filter = filterInput.value.trim().toLowerCase();
+      const rows = (state.library?.sections ?? [])
+        .filter((s) => !chosen.has(s.slug))
+        .filter((s) => !filter || s.slug.toLowerCase().includes(filter))
+        .slice(0, 40)
+        .map((s) =>
+          el(
+            "div",
+            {
+              class: "mrln-combine-pick",
+              onclick: () => {
+                chosen.set(s.slug, 1);
+                renderChosen();
+                renderPicks();
+              },
+            },
+            `+ ${s.slug}`,
+            el("span", { class: "mrln-slug" }, ` ${s.item_count ?? "?"} items`)
+          )
+        );
+      pickList.replaceChildren(
+        ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "no matches")])
+      );
+    }
+
+    function build() {
+      if (!chosen.size) {
+        errorLine.textContent = "pick at least one section to combine";
+        return;
+      }
+      const items = [...chosen.entries()].map(([slug, weight]) => combineItem(slug, weight));
+      const names = new Set();
+      for (const item of items) {
+        let name = item.name;
+        for (let n = 2; names.has(name); n++) name = `${item.name}-${n}`;
+        item.name = name;
+        names.add(name);
+      }
+      // hand off to the ordinary editor: from here it is just a section
+      openSectionForm(existing?.slug ?? null, {
+        label: labelInput.value.trim(),
+        description: existing?.body.description ?? "",
+        negative: existing?.body.negative ?? "",
+        items,
+        raw: existing?.body.raw ?? { items: [] },
+        factory_raw: existing?.body.factory_raw ?? null,
+        merged: false,
+        replaces: Boolean(existing?.body.replaces),
+        tier: existing?.body.tier ?? "",
+      });
+    }
+
+    renderChosen();
+    renderPicks();
+    setEditor(
+      el(
+        "div",
+        { class: "mrln-tree-head" },
+        existing ? `Combine: ${existing.slug}` : "New combine section",
+        editorCloseBtn()
+      ),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Each picked section becomes one entry; drawing this section picks an "
+          + "entry (by weight) and then draws from that section. Build it, then "
+          + "the normal section editor opens so you can save it."
+      ),
+      field("Label", labelInput),
+      chosenList,
+      field("Add a section", filterInput),
+      pickList,
+      errorLine,
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el("button", { class: "mrln-btn mrln-primary", onclick: build }, "Build →")
+      )
+    );
+  }
+
   function newSection() {
     openSectionForm(null, {
       label: "",
@@ -4008,6 +4178,13 @@ export function createComposerPanel(root, ctx) {
       body = await ctx.apiJson(`/mrln/prompt/section?slug=${encodeURIComponent(slug)}`);
     } catch (err) {
       setEditor(el("div", { class: "mrln-error" }, err.message));
+      return;
+    }
+    const items = body.items ?? [];
+    if (items.length && items.every(isCombineItem)) {
+      // a section that is nothing but delegations edits far better as the
+      // pick-and-weight list it came from than as a table of "{pick}" rows
+      newCombineSection({ slug, body });
       return;
     }
     openSectionForm(slug, body);
