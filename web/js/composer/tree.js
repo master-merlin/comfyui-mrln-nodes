@@ -20,6 +20,7 @@ export function createTree(hub) {
   const confirmTwoStep = (...a) => hub.confirmTwoStep(...a);
   const exportBtn = (...a) => hub.exportBtn(...a);
   const importBundlePicker = (...a) => hub.importBundlePicker(...a);
+  const migrationImportPicker = (...a) => hub.migrationImportPicker(...a);
   const libraryErrorNote = (...a) => hub.libraryErrorNote(...a);
   const loadLibrary = (...a) => hub.loadLibrary(...a);
   const newCombineSection = (...a) => hub.newCombineSection(...a);
@@ -417,6 +418,19 @@ export function createTree(hub) {
             },
           },
           "Import…"
+        ),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            title:
+              "Bring in content from another tool: a wildcard folder or the .zip a "
+              + "pack ships as, an A1111 styles.csv, or a Civitai wildcard pack",
+            onclick: () => {
+              if (confirmReplaceEditor()) migrationImportPicker();
+            },
+          },
+          "Migrate…"
         ),
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload"),
         viewToggle()

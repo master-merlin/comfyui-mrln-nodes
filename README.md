@@ -189,13 +189,21 @@ rather than approximates) and copy-prompt. A batch collapses to one row.
 Recording and retention are settings, clearing is a two-step confirm, and a
 failed history write can never break a render that already succeeded.
 
-**Coming from A1111 or a wildcard collection?** Two importers read wildcards
+**Coming from A1111 or a wildcard collection?** **Migrate…** in the Library
+tab reads wildcards
 — a folder of `.txt`/`.yaml` files, or the `.zip` a published pack actually
 ships as — or an A1111 `styles.csv`, and dry-run the result through the same
 plan preview the bundle importer uses, so you see exactly what would be
 written before anything is. Weighted lines (`3::rare option`) are honored,
 and the plan says plainly which third-party syntax survives the trip and
 which does not.
+
+Wildcard packs also import straight from Civitai: paste the link of a
+model of type **Wildcards** and the pack is downloaded, checked against
+the SHA256 Civitai publishes, and planned like any other import — with the
+creator's licence terms shown *before* anything is written. The API key is
+only needed for packs that require an account; it rides an Authorization
+header and never the URL.
 
 The Settings tab holds the local backend URLs (Ollama / LM Studio,
 auto-validated with installed-model lists), the cloud API keys — stored

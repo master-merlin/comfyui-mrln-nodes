@@ -9,6 +9,7 @@ import threading
 
 from .. import promptlib as pl
 from ..pack import logger
+from .civitai import handle_import_civitai_wildcards
 from .core import MAX_BODY_BYTES
 from .decompose import handle_decompose
 from .history import handle_history, handle_history_clear, prune_history
@@ -68,6 +69,10 @@ ROUTES = (
     # Composer's existing plan preview renders them with no new UI
     ("post", "/mrln/prompt/import-wildcards", handle_import_wildcards, True),
     ("post", "/mrln/prompt/import-styles", handle_import_styles, True),
+    # the same wildcard importer, fed from Civitai's "Wildcards" model type
+    # (796 packs, all .zip): resolve the link, fetch, plan. dry_run defaults
+    # to TRUE here because this one reaches the network.
+    ("post", "/mrln/prompt/import-civitai-wildcards", handle_import_civitai_wildcards, True),
     # thumbnails: the GET is the one route that answers with bytes rather than
     # JSON. 'thumb-delete' is a POST because the route-table lint freezes the
     # methods to get/post — the pack already spells this idea /delete

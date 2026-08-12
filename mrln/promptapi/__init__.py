@@ -33,6 +33,19 @@ This module IS the public surface: everything below is re-exported so
 # patching it here patches the very object core._write_json_atomic uses.
 import json
 
+from .civitai import (
+    LINK_REMEDIATION,
+    MAX_ARCHIVE_BYTES,
+    CivitaiError,
+    download_archive,
+    handle_import_civitai_wildcards,
+    import_civitai_wildcards,
+    licence_of,
+    model_type_of,
+    parse_model_ref,
+    pick_archive,
+    pick_version,
+)
 from .core import (
     MAX_BODY_BYTES,
     ApiError,
@@ -89,6 +102,7 @@ from .importers import (
     apply_drafts,
     decode_text,
     derive_slug,
+    extract_wildcard_archive,
     handle_import_styles,
     handle_import_wildcards,
     import_styles,

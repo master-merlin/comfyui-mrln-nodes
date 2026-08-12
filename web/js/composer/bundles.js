@@ -5,7 +5,7 @@
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
 import { bundleFilename } from "./util.js";
-import { el, field, mount } from "./dom.js";
+import { busy, el, field, loadingNote, mount } from "./dom.js";
 
 export function createBundles(hub) {
   const { ctx } = hub;
@@ -249,5 +249,180 @@ export function createBundles(hub) {
     );
   }
 
-  return { exportBtn, importBundlePicker };
+
+  // ---- migration imports ---------------------------------------------------
+  // Three sources that all answer the SAME plan shape as a bundle, which is
+  // why they share this card and importPlanLines(): a wildcard folder or the
+  // .zip a pack ships as, an A1111 styles.csv, and a Civitai 'Wildcards' model
+  // (796 of them, all .zip). Dry-run first, always — these write user files.
+
+  const MIGRATION_SOURCES = [
+    {
+      id: "wildcards",
+      label: "Wildcard folder or .zip",
+      route: "/mrln/prompt/import-wildcards",
+      key: "path",
+      placeholder: "D:\stable-diffusion\wildcards   or   …\pack.zip",
+      hint:
+        "A folder of .txt/.yaml wildcards, or the .zip a published pack ships as. "
+        + "Lands in user sections under 'wildcards/…'; weighted lines (3::rare) are kept.",
+    },
+    {
+      id: "styles",
+      label: "A1111 styles.csv",
+      route: "/mrln/prompt/import-styles",
+      key: "path",
+      placeholder: "D:\stable-diffusion-webui\styles.csv",
+      hint:
+        "Rows containing {prompt} become templates; the rest become items in "
+        + "'styles/a1111'.",
+    },
+    {
+      id: "civitai",
+      label: "Civitai wildcard pack",
+      route: "/mrln/prompt/import-civitai-wildcards",
+      key: "url",
+      placeholder: "https://civitai.com/models/615967",
+      hint:
+        "Paste the link of a Civitai model of type 'Wildcards' (or its id). The pack "
+        + "is downloaded, hash-checked and planned — the creator's licence is shown "
+        + "before anything is written.",
+    },
+  ];
+
+  function warningLines(plan) {
+    const warnings = plan.warnings ?? [];
+    if (!warnings.length) return [];
+    return [
+      el("div", { class: "mrln-field-name" }, `Notes (${warnings.length})`),
+      el(
+        "ul",
+        { class: "mrln-import-plan" },
+        warnings.slice(0, 40).map((text) => el("li", {}, text))
+      ),
+    ];
+  }
+
+  function creditLine(plan) {
+    // A Civitai import names who made the pack. Nothing else in the panel
+    // knows this, and a licence the user only sees once is worth repeating.
+    const info = plan.civitai;
+    if (!info) return null;
+    return el(
+      "div",
+      { class: "mrln-note" },
+      `${info.model} `,
+      info.version ? el("span", { class: "mrln-chip" }, info.version) : null,
+      info.creator ? ` by ${info.creator} — ` : " — ",
+      el("span", {}, info.licence?.summary ?? "")
+    );
+  }
+
+  function migrationImportPicker() {
+    const select = el("select", {});
+    for (const source of MIGRATION_SOURCES) {
+      select.append(el("option", { value: source.id }, source.label));
+    }
+    const input = el("input", { type: "text" });
+    const hint = el("div", { class: "mrln-note" });
+    const errorLine = el("div", { class: "mrln-error" });
+    const planBox = el("div", {});
+    const overwriteBox = el("input", { type: "checkbox" });
+    let plan = null;
+
+    const current = () => MIGRATION_SOURCES.find((s) => s.id === select.value) ?? MIGRATION_SOURCES[0];
+    const syncSource = () => {
+      const source = current();
+      input.setAttribute("placeholder", source.placeholder);
+      hint.textContent = source.hint;
+      plan = null;
+      mount(planBox);
+      errorLine.textContent = "";
+    };
+    select.addEventListener("change", syncSource);
+    syncSource();
+
+    function body(dryRun) {
+      const source = current();
+      return { [source.key]: input.value.trim(), overwrite: overwriteBox.checked, dry_run: dryRun };
+    }
+
+    async function preview() {
+      const source = current();
+      if (!input.value.trim()) {
+        errorLine.textContent = "nothing to import yet — fill the field above";
+        return;
+      }
+      errorLine.textContent = "";
+      mount(planBox, loadingNote("Reading the source…"));
+      try {
+        plan = await ctx.apiJson(source.route, { method: "POST", body: body(true) });
+      } catch (err) {
+        plan = null;
+        mount(planBox);
+        errorLine.textContent = [err.message, err.remediation].filter(Boolean).join(" — ");
+        return;
+      }
+      mount(
+        planBox,
+        creditLine(plan),
+        el("ul", { class: "mrln-import-plan" }, importPlanLines(plan)),
+        ...warningLines(plan)
+      );
+    }
+
+    async function apply(button) {
+      const source = current();
+      if (!plan) {
+        errorLine.textContent = "preview it first — this writes files";
+        return;
+      }
+      try {
+        const report = await ctx.apiJson(source.route, { method: "POST", body: body(false) });
+        const written = (report.written ?? []).length;
+        const kept = (report.skipped ?? []).length;
+        ctx.toast(
+          "success",
+          "Import complete",
+          `${written} file(s) written${kept ? `, ${kept} kept — tick overwrite to replace them` : ""}`
+        );
+        setEditor();
+        ctx.refreshCombos();
+        await loadLibrary();
+      } catch (err) {
+        errorLine.textContent = [err.message, err.remediation].filter(Boolean).join(" — ");
+      }
+      void button;
+    }
+
+    setEditor(
+      el("div", { class: "mrln-tree-head" }, "Import from another tool", editorCloseBtn()),
+      field("Source", select),
+      hint,
+      field("Folder, file or link", input),
+      el(
+        "label",
+        { class: "mrln-check" },
+        overwriteBox,
+        el("span", {}, " overwrite files I already have")
+      ),
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el("button", { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, preview) }, "Preview"),
+        el(
+          "button",
+          {
+            class: "mrln-btn mrln-primary",
+            onclick: (e) => busy(e.currentTarget, () => apply(e.currentTarget)),
+          },
+          "Import"
+        )
+      ),
+      errorLine,
+      planBox
+    );
+  }
+
+  return { exportBtn, importBundlePicker, migrationImportPicker };
 }
