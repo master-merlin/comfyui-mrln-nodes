@@ -447,6 +447,42 @@ export function createCompose(hub) {
     return rows;
   }
 
+  // ONE request per ref, ONE re-render per frame.
+  //
+  // This is where the panel froze. childRow used to do
+  //     if (!pool) ensurePool(child.ref).then(() => renderNested());
+  // which looks harmless and is quadratic-then-worse: a template with N
+  // nested children whose pools are not loaded schedules N callbacks; EVERY
+  // resolution re-renders; every re-render walks all N children again and
+  // attaches a fresh callback to each still-pending request (ensurePool hands
+  // back the same in-flight promise, so they stack). N renders x N children
+  // compounds until the tab stops painting — which is what "click on a parent
+  // of a nested object" did, because changing a parent's draw gives its
+  // children new refs that are all unloaded at once.
+  //
+  // The two rules that make it linear: never ask for the same ref twice while
+  // it is in flight, and collapse any number of arrivals into a single render
+  // on the next frame. A pool that never arrives (declined, failed, backed
+  // off) renders nothing, so nothing re-schedules.
+  const nestedAsked = new Set();
+  let nestedFrame = null;
+
+  function requestNestedPool(ref) {
+    if (nestedAsked.has(ref)) return; // already in flight — its arrival renders
+    nestedAsked.add(ref);
+    ensurePool(ref)
+      .then(() => {
+        nestedAsked.delete(ref);
+        if (!state.detail?.pools?.[ref]) return; // declined or failed: end here
+        if (nestedFrame !== null) return; // a render is already queued
+        nestedFrame = requestAnimationFrame(() => {
+          nestedFrame = null;
+          renderNested();
+        });
+      })
+      .catch(() => nestedAsked.delete(ref));
+  }
+
   function renderNested() {
     const seen = new Set();
     const collect = (slots) => {
@@ -508,25 +544,7 @@ export function createCompose(hub) {
       state.rows.set(child.id, row);
     }
     const pool = state.detail.pools[child.ref];
-    if (!pool) {
-      // ONLY re-render when the pool actually ARRIVED.
-      //
-      // ensurePool is async and resolves immediately whenever it declines to
-      // fetch — a request is already in flight, or it is backing off after a
-      // failure. Re-rendering unconditionally on that resolution meant
-      // renderNested -> childRow -> ensurePool -> (immediate) -> renderNested,
-      // a loop that spins as fast as microtasks drain and never yields to
-      // paint: the tab freezes. It needs a parent whose children reference an
-      // unloaded pool, which is exactly what changing a parent's draw
-      // produces, so "click a parent of a nested object" froze the panel.
-      //
-      // Checking the pool is the termination condition: a decline ends the
-      // chain, a success renders once. The in-flight case is covered too,
-      // because the request that IS running resolves with the pool present.
-      ensurePool(child.ref).then(() => {
-        if (state.detail?.pools?.[child.ref]) renderNested();
-      });
-    }
+    if (!pool) requestNestedPool(child.ref);
 
     const itemSelect = el("select", {
       onchange: (e) => {
