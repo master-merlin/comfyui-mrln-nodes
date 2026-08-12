@@ -11,7 +11,8 @@
       "text": "a ({nationality}:1.1) woman {age}, ({physique}:1.15), ({bust}:1.1), with ({hair-color} hair in {hair-style}:1.25), {eyes} eyes, {skin}, ({tattoos}:1.15), ({lipstick}:1.1), ({nails}:1.1), wearing an elegant ({lingerie-color} {lingerie-fabric} {lingerie-garment}:1.25), ({accessories}:1.15), dynamic hair movement, confident poise, glamour makeup, defined eyeshadow, ({gaze} paired with {gesture}:1.2)",
       "text_short": "a {nationality} woman {age}, {physique}, {hair-color} {hair-style} hair, {eyes} eyes, in {lingerie-color} {lingerie-fabric} {lingerie-garment}, {gaze}",
       "tags": [
-        "boudoir"
+        "boudoir",
+        "female"
       ],
       "slots": [
         {
@@ -102,6 +103,7 @@
       "text_short": "a {nationality} woman {age}, {physique}, {hair-color} {hair-style} hair, {eyes} eyes, in warm-toned {lingerie-color} {lingerie-fabric} {lingerie-garment}",
       "tags": [
         "boudoir",
+        "female",
         "warm"
       ],
       "slots": [
@@ -192,6 +194,7 @@
       "text_short": "a {nationality} woman {age}, {physique}, {hair-color} {hair-style} hair, {eyes} eyes, in pale-toned {lingerie-color} {lingerie-fabric} {lingerie-garment}",
       "tags": [
         "boudoir",
+        "female",
         "pale"
       ],
       "slots": [
@@ -341,6 +344,9 @@
           "id": "gaze",
           "ref": "human/gaze"
         }
+      ],
+      "tags": [
+        "female"
       ]
     },
     {
@@ -348,7 +354,8 @@
       "text": "a handsome ({nationality}:1.1) man {age} with {hair-color} {hair} hair and {eyes} eyes and {grooming}, ({physique}:1.15), wearing an unbuttoned ({wardrobe}:1.3), ({accessories}:1.15), confident gaze, subtle romantic tension",
       "text_short": "a {nationality} man {age}, {physique}, {hair-color} {hair} hair, {eyes} eyes, unbuttoned {wardrobe}",
       "tags": [
-        "boudoir"
+        "boudoir",
+        "male"
       ],
       "slots": [
         {
@@ -448,6 +455,9 @@
             "male"
           ]
         }
+      ],
+      "tags": [
+        "male"
       ]
     },
     {
@@ -497,6 +507,9 @@
           "id": "gaze",
           "ref": "human/gaze"
         }
+      ],
+      "tags": [
+        "female"
       ]
     },
     {
@@ -546,6 +559,9 @@
           "id": "gaze",
           "ref": "human/gaze"
         }
+      ],
+      "tags": [
+        "female"
       ]
     }
   ]

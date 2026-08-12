@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "label": "Portrait Treatment",
+  "description": "How a portrait is HANDLED — styling attitude, retouching philosophy, tonal intent and emulsion character. Deliberately says nothing about light, so it composes with templates that own their lighting in a dedicated slot (unlike style/portraiture, whose items are complete looks that state their own key).",
+  "items": [
+    {
+      "name": "editorial-polish",
+      "text": "handled as a magazine editorial, styling considered down to the last fold, retouching held to what a good title would actually leave in",
+      "text_short": "editorial treatment, considered styling, honest retouching",
+      "tags": ["boudoir", "studio", "fashion"]
+    },
+    {
+      "name": "intimate-documentary",
+      "text": "handled as trusting documentary, the in-between frames kept, nothing corrected that a real moment would not correct itself",
+      "text_short": "documentary treatment, unposed, in-between moments kept",
+      "tags": ["boudoir", "street"]
+    },
+    {
+      "name": "fine-art-tonal",
+      "text": "handled as a gallery print, the long patient tonal range of fibre paper, form valued over incident and restraint over flourish",
+      "text_short": "fine-art treatment, long tonal range, restrained",
+      "tags": ["boudoir", "studio"]
+    },
+    {
+      "name": "film-romantic",
+      "text": "handled on romantic colour film, gentle grain through the midtones and highlights blooming just slightly, colour drifting warm toward the edges of the frame",
+      "text_short": "romantic film treatment, gentle grain, warm bloom",
+      "tags": ["boudoir", "street"]
+    },
+    {
+      "name": "high-gloss-glamour",
+      "text": "handled at high gloss, every surface finished and lacquered, hair and skin styled to a deliberate polish with nothing left accidental",
+      "text_short": "high-gloss treatment, lacquered finish, deliberate polish",
+      "tags": ["boudoir", "studio", "fashion"]
+    },
+    {
+      "name": "natural-unretouched",
+      "text": "handled honestly with almost no retouching, real skin texture and stray hairs left in, the subject recognisable as themselves rather than a version of themselves",
+      "text_short": "unretouched treatment, real skin, stray hairs kept",
+      "tags": ["boudoir", "street"]
+    },
+    {
+      "name": "painterly-classical",
+      "text": "handled toward classical painting, pose and drapery arranged with an old-master patience, colour muted to earth pigments and varnish warmth",
+      "text_short": "painterly classical treatment, old-master arrangement, earth pigments",
+      "tags": ["boudoir", "studio"]
+    },
+    {
+      "name": "monochrome-graphic",
+      "text": "handled in monochrome, tonal separation doing the work colour would have done, the frame reading as shape and gesture before it reads as a person",
+      "text_short": "monochrome treatment, tonal separation, shape and gesture",
+      "tags": ["boudoir", "studio", "street"]
+    }
+  ]
+}

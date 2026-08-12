@@ -1,7 +1,10 @@
 {
   "version": 1,
   "label": "Boudoir Session",
-  "type": ["human", "boudoir"],
+  "type": [
+    "human",
+    "boudoir"
+  ],
   "description": "The OverDrive boudoir session: solo, female duo or couple (nested model profiles), shared interiors, organic light and editorial optics. Tasteful glamour tier; all subjects adult.",
   "variables": [
     {
@@ -28,7 +31,9 @@
       "ref": "lighting/organic",
       "label": "Lighting Conditions",
       "emphasis": 1.2,
-      "tags_none": ["night"]
+      "tags_none": [
+        "night"
+      ]
     },
     {
       "id": "shot",
@@ -41,14 +46,18 @@
       "ref": "camera/portrait-glass",
       "label": "Optics",
       "default": "85mm-f14",
-      "tags_any": ["boudoir"]
+      "tags_any": [
+        "boudoir"
+      ]
     },
     {
       "id": "styleline",
-      "ref": "style/portraiture",
-      "label": "Photographic Style",
-      "default": "boudoir-editorial",
-      "tags_any": ["boudoir"]
+      "ref": "style/portrait-treatment",
+      "label": "Photographic Treatment",
+      "default": "editorial-polish",
+      "tags_any": [
+        "boudoir"
+      ]
     },
     {
       "id": "grade",
