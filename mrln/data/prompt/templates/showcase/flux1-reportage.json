@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "label": "Model Showcase: FLUX.1 Reportage",
+  "type": [
+    "human"
+  ],
+  "description": "Targets the FLUX.1 family (profile flux). FLUX weights its earliest tokens hardest, so the subject and the expression are woven straight into the opening sentence instead of trailing behind a boilerplate prefix, and the rest stays plain declarative language with one concrete lens named rather than tag soup. FLUX at distilled guidance ignores the negative prompt entirely, so every constraint that matters is written as something present in the frame. The optional film-look LoRA slot is pinned to tags_any flux1 — the only family this template may ever load.",
+  "prefix": "{subject}, {expression}, working through an ordinary day and photographed in one honest frame — the person is the first thing this picture states, and the rest of the scene arranges itself around them.",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/archetype",
+      "label": "Subject",
+      "tags_none": [
+        "fantasy",
+        "scifi",
+        "neon"
+      ]
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Lens",
+      "default": "35mm-reportage",
+      "tags_any": [
+        "street"
+      ]
+    },
+    {
+      "id": "film",
+      "ref": "camera/film",
+      "label": "Film Stock",
+      "allow_empty": true
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Framing"
+    },
+    {
+      "id": "finish",
+      "ref": "loralab/film-look",
+      "label": "Film-look LoRA (Flux.1)",
+      "tags_any": [
+        "flux1"
+      ],
+      "allow_empty": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "workshop-floor",
+      "label": "Working floor",
+      "slots": [
+        {
+          "id": "place",
+          "ref": "location/industrial",
+          "label": "Location",
+          "emphasis": 1.1,
+          "tags_none": [
+            "night"
+          ]
+        },
+        {
+          "id": "light",
+          "ref": "atmosphere/time-of-day",
+          "label": "Light",
+          "tags_any": [
+            "day"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "high-street",
+      "label": "Out on the street",
+      "slots": [
+        {
+          "id": "place",
+          "ref": "location/urban",
+          "label": "Location",
+          "tags_none": [
+            "night",
+            "neon"
+          ],
+          "emphasis": 1.1
+        },
+        {
+          "id": "light",
+          "ref": "atmosphere/time-of-day",
+          "label": "Light",
+          "tags_any": [
+            "day"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "indoor-trade",
+      "label": "Indoors, available light",
+      "slots": [
+        {
+          "id": "place",
+          "ref": "location/everyday",
+          "label": "Location",
+          "emphasis": 1.1
+        },
+        {
+          "id": "light",
+          "ref": "lighting/organic",
+          "label": "Light"
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "subject",
+    "expression",
+    "@variant",
+    "lens",
+    "film",
+    "framing",
+    "finish"
+  ],
+  "suffix": "shot as reportage with the available light kept exactly as it fell, the subject sharp and life-sized inside a readable environment that tells you where you are without competing for the eye, skin and fabric and metal each keeping their own texture, hands whole and busy with the work, the whole frame the record of a real minute rather than a set-up",
+  "negative": "child, underage, watermark, signature, deformed hands, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "profile": "flux",
+    "text_length": "long"
+  }
+}

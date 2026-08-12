@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "label": "Model Showcase: Z-Image Bilingual Counter",
+  "type": ["food", "object", "product"],
+  "description": "Targets the Z-Image family (profile zimage). Z-Image runs without classifier-free guidance, so its negative prompt is inert — this template is the demonstration of composing under that rule: the placement of every object is dictated in the opening instruction, and each constraint that would normally be dumped into a negative (one serving only, a dry uncluttered counter, hands out of frame) is stated in the suffix as something present in the picture instead. It also exercises the model's bilingual text rendering, printing an English line and a Chinese line on one small card with their order, size and alignment given. Every slot pool is chosen so it can never contradict that stated arrangement. Two variants swap the hero between a poured drink and a plated course. No LoRA slot: the library ships no Z-Image-family LoRA.",
+  "prefix": "Photograph one small counter setting exactly as described. The hero sits slightly left of center on the counter top, one folded card stands upright to its right, and the rest of the surface is cleared and empty.",
+  "variables": [
+    {
+      "name": "sign_en",
+      "label": "Card line 1 (English)",
+      "default": "TODAY'S MENU"
+    },
+    {
+      "name": "sign_zh",
+      "label": "Card line 2 (Chinese)",
+      "default": "今日菜单"
+    }
+  ],
+  "slots": [
+    {
+      "id": "surface",
+      "ref": "product/surface",
+      "label": "Counter Surface"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/still-life",
+      "label": "Light"
+    },
+    {
+      "id": "optics",
+      "ref": "camera/still-life-optics",
+      "label": "Optics"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "allow_empty": true
+    }
+  ],
+  "variants": [
+    {
+      "name": "pour-counter",
+      "label": "Poured drink",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/drink",
+          "label": "Hero",
+          "emphasis": 1.15
+        }
+      ]
+    },
+    {
+      "name": "plated-course",
+      "label": "Plated course",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/dish",
+          "label": "Hero",
+          "emphasis": 1.15
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "@variant",
+    "surface",
+    "light",
+    "optics",
+    "palette"
+  ],
+  "suffix": "the card is printed in two lines, one language above the other: \"{sign_en}\" across the upper line in small neat English capitals, and \"{sign_zh}\" directly below it in clean Chinese characters at the same size, both lines centered on the card and both fully legible. The counter carries nothing except what is described here, the hero is the only serving in the picture, both hands remain outside the frame, and every edge is sharp exactly where the optics place it. Colors hold to the stated palette and the light behaves precisely as stated",
+  "negative": "watermark, signature, cluttered background, lowres",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "profile": "zimage",
+    "text_length": "long"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "label": "Model Showcase: Qwen-Image Typographic Poster",
+  "type": [
+    "product",
+    "object",
+    "food",
+    "animal"
+  ],
+  "description": "Targets the Qwen-Image family (profile qwen-image) and showcases the two things that model genuinely leads on: layout control and text rendered inside the image. Exactly one grid is ever stated — the suffix fixes the position, relative size and alignment of three separate lines of type and quotes each of them verbatim, while the drawn composition is woven in as the picture area's own framing so it can never fight the page. The pictured subject is woven into the opening sentence, because Qwen-Image wants the main subject named first. Three variants keep that subject a product, a plated dish or a single insect specimen, proving one typographic layout carries any domain in the library. No LoRA slot: the library's only qwen-tagged LoRA is a car subject and lives in showcase/night-machine, so pulling it in here would be a cross-family bug.",
+  "prefix": "A printed poster photographed flat and square-on, the whole sheet filling the frame with a hair of clean margin on every side. The printed picture across the top of the sheet shows {hero}, and every line of type below it was laid out on the same grid as that picture.",
+  "variables": [
+    {
+      "name": "headline",
+      "label": "Headline (largest type)",
+      "default": "NEW SEASON"
+    },
+    {
+      "name": "subhead",
+      "label": "Sub-line under the headline",
+      "default": "One hundred numbered copies"
+    },
+    {
+      "name": "footer",
+      "label": "Bottom strip line",
+      "default": "AVAILABLE NOW"
+    }
+  ],
+  "slots": [
+    {
+      "id": "print",
+      "ref": "style/print",
+      "label": "Print Process",
+      "allow_empty": true
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "grid",
+      "ref": "composition/framing",
+      "label": "Picture Composition"
+    }
+  ],
+  "variants": [
+    {
+      "name": "product-launch",
+      "label": "Product launch",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "product/category",
+          "label": "Pictured Subject",
+          "emphasis": 1.2
+        },
+        {
+          "id": "support",
+          "ref": "product/staging",
+          "label": "Staging"
+        }
+      ]
+    },
+    {
+      "name": "menu-card",
+      "label": "Menu card",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "food/dish",
+          "label": "Pictured Subject",
+          "emphasis": 1.2
+        },
+        {
+          "id": "support",
+          "ref": "food/styling",
+          "label": "Styling"
+        }
+      ]
+    },
+    {
+      "name": "field-guide",
+      "label": "Field-guide plate",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "animal/insect-macro",
+          "label": "Pictured Subject",
+          "emphasis": 1.2
+        },
+        {
+          "id": "support",
+          "ref": "style/technical-plate",
+          "label": "Plate Treatment"
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "@variant",
+    "print",
+    "palette",
+    "grid"
+  ],
+  "suffix": "layout stated exactly: the picture occupies the upper two thirds of the sheet and bleeds to the left and right edges, composed inside that area as {grid}. The headline \"{headline}\" sits in the upper-left corner of the lower third in large condensed sans capitals, left-aligned, the tallest type anywhere on the page. Directly beneath it, at roughly one third that height, one line reads \"{subhead}\". A thin rule crosses the full width under the picture, and the bottom strip carries \"{footer}\" in small letter-spaced capitals, centered between the side margins. All three lines are crisp, correctly spelled and sit on the same grid as the image, and the margins around them stay empty",
+  "negative": "watermark, crooked crop, muddy print registration, low detail",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "profile": "qwen-image",
+    "text_length": "long"
+  }
+}

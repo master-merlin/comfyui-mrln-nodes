@@ -68,6 +68,7 @@ combination reads like a specialist wrote the brief:
 | `architecture/study`, `architecture/blue-hour-icon`, `architecture/golden-interior`, `architecture/cozy-moment` | architectural formulas from icon to interior to hygge |
 | `food/editorial`, `food/dark-mood`, `food/pour-shot`, `product/hero`, `product/lifestyle-scene`, `product/teardown-sheet` | commercial photography formulas |
 | `design/travel-poster`, `design/movie-poster`, `design/album-cover` | any place as a vintage poster; one-sheet and sleeve design |
+| `showcase/krea2-art-direction`, `showcase/flux1-reportage`, `showcase/flux2-storefront`, `showcase/qwen-typographic`, `showcase/zimage-bilingual-counter` | one per target model, each built to what that family actually rewards — KREA 2's art-direction layering, FLUX.1's early-token weighting, FLUX.2's structured scene plus lettering spec, Qwen-Image's layout control and in-image type, Z-Image's all-positive phrasing with bilingual text. Each pins its own profile, so picking the template already targets the model |
 
 The human-domain content is strictly adults-only and kept at a tasteful
 glamour level (lint-enforced); templates carry matching safety negatives by
@@ -78,8 +79,8 @@ default.
 `loralab/*` sections curate well-known community LoRAs as ordinary library
 items — detail boosters, film looks, portrait realism, sci-fi and anime style
 movers, and vehicle icons — each with its trained trigger woven into the item
-text, its authored strengths, and its Civitai AIR urn. The three
-`showcase/*` templates put them to work end to end: compose, and the drawn
+text, its authored strengths, and its Civitai AIR urn. `showcase/detail-portrait`,
+`showcase/night-machine` and `showcase/style-lab` put them to work end to end: compose, and the drawn
 LoRAs leave through the `loras` output into **LoRA Apply** while their trigger
 words ride the prompt; a file you don't have yet is offered for download by
 its AIR, verified by SHA256, and the item is healed to point at it. Every
@@ -185,7 +186,7 @@ __init__.py          # ComfyUI entry point (thin re-export shim)
 mrln/
   pack.py            # pack identity: ID prefix, display marker, category root
   registry.py        # domain activation + fault-tolerant aggregation
-  promptapi.py       # /mrln/prompt/* endpoints (soft-fails outside ComfyUI)
+  promptapi/         # /mrln/prompt/* endpoints (soft-fails outside ComfyUI)
   promptlib/         # prompt engine (pure Python, zero dependencies)
   nodes/             # one module per domain (prompt.py, text.py, ...)
   data/prompt/       # factory prompt library (sections + templates)

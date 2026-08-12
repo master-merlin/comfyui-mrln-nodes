@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "label": "Model Showcase: FLUX.2 Storefront",
+  "type": [
+    "architecture",
+    "object",
+    "product"
+  ],
+  "description": "Targets the FLUX.2 family (profile flux2-klein). FLUX.2 follows long structured natural language closely and renders in-image text reliably, so this template is written in exactly that order — subject and its placement first, then the object behind the glass, then weather and light, then materials and camera — and closes with a lettering specification that quotes the fascia name and the window card verbatim and gives each one a typeface, a color and a position in the frame. The display piece is woven into the opening sentence so its placement is stated rather than listed. Two variants trade the whole street between daylight and evening. No LoRA slot: nothing in the library is trained for the FLUX.2 family.",
+  "prefix": "A narrow two-storey corner shop stands dead center in the frame, its ground floor filling the lower two thirds of the picture, its lettered fascia running the full width of the building above the door and the wet pavement crossing the bottom edge. Behind the display window to the left of the door, raised alone on a low plinth, stands {display}.",
+  "variables": [
+    {
+      "name": "shopname",
+      "label": "Name on the fascia",
+      "default": "NORTHGATE SUPPLY"
+    },
+    {
+      "name": "notice",
+      "label": "Card in the window",
+      "default": "OPEN TODAY"
+    }
+  ],
+  "slots": [
+    {
+      "id": "display",
+      "ref": "product/category",
+      "label": "Window Display"
+    },
+    {
+      "id": "facade",
+      "ref": "architecture/facade",
+      "label": "Upper-Floor Skin",
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "allow_empty": true
+    },
+    {
+      "id": "view",
+      "ref": "camera/architecture-view",
+      "label": "Camera",
+      "default": "frontal-elevation",
+      "tags_none": [
+        "indoor"
+      ]
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "variants": [
+    {
+      "name": "daylight-trade",
+      "label": "Daylight trade",
+      "slots": [
+        {
+          "id": "light",
+          "ref": "atmosphere/time-of-day",
+          "label": "Light",
+          "tags_any": [
+            "day"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "evening-trade",
+      "label": "Evening trade",
+      "slots": [
+        {
+          "id": "light",
+          "ref": "atmosphere/time-of-day",
+          "label": "Light",
+          "tags_any": [
+            "night"
+          ]
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "display",
+    "facade",
+    "weather",
+    "@variant",
+    "view",
+    "grade"
+  ],
+  "suffix": "the fascia carries the shop name \"{shopname}\" in hand-painted serif capitals, cream letters on a deep painted ground, centered above the door and spanning the full width of the sign board. A small card propped in the lower-left corner of the display window reads \"{notice}\" in neat black block letters, no bigger than a postcard. Every other surface of the building stays free of lettering. Materials read honestly at this distance — brushed paint, plate glass, brass and worn stone — and the pavement in the foreground holds the reflection of the lit window",
+  "negative": "watermark, garbled lettering, duplicated signage, low detail",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "profile": "flux2-klein",
+    "text_length": "long"
+  }
+}

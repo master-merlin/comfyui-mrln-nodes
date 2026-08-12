@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "label": "Model Showcase: KREA 2 Art Direction",
+  "type": ["human"],
+  "description": "Targets the KREA 2 family (profile krea2). The block order IS that model's reading order — subject and pose, then medium and surface texture, then palette, then light behavior, then mood — so every labeled paragraph lands where KREA 2 expects it and the layered art-direction prose it rewards arrives already layered. Three briefs cover handmade, photographic and painted media, and everything that would normally be a negative is stated as something present in the frame. No LoRA slot: the library ships no KREA-family LoRA, and mixing a Flux or SDXL model into a KREA render is the classic wasted seed.",
+  "prefix": "One figure held inside a fully art-directed frame — the kind of picture where the medium, the palette and the behavior of the light were all decided before the shutter or the brush ever moved. Nothing generic is allowed to fill a gap: every surface in this image has been specified on purpose.",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/archetype",
+      "label": "Subject",
+      "emphasis": 1.2
+    },
+    {
+      "id": "pose",
+      "ref": "pose/standing",
+      "label": "Pose"
+    },
+    {
+      "id": "setting",
+      "ref": "location",
+      "label": "Setting",
+      "tags_none": ["boudoir", "underwater", "aerial", "neon"],
+      "emphasis": 1.1
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/quality",
+      "label": "Light Behavior"
+    },
+    {
+      "id": "mood",
+      "ref": "atmosphere/mood",
+      "label": "Mood"
+    }
+  ],
+  "variants": [
+    {
+      "name": "handmade-brief",
+      "label": "Handmade brief",
+      "slots": [
+        {
+          "id": "medium",
+          "ref": "style/craft-medium",
+          "label": "Medium",
+          "emphasis": 1.15
+        },
+        {
+          "id": "surface",
+          "ref": "style/print",
+          "label": "Print Surface",
+          "allow_empty": true
+        }
+      ]
+    },
+    {
+      "name": "photographic-brief",
+      "label": "Photographic brief",
+      "slots": [
+        {
+          "id": "medium",
+          "ref": "style/portraiture",
+          "label": "Medium",
+          "tags_none": ["boudoir"],
+          "emphasis": 1.15
+        },
+        {
+          "id": "surface",
+          "ref": "camera/film",
+          "label": "Film Surface"
+        }
+      ]
+    },
+    {
+      "name": "painted-brief",
+      "label": "Painted brief",
+      "slots": [
+        {
+          "id": "medium",
+          "ref": "style/movement",
+          "label": "Medium",
+          "emphasis": 1.15
+        },
+        {
+          "id": "surface",
+          "ref": "style/graphic",
+          "label": "Graphic Finish",
+          "allow_empty": true
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "subject",
+    "pose",
+    "setting",
+    "@variant",
+    "palette",
+    "light",
+    "mood"
+  ],
+  "suffix": "Art Direction: the named medium owns every surface in the frame — its tooth, grain and edge quality stay visible at reading distance, and the stated palette is the only palette present. Light is described by behavior rather than by fixture: where it enters, what it wraps, where it falls away, how cleanly it dies into shadow. (the figure reads first and the material of the picture reads second, both inside one glance:1.15), anatomy sound and hands whole and relaxed, the face lit clearly enough to read, the frame finished to gallery standard.",
+  "negative": "child, underage, deformed hands, extra fingers, watermark, caption overlay, lowres",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n",
+    "profile": "krea2",
+    "text_length": "long"
+  }
+}
