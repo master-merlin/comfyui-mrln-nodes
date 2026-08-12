@@ -116,11 +116,36 @@ export function createTree(hub) {
         : tierChip(section.tier),
       // factory-pure sections ship with every install — nothing to share
       section.tier === "user" || section.merged ? exportBtn("section", section.slug) : null,
+      section.tier === "user" || section.merged ? deleteBtn("section", section.slug) : null,
     ];
   }
 
+  function deleteBtn(kind, slug) {
+    // Delete lived only at the bottom of an editor you had to know to open, so
+    // in the tree there was visibly "no way to delete a user entry" (UAT). It
+    // belongs on the row, next to Export, and only where there is a USER file
+    // to remove — a factory-pure entry is not the user's to delete, and
+    // deleteEntry() already confirms before anything happens.
+    return el(
+      "button",
+      {
+        class: "mrln-btn mrln-mini mrln-chip-btn",
+        title: `Delete your user-tier ${kind} '${slug}'`,
+        onclick: (e) => {
+          e.stopPropagation(); // the row itself opens the editor
+          deleteEntry(kind === "section" ? "sections" : "templates", slug);
+        },
+      },
+      "🗑"
+    );
+  }
+
   function templateChips(template) {
-    return [tierChip(template.tier), exportBtn("template", template.slug)];
+    return [
+      tierChip(template.tier),
+      exportBtn("template", template.slug),
+      template.tier === "user" ? deleteBtn("template", template.slug) : null,
+    ];
   }
 
   function sectionLi(section) {
