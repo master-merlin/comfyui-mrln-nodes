@@ -90,7 +90,32 @@ def _civitai_summary(resp):
     }
 
 
+# ONE dict for the whole package (path -> ((mtime_ns, size), sha256)), only
+# ever mutated in place: the download worker seeds it, request threads read it.
 _HASH_CACHE = {}
+# Hashing a LoRA means reading the whole file — seconds for a multi-GB one, on
+# an executor thread. Without single-flight, N clicks on the same row = N full
+# reads on N of the pool's threads; with it, the extras wait for the first.
+# Per PATH, so two different files still hash in parallel. Bounded in practice
+# by the number of distinct lora files ever looked up (one small Lock each).
+_HASH_LOCKS = {}
+_HASH_LOCKS_GUARD = threading.Lock()
+
+
+def _hash_key(path):
+    """Cache key for a file path — normalized so the same file reached under a
+    different spelling (case, separators) shares one entry."""
+    import os
+
+    return os.path.normcase(os.path.abspath(str(path)))
+
+
+def _hash_lock(key):
+    with _HASH_LOCKS_GUARD:
+        lock = _HASH_LOCKS.get(key)
+        if lock is None:
+            lock = _HASH_LOCKS[key] = threading.Lock()
+        return lock
 
 
 def _sha256_of(path):
@@ -99,15 +124,20 @@ def _sha256_of(path):
 
     stat = os.stat(path)
     key = (stat.st_mtime_ns, stat.st_size)
-    cached = _HASH_CACHE.get(str(path))
+    cache_key = _hash_key(path)
+    cached = _HASH_CACHE.get(cache_key)
     if cached and cached[0] == key:
         return cached[1]
-    digest = hashlib.sha256()
-    with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 20), b""):
-            digest.update(chunk)
-    hexdigest = digest.hexdigest()
-    _HASH_CACHE[str(path)] = (key, hexdigest)
+    with _hash_lock(cache_key):
+        cached = _HASH_CACHE.get(cache_key)  # a concurrent caller may have won
+        if cached and cached[0] == key:
+            return cached[1]
+        digest = hashlib.sha256()
+        with open(path, "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                digest.update(chunk)
+        hexdigest = digest.hexdigest()
+        _HASH_CACHE[cache_key] = (key, hexdigest)
     return hexdigest
 
 
@@ -226,7 +256,12 @@ def handle_lora_meta(lib, payload):
 
 _AIR_RE = re.compile(r"^urn:air:[a-z0-9._-]+:[a-z0-9._-]+:civitai:(\d+)@(\d+)$", re.IGNORECASE)
 _SAFE_SEGMENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._ -]*$")
+# ONE dict for the whole package, only ever mutated in place: worker threads
+# write progress into it while the (unauthenticated) poll route reads it.
 _LORA_DL_STATUS = {}  # air urn -> {"status", "detail", "name", "loaded", "total"}
+# handlers run concurrently on the executor (routes.py), so the check-then-claim
+# in handle_lora_download has to be atomic — see the comment there
+_DL_LOCK = threading.Lock()
 
 
 def parse_air(air):
@@ -350,7 +385,11 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
             url = f"https://civitai.com/api/download/models/{version_id}"
         os.makedirs(dest_dir, exist_ok=True)
         final_path = os.path.join(dest_dir, filename)
-        part_path = final_path + ".part"
+        # per-start unique: should two fetches of one AIR ever overlap (the
+        # Composer's background download and the node's synchronous one), they
+        # write separate torsos and the last os.replace wins — interleaved
+        # writes into a single '.part' would silently corrupt the file
+        part_path = f"{final_path}.part-{os.getpid()}-{threading.get_ident()}"
         import hashlib
 
         digest = hashlib.sha256()
@@ -370,6 +409,14 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
                 f"Civitai says {want_sha[:12]}…) — file discarded"
             )
         os.replace(part_path, final_path)
+        # the stream was hashed for verification anyway: seed the cache so the
+        # Composer's follow-up Civitai lookup never re-reads the whole file
+        with contextlib.suppress(OSError):
+            stat = os.stat(final_path)
+            _HASH_CACHE[_hash_key(final_path)] = (
+                (stat.st_mtime_ns, stat.st_size),
+                digest.hexdigest(),
+            )
         status["name"] = filename
         return filename
     except Exception:
@@ -422,7 +469,7 @@ def handle_lora_download(lib, payload):
         return 200, {"air": air, **status}
     current = _LORA_DL_STATUS.get(air)
     if current and current.get("status") == "downloading":
-        return 200, {"air": air, **current}
+        return 200, {"air": air, **current}  # cheap early out; the claim below is the real one
     try:
         import folder_paths
     except ImportError:
@@ -432,7 +479,11 @@ def handle_lora_download(lib, payload):
         }
     roots = folder_paths.get_folder_paths("loras")
     if not roots:
-        return 400, {"error": "no loras folder registered in this ComfyUI"}
+        return 400, {
+            "error": "no loras folder registered in this ComfyUI",
+            "remediation": "add a loras path to extra_model_paths.yaml (or create "
+            "models/loras) and restart ComfyUI",
+        }
     folder = _sanitize_subfolder(payload.get("folder"))
     filename = _sanitize_lora_filename(payload.get("filename"))
     import os
@@ -448,7 +499,15 @@ def handle_lora_download(lib, payload):
     item = str(payload.get("item") or "").strip()
     if section and item:
         heal = (lib, section, item, folder, str(payload.get("stored") or ""))
-    _LORA_DL_STATUS[air] = {"status": "downloading", "detail": "", "loaded": 0, "total": 0}
+    # Claim the AIR atomically: the check at the top of this handler and the
+    # write below are seconds apart (folder_paths import, settings read), and
+    # handlers run concurrently on the executor — a double-click would
+    # otherwise start two workers streaming into one file. Re-check inside.
+    with _DL_LOCK:
+        current = _LORA_DL_STATUS.get(air)
+        if current and current.get("status") == "downloading":
+            return 200, {"air": air, **current}
+        _LORA_DL_STATUS[air] = {"status": "downloading", "detail": "", "loaded": 0, "total": 0}
     threading.Thread(
         target=_lora_download_worker,
         args=(air, meta_headers, token, version_id, dest_dir, filename, heal),

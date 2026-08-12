@@ -128,12 +128,6 @@ def _read_settings(lib):
         return {}
 
 
-def read_settings(lib):
-    """Public settings reader (keys stay server-side; callers must never
-    echo secrets)."""
-    return _read_settings(lib)
-
-
 def _llm_settings(settings):
     llm = settings.get("llm")
     return llm if isinstance(llm, dict) else {}

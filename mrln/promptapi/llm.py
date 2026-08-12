@@ -3,6 +3,7 @@ Enhance node and the LLM de-composer, plus the validate/pull endpoints
 behind the Settings tab and the model dropdowns.
 """
 
+import contextlib
 import json
 import threading
 
@@ -20,6 +21,13 @@ from .settings import (
 )
 
 CLOUD_PROVIDERS = ("anthropic", "openai", "gemini", "openrouter")
+
+# ONE backend, two spellings that both ship: the Enhance node's enum value is
+# "lm studio" (frozen in saved workflows), while llm-validate, the settings UI
+# and the panel say "lmstudio". Every entry point accepts both and canonicalizes
+# onto its own — otherwise a client that reuses the validate vocabulary for
+# /decompose gets "unknown backend 'lmstudio'" dressed up as a backend failure.
+LMSTUDIO_SPELLINGS = ("lmstudio", "lm studio")
 
 # editable defaults — used when the model widget is empty on a cloud backend
 DEFAULT_CLOUD_MODELS = {
@@ -53,15 +61,18 @@ CLOUD_MODEL_SUGGESTIONS = {
 }
 
 
+def _reflected_text(text, limit=200):
+    """The one treatment every string that travels back to the panel gets:
+    whitespace-collapsed, secret-scrubbed and capped. The pull poll route is
+    not authenticated, so nothing reflected may ever carry a credential that
+    happened to sit in a URL, and nothing may be unbounded."""
+    text = " ".join(_scrub_secrets(text).split())
+    return text[:limit] + "..." if len(text) > limit else text
+
+
 def _exc_detail(exc, limit=200):
-    """Exception class + message, whitespace-collapsed, secret-scrubbed and
-    capped — these strings are reflected to the panel (the pull poll route is
-    not authenticated), so they stay diagnostic without pasting back whatever
-    the remote end sent in its response body, and without ever carrying a
-    credential that happened to sit in a URL the exception quoted."""
-    text = " ".join(_scrub_secrets(str(exc)).split())
-    if len(text) > limit:
-        text = text[:limit] + "..."
+    """Exception class + message, run through _reflected_text."""
+    text = _reflected_text(str(exc), limit)
     return f"{type(exc).__name__}: {text}" if text else type(exc).__name__
 
 
@@ -75,6 +86,8 @@ def _backend_url_or_raise(settings, key, default):
 
 
 def _post_json(url, payload, timeout, headers=None):
+    import urllib.error
+    import urllib.parse
     import urllib.request
 
     request = urllib.request.Request(
@@ -86,8 +99,23 @@ def _post_json(url, payload, timeout, headers=None):
             **(headers or {}),
         },
     )
-    with urllib.request.urlopen(request, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        # urllib's str() is only 'HTTP Error 404: Not Found' and it leaves the
+        # body unread — yet the body is where the actionable reason lives
+        # (Ollama: "model 'x' not found, try pulling it first"; cloud
+        # providers: invalid key, retired model, quota). Read a bounded slice
+        # and reflect it through the same scrub+cap every echoed string gets.
+        detail = ""
+        with contextlib.suppress(Exception):
+            detail = _reflected_text(exc.read(4096).decode("utf-8", "replace"))
+        host = urllib.parse.urlsplit(url).netloc or url
+        message = f"HTTP {exc.code} from {host}"
+        # `from None`: the raw HTTPError must not ride an unscrubbed cause
+        # into the ComfyUI log alongside the message the user sees
+        raise RuntimeError(_scrub_secrets(f"{message}: {detail}" if detail else message)) from None
 
 
 def _cloud_request(backend, key, model, system, prompt, temperature, seed, max_tokens):
@@ -167,6 +195,8 @@ def llm_chat(
     user tier's settings.json and are never echoed anywhere."""
     settings = _read_settings(lib)
     model = str(model or "").strip()
+    if backend in LMSTUDIO_SPELLINGS:
+        backend = "lm studio"  # the node's frozen enum spelling wins here
     if backend == "ollama":
         if not model:
             raise RuntimeError(
@@ -218,6 +248,8 @@ def handle_llm_validate(lib, payload):
     model suggestions. Powers the green checkmarks in Settings and every
     model dropdown (Enhance node, De-compose tab)."""
     provider = _require_str(payload, "provider")
+    if provider in LMSTUDIO_SPELLINGS:
+        provider = "lmstudio"  # this endpoint's spelling; the answer echoes it
     settings = _read_settings(lib)
     if provider in CLOUD_PROVIDERS:
         key_set = bool((settings.get("llm_api_keys") or {}).get(provider))
@@ -266,7 +298,11 @@ def handle_llm_validate(lib, payload):
 
 # model name -> {"status": "pulling"|"done"|"error", "detail": str}; module
 # scope like _ENHANCE_CACHE — worker threads write, the poll endpoint reads.
+# ONE dict for the whole package: only ever mutated in place, never rebound.
 _PULL_STATUS = {}
+# handlers run concurrently on the executor (routes.py), so the check-then-claim
+# below has to be atomic or two rapid POSTs both start a 3600 s pull
+_PULL_LOCK = threading.Lock()
 
 
 def _pull_worker(url, model):
@@ -297,14 +333,18 @@ def handle_llm_pull(lib, payload):
     polling (or cross-site) GET can never kick off a pull."""
     model = _require_str(payload, "model")
     if payload.get("start") is True:
-        current = _PULL_STATUS.get(model)
-        if current and current.get("status") == "pulling":
-            return 200, {"model": model, "status": "pulling", "detail": "already running"}
         try:  # same gate as save/validate — no thread starts on a bad URL
             url = backend_url(_read_settings(lib), "ollama_url", DEFAULT_OLLAMA_URL)
         except BackendUrlError as exc:
             return 400, exc.body()
-        _PULL_STATUS[model] = {"status": "pulling", "detail": ""}
+        # claim atomically — the settings read above is slow enough for two
+        # rapid POSTs to both pass an unguarded check and start two 3600 s
+        # pulls, the second of which also orphans the first one's status dict
+        with _PULL_LOCK:
+            current = _PULL_STATUS.get(model)
+            if current and current.get("status") == "pulling":
+                return 200, {"model": model, "status": "pulling", "detail": "already running"}
+            _PULL_STATUS[model] = {"status": "pulling", "detail": ""}
         threading.Thread(target=_pull_worker, args=(url, model), daemon=True).start()
         return 200, {"model": model, "status": "pulling", "detail": "started"}
     status = _PULL_STATUS.get(model) or {"status": "unknown", "detail": "no pull started"}

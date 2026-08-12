@@ -6,6 +6,11 @@ deletes, and the shareable export/import bundles.
 import json
 
 from .. import promptlib as pl
+
+# lora.py owns the secret registry (it imports neither this module nor anything
+# reaching back here). Module object, not the name — same seam style as
+# decompose.py: every NEW client-visible string goes through _scrub_secrets.
+from . import lora
 from .core import (
     ApiError,
     _factory_raw,
@@ -91,7 +96,17 @@ def handle_library(lib, payload):
 @_guarded
 def handle_template(lib, payload):
     slug = _require_str(payload, "slug")
+    # Fingerprint FIRST, for the same two reasons as handle_library: taken
+    # last it can label an already-stale payload with a fresh fingerprint,
+    # and since fingerprint() invalidates the scan memo before re-walking,
+    # taking it first shares those walks with the load below instead of
+    # doubling them (measured: 4 tree walks -> 2 on this path).
+    fingerprint = lib.fingerprint()
     tpl = lib.load_template(slug)
+    # aliases.json redirects a retired slug: everything below must speak the
+    # LIVE slug, or tier_of() misses (reporting tier "") and a save-back
+    # writes a user file under the dead name, shadowing the alias forever.
+    resolved = tpl.slug
     refs = [slot.ref for slot in tpl.slots]
     refs.extend(slot.ref for variant in tpl.variants for slot in variant.slots)
     pools = {}
@@ -104,7 +119,7 @@ def handle_template(lib, payload):
         except pl.SectionNotFoundError:
             missing_refs.append(ref)  # dead ref: detail still loads, slot flags missing
     detail = {
-        "slug": slug,
+        "slug": resolved,
         "label": tpl.label,
         "type": list(tpl.type),
         "description": tpl.description,
@@ -135,23 +150,27 @@ def handle_template(lib, payload):
         },
     }
     return 200, {
-        "slug": slug,
-        "tier": lib.tier_of("templates", slug),
+        "slug": resolved,
+        "requested": slug,  # so a client that asked under a retired name can correlate
+        "tier": lib.tier_of("templates", resolved),
         "template": detail,
-        "raw": _raw_file(lib, "templates", slug),
+        "raw": _raw_file(lib, "templates", resolved),
         "pools": pools,
         "missing_refs": missing_refs,
-        "fingerprint": lib.fingerprint(),
+        "fingerprint": fingerprint,
     }
 
 
 @_guarded
 def handle_section(lib, payload):
     slug = _require_str(payload, "slug")
+    fingerprint = lib.fingerprint()  # first: see handle_template
     section = lib.load_section(slug)
-    tier = lib.tier_of("sections", slug)
+    resolved = section.slug  # alias-resolved; see handle_template
+    tier = lib.tier_of("sections", resolved)
     return 200, {
-        "slug": slug,
+        "slug": resolved,
+        "requested": slug,
         "tier": tier,
         "merged": section.merged,
         "replaces": section.replaces,
@@ -179,9 +198,9 @@ def handle_section(lib, payload):
             }
             for item in section.items
         ],
-        "raw": _raw_file(lib, "sections", slug),
-        "factory_raw": _factory_raw(lib, "sections", slug),
-        "fingerprint": lib.fingerprint(),
+        "raw": _raw_file(lib, "sections", resolved),
+        "factory_raw": _factory_raw(lib, "sections", resolved),
+        "fingerprint": fingerprint,
     }
 
 
@@ -193,6 +212,9 @@ def handle_items(lib, payload):
 
 @_guarded
 def handle_preview(lib, payload):
+    # first, like handle_template — /preview fires on every 300 ms-debounced
+    # keystroke in the composer, so halving its tree walks is the hot path
+    fingerprint = lib.fingerprint()
     draft = payload.get("template_data")
     if draft is not None:
         # Unsaved composer draft: parse in memory so the panel can preview
@@ -246,7 +268,7 @@ def handle_preview(lib, payload):
         "variant": resolved.variant,
         "variant_random": resolved.variant_random,
         "slots": [_resolved_slot_json(s) for s in resolved.slots],
-        "fingerprint": lib.fingerprint(),
+        "fingerprint": fingerprint,
     }
 
 
@@ -278,8 +300,13 @@ def _retarget_default(default, section_slug, ref, renames):
 def _propagate_item_renames(lib, section_slug, renames):
     """Rewrite USER-tier template slot defaults referencing renamed items.
     Factory templates are read-only; workflow selections are healed at
-    resolve time by the stale-pick fallback instead."""
-    rewritten = 0
+    resolve time by the stale-pick fallback instead.
+
+    Returns (rewritten, failures). This runs AFTER the section file is
+    durably saved, so an unwritable template file (AV/sync lock on Windows)
+    must never turn that save into a 500 — reads were always skipped on
+    OSError, and now writes are too, reported instead of raised."""
+    rewritten, failures = 0, []
     for entry in lib._scan("templates").values():
         if entry.tier != "user":
             continue
@@ -302,11 +329,15 @@ def _propagate_item_renames(lib, section_slug, renames):
                     slot["default"] = new_default
                     changed = True
         if changed:
-            _write_json_atomic(entry.path, data, ensure_ascii=False)
+            try:
+                _write_json_atomic(entry.path, data, ensure_ascii=False)
+            except OSError as exc:
+                failures.append(lora._scrub_secrets(f"{entry.slug}: {exc}"))
+                continue
             rewritten += 1
     if rewritten:
         lib.invalidate()
-    return rewritten
+    return rewritten, failures
 
 
 @_guarded
@@ -320,9 +351,17 @@ def handle_save_section(lib, payload):
                 for old, new in renames.items()
                 if old and new and str(old) != str(new)
             }
-            body["templates_rewritten"] = (
-                _propagate_item_renames(lib, body["slug"], clean) if clean else 0
+            rewritten, failures = (
+                _propagate_item_renames(lib, body["slug"], clean) if clean else (0, [])
             )
+            body["templates_rewritten"] = rewritten
+            if failures:
+                # the section file is already on disk: report the partial
+                # follow-up inside the 200 instead of claiming the save failed
+                body["rename_warning"] = (
+                    f"{len(failures)} user template file(s) could not be re-pointed "
+                    f"at the renamed items: {'; '.join(failures[:3])}"
+                )
     return status, body
 
 

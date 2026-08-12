@@ -190,8 +190,15 @@ def handle_decompose(lib, payload):
     if engine != "programmatic":
         backend = str(payload.get("backend") or "ollama")
         model = str(payload.get("model") or "")
-        timeout = payload.get("timeout", 90)
-        if not isinstance(timeout, int) or not 5 <= timeout <= 600:
+        # tolerant like handle_preview's seed: plenty of JSON serializers emit
+        # 90.0 for an integer, and a GET-shaped client sends "90". bool is an
+        # int subclass, so `true` is rejected on purpose rather than by luck.
+        raw_timeout = payload.get("timeout", 90)
+        try:
+            timeout = None if isinstance(raw_timeout, bool) else int(raw_timeout)
+        except (TypeError, ValueError):
+            timeout = None
+        if timeout is None or not 5 <= timeout <= 600:
             raise ApiError("'timeout' must be an integer between 5 and 600 seconds")
         try:
             report = _llm_decompose(

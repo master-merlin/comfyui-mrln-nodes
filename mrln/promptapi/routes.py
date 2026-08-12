@@ -4,6 +4,7 @@ cleanly headless, under pytest and outside ComfyUI.
 """
 
 import asyncio
+import json
 import threading
 
 from .. import promptlib as pl
@@ -123,11 +124,27 @@ def register_routes():
     def adapt(handler, reads_body):
         async def endpoint(request):
             if reads_body:
+                too_large = {"error": "request body too large", "remediation": "send less data"}
+                # Content-Length is a hint, not a promise: a chunked request
+                # carries none, so this header check is only the cheap early
+                # out. The cap that actually holds is on the bytes read below —
+                # one byte past the limit is enough to refuse, so an oversized
+                # body is never buffered whole (aiohttp's client_max_size is
+                # ComfyUI's ~100 MB upload cap, far above our 1 MB intent).
                 if (request.content_length or 0) > MAX_BODY_BYTES:
-                    body = {"error": "request body too large", "remediation": "send less data"}
-                    return web.json_response(body, status=413)
+                    return web.json_response(too_large, status=413)
+                raw = b""
+                while len(raw) <= MAX_BODY_BYTES:
+                    # read(n) hands back what is buffered NOW, not n bytes:
+                    # loop to EOF or the cap, never assume one read suffices
+                    chunk = await request.content.read(MAX_BODY_BYTES + 1 - len(raw))
+                    if not chunk:
+                        break
+                    raw += chunk
+                if len(raw) > MAX_BODY_BYTES:
+                    return web.json_response(too_large, status=413)
                 try:
-                    payload = await request.json()
+                    payload = json.loads(raw)
                 except Exception:
                     body = {"error": "request body is not valid JSON", "remediation": "send JSON"}
                     return web.json_response(body, status=400)
