@@ -9,6 +9,7 @@ import json
 import re
 from collections import OrderedDict
 from inspect import cleandoc
+from uuid import uuid4
 
 from .. import promptlib as pl
 from ..pack import build_mappings, category, logger
@@ -154,17 +155,23 @@ def _cap_message(size, dimensions):
     )
 
 
-def _combinatorial_batch(lib, tpl, probe, seed, selection_map, compose_one):
-    """([(composed, seed)], dimensions) — one render per combination of the
-    random slots, all on the master seed. `probe` is the ordinary render that
-    already happened: it names the active variant and which slots are random,
-    which is exactly what the engine had to resolve anyway."""
+def _combinatorial_batch(lib, tpl, probe, seed, mode, selection_map, compose_one):
+    """([(composed, seed, mode, selection)], dimensions) — one render per
+    combination of the random slots, all on the master seed. `probe` is the
+    ordinary render that already happened: it names the active variant and
+    which slots are random, which is exactly what the engine had to resolve
+    anyway.
+
+    Each item carries the (seed, mode, selection) triple it was ACTUALLY
+    composed with, not the widget values: for an enumerated combination that
+    is 'as configured' plus the pins, which is what the history record needs
+    to reproduce that one item (SPEC 6.2 restore)."""
     pins, dimensions = _combinatorial_plan(lib, tpl, probe.resolved)
     if not dimensions:
         # nothing random to enumerate: emit the ordinary render untouched, so
         # a combinatorial workflow with everything pinned is byte-identical to
         # the same workflow without the batch widgets
-        return [(probe, seed)], ()
+        return [(probe, seed, mode, selection_map)], ()
     size = 1
     for _slot_id, names in dimensions:
         size *= len(names)
@@ -176,7 +183,7 @@ def _combinatorial_batch(lib, tpl, probe, seed, selection_map, compose_one):
         pinned = dict(base)
         for (slot_id, _names), name in zip(dimensions, combo, strict=True):
             pinned[slot_id] = name
-        items.append((compose_one(seed, "as configured", pinned), seed))
+        items.append((compose_one(seed, "as configured", pinned), seed, "as configured", pinned))
     return items, dimensions
 
 
@@ -259,6 +266,78 @@ def _gen_info(positive, negative, seed, lora_entries):
         tail.append(f"Civitai resources: {payload}")
     lines.append(", ".join(tail))
     return "\n".join(lines)
+
+
+# -- generation history (SPEC 6.2) -------------------------------------------
+# ONE LINE PER RENDERED ITEM, each carrying the seed and the selection that
+# item actually rendered with. The alternative — one line per queue click —
+# was rejected: a batch of 8 exists precisely so the eight images differ, and
+# "recover the prompt behind THIS image" is half the reason history exists, so
+# collapsing 8 renders into 1 line makes 7 of them unrecoverable. What a 512-
+# combination click must not do is bury the tab in 512 rows, so every item of
+# one click shares a `batch` block (id + index/total + which batch mode) and
+# the History tab collapses them into one expandable row. Cost is bounded by
+# the render itself: the node already caps a click at 64 items (increment) or
+# 512 (combinatorial), and month rotation plus `history_months` bound the rest.
+
+
+def _record_history(
+    lib,
+    *,
+    template,
+    profile,
+    variables,
+    format,
+    text_length,
+    conflict_policy,
+    kind,
+    rows,
+):
+    """Append one history line per rendered item. NEVER breaks a render.
+
+    Guarded three deep on purpose, because everything this touches happens
+    AFTER the render succeeded and the outputs are already built: store's
+    append logs-and-swallows its own IO failures (full disk, read-only user
+    dir, a file where the history directory belongs), `record_renders` swallows
+    the settings read and the loop, and this wrapper swallows the rest — a
+    promptapi import that fails in an odd install, or a record that cannot be
+    built. The worst any of it can cost is the history line.
+
+    The lazy relative import is also deliberate: `promptapi` is the layer that
+    owns settings.json, nodes/ may never drag it into import at registration
+    time, and inside ComfyUI the pack is not a top-level module."""
+    try:
+        from ..promptapi.history import record_renders, render_record
+
+        total = len(rows)
+        # one queue click = one batch id; only stamped when there is a batch
+        batch_id = uuid4().hex[:12] if total > 1 else None
+        records = []
+        for index, row in enumerate(rows, start=1):
+            item_seed, item_mode, item_selection, positive, negative, choices, entries = row
+            records.append(
+                render_record(
+                    template=template,
+                    profile=profile,
+                    seed=item_seed,
+                    mode=item_mode,
+                    selection=item_selection,
+                    variables=variables,
+                    format=format,
+                    text_length=text_length,
+                    conflict_policy=conflict_policy,
+                    positive=positive,
+                    negative=negative,
+                    choices=choices,
+                    loras=entries,
+                    batch=None
+                    if batch_id is None
+                    else {"id": batch_id, "index": index, "total": total, "kind": kind},
+                )
+            )
+        record_renders(lib, records)
+    except Exception as exc:
+        logger.warning("MRLN prompt: render not written to history (%s)", exc)
 
 
 def _batch_line(index, total, seed, dimensions):
@@ -559,19 +638,25 @@ class PromptTemplate:
         dimensions = ()
         if batch_mode == "combinatorial":
             items, dimensions = _combinatorial_batch(
-                lib, tpl, first, seed, selection_map, compose_one
+                lib, tpl, first, seed, selection_mode, selection_map, compose_one
             )
         else:
             count = max(1, min(int(batch_count or 1), BATCH_MAX))
             # item 0 IS the ordinary render (seed + 0), so the probe is reused
-            items = [(first, seed)] + [
-                (compose_one(seed + i, selection_mode, selection_map), seed + i)
+            items = [(first, seed, selection_mode, selection_map)] + [
+                (
+                    compose_one(seed + i, selection_mode, selection_map),
+                    seed + i,
+                    selection_mode,
+                    selection_map,
+                )
                 for i in range(1, count)
             ]
 
         total = len(items)
         prompts, negatives, choices, loras, llms, gen_infos = [], [], [], [], [], []
-        for index, (composed, item_seed) in enumerate(items, start=1):
+        history_rows = []
+        for index, (composed, item_seed, item_mode, item_selection) in enumerate(items, start=1):
             out = composed.rendered
             report = out.choices
             if total > 1:
@@ -586,6 +671,22 @@ class PromptTemplate:
             # seed it was actually drawn with, which is the only thing that
             # makes a shared image reproducible
             gen_infos.append(_gen_info(out.positive, out.negative, item_seed, entries))
+            history_rows.append(
+                (item_seed, item_mode, item_selection, out.positive, out.negative, report, entries)
+            )
+        # last, and guarded: the outputs above are complete and correct at this
+        # point, so a history failure can only cost the history line
+        _record_history(
+            lib,
+            template=template,
+            profile=profile,
+            variables=variable_map,
+            format=format,
+            text_length=text_length,
+            conflict_policy=conflict_policy,
+            kind=batch_mode,
+            rows=history_rows,
+        )
         return (prompts, negatives, choices, loras, llms, gen_infos)
 
 

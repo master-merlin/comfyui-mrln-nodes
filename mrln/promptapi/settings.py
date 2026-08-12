@@ -137,6 +137,7 @@ def _llm_settings(settings):
 def handle_settings(lib, payload):
     # secrets are NEVER echoed back — only whether one is stored; local
     # backend URLs are not secrets and round-trip for the settings UI
+    from .history import history_settings  # lazy: history.py reads this module
     from .llm import CLOUD_PROVIDERS  # lazy: llm.py reads this module at import
 
     settings = _read_settings(lib)
@@ -144,6 +145,7 @@ def handle_settings(lib, payload):
     keys = settings.get("llm_api_keys") or {}
     return 200, {
         "civitai_key_set": bool(settings.get("civitai_api_key")),
+        **history_settings(settings),
         "llm": {
             "ollama_url": llm.get("ollama_url") or DEFAULT_OLLAMA_URL,
             "lmstudio_url": llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL,
@@ -157,6 +159,7 @@ def handle_settings(lib, payload):
 
 @_guarded
 def handle_save_settings(lib, payload):
+    from .history import history_settings  # lazy: history.py reads this module
     from .llm import CLOUD_PROVIDERS  # lazy: llm.py reads this module at import
 
     if lib.user_root is None:
@@ -174,6 +177,19 @@ def handle_save_settings(lib, payload):
                 settings["civitai_api_key"] = raw.strip()
             else:
                 settings.pop("civitai_api_key", None)  # empty clears
+        if "history_enabled" in payload:
+            raw = payload.get("history_enabled")
+            if not isinstance(raw, bool):
+                raise ApiError("'history_enabled' must be a JSON boolean (true or false)")
+            settings["history_enabled"] = raw
+        if "history_months" in payload:
+            raw = payload.get("history_months")
+            # bool is an int in Python, and True would silently mean "1 month"
+            if isinstance(raw, bool) or not isinstance(raw, int) or raw < 0:
+                raise ApiError(
+                    "'history_months' must be a whole number of months >= 0 (0 keeps everything)"
+                )
+            settings["history_months"] = raw
         if "llm" in payload:
             raw_llm = payload.get("llm")
             if not isinstance(raw_llm, dict):
@@ -228,6 +244,7 @@ def handle_save_settings(lib, payload):
     return 200, {
         "ok": True,
         "civitai_key_set": bool(settings.get("civitai_api_key")),
+        **history_settings(settings),
         "llm_keys_set": {p: bool(keys.get(p)) for p in CLOUD_PROVIDERS},
     }
 

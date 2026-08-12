@@ -11,6 +11,8 @@ from .. import promptlib as pl
 from ..pack import logger
 from .core import MAX_BODY_BYTES
 from .decompose import handle_decompose
+from .history import handle_history, handle_history_clear, prune_history
+from .importers import handle_import_styles, handle_import_wildcards
 from .intake import handle_extract_apply, handle_extract_image
 from .library import (
     handle_delete,
@@ -61,6 +63,14 @@ ROUTES = (
     ("post", "/mrln/prompt/extract-apply", handle_extract_apply, True),
     ("get", "/mrln/prompt/export", handle_export, False),
     ("post", "/mrln/prompt/import", handle_import, True),
+    # migration on-ramps: both answer the bundle importer's plan shape, so the
+    # Composer's existing plan preview renders them with no new UI
+    ("post", "/mrln/prompt/import-wildcards", handle_import_wildcards, True),
+    ("post", "/mrln/prompt/import-styles", handle_import_styles, True),
+    ("get", "/mrln/prompt/history", handle_history, False),
+    # clearing is destructive, so it takes JSON true like every other start
+    # flag here — a query string can never trigger it
+    ("post", "/mrln/prompt/history-clear", handle_history_clear, True),
 )
 
 
@@ -109,6 +119,10 @@ def _warm_library_caches():
                 )
             if len(gone) > 10:
                 logger.warning("MRLN prompt:   … and %d more", len(gone) - 10)
+        # Retention runs at boot because that is when the setting reflects the
+        # user's current intent; it is independent of history_enabled, which
+        # governs what is WRITTEN, not what is kept.
+        prune_history(lib)
     except Exception:
         logger.debug("MRLN prompt library warm-up skipped", exc_info=True)
 
