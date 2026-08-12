@@ -17,6 +17,16 @@
 //              them in as the new defaults.
 
 import * as util from "./composer/util.js";
+// Model-dropdown value encoding — the SAME builder and sentinels the Enhance
+// node's combo uses (composer/api.js), so the two dropdowns cannot drift apart.
+// Pure exports only; the fetching instance arrives as ctx.api.
+import {
+  CUSTOM_ENTRY,
+  PULL_PREFIX,
+  buildModelValues,
+  isNoteEntry,
+  isPullEntry,
+} from "./composer/api.js";
 
 const {
   bundleFilename,
@@ -25,6 +35,7 @@ const {
   diffProfileOverrides,
   downloadableAir,
   isCombineItem,
+  itemRowEdited,
   jsSlugify,
   loraKey,
   loraProgressText,
@@ -34,6 +45,7 @@ const {
   parseKvLines,
   parseToken,
   structuralDrift,
+  uniqueName,
 } = util;
 
 function el(tag, attrs = {}, ...children) {
@@ -211,7 +223,9 @@ export function createComposerPanel(root, ctx) {
     choicesOpen: false,
     negativeOpen: false,
     tab: "compose",
-    decompose: { text: "", type: "", report: null, plans: [] }, // De-compose tab state
+    // De-compose tab state — runNo/modelGen are supersede tokens (mirror
+    // previewNo), running keeps the button disabled across re-renders
+    decompose: { text: "", type: "", report: null, plans: [], runNo: 0, modelGen: 0, running: false },
     libGroups: new Set(), // Library tab: expanded top-level slug groups
     nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed
   };
@@ -292,15 +306,15 @@ export function createComposerPanel(root, ctx) {
   function armDestructive(button, reallyLabel, action) {
     // Button flavor: the first click relabels the button to the question and
     // arms it; the second click (any call while armed) runs the stored
-    // action. Auto-disarms after ~4s.
+    // action. Auto-disarms after ~4s. Returns the action's result so an
+    // async armed action can be awaited (busy() keeps the button disabled).
     if (button.mrlnArmed) {
       clearTimeout(button.mrlnArmed.timer);
       button.textContent = button.mrlnArmed.label;
       button.classList.remove("mrln-armed");
       const run = button.mrlnArmed.action;
       button.mrlnArmed = null;
-      run();
-      return;
+      return run();
     }
     button.mrlnArmed = {
       label: button.textContent,
@@ -313,6 +327,32 @@ export function createComposerPanel(root, ctx) {
     };
     button.textContent = reallyLabel;
     button.classList.add("mrln-armed");
+  }
+
+  // ---- in-flight guard for mutating buttons --------------------------------
+
+  async function busy(button, fn) {
+    // Every mutating async action runs through here: the button disables for
+    // the life of the promise and re-enables in a finally. Double-clicking
+    // Save/Apply used to interleave two POST → loadLibrary → selectTemplate
+    // chains; a De-compose run takes up to two minutes and looked frozen.
+    // (Inline style, not a class — the panel's stylesheet is shared and a
+    // disabled button is otherwise indistinguishable in some themes.)
+    if (button) {
+      if (button.disabled) return undefined; // still running — swallow the click
+      button.disabled = true;
+      button.style.opacity = "0.55";
+      button.style.cursor = "progress";
+    }
+    try {
+      return await fn();
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.style.opacity = "";
+        button.style.cursor = "";
+      }
+    }
   }
 
   // ---- data loading --------------------------------------------------------
@@ -372,10 +412,18 @@ export function createComposerPanel(root, ctx) {
     // Library edits change pools/defaults under the loaded template —
     // re-fetch the actual data without nuking the user's current picks.
     if (!state.slug) return;
+    // Supersede guard, same token as selectTemplate: refreshDetail fires from
+    // section/profile saves, LoRA heals and deletes, so a template switch
+    // mid-flight must not let the OLD slug's body overwrite the new
+    // template's detail (and, when unmodified, its baseRaw/rawData).
+    const slug = state.slug;
+    const no = state.templateNo;
     try {
-      state.detail = await ctx.apiJson(
-        `/mrln/prompt/template?slug=${encodeURIComponent(state.slug)}`
+      const detail = await ctx.apiJson(
+        `/mrln/prompt/template?slug=${encodeURIComponent(slug)}`
       );
+      if (no !== state.templateNo || slug !== state.slug) return; // newer pick owns the tab
+      state.detail = detail;
       if (!state.modified) {
         state.baseRaw = structuredClone(state.detail.raw);
         state.rawData = effectiveRaw(state.profile);
@@ -386,6 +434,7 @@ export function createComposerPanel(root, ctx) {
       schedulePreview();
       refreshLoraBanner(state.slug); // a library edit can add, repair or drop a LoRA item
     } catch {
+      if (no !== state.templateNo || slug !== state.slug) return;
       schedulePreview(); // stale detail is survivable; the preview shows truth
     }
   }
@@ -574,15 +623,39 @@ export function createComposerPanel(root, ctx) {
     return util.allSlots(state.rawData);
   }
 
-  async function ensurePool(ref) {
+  const poolReqs = new Map(); // ref -> in-flight /items promise
+  const poolFailedAt = new Map(); // ref -> ms epoch of the last failure
+  const POOL_RETRY_MS = 30000;
+
+  async function ensurePool(ref, { force = false } = {}) {
+    // Three guards, because the naive version had three holes: the cache only
+    // saw COMPLETED fetches (every child row of every renderNested pass fired
+    // its own identical GET), a failure cached [] — truthy, so the guard below
+    // never refetched and the slot showed only 'random' for the life of the
+    // loaded template — and retrying on every render would storm a dead
+    // endpoint with a toast each time. So: cache successes only, share the
+    // in-flight promise, and back off after a failure (a user-initiated call
+    // passes force to retry immediately).
     if (state.detail.pools[ref]) return;
-    try {
-      const body = await ctx.apiJson(`/mrln/prompt/items?ref=${encodeURIComponent(ref)}`);
-      state.detail.pools[ref] = body.items;
-    } catch (err) {
-      state.detail.pools[ref] = [];
-      ctx.toast("error", `Cannot load items for '${ref}'`, err.message);
-    }
+    const pending = poolReqs.get(ref);
+    if (pending) return pending;
+    if (!force && Date.now() - (poolFailedAt.get(ref) ?? 0) < POOL_RETRY_MS) return;
+    const detail = state.detail; // the detail this request was issued for
+    const request = (async () => {
+      try {
+        const body = await ctx.apiJson(`/mrln/prompt/items?ref=${encodeURIComponent(ref)}`);
+        detail.pools[ref] = body.items;
+        poolFailedAt.delete(ref);
+      } catch (err) {
+        delete detail.pools[ref]; // never cache a failure
+        poolFailedAt.set(ref, Date.now());
+        ctx.toast("error", `Cannot load items for '${ref}'`, err.message);
+      } finally {
+        poolReqs.delete(ref);
+      }
+    })();
+    poolReqs.set(ref, request);
+    return request;
   }
 
   // ---- mute / solo audition (preview-only, DAW-style) ----------------------
@@ -991,7 +1064,7 @@ export function createComposerPanel(root, ctx) {
           title: "Write template + settings to the node. Unsaved template edits "
             + "are saved to your user library first — the node always renders "
             + "the saved file.",
-          onclick: () => applyToNode(),
+          onclick: (e) => busy(e.currentTarget, applyToNode),
         },
         "Apply to node"
       ),
@@ -1011,7 +1084,7 @@ export function createComposerPanel(root, ctx) {
         {
           class: "mrln-btn",
           title: "Save this template (current picks become its defaults) to your user library",
-          onclick: () => saveTemplate(state.slug),
+          onclick: (e) => busy(e.currentTarget, () => saveTemplate(state.slug)),
         },
         "Save"
       ),
@@ -1019,27 +1092,29 @@ export function createComposerPanel(root, ctx) {
         "button",
         {
           class: "mrln-btn",
-          onclick: async (e) => {
+          onclick: (e) => {
             const button = e.currentTarget;
-            if (button.mrlnArmed) {
-              armDestructive(button); // second click — run the armed overwrite
-              return;
-            }
-            const slug = await askString(
-              "Save as template",
-              "Template slug (lowercase, '/' for folders):",
-              `${state.slug}-mine`
-            );
-            if (!slug?.trim()) return;
-            const clean = slug.trim();
-            if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
-              // silent clobber guard — newTemplate refuses, Save as… arms
-              armDestructive(button, `Really overwrite '${clean}'?`, () =>
-                saveTemplate(clean, { asNew: true })
+            return busy(button, async () => {
+              if (button.mrlnArmed) {
+                await armDestructive(button); // second click — run the armed overwrite
+                return;
+              }
+              const slug = await askString(
+                "Save as template",
+                "Template slug (lowercase, '/' for folders):",
+                `${state.slug}-mine`
               );
-              return;
-            }
-            await saveTemplate(clean, { asNew: true });
+              if (!slug?.trim()) return;
+              const clean = slug.trim();
+              if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
+                // silent clobber guard — newTemplate refuses, Save as… arms
+                armDestructive(button, `Really overwrite '${clean}'?`, () =>
+                  saveTemplate(clean, { asNew: true })
+                );
+                return;
+              }
+              await saveTemplate(clean, { asNew: true });
+            });
           },
         },
         "Save as…"
@@ -1089,7 +1164,13 @@ export function createComposerPanel(root, ctx) {
   }
 
   function attachDrag(card, handle, scope, index, mover) {
-    handle.addEventListener("mousedown", () => (card.draggable = true));
+    handle.addEventListener("mousedown", () => {
+      // dragend is the only other reset, and it never fires when the grab is
+      // aborted — a card left draggable hijacks text selection inside its own
+      // inputs. dragstart still fires: draggable is true at drag initiation.
+      card.draggable = true;
+      window.addEventListener("mouseup", () => (card.draggable = false), { once: true });
+    });
     card.addEventListener("dragstart", (e) => {
       dragSrc = { scope, index };
       card.classList.add("mrln-dragging");
@@ -1158,6 +1239,9 @@ export function createComposerPanel(root, ctx) {
   }
 
   function smallBtn(title, text, onclick, disabled = false) {
+    // `disabled` is what the ↑/↓ move buttons use at the ends of a list —
+    // moveOrder/the variant swaps no-op there, and a button that silently
+    // does nothing reads as a bug.
     return el(
       "button",
       { class: "mrln-btn mrln-mini", title, onclick, disabled: disabled ? "" : null },
@@ -1277,7 +1361,7 @@ export function createComposerPanel(root, ctx) {
       });
       if (body.status === "done") {
         done++;
-        loraListCache = null; // pickers must list the new file
+        loraListPromise = null; // pickers must list the new file
         if (body.healed) healed = true;
         note.textContent = body.healed ? ` — done → ${body.healed}` : " — done";
       } else {
@@ -1414,7 +1498,14 @@ export function createComposerPanel(root, ctx) {
         el(
           "div",
           { class: "mrln-actions" },
-          el("button", { class: "mrln-btn mrln-primary", onclick: newTemplate }, "New template…")
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-primary",
+              onclick: (e) => busy(e.currentTarget, newTemplate),
+            },
+            "New template…"
+          )
         )
       );
       return;
@@ -1503,7 +1594,7 @@ export function createComposerPanel(root, ctx) {
             {
               class: "mrln-btn mrln-mini mrln-new-tpl",
               title: "Start a NEW empty template (net-new composition)",
-              onclick: newTemplate,
+              onclick: (e) => busy(e.currentTarget, newTemplate),
             },
             "＋"
           ),
@@ -1572,7 +1663,20 @@ export function createComposerPanel(root, ctx) {
       profileSelect.append(el("option", { value: name }, name));
     }
     profileSelect.value = state.profile ?? "standard";
-    if (profileSelect.value !== (state.profile ?? "standard")) profileSelect.value = "standard";
+    if (profileSelect.value !== (state.profile ?? "standard")) {
+      // A profile this install does not offer (loaded from a node built
+      // elsewhere). Show it instead of silently displaying 'standard' while
+      // preview and Apply keep sending the foreign name — same treatment the
+      // node's backend combo gives an unknown value.
+      profileSelect.append(
+        el(
+          "option",
+          { value: state.profile, title: "Not installed here — the render falls back" },
+          `${state.profile} (not installed)`
+        )
+      );
+      profileSelect.value = state.profile;
+    }
     const tweakCount = overrideTweakCount(overridesFor(state.profile));
     const profileWrap = el("div", { class: "mrln-inline" }, profileSelect);
     if (tweakCount) {
@@ -1814,8 +1918,18 @@ export function createComposerPanel(root, ctx) {
         el(
           "span",
           { class: "mrln-rowbtns" },
-          smallBtn("Move variant block up", "↑", () => moveOrder(orderIndex, -1)),
-          smallBtn("Move variant block down", "↓", () => moveOrder(orderIndex, 1))
+          smallBtn(
+            "Move variant block up",
+            "↑",
+            () => moveOrder(orderIndex, -1),
+            orderIndex === 0
+          ),
+          smallBtn(
+            "Move variant block down",
+            "↓",
+            () => moveOrder(orderIndex, 1),
+            orderIndex === state.orderIds.length - 1
+          )
         )
       ),
       variantSelect
@@ -1845,17 +1959,21 @@ export function createComposerPanel(root, ctx) {
       "button",
       {
         class: "mrln-btn",
-        onclick: async () => {
-          const ref = remapSelect.value;
-          if (!ref) return;
-          slot.ref = ref;
-          delete slot.default; // the old default named an item of the dead section
-          state.rows.set(slot.id, parseToken("random"));
-          await ensurePool(ref);
-          markModified();
-          renderComposeTab();
-          schedulePreview();
-        },
+        // this card exists to un-stick a broken template — an inert button
+        // with no explanation is the worst possible zero state here
+        disabled: remapSelect.options.length ? null : "",
+        onclick: (e) =>
+          busy(e.currentTarget, async () => {
+            const ref = remapSelect.value;
+            if (!ref) return;
+            slot.ref = ref;
+            delete slot.default; // the old default named an item of the dead section
+            state.rows.set(slot.id, parseToken("random"));
+            await ensurePool(ref, { force: true }); // user-initiated: retry a failed pool now
+            markModified();
+            renderComposeTab();
+            schedulePreview();
+          }),
       },
       "Remap"
     );
@@ -1882,7 +2000,8 @@ export function createComposerPanel(root, ctx) {
         { class: "mrln-error" },
         `Section '${slot.ref}' no longer exists — remap it to a live section:`
       ),
-      el("div", { class: "mrln-inline" }, remapSelect, remapButton)
+      el("div", { class: "mrln-inline" }, remapSelect, remapButton),
+      remapSelect.options.length ? null : emptyLibraryNote()
     );
     if (isVariantSlot) {
       attachDrag(card, handle, `variant:${state.variant}`, index, (from, to) =>
@@ -1943,7 +2062,14 @@ export function createComposerPanel(root, ctx) {
     }
     itemSelect.value = row.random && !singleOnly ? "random" : row.item;
     if (itemSelect.value === "") {
-      itemSelect.value = singleOnly ? pool[0].name : "random"; // stale item name
+      // The row names an item this pool no longer has (renamed/removed in the
+      // library). Repair the ROW, not just the display — otherwise the select
+      // shows 'random' while rowToken keeps emitting the dead name to the
+      // preview and to Apply.
+      const fixed = parseToken(singleOnly ? pool[0].name : "random");
+      Object.assign(row, fixed);
+      state.rows.set(slot.id, row);
+      itemSelect.value = singleOnly ? pool[0].name : "random";
     }
     if (singleOnly) itemSelect.title = "Only item in this section — drawn every time";
 
@@ -1968,7 +2094,9 @@ export function createComposerPanel(root, ctx) {
     if (loraItem) {
       // name the target model on the pill: which one is DRAWN matters, since a
       // pool can hold several families and only one can match the checkpoint
-      const drawn = pool.find((p) => p.lora && p.name === state.rows.get(slot.id)?.value);
+      // rows are {random, seed, item} — reading '.value' here always came back
+      // undefined, so the pill never narrowed to the picked item's base
+      const drawn = pool.find((p) => p.lora && p.name === state.rows.get(slot.id)?.item);
       const bases = [...new Set(pool.filter((p) => p.base).map((p) => p.base))];
       const shown = drawn?.base ? [drawn.base] : bases;
       chips.push(
@@ -2036,26 +2164,47 @@ export function createComposerPanel(root, ctx) {
       }),
       isVariantSlot
         ? [
-            smallBtn("Move up within the variant", "↑", () => {
-              if (index > 0) {
-                [container[index - 1], container[index]] = [container[index], container[index - 1]];
-                markModified();
-                renderComposeTab();
-                schedulePreview();
-              }
-            }),
-            smallBtn("Move down within the variant", "↓", () => {
-              if (index < container.length - 1) {
-                [container[index + 1], container[index]] = [container[index], container[index + 1]];
-                markModified();
-                renderComposeTab();
-                schedulePreview();
-              }
-            }),
+            smallBtn(
+              "Move up within the variant",
+              "↑",
+              () => {
+                if (index > 0) {
+                  [container[index - 1], container[index]] = [
+                    container[index],
+                    container[index - 1],
+                  ];
+                  markModified();
+                  renderComposeTab();
+                  schedulePreview();
+                }
+              },
+              index === 0
+            ),
+            smallBtn(
+              "Move down within the variant",
+              "↓",
+              () => {
+                if (index < container.length - 1) {
+                  [container[index + 1], container[index]] = [
+                    container[index],
+                    container[index + 1],
+                  ];
+                  markModified();
+                  renderComposeTab();
+                  schedulePreview();
+                }
+              },
+              index === container.length - 1
+            ),
           ]
         : [
-            smallBtn("Move up", "↑", () => moveOrder(orderIndex, -1)),
-            smallBtn("Move down", "↓", () => moveOrder(orderIndex, 1)),
+            smallBtn("Move up", "↑", () => moveOrder(orderIndex, -1), orderIndex === 0),
+            smallBtn(
+              "Move down",
+              "↓",
+              () => moveOrder(orderIndex, 1),
+              orderIndex === state.orderIds.length - 1
+            ),
           ],
       smallBtn("Remove this section from the template", "✕", () =>
         removeSlot(container, index, slot.id, isVariantSlot)
@@ -2156,6 +2305,17 @@ export function createComposerPanel(root, ctx) {
     return card;
   }
 
+  function emptyLibraryNote() {
+    // Zero state for every control fed by sectionSelect(): a picker with no
+    // options makes its paired button inert, which must be explained rather
+    // than left as a click that does nothing.
+    return el(
+      "div",
+      { class: "mrln-note" },
+      "No sections in the library yet — create one in the Library tab ('New section…')."
+    );
+  }
+
   function sectionSelect() {
     // Grouped picker over the live library: type-matching + universal
     // sections first, other domains behind an optgroup. Shared by the
@@ -2199,25 +2359,31 @@ export function createComposerPanel(root, ctx) {
       "button",
       {
         class: "mrln-btn",
-        onclick: async () => {
-          const ref = refSelect.value;
-          if (!ref) return;
-          const existing = new Set(allSlots().map((s) => s.id));
-          let id = ref.split("/").pop();
-          for (let n = 2; existing.has(id); n++) id = `${ref.split("/").pop()}-${n}`;
-          state.rawData.slots = state.rawData.slots ?? [];
-          state.rawData.slots.push({ id, ref });
-          state.orderIds.push(id);
-          state.rows.set(id, parseToken("random"));
-          await ensurePool(ref);
-          markModified();
-          renderComposeTab();
-          schedulePreview();
-        },
+        disabled: refSelect.options.length ? null : "",
+        onclick: (e) =>
+          busy(e.currentTarget, async () => {
+            const ref = refSelect.value;
+            if (!ref) return;
+            const id = uniqueName(ref.split("/").pop(), new Set(allSlots().map((s) => s.id)));
+            state.rawData.slots = state.rawData.slots ?? [];
+            state.rawData.slots.push({ id, ref });
+            state.orderIds.push(id);
+            state.rows.set(id, parseToken("random"));
+            await ensurePool(ref, { force: true }); // user-initiated: retry a failed pool now
+            markModified();
+            renderComposeTab();
+            schedulePreview();
+          }),
       },
       "+ Add"
     );
-    return el("div", { class: "mrln-addrow", title: "Add a section (or folder scope) as a new slot" }, refSelect, addButton);
+    return el(
+      "div",
+      { class: "mrln-addrow", title: "Add a section (or folder scope) as a new slot" },
+      refSelect,
+      addButton,
+      refSelect.options.length ? null : emptyLibraryNote()
+    );
   }
 
   function renderPreview(preview, err) {
@@ -2263,9 +2429,26 @@ export function createComposerPanel(root, ctx) {
           {
             class: "mrln-btn mrln-mini",
             title: "Copy the prompt to the clipboard",
-            onclick: () => {
-              navigator.clipboard?.writeText(preview.positive);
-              ctx.toast("success", "Prompt copied");
+            onclick: async () => {
+              // Over plain http from another machine (a normal ComfyUI LAN
+              // setup) navigator.clipboard does not exist at all, and even
+              // where it does writeText rejects on a denied permission — the
+              // success toast has to follow the actual outcome.
+              if (!navigator.clipboard?.writeText) {
+                ctx.toast(
+                  "error",
+                  "Clipboard unavailable",
+                  "This page is not a secure context (plain http), so the browser "
+                    + "exposes no clipboard API — select the text above and copy it."
+                );
+                return;
+              }
+              try {
+                await navigator.clipboard.writeText(preview.positive);
+                ctx.toast("success", "Prompt copied");
+              } catch (err) {
+                ctx.toast("error", "Copy failed", err.message);
+              }
             },
           },
           "⧉ copy"
@@ -2384,6 +2567,20 @@ export function createComposerPanel(root, ctx) {
     state.trigger = ctx.getWidget(node, "trigger") ?? "";
     state.variables = ctx.getWidget(node, "variables") ?? "";
     state.profile = ctx.getWidget(node, "profile") ?? "standard";
+    if (
+      state.profile !== "standard" &&
+      !(state.profile in (state.detail?.template?.profiles ?? {}))
+    ) {
+      // keep the value (the node carries it; Apply must round-trip it) but say
+      // so once — the select renders it as '(not installed)'
+      ctx.toast(
+        "warn",
+        "Profile not installed here",
+        `The node asks for '${state.profile}', which this library does not define — `
+          + "the render falls back to the standard one. Pick another Target profile "
+          + "to replace it."
+      );
+    }
     rebuildForProfile(state.profile); // rows/defaults reflect the node's variant
     applyKvToRows(parseKvLines(ctx.getWidget(node, "selection") ?? ""));
     renderComposeTab();
@@ -2392,7 +2589,14 @@ export function createComposerPanel(root, ctx) {
   }
 
   function pinLastDraw() {
-    if (!state.lastPreview) return;
+    if (!state.lastPreview) {
+      ctx.toast(
+        "warn",
+        "Nothing drawn yet",
+        "Pin draw fixes what the live preview last drew — wait for the preview below."
+      );
+      return;
+    }
     let pinned = 0;
     for (const slot of state.lastPreview.slots) {
       const row = state.rows.get(slot.id);
@@ -2417,10 +2621,20 @@ export function createComposerPanel(root, ctx) {
   function watchDecomposePull(model) {
     const started = Date.now();
     const tick = async () => {
-      if (Date.now() - started > 45 * 60 * 1000) return; // stop polling silently
+      if (Date.now() - started > 45 * 60 * 1000) {
+        // a watcher that ends without a word leaves the user guessing whether
+        // a multi-GB pull ever finished
+        ctx.toast(
+          "info",
+          "Stopped watching the pull",
+          `${model} — still running after 45 min. Ollama keeps downloading in the `
+            + "background; check with `ollama list`."
+        );
+        return;
+      }
       let body = null;
       try {
-        body = await ctx.apiJson(`/mrln/prompt/llm-pull?model=${encodeURIComponent(model)}`);
+        body = await ctx.api.pullStatus(model);
       } catch {
         /* transient — keep polling */
       }
@@ -2438,6 +2652,16 @@ export function createComposerPanel(root, ctx) {
     setTimeout(tick, 4000);
   }
 
+  // Persistent progress row: renderDecomposeTab rebuilds the whole tab, so a
+  // spinner mounted into the render would vanish on the first re-render.
+  const decomposeBusyText = el("span", {}, " De-composing…");
+  const decomposeBusy = el(
+    "div",
+    { class: "mrln-note mrln-loading", style: "display:none" },
+    el("span", { class: "mrln-spinner" }),
+    decomposeBusyText
+  );
+
   async function runDecompose() {
     const d = state.decompose;
     if (!d.text.trim()) {
@@ -2450,14 +2674,31 @@ export function createComposerPanel(root, ctx) {
       body.backend = d.backend ?? "ollama";
       body.model = d.model ?? "";
       body.timeout = 120; // an LLM chewing a mega-prompt needs headroom
-      ctx.toast("info", "De-composing…", `${engine} engine via ${body.backend}`);
     }
+    // A 4-second toast is not feedback for a two-minute call: hold a spinner
+    // for the whole run, keep the button disabled across re-renders (d.running)
+    // and let only the NEWEST run write d.report/d.plans (d.runNo).
+    const no = ++d.runNo;
+    d.running = true;
+    decomposeBusyText.textContent =
+      engine === "programmatic"
+        ? " De-composing…"
+        : ` De-composing… ${engine} engine via ${body.backend} — up to 2 minutes`;
+    decomposeBusy.style.display = "";
+    let report;
     try {
-      d.report = await ctx.apiJson("/mrln/prompt/decompose", { method: "POST", body });
+      report = await ctx.apiJson("/mrln/prompt/decompose", { method: "POST", body });
     } catch (err) {
-      ctx.toast("error", "Decompose failed", err.message);
+      if (no === d.runNo) ctx.toast("error", "Decompose failed", err.message);
       return;
+    } finally {
+      if (no === d.runNo) {
+        d.running = false;
+        decomposeBusy.style.display = "none";
+      }
     }
+    if (no !== d.runNo) return; // a newer run owns the tab
+    d.report = report;
     if (d.report.llm_error) {
       ctx.toast("warn", "LLM engine fell back", d.report.llm_error);
     }
@@ -2563,7 +2804,7 @@ export function createComposerPanel(root, ctx) {
     const d = state.decompose;
     if (!d.report) return;
     if (button?.mrlnArmed) {
-      armDestructive(button); // second click — run the armed overwrite
+      await armDestructive(button); // second click — run the armed overwrite
       return;
     }
     const slug = await askString(
@@ -2591,10 +2832,11 @@ export function createComposerPanel(root, ctx) {
     const suffixParts = [];
     const slots = [];
     const newItemsBySection = new Map(); // section slug -> [{name, text}]
+    const slotForItem = new Map(); // new item -> the slot whose default names it
+    const dropped = []; // fragments whose target section was never chosen
     const usedIds = new Set();
     const slotId = (base) => {
-      let id = base;
-      for (let n = 2; usedIds.has(id); n++) id = `${base}-${n}`;
+      const id = uniqueName(base, usedIds);
       usedIds.add(id);
       return id;
     };
@@ -2616,24 +2858,40 @@ export function createComposerPanel(root, ctx) {
       else if (plan.action === "suffix") suffixParts.push(prose);
       else if (plan.action === "new-item" || plan.action === "new-section") {
         const section = plan.action === "new-item" ? plan.section : plan.newSection;
-        if (!section) return;
+        if (!section) {
+          dropped.push(fragment.text); // no section picked — say so, don't vanish
+          return;
+        }
         const items = newItemsBySection.get(section) ?? [];
-        const base = jsSlugify(fragment.suggested_name || fragment.text);
-        let name = base;
-        for (let n = 2; items.some((item) => item.name === name); n++) name = `${base}-${n}`;
+        const name = uniqueName(
+          jsSlugify(fragment.suggested_name || fragment.text),
+          new Set(items.map((item) => item.name))
+        );
         const item = { name, text: prose };
         if (fragment.short) item.text_short = fragment.short;
         items.push(item);
         newItemsBySection.set(section, items);
-        slots.push({ id: slotId(section.split("/").pop()), ref: section, default: name });
+        const slot = { id: slotId(section.split("/").pop()), ref: section, default: name };
+        slots.push(slot);
+        slotForItem.set(item, slot);
       }
     });
+    if (dropped.length) {
+      ctx.toast(
+        "warn",
+        `${dropped.length} fragment(s) dropped`,
+        `No target section was chosen for: ${dropped
+          .map((text) => `'${text.slice(0, 40)}'`)
+          .join(", ")}`
+      );
+    }
     if (!slots.length) {
       ctx.toast("warn", "No slots", "Nothing is mapped to a section — template would be empty.");
       return;
     }
     // 1) new items land first (extend files for factory sections, appends
     //    for user sections, fresh files for new slugs)
+    const written = [];
     for (const [section, items] of newItemsBySection) {
       let data = { version: 1, items };
       try {
@@ -2643,6 +2901,19 @@ export function createComposerPanel(root, ctx) {
             `/mrln/prompt/section?slug=${encodeURIComponent(section)}`
           );
           if (body.tier === "user") {
+            // Uniquify against the section's EXISTING names too: the server
+            // rejects a file with duplicate item names, which used to abort
+            // this loop after earlier sections were already written.
+            const taken = new Set((body.raw.items ?? []).map((item) => item.name));
+            for (const item of items) {
+              const fixed = uniqueName(item.name, taken);
+              taken.add(fixed);
+              if (fixed !== item.name) {
+                item.name = fixed;
+                const slot = slotForItem.get(item);
+                if (slot) slot.default = fixed; // the template must name the item it saved
+              }
+            }
             data = { ...body.raw, items: [...(body.raw.items ?? []), ...items] };
           }
         } else if (type.length) {
@@ -2652,8 +2923,16 @@ export function createComposerPanel(root, ctx) {
           method: "POST",
           body: { slug: section, data },
         });
+        written.push(section);
       } catch (err) {
-        ctx.toast("error", `Cannot save items into '${section}'`, err.message);
+        ctx.toast(
+          "error",
+          `Cannot save items into '${section}'`,
+          err.message
+            + (written.length
+              ? ` — already written: ${written.join(", ")} (a retry re-appends those)`
+              : "")
+        );
         return;
       }
     }
@@ -2738,20 +3017,21 @@ export function createComposerPanel(root, ctx) {
         + "to a sensible default when empty.",
       onchange: async (e) => {
         const value = e.target.value;
-        if (value === "__custom__") {
+        if (isNoteEntry(value)) {
+          e.target.value = (d.model ?? "").trim(); // the ⚠ row is a message, not a model
+          return;
+        }
+        if (value === CUSTOM_ENTRY) {
           const typed = await askString("Model name", "Exact model tag/id:", d.model ?? "");
           if (typed?.trim()) d.model = typed.trim();
           renderDecomposeTab();
           return;
         }
-        if (value.startsWith("__pull__:")) {
-          const model = value.slice(9);
+        if (isPullEntry(value)) {
+          const model = value.slice(PULL_PREFIX.length);
           d.model = model; // set now — the pull lands in the background
           try {
-            await ctx.apiJson("/mrln/prompt/llm-pull", {
-              method: "POST",
-              body: { model, start: true },
-            });
+            await ctx.api.startPull(model);
             ctx.toast("info", "Pulling model", `${model} — Ollama downloads it in the background`);
             watchDecomposePull(model);
           } catch (err) {
@@ -2768,47 +3048,43 @@ export function createComposerPanel(root, ctx) {
       const backend = d.backend ?? "ollama";
       const provider = backend === "lm studio" ? "lmstudio" : backend;
       const current = (d.model ?? "").trim();
+      // Supersede token: this tab re-renders on every engine/backend change,
+      // and a slow response for the PREVIOUS backend must not write the shared
+      // d.model (an Ollama tag posted to a cloud backend) behind the new one.
+      const gen = ++d.modelGen;
       modelSelect.replaceChildren(el("option", { value: current }, current || "…"));
-      let body = null;
-      try {
-        body = await ctx.apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
-      } catch (err) {
-        modelNote.textContent = `✗ ${err.message}`;
+      // shared 30 s cache + in-flight dedup (composer/api.js): this ran on
+      // EVERY render, and each local-backend probe blocks a server executor
+      // thread for up to 5 s when the backend is down
+      const entry = await ctx.api.llmModels(provider);
+      if (gen !== d.modelGen) return; // the user switched backends mid-flight
+      const models = entry.models ?? [];
+      const isCloud = entry.keySet !== null; // llm-validate answers clouds offline
+      if (entry.error) {
+        modelNote.textContent = `✗ ${entry.error}`;
         modelNote.style.color = "#e88";
-        if (!current) modelSelect.replaceChildren(el("option", { value: "" }, "(unreachable)"));
-        modelSelect.append(el("option", { value: "__custom__" }, "✏ custom…"));
-        return;
-      }
-      const models = body.models ?? [];
-      const suggested = body.suggested ?? [];
-      const isCloud = "key_set" in body;
-      modelSelect.replaceChildren();
-      if (isCloud) {
-        modelSelect.append(el("option", { value: "" }, "(backend default)"));
-        modelNote.textContent = body.key_set
+      } else if (isCloud) {
+        modelNote.textContent = entry.keySet
           ? "✓ key stored"
           : "no key stored — add it in the Settings tab";
-        modelNote.style.color = body.key_set ? "#6ca" : "#e88";
+        modelNote.style.color = entry.keySet ? "#6ca" : "#e88";
       } else {
         modelNote.textContent = `✓ ${models.length} installed`;
         modelNote.style.color = "#6ca";
       }
-      if (current && !models.includes(current) && !suggested.includes(current)) {
-        modelSelect.append(el("option", { value: current }, current));
-      }
-      for (const m of models) modelSelect.append(el("option", { value: m }, m));
-      for (const s of suggested) {
-        if (models.includes(s)) continue;
-        if (provider === "ollama") {
-          modelSelect.append(el("option", { value: `__pull__:${s}` }, `⬇ pull ${s}`));
-        } else {
-          modelSelect.append(el("option", { value: s }, s));
-        }
-      }
-      modelSelect.append(el("option", { value: "__custom__" }, "✏ custom…"));
+      // one shared value encoding (⬇ pull … / ✏ custom… / ⚠ note) instead of
+      // this tab's own __pull__:/__custom__ sentinels
+      modelSelect.replaceChildren(
+        ...(isCloud ? [el("option", { value: "" }, "(backend default)")] : []),
+        ...buildModelValues({ provider, current, entry }).map((value) =>
+          el("option", { value }, value)
+        )
+      );
       if (!current && !isCloud && models.length) d.model = models[0]; // ollama needs one
       modelSelect.value = (d.model ?? "").trim();
-      if (modelSelect.value !== (d.model ?? "").trim()) modelSelect.value = isCloud ? "" : models[0] ?? "";
+      if (modelSelect.value !== (d.model ?? "").trim()) {
+        modelSelect.value = isCloud ? "" : (models[0] ?? "");
+      }
     })();
     const parts = [
       el(
@@ -2827,8 +3103,17 @@ export function createComposerPanel(root, ctx) {
       el(
         "div",
         { class: "mrln-actions" },
-        el("button", { class: "mrln-btn mrln-primary", onclick: () => runDecompose() }, "Decompose")
+        el(
+          "button",
+          {
+            class: "mrln-btn mrln-primary",
+            disabled: d.running ? "" : null,
+            onclick: (e) => busy(e.currentTarget, runDecompose),
+          },
+          d.running ? "De-composing…" : "Decompose"
+        )
       ),
+      decomposeBusy,
     ];
     if (d.report) {
       parts.push(
@@ -2852,7 +3137,10 @@ export function createComposerPanel(root, ctx) {
             {
               class: "mrln-btn mrln-primary",
               title: "Save new items/sections, then store the mapping as a template",
-              onclick: (e) => saveDecomposedTemplate(e.currentTarget),
+              onclick: (e) => {
+                const button = e.currentTarget; // cleared once the handler returns
+                return busy(button, () => saveDecomposedTemplate(button));
+              },
             },
             "Create template…"
           )
@@ -2980,6 +3268,11 @@ export function createComposerPanel(root, ctx) {
             class: "mrln-fold mrln-tree-group",
             open: filter || state.libGroups.has(stateKey) ? "" : null,
             ontoggle: (e) => {
+              // Setting the open attribute QUEUES a toggle event, which lands
+              // after this listener is attached — so a filter-forced open
+              // would record itself as user-opened and leave every matching
+              // group expanded once the filter is cleared.
+              if (filter) return;
               if (e.target.open) state.libGroups.add(stateKey);
               else state.libGroups.delete(stateKey);
             },
@@ -3014,6 +3307,10 @@ export function createComposerPanel(root, ctx) {
         class: "mrln-fold mrln-tree-block",
         open: (state.libFilter ?? "").trim() || state.libGroups.has(stateKey) ? "" : null,
         ontoggle: (e) => {
+          // same queued-toggle trap as groupedTree — and here a filter-forced
+          // open also self-marks ':touched', permanently disabling the
+          // 'sections default open' rule above
+          if ((state.libFilter ?? "").trim()) return;
           state.libGroups.add(`${stateKey}:touched`);
           if (e.target.open) state.libGroups.add(stateKey);
           else state.libGroups.delete(stateKey);
@@ -3277,13 +3574,15 @@ export function createComposerPanel(root, ctx) {
       placeholder: "Filter sections & templates…",
       value: state.libFilter ?? "",
       oninput: (e) => {
+        // the re-render replaces this input — restore focus AND the exact
+        // caret position, or typing anywhere but the end is impossible
+        const caret = e.target.selectionStart ?? e.target.value.length;
         state.libFilter = e.target.value;
         renderLibraryTab();
-        // re-render replaces the input — restore typing focus at the end
         const fresh = libraryTab.querySelector(".mrln-lib-filter");
         if (fresh) {
           fresh.focus();
-          fresh.setSelectionRange(fresh.value.length, fresh.value.length);
+          fresh.setSelectionRange(caret, caret);
         }
       },
     });
@@ -3313,7 +3612,11 @@ export function createComposerPanel(root, ctx) {
           },
           "New combine…"
         ),
-        el("button", { class: "mrln-btn", onclick: () => newTemplate() }, "New template…"),
+        el(
+          "button",
+          { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, newTemplate) },
+          "New template…"
+        ),
         el(
           "button",
           {
@@ -3483,7 +3786,11 @@ export function createComposerPanel(root, ctx) {
     }
 
     const actions = [
-      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user tier"),
+      el(
+        "button",
+        { class: "mrln-btn mrln-primary", onclick: (e) => busy(e.currentTarget, save) },
+        "Save to user tier"
+      ),
     ];
     if (body.user) {
       actions.push(
@@ -3564,6 +3871,11 @@ export function createComposerPanel(root, ctx) {
       autocomplete: "off",
     });
     const status = el("span", { class: "mrln-note" });
+    // The URL inputs are prefilled from GET /settings. If that GET failed they
+    // are empty for a reason that has nothing to do with what is stored, so
+    // Validate must NOT persist them — an empty string reverts the stored URL
+    // to the default server-side, silently discarding a custom endpoint.
+    let settingsLoaded = false;
     const backendRow = (label, key, provider) => {
       const urlInput = el("input", {
         type: "text",
@@ -3572,6 +3884,17 @@ export function createComposerPanel(root, ctx) {
       });
       const rowStatus = el("span", { class: "mrln-note" }, "checking…");
       const check = async (persist = false) => {
+        if (persist && !settingsLoaded) {
+          rowStatus.textContent = "✗ stored settings could not be read — not saving";
+          rowStatus.style.color = "#e88";
+          ctx.toast(
+            "error",
+            "Settings unavailable",
+            "The stored settings never loaded, so Validate will not overwrite them "
+              + "with an empty URL. Reopen this tab once the server answers."
+          );
+          return;
+        }
         rowStatus.textContent = "…";
         try {
           if (persist) {
@@ -3580,12 +3903,18 @@ export function createComposerPanel(root, ctx) {
               body: { llm: { [key]: urlInput.value } },
             });
           }
-          const body = await ctx.apiJson(`/mrln/prompt/llm-validate?provider=${provider}`);
-          rowStatus.textContent = `✓ ${body.models.length} model(s): ${body.models
+          // cached probe on tab entry (this used to re-ping on every open,
+          // each one blocking a server executor thread up to 5 s when the
+          // backend is down); an explicit Validate ignores the TTL
+          const entry = persist
+            ? await ctx.api.refreshLlmModels(provider)
+            : await ctx.api.llmModels(provider);
+          if (entry.error) throw new Error(entry.error);
+          rowStatus.textContent = `✓ ${entry.models.length} model(s): ${entry.models
             .slice(0, 3)
-            .join(", ")}${body.models.length > 3 ? ", …" : ""}`;
+            .join(", ")}${entry.models.length > 3 ? ", …" : ""}`;
           rowStatus.style.color = "#6ca";
-          rowStatus.title = body.models.join("\n");
+          rowStatus.title = entry.models.join("\n");
         } catch (err) {
           rowStatus.textContent = `✗ ${err.message}`;
           rowStatus.style.color = "#e88";
@@ -3596,7 +3925,11 @@ export function createComposerPanel(root, ctx) {
         "div",
         { class: "mrln-inline" },
         urlInput,
-        el("button", { class: "mrln-btn", onclick: () => check(true) }, "Validate")
+        el(
+          "button",
+          { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, () => check(true)) },
+          "Validate"
+        )
       );
       return { row, rowStatus, urlInput, check };
     };
@@ -3623,6 +3956,8 @@ export function createComposerPanel(root, ctx) {
           });
           input.value = "";
           setMark(body.llm_keys_set?.[provider]);
+          ctx.api.refreshLlmKeys(); // key_set flipped — the node's dropdown must follow
+          ctx.api.refreshLlmModels(provider); // and so must the De-compose model note
           ctx.toast("success", "Settings saved", `${label} key ${value ? "stored" : "cleared"}`);
         } catch (err) {
           ctx.toast("error", "Settings save failed", err.message);
@@ -3637,13 +3972,24 @@ export function createComposerPanel(root, ctx) {
           "button",
           {
             class: "mrln-btn",
-            onclick: () => {
-              if (input.value.trim()) push(input.value.trim());
-            },
+            onclick: (e) =>
+              busy(e.currentTarget, async () => {
+                if (input.value.trim()) await push(input.value.trim());
+              }),
           },
           "Save"
         ),
-        el("button", { class: "mrln-btn", onclick: () => push("") }, "Clear"),
+        el(
+          "button",
+          {
+            // one click away from Save, and a cleared key can only be recovered
+            // from the provider's dashboard — arm it like every other
+            // irreversible action in the panel
+            class: "mrln-btn",
+            onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => push("")),
+          },
+          "Clear"
+        ),
         mark
       );
       return { row, setMark };
@@ -3664,8 +4010,11 @@ export function createComposerPanel(root, ctx) {
         ollama.urlInput.value = body.llm?.ollama_url ?? "";
         lmstudio.urlInput.value = body.llm?.lmstudio_url ?? "";
         for (const [provider, cloud] of clouds) cloud.setMark(body.llm_keys_set?.[provider]);
-      } catch {
-        status.textContent = "";
+        settingsLoaded = true;
+      } catch (err) {
+        settingsLoaded = false;
+        status.textContent = "settings unavailable — nothing shown here is what is stored";
+        ctx.toast("error", "Cannot read Composer settings", err.message);
       }
       // auto-check the local backends — green marks without a click
       ollama.check();
@@ -3706,13 +4055,23 @@ export function createComposerPanel(root, ctx) {
           "button",
           {
             class: "mrln-btn",
-            onclick: () => {
-              if (keyInput.value.trim()) save(false);
-            },
+            onclick: (e) =>
+              busy(e.currentTarget, async () => {
+                if (keyInput.value.trim()) await save(false);
+              }),
           },
           "Save key"
         ),
-        el("button", { class: "mrln-btn", onclick: () => save(true) }, "Clear")
+        el(
+          "button",
+          {
+            // same reasoning as the cloud keys: never echoed back, so a
+            // misclick next to 'Save key' costs a trip to the dashboard
+            class: "mrln-btn",
+            onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => save(true)),
+          },
+          "Clear"
+        )
       ),
       status,
       el("hr", { class: "mrln-sep" }),
@@ -3833,10 +4192,8 @@ export function createComposerPanel(root, ctx) {
       const items = [...chosen.entries()].map(([slug, weight]) => combineItem(slug, weight));
       const names = new Set();
       for (const item of items) {
-        let name = item.name;
-        for (let n = 2; names.has(name); n++) name = `${item.name}-${n}`;
-        item.name = name;
-        names.add(name);
+        item.name = uniqueName(item.name, names);
+        names.add(item.name);
       }
       // hand off to the ordinary editor: from here it is just a section
       openSectionForm(existing?.slug ?? null, {
@@ -3913,34 +4270,48 @@ export function createComposerPanel(root, ctx) {
     openSectionForm(slug, body);
   }
 
-  let loraListCache = null;
-  async function installedLoras() {
-    if (loraListCache?.length) return loraListCache;
-    let names = [];
-    // primary: the dedicated models endpoint (full list incl. subfolders —
-    // modern frontends load combos lazily, so object_info may be incomplete)
-    try {
-      const viaModels = await ctx.apiJson("/models/loras");
-      if (Array.isArray(viaModels)) {
-        names = viaModels.map((entry) => (typeof entry === "string" ? entry : entry?.name)).filter(Boolean);
-      }
-    } catch {
-      /* older server without /models */
-    }
-    if (!names.length) {
-      try {
-        const info = await ctx.apiJson("/object_info/LoraLoader");
-        const spec = info?.LoraLoader?.input?.required?.lora_name;
-        if (Array.isArray(spec)) {
-          if (Array.isArray(spec[0])) names = spec[0];
-          else if (Array.isArray(spec[1]?.options)) names = spec[1].options;
+  let loraListPromise = null;
+  function installedLoras() {
+    // PROMISE cache, not a value cache: a section with N LoRA rows calls this
+    // 2N times as it opens, and the old value cache only helped once the first
+    // pair of requests had already resolved. A resolved EMPTY list is a valid
+    // answer too (an empty loras folder used to refetch both endpoints
+    // forever) — only an unreachable server stays uncached, so it can retry.
+    if (!loraListPromise) {
+      loraListPromise = (async () => {
+        let names = [];
+        let answered = false;
+        // primary: the dedicated models endpoint (full list incl. subfolders —
+        // modern frontends load combos lazily, so object_info may be incomplete)
+        try {
+          const viaModels = await ctx.apiJson("/models/loras");
+          if (Array.isArray(viaModels)) {
+            answered = true;
+            names = viaModels
+              .map((entry) => (typeof entry === "string" ? entry : entry?.name))
+              .filter(Boolean);
+          }
+        } catch {
+          /* older server without /models */
         }
-      } catch {
-        /* endpoint unavailable */
-      }
+        if (!names.length) {
+          try {
+            const info = await ctx.apiJson("/object_info/LoraLoader");
+            const spec = info?.LoraLoader?.input?.required?.lora_name;
+            if (Array.isArray(spec)) {
+              answered = true;
+              if (Array.isArray(spec[0])) names = spec[0];
+              else if (Array.isArray(spec[1]?.options)) names = spec[1].options;
+            }
+          } catch {
+            /* endpoint unavailable */
+          }
+        }
+        if (!answered) loraListPromise = null; // never cache "the server said nothing"
+        return [...new Set(names)].sort((a, b) => a.localeCompare(b));
+      })();
     }
-    loraListCache = [...new Set(names)].sort((a, b) => a.localeCompare(b));
-    return loraListCache;
+    return loraListPromise;
   }
 
   function loraPicker(current) {
@@ -4039,6 +4410,19 @@ export function createComposerPanel(root, ctx) {
         for (const name of files.sort((a, b) => baseOf(a).localeCompare(baseOf(b)))) {
           out.push(entry(name === value.value ? "mrln-lora-sel" : "", baseOf(name), () => choose(name)));
         }
+        if (!subdirs.size && !files.length) {
+          // zero state: with no installed LoRAs (or both listing endpoints
+          // down) this menu was an unexplained empty rectangle
+          out.push(
+            el(
+              "div",
+              { class: "mrln-note", style: "padding:3px 6px" },
+              cwd
+                ? "this folder is empty"
+                : "no LoRAs found — check your ComfyUI models/loras folder"
+            )
+          );
+        }
       }
       menu.replaceChildren(...out);
       menu.style.display = "";
@@ -4057,6 +4441,13 @@ export function createComposerPanel(root, ctx) {
     control.addEventListener("blur", () => setTimeout(hide, 150));
     filter.addEventListener("input", render);
     filter.addEventListener("blur", () => setTimeout(hide, 150));
+    // Escape closes it, like braceAssist — a menu that only a blur or a
+    // re-click dismisses feels stuck
+    for (const node of [control, filter]) {
+      node.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") hide();
+      });
+    }
     installedLoras().then((list) => {
       if (list.length) names = list;
       if (value.value && !names.includes(value.value)) {
@@ -4317,7 +4708,7 @@ export function createComposerPanel(root, ctx) {
             checkMissing();
             return;
           }
-          loraListCache = null; // pickers must list the new file
+          loraListPromise = null; // pickers must list the new file
           ctx.toast(
             "success",
             "LoRA downloaded",
@@ -4438,10 +4829,23 @@ export function createComposerPanel(root, ctx) {
     }
 
     function rowEdited(row) {
-      return (
-        row.name.value.trim() !== (row.orig.name ?? "") ||
-        row.text.value !== (row.orig.text ?? "") ||
-        (parseFloat(row.weight.value) || 1) !== (row.orig.weight ?? 1)
+      // Gate for the thin extend diff: a factory-origin row is stored ONLY
+      // when this is true, so it has to see every field cleanedItem persists
+      // — the LoRA block (file/strengths/comment/base) and the child slots
+      // included, not just name/text/weight.
+      return itemRowEdited(
+        {
+          name: row.name.value,
+          text: row.text.value,
+          weight: row.weight.value,
+          slots: row.slots,
+          lora: row.lora ? row.lora.value : undefined,
+          sm: row.sm?.value,
+          sc: row.sc?.value,
+          comment: row.comment?.value,
+          base: row.base?.value,
+        },
+        row.orig
       );
     }
 
@@ -4550,7 +4954,11 @@ export function createComposerPanel(root, ctx) {
     }
 
     const actions = [
-      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library"),
+      el(
+        "button",
+        { class: "mrln-btn mrln-primary", onclick: (e) => busy(e.currentTarget, save) },
+        "Save to user library"
+      ),
     ];
     if (body.tier === "user") {
       actions.push(
@@ -4561,7 +4969,7 @@ export function createComposerPanel(root, ctx) {
             title: hasFactory
               ? "Delete your user file — the slug reverts to pure factory content"
               : "Delete your user file",
-            onclick: () => deleteEntry("sections", slug),
+            onclick: (e) => busy(e.currentTarget, () => deleteEntry("sections", slug)),
           },
           "Delete user file"
         )
@@ -4669,13 +5077,20 @@ export function createComposerPanel(root, ctx) {
     }
 
     const actions = [
-      el("button", { class: "mrln-btn mrln-primary", onclick: save }, "Save to user library"),
+      el(
+        "button",
+        { class: "mrln-btn mrln-primary", onclick: (e) => busy(e.currentTarget, save) },
+        "Save to user library"
+      ),
     ];
     if (body.tier === "user") {
       actions.push(
         el(
           "button",
-          { class: "mrln-btn", onclick: () => deleteEntry("templates", slug) },
+          {
+            class: "mrln-btn",
+            onclick: (e) => busy(e.currentTarget, () => deleteEntry("templates", slug)),
+          },
           "Delete user file"
         )
       );
@@ -4733,8 +5148,9 @@ export function createComposerPanel(root, ctx) {
   }
 
   // ---- boot ----------------------------------------------------------------
+  // No disposer: the panel is a deliberate never-unmounted singleton (see
+  // prompt_composer.js), so returning a cleanup only advertised a lifecycle
+  // that never runs — its sole caller discarded it.
 
   loadLibrary(false);
-
-  return () => clearTimeout(state.previewTimer);
 }

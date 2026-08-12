@@ -63,6 +63,7 @@ const {
   downloadableAir,
   effectiveRaw,
   isCombineItem,
+  itemRowEdited,
   jsSlugify,
   loraKey,
   loraProgressText,
@@ -76,6 +77,7 @@ const {
   slotAudible,
   structuralDrift,
   syncOrderIds,
+  uniqueName,
   variantBlockAudible,
   variantSlotIds,
 } = util;
@@ -546,6 +548,37 @@ describe("buildSaveData", () => {
     assert.equal(buildSaveData(state).variant_default, "night");
   });
 
+  test("variant_default: an untouched first variant is NOT stamped", () => {
+    // The file ships without a variant_default and the user changed nothing,
+    // so stamping "day" would only restate what "" already means — and under a
+    // profile that phantom value becomes a stored overrides block.
+    const state = loadState(withVariants());
+    assert.equal(state.variant, "day"); // the fallback, not a choice
+    assert.equal("variant_default" in buildSaveData(state), false);
+  });
+
+  test("variant_default: a literal in the file is always re-stated", () => {
+    // THE TRAP: a template deliberately saved as "night" must not fall back to
+    // the first variant just because the user never touched the dropdown.
+    const raw = { ...withVariants(), variant_default: "night" };
+    const kept = loadState(raw);
+    assert.equal(kept.variant, "night");
+    assert.equal(buildSaveData(kept).variant_default, "night");
+
+    // …and switching such a template BACK to the first variant must overwrite
+    // the literal rather than silently keeping "night".
+    const switched = loadState(raw);
+    switched.variant = "day";
+    assert.equal(buildSaveData(switched).variant_default, "day");
+  });
+
+  test("variant_default: un-muting a block baked 'off' stamps the active variant", () => {
+    const raw = { ...withVariants(), variant_default: "off" };
+    const state = loadState(raw);
+    state.muted.delete("@variant"); // the user un-muted the block
+    assert.equal(buildSaveData(state).variant_default, "day");
+  });
+
   test("slots absent from rows keep their file default", () => {
     const state = loadState(flat());
     state.rows.delete("subject");
@@ -721,14 +754,15 @@ describe("diffProfileOverrides", () => {
     assert.equal(diffProfileOverrides(buildSaveData(loadState(base)), base), null);
   });
 
-  test("PINS CURRENT BEHAVIOR: a variant template's unchanged save is NOT an empty diff", () => {
-    // buildSaveData always stamps variant_default, so a template that ships
-    // without one diffs against "" and forks an overrides block that only
-    // restates the first variant. Pinned, not endorsed — see the report.
+  test("EMPTY DIFF survives the round trip for a VARIANT template too", () => {
+    // Was pinned as "NOT an empty diff": buildSaveData used to stamp
+    // variant_default unconditionally, so an untouched variant template saved
+    // under a profile forked {variant_default: "<first variant>"} — a phantom
+    // '✎ 1' tweak chip that also defeated the "now matches standard → stored
+    // tweaks removed" cleanup. The stamp is now conditional; see the
+    // buildSaveData › variant_default tests for what still gets stamped.
     const base = withVariants();
-    assert.deepEqual(diffProfileOverrides(buildSaveData(loadState(base)), base), {
-      variant_default: "day",
-    });
+    assert.equal(diffProfileOverrides(buildSaveData(loadState(base)), base), null);
   });
 
   test("scalar edits are captured, including clearing one to ''", () => {
@@ -991,7 +1025,84 @@ describe("combine sections", () => {
   });
 });
 
+describe("section editor: itemRowEdited", () => {
+  // The gate for the thin extend diff — a factory-origin row is only written
+  // into the user file when this says the row changed, so anything it cannot
+  // see is an edit that gets silently dropped on save.
+  const item = { name: "neon", text: "neon glow", weight: 2 };
+  const row = (patch = {}) => ({ name: "neon", text: "neon glow", weight: "2", ...patch });
+
+  test("an untouched row is not edited", () => {
+    assert.equal(itemRowEdited(row(), item), false);
+  });
+
+  test("name, text and weight changes are caught (weight 1 == absent)", () => {
+    assert.equal(itemRowEdited(row({ name: "neon2" }), item), true);
+    assert.equal(itemRowEdited(row({ text: "x" }), item), true);
+    assert.equal(itemRowEdited(row({ weight: "3" }), item), true);
+    assert.equal(itemRowEdited({ name: "a", text: "b", weight: "" }, { name: "a", text: "b" }), false);
+    assert.equal(itemRowEdited({ name: "a", text: "b", weight: "1" }, { name: "a", text: "b" }), false);
+  });
+
+  test("surrounding whitespace in the name does not count as an edit", () => {
+    assert.equal(itemRowEdited(row({ name: "  neon  " }), item), false);
+  });
+
+  test("child slots are compared (adding one via '{' is an edit)", () => {
+    const withSlot = { ...item, slots: [{ id: "pick", ref: "a/b" }] };
+    assert.equal(itemRowEdited(row({ slots: [{ id: "pick", ref: "a/b" }] }), withSlot), false);
+    assert.equal(itemRowEdited(row({ slots: [] }), withSlot), true);
+    assert.equal(itemRowEdited(row({ slots: [{ id: "pick", ref: "a/c" }] }), withSlot), true);
+  });
+
+  test("every LoRA field counts — file, strengths, comment and base", () => {
+    const lora = {
+      name: "neon",
+      text: "neon glow",
+      data: { lora: "x.safetensors", strength_model: 1, strength_clip: 1 },
+    };
+    const loraRow = (patch = {}) => ({
+      name: "neon",
+      text: "neon glow",
+      weight: "",
+      lora: "x.safetensors",
+      sm: "1",
+      sc: "1",
+      comment: "",
+      base: "",
+      ...patch,
+    });
+    assert.equal(itemRowEdited(loraRow(), lora), false);
+    assert.equal(itemRowEdited(loraRow({ lora: "y.safetensors" }), lora), true);
+    assert.equal(itemRowEdited(loraRow({ sm: "0.8" }), lora), true);
+    assert.equal(itemRowEdited(loraRow({ sc: "0.5" }), lora), true);
+    assert.equal(itemRowEdited(loraRow({ comment: "urn:air:sdxl:lora:civitai:1@2" }), lora), true);
+    assert.equal(itemRowEdited(loraRow({ base: "sdxl" }), lora), true);
+    assert.equal(itemRowEdited(loraRow({ base: "SDXL" }), { ...lora, data: { ...lora.data, base: "sdxl" } }), false);
+  });
+
+  test("strength_clip defaults to strength_model on both sides", () => {
+    const lora = { name: "n", text: "t", data: { lora: "x", strength_model: 0.7 } };
+    const base = { name: "n", text: "t", weight: "", lora: "x", sm: "0.7", comment: "", base: "" };
+    assert.equal(itemRowEdited({ ...base, sc: "" }, lora), false);
+    assert.equal(itemRowEdited({ ...base, sc: "0.7" }, lora), false);
+    assert.equal(itemRowEdited({ ...base, sc: "0.9" }, lora), true);
+  });
+
+  test("a row without a LoRA editor never inspects the LoRA fields", () => {
+    const lora = { name: "n", text: "t", data: { lora: "x", strength_model: 1 } };
+    assert.equal(itemRowEdited({ name: "n", text: "t", weight: "" }, lora), false);
+  });
+});
+
 describe("misc", () => {
+  test("uniqueName appends -2, -3 … only on collision", () => {
+    assert.equal(uniqueName("neon", new Set()), "neon");
+    assert.equal(uniqueName("neon", new Set(["neon"])), "neon-2");
+    assert.equal(uniqueName("neon", new Set(["neon", "neon-2", "neon-3"])), "neon-4");
+    assert.equal(uniqueName("neon", new Set(["other"])), "neon");
+  });
+
   test("moveInArray moves an element in place", () => {
     const arr = ["a", "b", "c", "d"];
     moveInArray(arr, 0, 2);

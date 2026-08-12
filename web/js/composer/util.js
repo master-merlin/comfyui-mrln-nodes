@@ -181,8 +181,19 @@ export function buildSaveData(state) {
   };
   bake(draft.slots, false);
   for (const variant of draft.variants ?? []) bake(variant.slots, true);
-  if (hasVariants && (blockOff || state.variant)) {
-    draft.variant_default = blockOff ? "off" : state.variant;
+  if (hasVariants) {
+    // Stamp variant_default only when it SAYS something: the user picked a
+    // variant, or the file already carries a literal value that has to be
+    // overwritten. A template shipping without one, still showing its first
+    // variant, must not gain a stamp — that phantom value diffs against ""
+    // and forks a profile overrides block that merely restates the base
+    // (rendering is identical either way: "" means variants[0] server-side).
+    const literal = state.rawData.variant_default ?? "";
+    const first = (draft.variants ?? [])[0]?.name;
+    if (blockOff) draft.variant_default = "off";
+    else if (state.variant && !(literal === "" && state.variant === first)) {
+      draft.variant_default = state.variant;
+    }
   }
   const sharedIds = (draft.slots ?? []).map((s) => s.id);
   const synthesized = (draft.variants ?? []).length ? [...sharedIds, "@variant"] : sharedIds;
@@ -388,7 +399,43 @@ export function isCombineItem(item) {
   );
 }
 
+// ---- section editor --------------------------------------------------------
+
+export function itemRowEdited(edited, item) {
+  // Does an editor row still equal the item it was loaded from? Extend-mode
+  // saves store a factory-origin row ONLY when this says yes, so every field
+  // the row can persist has to be compared here — a LoRA block's file,
+  // strengths, comment, base family and the item's child slots included, or
+  // that edit is silently dropped from the thin diff.
+  const num = (value, fallback) => {
+    const n = parseFloat(value);
+    return Number.isNaN(n) ? fallback : n;
+  };
+  if ((edited.name ?? "").trim() !== (item.name ?? "")) return true;
+  if ((edited.text ?? "") !== (item.text ?? "")) return true;
+  if ((parseFloat(edited.weight) || 1) !== (item.weight ?? 1)) return true;
+  if (JSON.stringify(edited.slots ?? []) !== JSON.stringify(item.slots ?? [])) return true;
+  if (edited.lora !== undefined) {
+    const data = item.data ?? {};
+    const sm = num(edited.sm, 1);
+    if ((edited.lora ?? "").trim() !== (data.lora ?? "")) return true;
+    if (sm !== (data.strength_model ?? 1)) return true;
+    if (num(edited.sc, sm) !== (data.strength_clip ?? data.strength_model ?? 1)) return true;
+    if ((edited.comment ?? "").trim() !== (data.comment ?? "")) return true;
+    if ((edited.base ?? "").trim().toLowerCase() !== (data.base ?? "")) return true;
+  }
+  return false;
+}
+
 // ---- misc ------------------------------------------------------------------
+
+export function uniqueName(base, taken) {
+  // '<base>', '<base>-2', '<base>-3', … — the collision rule every id/name
+  // generator in the panel needs (slot ids, decomposed item names, combines).
+  let name = base;
+  for (let n = 2; taken.has(name); n++) name = `${base}-${n}`;
+  return name;
+}
 
 export function moveInArray(arr, from, to) {
   const [moved] = arr.splice(from, 1);
