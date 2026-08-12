@@ -4,6 +4,7 @@ deletes, and the shareable export/import bundles.
 """
 
 import json
+import re
 
 from .. import promptlib as pl
 
@@ -453,3 +454,110 @@ def handle_delete(lib, payload):
     slug = _require_str(payload, "slug")
     reverted = lib.delete_user(kind, slug)
     return 200, {"ok": True, "slug": slug, "reverted_to_factory": reverted}
+
+
+# -- search -------------------------------------------------------------------
+
+SEARCH_SCOPES = ("name", "text", "both")
+SEARCH_LIMIT = 60
+SEARCH_SAMPLES = 3
+
+
+def _search_terms(query):
+    """The query as compiled term matchers. Every term must hit (AND), because
+    narrowing is the entire point — 'neon street' should not return every
+    section that mentions either.
+
+    A term matches at the START OF A WORD, not anywhere in it. Plain substring
+    matching looked reasonable and was not: 'rain' hit terrain, grain and
+    training; 'disco' hit discovered. Word-prefix keeps the useful half
+    (rain -> rainy, rainfall) and drops the noise, which is the difference
+    between a filter you trust and one you stop using."""
+    return [
+        re.compile(r"(?<![a-z0-9])" + re.escape(term))
+        for term in str(query or "").lower().split()
+        if term
+    ]
+
+
+def search_sections(lib, query, *, scope="both", limit=SEARCH_LIMIT):
+    """Sections matching `query`, with WHERE each one matched.
+
+    Runs server-side because the answer needs item text, and the alternative is
+    a client fetching 210 pools to filter them: the library is already parsed
+    and warm here (routes.py warms it at boot), so this is a walk over memory.
+
+    `where` is the useful half of the result — 'name' means the slug or label
+    says it, 'item' means something inside does. A user hunting a disco finds
+    it in wardrobe/historical's items, and being told THAT is what turns a
+    dead end into a pick.
+    """
+    terms = _search_terms(query)
+    if not terms:
+        return []
+    scope = scope if scope in SEARCH_SCOPES else "both"
+    hits = []
+    for slug in lib.section_slugs():
+        try:
+            section = lib.load_section(slug)
+        except pl.PromptLibError:
+            continue
+        name_hay = f"{slug} {section.label or ''} {section.description or ''}".lower()
+        name_hit = all(term.search(name_hay) for term in terms)
+        item_names = []
+        if scope != "name":
+            for item in section.items:
+                if item.hidden:
+                    continue
+                hay = f"{item.name} {item.text} {item.text_short or ''}".lower()
+                if all(term.search(hay) for term in terms):
+                    item_names.append(item.name)
+        if scope == "name" and not name_hit:
+            continue
+        if scope == "text" and not item_names:
+            continue
+        if not name_hit and not item_names:
+            continue
+        where = []
+        if name_hit:
+            where.append("name")
+        if item_names:
+            where.append("item")
+        hits.append(
+            {
+                "slug": slug,
+                "label": section.label or "",
+                "item_count": len(section.items),
+                "where": where,
+                "matches": len(item_names),
+                "samples": item_names[:SEARCH_SAMPLES],
+                # a name hit is what the user was looking for; an item hit is
+                # where it turned out to live, so name hits sort first
+                "_rank": (0 if name_hit else 1, -len(item_names), slug),
+            }
+        )
+    hits.sort(key=lambda hit: hit.pop("_rank"))
+    return hits[:limit]
+
+
+@_guarded
+def handle_search(lib, payload):
+    """GET /mrln/prompt/search?q=&scope=name|text|both&limit=
+
+    Answers {query, scope, results, truncated} — the picker's filter row. An
+    empty query answers an empty list rather than the whole library: 210
+    sections is the problem, not the answer."""
+    query = str(payload.get("q") or payload.get("query") or "")
+    scope = str(payload.get("scope") or "both").strip().lower()
+    try:
+        limit = max(1, min(int(payload.get("limit") or SEARCH_LIMIT), SEARCH_LIMIT))
+    except (TypeError, ValueError):
+        limit = SEARCH_LIMIT
+    results = search_sections(lib, query, scope=scope, limit=limit + 1)
+    truncated = len(results) > limit
+    return 200, {
+        "query": query,
+        "scope": scope if scope in SEARCH_SCOPES else "both",
+        "results": results[:limit],
+        "truncated": truncated,
+    }

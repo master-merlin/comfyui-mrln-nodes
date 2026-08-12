@@ -187,3 +187,44 @@ describe("composer module hygiene", () => {
     assert.equal(a.decompose.running, false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Shadowing an imported helper.
+//
+// A mechanical rewrite turned `mount.replaceChildren(…)` into `mount(mount, …)`
+// inside `for (const mount of …)`. The loop variable shadows dom.js's mount(),
+// so the call invokes a DOM ELEMENT as a function — every nested draw vanished
+// from the Compose tab, and no test noticed, because nothing here executes a
+// render path. It reached the user.
+//
+// The rule is cheap and absolute: never bind a local with the name of a helper
+// the module imported.
+// ---------------------------------------------------------------------------
+
+describe("no module shadows what it imports", () => {
+  const BINDING = /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*(?:of|in|=)/g;
+
+  for (const file of FILES) {
+    test(`${file.name} never rebinds an imported name`, () => {
+      const src = readFileSync(fileURLToPath(file.url), "utf8");
+      const imported = new Set();
+      for (const match of src.matchAll(/import\s*\{([^}]*)\}\s*from/g)) {
+        for (const part of match[1].split(",")) {
+          const name = part.split(" as ").pop().trim();
+          if (name) imported.add(name);
+        }
+      }
+      if (!imported.size) return;
+      const clashes = new Set();
+      for (const match of src.matchAll(BINDING)) {
+        if (imported.has(match[1])) clashes.add(match[1]);
+      }
+      assert.deepEqual(
+        [...clashes],
+        [],
+        `${file.name} rebinds imported name(s) ${[...clashes].join(", ")} — a call to the `
+          + "import then hits the local instead (this is how every nested draw disappeared)"
+      );
+    });
+  }
+});

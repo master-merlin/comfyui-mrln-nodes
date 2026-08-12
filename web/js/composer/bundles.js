@@ -171,14 +171,16 @@ export function createBundles(hub) {
     slugInput.addEventListener("change", replan);
     overwriteBox.addEventListener("change", replan);
 
-    let busy = false;
+    // NOT `busy`: this module imports dom.js's busy(), and a local of that
+    // name shadows it for the whole function.
+    let importing = false;
     const importButton = el(
       "button",
       {
         class: "mrln-btn mrln-primary",
         onclick: async () => {
-          if (busy) return;
-          busy = true;
+          if (importing) return;
+          importing = true;
           importButton.disabled = true;
           try {
             const report = await ctx.apiJson("/mrln/prompt/import", {
@@ -207,7 +209,7 @@ export function createBundles(hub) {
           } catch (err) {
             errorLine.textContent = err.message;
           } finally {
-            busy = false;
+            importing = false;
             importButton.disabled = false;
           }
         },

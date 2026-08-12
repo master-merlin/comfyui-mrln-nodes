@@ -24,6 +24,7 @@ from .library import (
     handle_preview,
     handle_save_section,
     handle_save_template,
+    handle_search,
     handle_section,
     handle_template,
 )
@@ -43,6 +44,9 @@ ROUTES = (
     ("get", "/mrln/prompt/template", handle_template, False),
     ("get", "/mrln/prompt/section", handle_section, False),
     ("get", "/mrln/prompt/items", handle_items, False),
+    # the section picker's filter row: 210 sections is not browsable, and the
+    # answer needs ITEM text, which only the server has warm
+    ("get", "/mrln/prompt/search", handle_search, False),
     ("get", "/mrln/prompt/lora-meta", handle_lora_meta, False),
     ("get", "/mrln/prompt/lora-status", handle_lora_status, False),
     ("get", "/mrln/prompt/lora-civitai", handle_lora_civitai, False),

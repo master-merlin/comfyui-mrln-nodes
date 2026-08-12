@@ -969,3 +969,20 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-style: dashed;
   box-shadow: inset 0 0 0 1px var(--mrln-accent);
 }
+
+/* ---- the section picker's filter row -------------------------------------
+   210 sections is not a browsable dropdown. The filter sits directly above the
+   select it narrows, and its note sits below, so the three read as one control
+   rather than three that happen to be adjacent. */
+.mrln-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.mrln-picker > .mrln-inline > input { flex: 1; min-width: 0; }
+.mrln-picker > .mrln-note { font-size: 10px; opacity: 0.7; }
+/* the add-section row lays its children out horizontally; the picker is a
+   column that must still be allowed to grow into the space it has */
+.mrln-addrow > .mrln-picker { flex: 1 1 auto; }

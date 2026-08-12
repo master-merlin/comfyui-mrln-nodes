@@ -146,6 +146,36 @@ export function orderWriteBack(renderOrder, orderIds) {
   return { order: out };
 }
 
+/**
+ * Section options whose label matches every term, each term at a WORD START.
+ *
+ * Plain substring looked fine and was not: 'rain' matched terrain, grain and
+ * training. Word-prefix keeps rainy and rainfall and drops the noise — the
+ * same rule the server's /search uses, so the two modes agree about what a
+ * match is.
+ */
+export function filterSectionOptions(options, query) {
+  const terms = String(query ?? "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!terms.length) return [...(options ?? [])];
+  const patterns = terms.map(
+    (term) => new RegExp(`(?<![a-z0-9])${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i")
+  );
+  return (options ?? []).filter((option) =>
+    patterns.every((rx) => rx.test(String(option.label ?? option.value ?? "")))
+  );
+}
+
+/** A deep hit's label: say WHERE it matched, or the slug alone is a dead end. */
+export function deepLabel(row) {
+  const slug = String(row?.slug ?? "");
+  if ((row?.where ?? []).includes("name")) return slug;
+  const samples = (row?.samples ?? []).slice(0, 2).join(", ");
+  return samples ? `${slug}  — via ${samples}` : slug;
+}
+
 export function createCompose(hub) {
   const { ctx, state, composeTab } = hub;
   // Persistent elements owned by other modules. Destructured (not forwarded):
@@ -437,12 +467,17 @@ export function createCompose(hub) {
         if (key.includes(".") && !seen.has(key)) state.rows.delete(key); // stale pins
       }
     }
-    for (const mount of composeTab.querySelectorAll("[data-mrln-nested]")) {
+    // `host`, NOT `mount`: this used to be a loop variable called `mount`, and
+    // naming it that again shadows dom.js's mount() — `mount(mount, …)` then
+    // calls a DOM element as a function and every nested draw disappears from
+    // the panel. That is exactly what happened, and it reached UAT.
+    for (const host of composeTab.querySelectorAll("[data-mrln-nested]")) {
       const resolved = (state.lastPreview?.slots ?? []).find(
-        (s) => s.id === mount.dataset.mrlnNested
+        (s) => s.id === host.dataset.mrlnNested
       );
       if (resolved && (resolved.children ?? []).length) {
-        mount(mount, 
+        mount(
+          host,
           el(
             "div",
             {
@@ -453,10 +488,10 @@ export function createCompose(hub) {
           ),
           ...nestedBranch(resolved)
         );
-        mount.style.display = "";
+        host.style.display = "";
       } else {
-        mount(mount);
-        mount.style.display = "none";
+        mount(host);
+        host.style.display = "none";
       }
     }
   }
@@ -1361,14 +1396,15 @@ export function createCompose(hub) {
     );
   }
 
-  function sectionSelect() {
-    // Grouped picker over the live library: type-matching + universal
-    // sections first, other domains behind an optgroup. Shared by the
-    // add-section row and the missing-ref remap card.
+
+  function sectionOptions() {
+    // The picker's DATA — one source for the plain select and the filtered
+    // one. Type-matching sections lead; folders are always offered because a
+    // folder pool self-filters at draw time.
     const type = state.rawData?.type ?? [];
     const matches = (suits) =>
       !type.length || !(suits ?? []).length || suits.some((s) => type.includes(s));
-    const sections = state.library.sections.map((s) => ({
+    const sections = (state.library?.sections ?? []).map((s) => ({
       value: s.slug,
       label:
         s.slug +
@@ -1377,29 +1413,149 @@ export function createCompose(hub) {
         (s.merged ? " ⊕" : ""),
       match: matches(s.suits),
     }));
-    const folders = state.library.folders.map((f) => ({
+    const folders = (state.library?.folders ?? []).map((f) => ({
       value: f,
       label: `${f}/ (folder)`,
-      match: true, // folder pools self-filter at draw time
+      match: true,
     }));
-    const options = [...folders, ...sections].sort((a, b) => a.value.localeCompare(b.value));
-    const refSelect = el("select", {});
+    return { type, options: [...folders, ...sections].sort((a, b) => a.value.localeCompare(b.value)) };
+  }
+
+  function buildSectionSelect(select, type, options) {
     const primary = options.filter((o) => o.match);
     const other = options.filter((o) => !o.match);
     if (other.length) {
-      const groupA = el("optgroup", { label: type.length ? `matches type: ${type.join(", ")}` : "sections" });
+      const groupA = el("optgroup", {
+        label: type.length ? `matches type: ${type.join(", ")}` : "sections",
+      });
       for (const opt of primary) groupA.append(el("option", { value: opt.value }, opt.label));
       const groupB = el("optgroup", { label: "other domains (suits elsewhere)" });
       for (const opt of other) groupB.append(el("option", { value: opt.value }, opt.label));
-      refSelect.append(groupA, groupB);
+      mount(select, groupA, groupB);
     } else {
-      for (const opt of primary) refSelect.append(el("option", { value: opt.value }, opt.label));
+      mount(select, ...primary.map((opt) => el("option", { value: opt.value }, opt.label)));
     }
-    return refSelect;
+    return select;
+  }
+
+  function sectionSelect() {
+    // Grouped picker over the live library: type-matching + universal
+    // sections first, other domains behind an optgroup. Shared by the
+    // add-section row and the missing-ref remap card.
+    const { type, options } = sectionOptions();
+    return buildSectionSelect(el("select", {}), type, options);
+  }
+
+  // A filter row over that picker. 210 sections is not a dropdown anyone can
+  // browse, and the word a user is hunting is usually not in a slug: looking
+  // for a disco they reach for location/everyday, while the word actually
+  // lives inside wardrobe/historical's ITEMS. Hence two modes, and a result
+  // that says which one found the hit.
+  //
+  //   Names — instant, local, over slug + label. No request.
+  //   Deep  — GET /mrln/prompt/search, which also reads item text and reports
+  //           the item that matched.
+  //
+  // Returns {node, select}: `select` is the same element sectionSelect()
+  // always returned, so callers keep reading .value off it.
+  function sectionPicker() {
+    const { type, options } = sectionOptions();
+    const select = buildSectionSelect(el("select", {}), type, options);
+    const note = el("span", { class: "mrln-note" }, "");
+    let deep = false;
+    let timer = null;
+    let generation = 0;
+
+    function applyLocal(query) {
+      const kept = filterSectionOptions(options, query);
+      buildSectionSelect(select, type, kept);
+      note.textContent = kept.length
+        ? `${kept.length} match${kept.length === 1 ? "" : "es"}`
+        : "no section NAME matches — switch to Deep to search what is inside them";
+    }
+
+    async function applyDeep(query) {
+      const mine = ++generation;
+      note.textContent = "searching…";
+      let body;
+      try {
+        body = await ctx.apiJson(`/mrln/prompt/search?q=${encodeURIComponent(query)}&scope=both`);
+      } catch (err) {
+        if (mine !== generation) return;
+        if (err.status === 404) {
+          // The endpoint is newer than the running server. Routes register at
+          // ComfyUI startup, so a pack updated underneath a live ComfyUI 404s
+          // here — "HTTP 404" alone sends the user hunting for a bug that is
+          // really a restart. Fall back to the local filter so the control
+          // still does something useful in the meantime.
+          applyLocal(query);
+          note.textContent =
+            "deep search needs a ComfyUI restart (the endpoint is newer than the running "
+            + "server) — showing name matches instead";
+          return;
+        }
+        note.textContent = [err.message, err.remediation].filter(Boolean).join(" — ");
+        return;
+      }
+      if (mine !== generation) return; // a newer keystroke owns the list
+      const results = body.results ?? [];
+      mount(select, ...results.map((row) => el("option", { value: row.slug }, deepLabel(row))));
+      note.textContent = results.length
+        ? `${results.length}${body.truncated ? "+" : ""} section(s)`
+        : "nothing in the library mentions that";
+    }
+
+    const run = () => {
+      const query = filter.value.trim();
+      clearTimeout(timer);
+      if (!query) {
+        generation++; // cancel a deep search still in flight
+        buildSectionSelect(select, type, options);
+        note.textContent = "";
+        return;
+      }
+      if (!deep) {
+        applyLocal(query);
+        return;
+      }
+      timer = setTimeout(() => applyDeep(query), 250); // one request per pause
+    };
+
+    const filter = el("input", {
+      type: "text",
+      placeholder: "filter sections…",
+      title:
+        "Narrow the list. 'Names' matches the slug and label; 'Deep' also searches "
+        + "what is INSIDE each section and tells you which item matched.",
+      oninput: run,
+    });
+    const modeButton = el(
+      "button",
+      {
+        class: "mrln-btn mrln-mini",
+        title: "Switch between matching section names and searching their contents",
+        onclick: () => {
+          deep = !deep;
+          modeButton.textContent = deep ? "Deep" : "Names";
+          modeButton.classList.toggle("mrln-toggled", deep);
+          run();
+        },
+      },
+      "Names"
+    );
+    const node = el(
+      "div",
+      { class: "mrln-picker" },
+      el("div", { class: "mrln-inline" }, filter, modeButton),
+      select,
+      note
+    );
+    return { node, select };
   }
 
   function addSectionRow() {
-    const refSelect = sectionSelect();
+    const picker = sectionPicker();
+    const refSelect = picker.select;
     const addButton = el(
       "button",
       {
@@ -1425,7 +1581,8 @@ export function createCompose(hub) {
     return el(
       "div",
       { class: "mrln-addrow", title: "Add a section (or folder scope) as a new slot" },
-      refSelect,
+      // the picker's node carries the filter row AND the select
+      picker.node,
       addButton,
       refSelect.options.length ? null : emptyLibraryNote()
     );

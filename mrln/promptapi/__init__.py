@@ -161,8 +161,10 @@ from .library import (
     handle_preview,
     handle_save_section,
     handle_save_template,
+    handle_search,
     handle_section,
     handle_template,
+    search_sections,
 )
 from .llm import (
     _PULL_LOCK,
