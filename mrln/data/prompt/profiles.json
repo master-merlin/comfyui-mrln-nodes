@@ -4,7 +4,28 @@
     "krea2": {
       "render": {
         "format": "string_labeled",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "style": 30,
+          "lighting": 40,
+          "atmosphere": 45,
+          "camera": 60
+        },
+        "negative_policy": "drop"
       },
       "llm": {
         "system": "You refine image prompts for KREA 2, which rewards art-direction prose: specific visual language layered as subject and pose, then medium and surface texture, then palette, then light behavior and mood. Rewrite as flowing connected sentences in that order, keeping one paragraph per labeled block and every concrete fact (subject, setting, lighting, camera, colors, trigger words and (weighted:1.2) spans verbatim). There is no negative prompt — phrase everything as what IS in frame — and never invent people, brands or text overlays. Length follows the input — never shorter than keeping everything requires; ~220 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -16,7 +37,30 @@
     "flux": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "atmosphere": 30,
+          "composition": 34,
+          "viewpoint": 36,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "drop"
       },
       "llm": {
         "system": "You refine image prompts for FLUX, which parses natural language well, weights early tokens most, and takes no negative prompt at its distilled guidance. Rewrite as clear declarative sentences with the subject in the first sentence, stating where each element sits in the frame and how the light falls; name a concrete camera and lens only when the input is photographic. Phrase everything positively — describe what is present, never what to avoid. Keep every concrete fact and trigger word verbatim, avoid tag soup and purple prose. Length follows the input — never shorter than keeping everything requires; ~120 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -28,7 +72,30 @@
     "flux2-klein": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "composition": 24,
+          "viewpoint": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "drop"
       },
       "llm": {
         "system": "You refine image prompts for FLUX.2 Klein, which follows long structured natural language closely and renders in-image text reliably. Rewrite as precise declarative sentences: subject and its placement first (early tokens weigh most), then action, then environment, then light, materials and camera. Put any text that must appear in the image in double quotes verbatim and state its lettering style, color and placement. No negative prompt exists — phrase everything positively. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -40,7 +107,30 @@
     "ernie-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "composition": 30,
+          "viewpoint": 32,
+          "lighting": 40,
+          "atmosphere": 45,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for ERNIE-Image, a single-stream DiT that rewards structured description in distinct phrases and handles dense, layout-sensitive in-image text. Rewrite as clear ordered sentences — subject, composition and spatial layout, lighting, tone — and put any text that should render in the image in double quotes exactly as it must appear, naming its placement. Keep every concrete fact and trigger word verbatim, no tag soup. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -52,7 +142,28 @@
     "boogu-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Boogu Image, a 10B model tuned for photorealism and bilingual in-image text. Rewrite as vivid but factual prose: one flowing paragraph covering subject, environment, light and materials in that order; put any text that must render in the image in double quotes verbatim. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written, never invent brands or people. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -64,7 +175,30 @@
     "qwen-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "composition": 36,
+          "viewpoint": 38,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Qwen-Image, which excels at layout control and rendering text inside images. Rewrite as precise natural-language sentences ordered main subject first, then environment, then finer detail; state the spatial arrangement explicitly (left of frame, centered, upper corner, three columns), and put any text that should appear in the image in double quotes exactly as it must render, with its placement and size. Keep every concrete fact and trigger word verbatim. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -76,7 +210,30 @@
     "hidream": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "composition": 24,
+          "viewpoint": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 34,
+          "style": 38,
+          "lighting": 42,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for HiDream, whose Llama-3.1 encoder favors coherent descriptive sentences over fragmented tags but whose effective sequence is short — detail past roughly 128 tokens fades. Rewrite as a few dense, well-structured sentences putting subject and composition first, then mood, palette and material quality; every word must earn its place. Keep every concrete fact and trigger word verbatim, no lists. Length follows the input — never shorter than keeping everything requires; ~110 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -88,7 +245,28 @@
     "sdxl": {
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "atmosphere": 30,
+          "lighting": 40,
+          "style": 60,
+          "camera": 65
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You compress image prompts for SDXL, whose CLIP encoders read a 75-token window with the earliest tokens weighted most. Rewrite as a front-loaded comma-separated sequence of tags and short phrases (up to five words each): subject first, then setting, lighting, style. Keep trigger words and (weighted:1.2) spans exactly as written, drop filler words and articles, no full sentences, stay under 75 tokens. FIDELITY: when the budget forces cuts, drop filler and redundancy — never named subjects, elements, colors or trigger words — and add NOTHING the input does not name: no new objects, palette shifts or generic embellishments. You compress wording; the content is already decided. STYLE LOCK: style and medium tags (anime, watercolor, 3D render, photorealistic…) are facts — never drop, soften or replace them with another medium or realism level.",
@@ -100,7 +278,28 @@
     "sd15": {
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 12,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "atmosphere": 30,
+          "lighting": 40,
+          "style": 60,
+          "camera": 65
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You compress image prompts for Stable Diffusion 1.5, which needs short front-loaded keyword prompts and still benefits from classic quality tags. Rewrite as comma-separated keywords: subject and its two or three defining attributes first, then setting and light, then a few strong style and quality tags (masterpiece, best quality, highly detailed). Keep trigger words and (weighted:1.2) spans exactly as written, stay under 60 tokens. FIDELITY: when the budget forces cuts, drop filler and redundancy — never named subjects, elements, colors or trigger words — and add NOTHING the input does not name: no new objects, palette shifts or generic embellishments. You compress wording; the content is already decided. STYLE LOCK: style and medium tags (anime, watercolor, 3D render, photorealistic…) are facts — never drop, soften or replace them with another medium or realism level.",
@@ -112,7 +311,24 @@
     "pony": {
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You rewrite image prompts for Pony Diffusion, which expects booru tags behind its score incantation. Start with 'score_9, score_8_up, score_7_up', then a rating tag (rating_safe, rating_questionable, rating_explicit) and, when the content implies one, a source tag (source_anime, source_cartoon, source_furry, source_pony), then the subject and scene as booru tags. The model needs no negative prompt and no extra quality words (masterpiece, hd). Keep trigger words and (weighted:1.2) spans exactly as written, no sentences, no artist names, stay under 90 tokens. FIDELITY: when the budget forces cuts, drop filler and redundancy — never named subjects, elements, colors or trigger words — and add NOTHING the input does not name: no new objects, palette shifts or generic embellishments. You compress wording; the content is already decided. STYLE LOCK: style and medium tags (anime, watercolor, 3D render, photorealistic…) are facts — never drop, soften or replace them with another medium or realism level.",
@@ -124,7 +340,27 @@
     "illustrious": {
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "pose": 18,
+          "wardrobe": 22,
+          "battle": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 34,
+          "lighting": 40,
+          "style": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You rewrite image prompts for Illustrious-XL, an anime model trained on Danbooru tags where earlier tags weigh more. Order by importance: character count tags first (1girl, 1boy, solo), then character and subject tags, then pose, clothing, scene, lighting, and finish with quality tags (masterpiece, best quality, very aesthetic). Use real Danbooru vocabulary, keep trigger words verbatim, no artist names, stay under 90 tokens. FIDELITY: when the budget forces cuts, drop filler and redundancy — never named subjects, elements, colors or trigger words — and add NOTHING the input does not name: no new objects, palette shifts or generic embellishments. You compress wording; the content is already decided. STYLE LOCK: style and medium tags (anime, watercolor, 3D render, photorealistic…) are facts — never drop, soften or replace them with another medium or realism level.",
@@ -136,7 +372,30 @@
     "microsoft-lens": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "composition": 24,
+          "viewpoint": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "lighting": 40,
+          "style": 44,
+          "atmosphere": 47,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Microsoft Lens, trained on dense machine-written captions averaging about 110 words — it rewards exactly that register: thorough, factual, caption-like prose. Rewrite as layered description in full sentences, the way a meticulous vision model would caption the finished image: subject and placement, then environment, then light, materials and atmosphere. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~200 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -148,7 +407,28 @@
     "zimage": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "drop"
       },
       "llm": {
         "system": "You refine image prompts for Z-Image, a bilingual model that runs without classifier-free guidance: negative prompts are ignored, so every constraint must be phrased as a positive statement of what IS in frame. Rewrite as clear instruction-like sentences ordered subject, scene, lighting, style; quote any in-image text verbatim in double quotes (English and Chinese both render well). Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -160,7 +440,27 @@
     "chroma": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "style": 65
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Chroma, a de-distilled FLUX-lineage model that runs real CFG — a negative prompt exists, so the positive stays clean description. Rewrite as descriptive sentences, front-loading the subject, allowing a short comma tag tail for style anchors (it parses booru tags tolerantly). Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~120 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -172,7 +472,30 @@
     "lumina2": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "composition": 30,
+          "viewpoint": 32,
+          "lighting": 40,
+          "atmosphere": 44,
+          "style": 60,
+          "camera": 62
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Lumina Image 2.0, whose Gemma LLM encoder parses long descriptive language as an instruction. Rewrite as flowing detailed prose with explicit spatial relations and light behavior, content before style, each sentence adding new information. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~180 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -184,7 +507,30 @@
     "longcat-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "composition": 36,
+          "viewpoint": 38,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for LongCat Image, a bilingual model whose tokenizer switches to character-level encoding for QUOTED text — any words that must render in the image go inside double quotes exactly, letter for letter. Rewrite as ordered sentences: subject, action, scene, lighting, style, with typography and layout stated plainly. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -196,7 +542,30 @@
     "nucleus-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "composition": 24,
+          "viewpoint": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 34,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Nucleus Image, a sparse mixture-of-experts model that follows plain factual description well. Rewrite as clean natural-language sentences: subject and placement first, then environment, light and materials, no ornament beyond what the input carries. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -208,7 +577,29 @@
     "dreamlite": {
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "lighting": 34,
+          "atmosphere": 60,
+          "composition": 62,
+          "viewpoint": 64,
+          "style": 66,
+          "camera": 70
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You compress image prompts for DreamLite, a sub-1B on-device model that holds only a few concepts per image — focused, economical description wins. Rewrite as short punchy sentences covering only subject, setting and light — cut secondary detail. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Stay under 60 words. FIDELITY: when the budget forces cuts, drop filler and redundancy — never named subjects, elements, colors or trigger words — and add NOTHING the input does not name: no new objects, palette shifts or generic embellishments. You compress wording; the content is already decided. STYLE LOCK: style and medium tags (anime, watercolor, 3D render, photorealistic…) are facts — never drop, soften or replace them with another medium or realism level.",
@@ -220,7 +611,28 @@
     "omnigen2": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine prompts for OmniGen2, an instruction-following image model that performs best in English. Rewrite as one direct natural-language instruction ('Generate an image of ...') stating subject, scene, lighting and style as a single coherent directive in plain vocabulary. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~120 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -232,7 +644,30 @@
     "ovis-image": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "battle": 22,
+          "composition": 24,
+          "viewpoint": 26,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 34,
+          "lighting": 40,
+          "style": 55,
+          "camera": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for Ovis Image, a model whose standout skill is accurate in-image typography — posters, banners, logos, UI text. Rewrite as precise descriptive sentences with explicit composition and light; put any text that must render in the image in double quotes exactly, and state its position, size and lettering style. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -244,7 +679,27 @@
     "prx": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 18,
+          "architecture": 26,
+          "location": 26,
+          "nature": 26,
+          "lighting": 34,
+          "atmosphere": 58,
+          "style": 62,
+          "camera": 66
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine image prompts for PRX, a compact model with a T5-Gemma encoder — it follows concise, concrete natural language and drowns in ornament. Rewrite as tight descriptive sentences — subject, scene, light — every noun specific, no filler. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~100 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -254,12 +709,55 @@
       }
     },
     "ideogram4": {
+      "_comment": "Ideogram 4.0 was trained on structured JSON captions and the 'json_prompt' field CONTRACTUALLY disables Ideogram's magic-prompt rewriting ('When supplied, magic-prompt is disabled'), so a render that leaves through json_template reaches the model verbatim — the strongest no-rewrite guarantee of any profile here. The scaffold's key order is load-bearing (Ideogram's CaptionVerifier checks it) and fill_json_template preserves authored order, so never sort these keys. Every string field carries a fallback ON PURPOSE: a dropped key is a broken caption here, not a tidied one, so the scaffold is fixed-arity. v4 has no negative, seed, aspect_ratio or style_type field anywhere — those are request fields (or gone), never caption fields. Exactly one of 'photo'/'art_style' may be present; a non-photo template replaces the whole json_template in its own 'profiles' block. See _harness/research/ideogram-v4.md.",
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 15,
+          "pose": 20,
+          "battle": 25,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "atmosphere": 35,
+          "lighting": 40,
+          "composition": 44,
+          "viewpoint": 46,
+          "style": 55,
+          "camera": 60,
+          "loralab": 90
+        },
+        "negative_policy": "drop"
+      },
+      "json_template": {
+        "high_level_description": "{positive}",
+        "style_description": {
+          "aesthetics": "{slot:style|clean contemporary commercial look, rule-of-thirds composition, generous negative space}",
+          "lighting": "{slot:light|even diffused daylight, soft shadows, no colour cast}",
+          "photo": "{slot:lens|eye-level, 50mm, natural perspective, sharp focus throughout}",
+          "medium": "photograph"
+        },
+        "compositional_deconstruction": {
+          "background": "{slot:scene|a plain seamless studio backdrop, evenly lit, no props and no horizon line}",
+          "elements": [
+            {
+              "type": "obj",
+              "desc": "{slot:subject|the single subject named in the high-level description, centred and fully in frame}"
+            }
+          ]
+        }
       },
       "llm": {
-        "system": "You refine image prompts for Ideogram 4, which excels at typography and graphic composition. Rewrite as design-literate prose ordered subject, style, lighting, composition, mood; when text must render in the image, make the typography the hero — put the exact words in quotes, keep them short, and name their lettering style, color and placement. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
+        "system": "You refine image prompts for Ideogram 4.0, whose strength is typography and graphic composition and whose documented prompt order is subject, then pose or action, then secondary elements, then setting and background, then lighting and atmosphere, then framing and composition, then technical enhancers. Rewrite as design-literate prose in exactly that order, starting immediately with the subject — never 'this image shows' or 'a photo depicting'. When text must render in the image, make the typography the hero: keep the words short, reproduce them character for character, and name ONE typeface category, ONE weight and ONE style, never two joined by 'or'. Commit to one value everywhere else too — no 'various', 'such as', 'or similar', 'implied'. There is no negative prompt: state the positive visual opposite instead (not 'no people' but 'an empty room with the chairs neatly arranged'). Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, color, material and light the input names must appear in your rewrite, and you may add NONE it does not name — no new objects, no palette shifts, no generic embellishments (iridescent, prismatic, ethereal, glowing, luminous, radiant, vibrant) unless the input itself uses them. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail, so it is naturally about as long as the input or longer. STYLE LOCK: the medium and art style the input states (anime, watercolor, oil painting, 3D render, photorealism…) are facts like any other — keep their exact words and never shift the prompt toward a different medium or realism level; if the input names no medium, do not introduce one.",
         "params": {
           "max_words": 150
         }
@@ -268,7 +766,30 @@
     "ltx2": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "pose": 15,
+          "battle": 20,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "camera": 38,
+          "viewpoint": 40,
+          "composition": 42,
+          "lighting": 45,
+          "style": 55,
+          "atmosphere": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine VIDEO prompts for LTX-2, which wants one flowing present-tense paragraph a cinematographer could execute without follow-up questions. Describe chronologically: subject and its continuous action first, then environment, then ONE clean explicit camera move (slow dolly-in, pan right, static, handheld follow), then lighting and style, then what changes over time. One scene, no cuts, concrete motion verbs, physically plausible movement. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -280,7 +801,30 @@
     "wan21": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "architecture": 20,
+          "location": 20,
+          "nature": 20,
+          "pose": 30,
+          "battle": 32,
+          "camera": 40,
+          "viewpoint": 42,
+          "composition": 44,
+          "atmosphere": 55,
+          "lighting": 56,
+          "style": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine VIDEO prompts for Wan 2.1, whose official formula orders subject, scene, motion, camera language, atmosphere, style. Rewrite as detailed present-tense prose for one continuous shot in exactly that order, qualifying every movement with a speed word (slow pan, fast dolly-in) and keeping motion physically plausible — instructions much past ~120 words start being ignored. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~120 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -292,7 +836,30 @@
     "wan22": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 12,
+          "pose": 15,
+          "battle": 18,
+          "camera": 25,
+          "viewpoint": 27,
+          "architecture": 35,
+          "location": 35,
+          "nature": 35,
+          "lighting": 45,
+          "composition": 47,
+          "atmosphere": 55,
+          "style": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine VIDEO prompts for Wan 2.2, which adds trained cinematic-aesthetic control on top of motion: it responds to named light sources, shot sizes, angles, lenses and camera moves. Rewrite as present-tense prose: subject and motion, one explicit speed-qualified camera move (slow push-in, orbit, tracking shot), scene, then lighting and composition descriptors (volumetric dusk, neon rim light, low angle, shallow focus). One continuous shot, no cuts; match the lighting mood to the motion energy. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~130 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -304,7 +871,30 @@
     "hunyuan-video15": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "architecture": 10,
+          "location": 10,
+          "nature": 10,
+          "animal": 20,
+          "boudoir": 20,
+          "creature": 20,
+          "food": 20,
+          "human": 20,
+          "product": 20,
+          "treasure": 20,
+          "vehicle": 20,
+          "wardrobe": 24,
+          "pose": 28,
+          "battle": 30,
+          "camera": 40,
+          "viewpoint": 42,
+          "composition": 44,
+          "lighting": 55,
+          "atmosphere": 58,
+          "style": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine VIDEO prompts for HunyuanVideo 1.5, whose official handbook wants scene setting, then the action decomposed into sequential beats, then key details. Rewrite as flowing present-tense description of one continuous shot in simple, direct sentences: set the scene, narrate the subject's action as an ordered sequence of concrete movements, name the shot type or camera move, close with light and mood. No cuts or scene lists. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~150 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -316,7 +906,29 @@
     "kandinsky5": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 12,
+          "pose": 15,
+          "battle": 18,
+          "camera": 25,
+          "viewpoint": 27,
+          "architecture": 35,
+          "location": 35,
+          "nature": 35,
+          "lighting": 45,
+          "atmosphere": 55,
+          "style": 60
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine VIDEO prompts for Kandinsky 5, which understands professional camera language (slow pan, dolly zoom, tracking shot), named lighting (soft daylight, neon glow) and explicit motion behavior. Rewrite as clear present-tense prose for a single continuous shot: subject, its motion, one camera move, setting, light. Short sentences, concrete verbs, smooth physically consistent motion. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~130 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -328,7 +940,29 @@
     "bernini-r": {
       "render": {
         "format": "string",
-        "text_length": "long"
+        "text_length": "long",
+        "block_order": {
+          "animal": 10,
+          "boudoir": 10,
+          "creature": 10,
+          "food": 10,
+          "human": 10,
+          "product": 10,
+          "treasure": 10,
+          "vehicle": 10,
+          "wardrobe": 14,
+          "style": 25,
+          "architecture": 30,
+          "location": 30,
+          "nature": 30,
+          "lighting": 40,
+          "atmosphere": 45,
+          "pose": 70,
+          "composition": 80,
+          "viewpoint": 82,
+          "camera": 84
+        },
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You refine prompts for Bernini-R, a video-EDIT renderer: the prompt describes the DESIRED RESULT of re-rendering the conditioning video. Rewrite as present-tense prose describing the output shot — subject appearance, materials, lighting and mood — while assuming motion and framing come from the source video; never introduce camera moves or new action. Keep every concrete fact, trigger word and (weighted:1.2) span exactly as written. Length follows the input — never shorter than keeping everything requires; ~130 words is this model's comfortable ceiling. FIDELITY: every subject, element, material, motion and light the input names must appear in your rewrite, and you may add NONE it does not name — no new actions, no extra shots, no invented scenery or camera moves. You re-word and connect; the content is already decided. NEVER summarize: your rewrite carries at least the input's level of detail. STYLE LOCK: the medium and visual style the input states (anime, stop-motion, photoreal, painterly…) are facts — keep their exact words and never shift the shot toward a different medium or realism level; if the input names no medium, do not introduce one.",
@@ -338,9 +972,11 @@
       }
     },
     "ace-step15": {
+      "_comment": "No block_order: ACE-Step reads a tag caption ordered genre, mood, instruments, tempo, vocal, production, and the library ships no audio section domain — ranking any image domain here would be dead data. Add ranks the day audio sections land.",
       "render": {
         "format": "string",
-        "text_length": "short"
+        "text_length": "short",
+        "negative_policy": "keep"
       },
       "llm": {
         "system": "You rewrite prompts for ACE-Step 1.5 music generation, which reads a comma-separated tag caption. Output tags in this order: genre, mood, two or three specific instruments, tempo as a number with BPM, vocal style (or 'instrumental'), production character (lo-fi, studio polish, analog warmth). Never combine contradictory moods or genres — the model blurs them. Keep any explicit tags the input already carries, no sentences, stay under 40 tags. FIDELITY: every genre, mood, instrument, tempo and vocal cue the input names must survive into your tag list, and you may add NONE it does not name. STYLE LOCK: the stated genre and era are facts — never substitute an adjacent genre or modernize the production character.",

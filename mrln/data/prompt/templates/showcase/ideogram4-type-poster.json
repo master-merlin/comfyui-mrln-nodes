@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "label": "Model Showcase: Ideogram 4.0 Type Poster",
+  "type": [
+    "object",
+    "product",
+    "vehicle",
+    "architecture"
+  ],
+  "description": "Targets the Ideogram 4.0 family (profile ideogram4) and showcases the two things that model genuinely leads on: typography and flat graphic design. It is a design piece rather than a figure piece on purpose — Ideogram blocks NSFW outright, so the family's real strength and the subject matter that survives its filter are the same choice. Ideogram 4.0 was trained on structured JSON captions and supplying one contractually disables its magic-prompt rewriting, so this is the one template in the pack whose composed prompt reaches the model verbatim: it replaces the profile's generic scaffold with a poster-specific one and adds a second caption element carrying the literal headline and its bounding box, which is the one thing the shared scaffold cannot express because not every template has a headline. Three details are rules of this family rather than preferences. The headline is a SLOT, not a template variable, because the JSON filler sees slot texts and never sees variables. Quoting is single, because double quotes are reserved inside an Ideogram caption. And no slot carries emphasis, because a (weighted:1.2) span is Stable-Diffusion sampler syntax that would arrive at this model as literal punctuation. The picture is stated as drawn rather than photographed, which is what lets one plate treatment govern the whole picture area and keeps every pool honest — a print process, an ink palette and a plate treatment are all true of a flat sheet, so no draw can promise a photograph the layout will not deliver. Three variants swap the drawn subject between a machine, a piece of built structure and a product.",
+  "prefix": "A printed poster design, one flat sheet filling the frame edge to edge with a clean margin all round, the picture across its upper two thirds and the type set below it on the same grid. The picture is drawn rather than photographed — one subject, redrawn as a plate.",
+  "slots": [
+    {
+      "id": "headline",
+      "ref": "style/headline",
+      "label": "Headline Copy"
+    },
+    {
+      "id": "plate",
+      "ref": "style/technical-plate",
+      "label": "Plate Treatment"
+    },
+    {
+      "id": "stock",
+      "ref": "style/print",
+      "label": "Print Process",
+      "allow_empty": true
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Ink Palette"
+    }
+  ],
+  "variants": [
+    {
+      "name": "machine-plate",
+      "label": "Machine plate",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "vehicle/machine",
+          "label": "Drawn Subject"
+        }
+      ]
+    },
+    {
+      "name": "structure-plate",
+      "label": "Structure plate",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "architecture/detail",
+          "label": "Drawn Subject"
+        }
+      ]
+    },
+    {
+      "name": "product-plate",
+      "label": "Product plate",
+      "slots": [
+        {
+          "id": "hero",
+          "ref": "product/category",
+          "label": "Drawn Subject"
+        }
+      ]
+    }
+  ],
+  "variant_default": "random",
+  "order": [
+    "headline",
+    "@variant",
+    "plate",
+    "stock",
+    "palette"
+  ],
+  "suffix": "the type sits on the same grid as the picture: the headline reads '{headline}' in one bold condensed sans-serif, a single heavy weight, all capitals, flush left across the full width of the sheet and the largest type anywhere on the page. A thin rule runs under the picture area, and every letter is crisp, whole and correctly spelled",
+  "negative": "watermark, garbled lettering, misspelled words, duplicated headline, crooked crop, low detail",
+  "render": {
+    "format": "string",
+    "joiner": ", ",
+    "profile": "ideogram4",
+    "text_length": "long"
+  },
+  "profiles": {
+    "ideogram4": {
+      "json_template": {
+        "high_level_description": "{positive}",
+        "style_description": {
+          "aesthetics": "{slot:palette|near-black ink on off-white stock}, {slot:stock|flat offset printing, solid ink areas and crisp edges}, one strict grid, generous whitespace, everything aligned to the same baseline",
+          "lighting": "flat even illumination across the whole sheet, no cast shadows, every ink reading at its true value",
+          "medium": "graphic_design",
+          "art_style": "{slot:plate|a flat editorial poster plate, bold geometric shapes and solid ink areas}"
+        },
+        "compositional_deconstruction": {
+          "background": "a plain off-white poster sheet with a faint paper tooth, edge to edge, nothing printed on it",
+          "elements": [
+            {
+              "type": "obj",
+              "bbox": [
+                40,
+                60,
+                620,
+                940
+              ],
+              "desc": "{slot:hero|one single subject drawn large across the picture area, centred, whole and fully inside the frame}"
+            },
+            {
+              "type": "text",
+              "bbox": [
+                660,
+                60,
+                810,
+                940
+              ],
+              "text": "{slot:headline|OPENING NIGHT}",
+              "desc": "the headline set in one bold condensed sans-serif, a single heavy weight, all capitals, flush left across the width of the sheet in near-black ink, the largest type on the page"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "label": "Headline Copy",
+  "description": "Literal display copy for the typography-capable families (Ideogram 4.0, Qwen-Image, Ovis, LongCat, FLUX.2). Every item is the exact characters that must render in the image and nothing else — no lettering advice, no quotes, no punctuation the picture should not carry — because a target that consumes a structured caption puts these words in a text field verbatim, and a template variable can never reach that field. Kept short on purpose: long strings are where these models start dropping and misspelling letters.",
+  "items": [
+    {
+      "name": "opening-night",
+      "text": "OPENING NIGHT",
+      "text_short": "OPENING NIGHT"
+    },
+    {
+      "name": "new-season",
+      "text": "NEW SEASON",
+      "text_short": "NEW SEASON"
+    },
+    {
+      "name": "limited-run",
+      "text": "LIMITED RUN",
+      "text_short": "LIMITED RUN"
+    },
+    {
+      "name": "now-showing",
+      "text": "NOW SHOWING",
+      "text_short": "NOW SHOWING"
+    },
+    {
+      "name": "the-collection",
+      "text": "THE COLLECTION",
+      "text_short": "THE COLLECTION"
+    },
+    {
+      "name": "field-notes",
+      "text": "FIELD NOTES",
+      "text_short": "FIELD NOTES"
+    },
+    {
+      "name": "made-by-hand",
+      "text": "MADE BY HAND",
+      "text_short": "MADE BY HAND"
+    },
+    {
+      "name": "one-night-only",
+      "text": "ONE NIGHT ONLY",
+      "text_short": "ONE NIGHT ONLY"
+    },
+    {
+      "name": "type-specimen",
+      "text": "TYPE SPECIMEN",
+      "text_short": "TYPE SPECIMEN"
+    },
+    {
+      "name": "summer-issue",
+      "text": "SUMMER ISSUE",
+      "text_short": "SUMMER ISSUE"
+    },
+    {
+      "name": "late-edition",
+      "text": "LATE EDITION",
+      "text_short": "LATE EDITION"
+    },
+    {
+      "name": "archive-sale",
+      "text": "ARCHIVE SALE",
+      "text_short": "ARCHIVE SALE"
+    },
+    {
+      "name": "free-entry",
+      "text": "FREE ENTRY",
+      "text_short": "FREE ENTRY"
+    },
+    {
+      "name": "second-pressing",
+      "text": "SECOND PRESSING",
+      "text_short": "SECOND PRESSING"
+    }
+  ]
+}
