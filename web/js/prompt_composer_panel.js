@@ -4479,6 +4479,18 @@ export function createComposerPanel(root, ctx) {
           title: "Free comment stored with this LoRA block — the Civitai lookup "
             + "fills in the model's AIR tag here",
         });
+        // the base family lets LoRA Apply warn when this LoRA meets a model
+        // of another architecture; an AIR already encodes it, so this only
+        // has to be typed for files that carry none
+        row.base = el("input", {
+          type: "text",
+          class: "mrln-narrow",
+          value: item.data.base ?? "",
+          placeholder: "base",
+          title: "Base-model family this LoRA was trained for (flux1, sdxl, sd1, "
+            + "qwen, pony…). LoRA Apply warns when it does not match the connected "
+            + "model. Left empty, it is read from the AIR's ecosystem segment.",
+        });
         let loraMetaReq = 0;
         row.lora.addEventListener("change", async () => {
           if (!row.name.value.trim()) {
@@ -4645,7 +4657,12 @@ export function createComposerPanel(root, ctx) {
             "tr",
             { class: "mrln-lora-row mrln-lora-end" },
             el("td", { class: "mrln-w-origin" }),
-            el("td", { colspan: 3 }, row.comment, row.missingBox),
+            el(
+              "td",
+              { colspan: 3 },
+              el("div", { class: "mrln-inline" }, row.comment, row.base),
+              row.missingBox
+            ),
             el("td", { class: "mrln-w-act" })
           )
         );
@@ -4680,10 +4697,14 @@ export function createComposerPanel(root, ctx) {
           const comment = row.comment?.value.trim();
           if (comment) item.data.comment = comment;
           else delete item.data.comment;
+          const base = row.base?.value.trim().toLowerCase();
+          if (base) item.data.base = base;
+          else delete item.data.base;
         } else if (item.data) {
           delete item.data.lora;
           delete item.data.strength_model;
           delete item.data.strength_clip;
+          delete item.data.base;
         }
       }
       if (item.data == null || (typeof item.data === "object" && !Object.keys(item.data).length)) {

@@ -122,7 +122,13 @@ a one-click fetch for the ones carrying a Civitai AIR. The same audit
 runs at server start (it logs what is missing), and **LoRA Apply** has an
 `on_missing` choice — stop with a named file, skip it and render without,
 or download it by its AIR — so a shared workflow can heal itself without
-the Composer ever being opened. The
+the Composer ever being opened.
+
+LoRA blocks also declare the base model they were trained for (`data.base`,
+or the ecosystem segment of their AIR). LoRA Apply reads the architecture of
+the connected model and, via `on_mismatch`, warns / skips / stops when they
+disagree — a FLUX LoRA on an SDXL checkpoint loads without any error from
+ComfyUI and simply degrades the image, which is otherwise invisible. The
 De-compose tab works the other way around: paste a finished prompt and it
 is decomposed against your library — matched fragments become slots pinned
 to their items, the residue becomes new items, new sections, or

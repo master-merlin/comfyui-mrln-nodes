@@ -390,9 +390,9 @@ class PromptSection:
 
 
 def parse_loras_json(loras):
-    """'loras' JSON -> validated [(name, strength_model, strength_clip, air)].
-    Pure so pytest covers it; raises ValueError with remediation text. The
-    air urn is "" when the block carries none."""
+    """'loras' JSON -> validated [(name, strength_model, strength_clip, air,
+    base)]. Pure so pytest covers it; raises ValueError with remediation
+    text. `air` and `base` are "" when the block carries none."""
     if not isinstance(loras, str) or not loras.strip():
         return []
     try:
@@ -410,8 +410,69 @@ def parse_loras_json(loras):
             raise ValueError(f"lora entry {entry!r} is missing the 'lora' file name")
         sm = float(entry.get("strength_model", 1.0))
         sc = float(entry.get("strength_clip", sm))
-        result.append((str(entry["lora"]), sm, sc, str(entry.get("air") or "")))
+        result.append(
+            (
+                str(entry["lora"]),
+                sm,
+                sc,
+                str(entry.get("air") or ""),
+                str(entry.get("base") or "").lower(),
+            )
+        )
     return result
+
+
+# A loaded model reports its architecture through comfy.model_base; map the
+# class names onto the AIR ecosystem slugs LoRA items declare. Only families
+# whose LoRAs are genuinely incompatible need an entry — anything unmapped
+# simply skips the check rather than crying wolf.
+_MODEL_FAMILIES = (
+    ("flux", "flux1"),
+    ("sd3", "sd3"),
+    ("sdxl", "sdxl"),
+    ("stablediffusionxl", "sdxl"),
+    ("qwenimage", "qwen"),
+    ("wan", "wan"),
+    ("hunyuanvideo", "hunyuan"),
+    ("hunyuandit", "hunyuan"),
+    ("ltxv", "ltxv"),
+    ("auraflow", "auraflow"),
+    ("hidream", "hidream"),
+    ("cascade", "cascade"),
+    ("sd15", "sd1"),
+    ("sd1", "sd1"),
+)
+
+# families that share a LoRA format closely enough that a mismatch is noise
+_FAMILY_ALIASES = {"pony": "sdxl", "illustrious": "sdxl", "noobai": "sdxl", "sd2": "sd1"}
+
+
+def _canonical_family(name):
+    name = str(name or "").strip().lower()
+    return _FAMILY_ALIASES.get(name, name)
+
+
+def model_family(model):
+    """Best-effort base-model family slug for a loaded MODEL, or "" when it
+    cannot be determined. Never raises: a wrong guess must not break a run,
+    so an unknown architecture simply disables the compatibility check."""
+    names = []
+    try:
+        inner = getattr(model, "model", None)
+        if inner is not None:
+            names.append(type(inner).__name__)
+            config = getattr(inner, "model_config", None)
+            if config is not None:
+                names.append(type(config).__name__)
+        names.append(type(model).__name__)
+    except Exception:
+        return ""
+    for raw in names:
+        flat = "".join(ch for ch in str(raw).lower() if ch.isalnum())
+        for needle, family in _MODEL_FAMILIES:
+            if needle in flat:
+                return family
+    return ""
 
 
 class LoraApply:
@@ -466,6 +527,19 @@ class LoraApply:
                         "heal themselves without opening the Composer.",
                     },
                 ),
+                "on_mismatch": (
+                    ["warn", "skip", "error", "ignore"],
+                    {
+                        "default": "warn",
+                        "tooltip": "A LoRA trained for a different base model than the "
+                        "connected one (a FLUX LoRA on an SDXL or KREA checkpoint) "
+                        "loads without erroring but quietly degrades the image. "
+                        "'warn' logs the mismatch and applies it anyway; 'skip' leaves "
+                        "that LoRA out; 'error' stops the run; 'ignore' disables the "
+                        "check. Only LoRA items that declare a family (data.base, or "
+                        "the ecosystem segment of their Civitai AIR) can be checked.",
+                    },
+                ),
             },
         }
 
@@ -479,7 +553,7 @@ class LoraApply:
             return str(exc)
         return True
 
-    def execute(self, model, clip, loras, on_missing="error"):
+    def execute(self, model, clip, loras, on_missing="error", on_mismatch="warn"):
         entries = parse_loras_json(loras)
         if not entries:
             return (model, clip)
@@ -494,7 +568,25 @@ class LoraApply:
                 name if name in available else normalized.get(name.replace("\\", "/").lower())
             ), available
 
-        for name, strength_model, strength_clip, air in entries:
+        target = "" if on_mismatch == "ignore" else _canonical_family(model_family(model))
+        for name, strength_model, strength_clip, air, base in entries:
+            # a LoRA for another architecture loads without complaint and just
+            # degrades the image — the one failure mode nothing else reports
+            declared = _canonical_family(base)
+            if target and declared and declared != target:
+                note = (
+                    f"LoRA '{name}' was trained for {declared}, but the connected "
+                    f"model is {target} — results will be poor"
+                )
+                if on_mismatch == "error":
+                    raise ValueError(
+                        f"{note}. Pick a {target} LoRA, or set on_mismatch to "
+                        "'warn'/'skip' on the LoRA Apply (MRLN) node."
+                    )
+                if on_mismatch == "skip":
+                    logger.warning("MRLN LoRA Apply: %s — skipped", note)
+                    continue
+                logger.warning("MRLN LoRA Apply: %s (applied anyway)", note)
             real, available = lookup(name)
             if real is None and on_missing == "download" and air:
                 # the workflow can heal itself without the Composer: fetch by

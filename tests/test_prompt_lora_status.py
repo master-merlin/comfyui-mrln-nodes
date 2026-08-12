@@ -160,14 +160,17 @@ def loras_json(air=AIR, name="kits/hycade.safetensors"):
     return json.dumps([entry])
 
 
-def test_on_missing_widget_is_optional_and_last(monkeypatch):
+def test_optional_widgets_are_append_only(monkeypatch):
     inputs = node_class().INPUT_TYPES()
-    assert "on_missing" in inputs["optional"]
     options, spec = inputs["optional"]["on_missing"]
     assert options == ["error", "skip", "download"]
     assert spec["default"] == "error"  # never surprise a user with a download
-    # widgets_values is positional: on_missing must be the LAST input
-    assert [*inputs["required"], *inputs["optional"]][-1] == "on_missing"
+    options, spec = inputs["optional"]["on_mismatch"]
+    assert options == ["warn", "skip", "error", "ignore"]
+    assert spec["default"] == "warn"  # family detection is best-effort: advise
+    # widgets_values is positional — new widgets APPEND, never reorder
+    order = [*inputs["required"], *inputs["optional"]]
+    assert order[-2:] == ["on_missing", "on_mismatch"]
 
 
 def test_missing_lora_errors_by_default(monkeypatch):
@@ -262,3 +265,101 @@ def test_section_payload_carries_child_slots(lib):
 def test_items_without_children_report_an_empty_list(lib):
     _status, body = promptapi.handle_section(lib, {"slug": "lora/kits"})
     assert all(item["slots"] == [] for item in body["items"])
+
+
+# -- base-model compatibility ------------------------------------------------
+
+
+def fake_model(class_name):
+    """A stand-in for a loaded MODEL: ComfyUI wraps the architecture object
+    on .model, which is what the family sniffer reads."""
+    inner = type(class_name, (), {})()
+    return types.SimpleNamespace(model=inner)
+
+
+@pytest.mark.parametrize(
+    "class_name,family",
+    [
+        ("Flux", "flux1"),
+        ("SDXL", "sdxl"),
+        ("SDXLRefiner", "sdxl"),
+        ("QwenImage", "qwen"),
+        ("BaseModel", ""),  # unknown architecture disables the check
+    ],
+)
+def test_model_family_detection(class_name, family):
+    from mrln.nodes.prompt import model_family
+
+    assert model_family(fake_model(class_name)) == family
+
+
+def test_model_family_never_raises():
+    from mrln.nodes.prompt import model_family
+
+    assert model_family(None) == ""
+    assert model_family(object()) == ""
+
+
+def test_pony_and_illustrious_count_as_sdxl():
+    from mrln.nodes.prompt import _canonical_family
+
+    assert _canonical_family("pony") == "sdxl"
+    assert _canonical_family("illustrious") == "sdxl"
+    assert _canonical_family("FLUX1") == "flux1"
+
+
+def mismatched(name="kits/hycade.safetensors"):
+    return json.dumps([{"lora": name, "base": "flux1"}])
+
+
+def test_mismatch_warns_but_still_applies(monkeypatch, caplog):
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    fake_comfy(monkeypatch)
+    _model, clip = node_class()().execute(model=fake_model("SDXL"), clip="C", loras=mismatched())
+    assert clip == "C+lora"  # warn = applied anyway, the user decides
+    assert any("trained for flux1" in r.message for r in caplog.records)
+
+
+def test_mismatch_skip_leaves_the_lora_out(monkeypatch):
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    loaded = fake_comfy(monkeypatch)
+    sentinel = fake_model("SDXL")
+    model, clip = node_class()().execute(
+        model=sentinel, clip="C", loras=mismatched(), on_mismatch="skip"
+    )
+    assert (model, clip) == (sentinel, "C") and loaded == []
+
+
+def test_mismatch_error_names_both_families(monkeypatch):
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    fake_comfy(monkeypatch)
+    with pytest.raises(ValueError, match=r"trained for flux1.*model is sdxl"):
+        node_class()().execute(
+            model=fake_model("SDXL"), clip="C", loras=mismatched(), on_mismatch="error"
+        )
+
+
+def test_matching_family_is_silent(monkeypatch, caplog):
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    fake_comfy(monkeypatch)
+    node_class()().execute(
+        model=fake_model("Flux"), clip="C", loras=mismatched(), on_mismatch="error"
+    )
+    assert not any("trained for" in r.message for r in caplog.records)
+
+
+def test_undeclared_lora_is_never_a_mismatch(monkeypatch):
+    """Most user LoRAs declare no family — they must not spam warnings."""
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    fake_comfy(monkeypatch)
+    node_class()().execute(
+        model=fake_model("SDXL"), clip="C", loras=loras_json(air=""), on_mismatch="error"
+    )
+
+
+def test_ignore_disables_the_check(monkeypatch):
+    fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
+    fake_comfy(monkeypatch)
+    node_class()().execute(
+        model=fake_model("SDXL"), clip="C", loras=mismatched(), on_mismatch="ignore"
+    )

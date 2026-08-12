@@ -69,8 +69,27 @@ def _lora_entries(resolved):
         comment = str(data.get("comment") or "").strip()
         if comment.lower().startswith("urn:air:"):
             entry["air"] = comment
+        base = lora_base_family(data)
+        if base:
+            entry["base"] = base
         entries.append(entry)
     return entries, warnings
+
+
+def lora_base_family(data):
+    """The base-model family a LoRA was trained for: the item's explicit
+    data.base wins, else the ecosystem segment of its Civitai AIR urn
+    (urn:air:<eco>:lora:…). '' when the item declares neither — a LoRA of
+    unknown family is never reported as a mismatch."""
+    explicit = str((data or {}).get("base") or "").strip().lower()
+    if explicit:
+        return explicit
+    comment = str((data or {}).get("comment") or "").strip()
+    if comment.lower().startswith("urn:air:"):
+        parts = comment.split(":")
+        if len(parts) > 2 and parts[2]:
+            return parts[2].strip().lower()
+    return ""
 
 
 def lora_entries(resolved):

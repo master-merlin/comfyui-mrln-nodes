@@ -167,6 +167,9 @@ def test_lora_entries_keep_authored_names_and_carry_air(lib):
             # the comment's AIR urn rides along: the wire tells a machine
             # missing the file where to get it
             "air": "urn:air:sdxl:lora:civitai:333@444",
+            # …and its ecosystem segment names the base family, so LoRA Apply
+            # can warn when the connected model is a different architecture
+            "base": "sdxl",
         }
     ]
     # a plain comment is NOT an air field
@@ -182,9 +185,12 @@ def test_parse_loras_json_roundtrip_and_errors():
     entries = parse_loras_json(
         '[{"lora": "a.safetensors", "strength_model": 0.5}, {"lora": "b", "strength_clip": 0.7}]'
     )
-    assert entries == [("a.safetensors", 0.5, 0.5, ""), ("b", 1.0, 0.7, "")]
+    assert entries == [("a.safetensors", 0.5, 0.5, "", ""), ("b", 1.0, 0.7, "", "")]
     entries = parse_loras_json('[{"lora": "x", "air": "urn:air:sdxl:lora:civitai:1@2"}]')
-    assert entries == [("x", 1.0, 1.0, "urn:air:sdxl:lora:civitai:1@2")]
+    assert entries == [("x", 1.0, 1.0, "urn:air:sdxl:lora:civitai:1@2", "")]
+    # an explicit base rides the wire for the compatibility check
+    entries = parse_loras_json('[{"lora": "x", "base": "FLUX1"}]')
+    assert entries == [("x", 1.0, 1.0, "", "flux1")]
     with pytest.raises(ValueError, match="not valid JSON"):
         parse_loras_json("{broken")
     with pytest.raises(ValueError, match="missing the 'lora'"):
