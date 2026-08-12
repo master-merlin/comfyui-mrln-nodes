@@ -36,7 +36,7 @@ full replacement). Same-name templates replace the factory file entirely.
 
 ### Factory library
 
-202 sections / ~2800 curated items across dimension folders every template
+208 sections / ~2900 curated items across dimension folders every template
 shares (`location` incl. anime/sci-fi/fantasy/historical/underwater/coastal
 places, `lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
 particles/reentry, `viewpoint`, `camera` with film stocks and real lens/
@@ -72,6 +72,25 @@ combination reads like a specialist wrote the brief:
 The human-domain content is strictly adults-only and kept at a tasteful
 glamour level (lint-enforced); templates carry matching safety negatives by
 default.
+
+### LoRA Lab
+
+`loralab/*` sections curate well-known community LoRAs as ordinary library
+items — detail boosters, film looks, portrait realism, sci-fi and anime style
+movers, and vehicle icons — each with its trained trigger woven into the item
+text, its authored strengths, and its Civitai AIR urn. The three
+`showcase/*` templates put them to work end to end: compose, and the drawn
+LoRAs leave through the `loras` output into **LoRA Apply** while their trigger
+words ride the prompt; a file you don't have yet is offered for download by
+its AIR, verified by SHA256, and the item is healed to point at it. Every
+LoRA-bearing slot pins exactly one base-model family by tag, so a random draw
+can never stack a Flux LoRA onto an SDXL render.
+
+A LoRA item may carry `data.lora_info` — `{name, creator, base, url, about}`
+— a render-inert provenance card naming the model, its creator, its base
+family, its Civitai page and what it does. It never reaches the prompt or any
+output wire; it exists so the Composer can tell you where a file came from
+and why it is on the list.
 
 Factory updates never strand your saved templates: renamed section slugs
 keep resolving through shipped aliases, and a template whose section
