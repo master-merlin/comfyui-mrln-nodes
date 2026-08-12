@@ -101,6 +101,107 @@ def test_location_items_are_orthogonal_or_declared(lib):
                 )
 
 
+# -- Referent anchoring (a section name is not a prompt) ----------------------
+
+NAVAL_WORDS = re.compile(
+    r"\b(dreadnought|frigate|corvette|battleship|cruiser|destroyer|galleon|schooner"
+    r"|trawler|freighter|liner|tanker|skiff|barge|flotilla|armada|convoy|fleet"
+    r"|flagship|carrier|hull|bow|stern|amidships|keel|gunwale|prow|quarterdeck"
+    r"|forecastle|at anchor|anchorage|moored|drydock)s?\b",
+    re.IGNORECASE,
+)
+SPACEFLIGHT_ANCHOR = re.compile(
+    r"\b(spacecraft|spaceship|starship|starfighter|starfaring|starfarer|starliner"
+    r"|star[- ](?:dreadnought|freighter|liner|carrier|cruiser|destroyer|frigate)"
+    r"|interstellar|sublight|faster-than-light|ftl|hyperspace|lightspeed|warp"
+    r"|void|vacuum|orbit|orbital|de-?orbit|re-?entry|atmospheric entry|planetfall"
+    r"|thruster|fusion[- ]drive|ion[- ]drive|plasma[- ]drive|drive bell|drive plume"
+    r"|engine bell|main drive|solar sail|zero-?g|null-?gravity|repulsor|antigrav)s?\b",
+    re.IGNORECASE,
+)
+
+
+def referent_defect(text, text_short):
+    """The rule, as a function: text DOMINATED by seagoing-vessel vocabulary
+    (>=2 distinct naval terms) must also name itself as spaceflight hardware,
+    and text_short must carry that anchor too. Returns a reason or None."""
+    naval = {m.group(0).lower() for m in NAVAL_WORDS.finditer(text)}
+    naval_short = {m.group(0).lower() for m in NAVAL_WORDS.finditer(text_short)}
+    if len(naval) >= 2:
+        if not SPACEFLIGHT_ANCHOR.search(text):
+            return (
+                f"naval vocabulary {sorted(naval)} with no spaceflight anchor — name the "
+                "OBJECT (starship / interstellar / fusion-drive / orbital), not the environment"
+            )
+        if not SPACEFLIGHT_ANCHOR.search(text_short):
+            return (
+                f"text_short {text_short!r} drops the spaceflight anchor — short is what "
+                "tag-style models actually receive"
+            )
+    elif len(naval_short) >= 2 and not SPACEFLIGHT_ANCHOR.search(text_short):
+        return f"text_short {text_short!r} is naval {sorted(naval_short)} with no anchor"
+    return None
+
+
+def test_scifi_vehicles_anchor_their_referent(lib):
+    """A SECTION NAME IS NOT A PROMPT. Slug ('vehicle/scifi-fleet') and label
+    ('The Fleet') never reach the rendered text, so an item written purely in
+    wet-navy vocabulary describes a BOAT to anything reading only that line —
+    a base model rides the surrounding template's gestalt, but an LLM asked to
+    rewrite it into prose resolves the dominant referent and lands on an
+    aircraft carrier with thrusters bolted on.
+
+    The anchor names the OBJECT, never the environment: these items also get
+    drawn mid-atmospheric-entry, where 'in vacuum' would contradict the scene.
+
+    Deliberately narrow. Scoped to vehicle/ sci-fi sections, so incidental sea
+    words elsewhere stay legal — 'cloud deck' in a location, an anatomical
+    'keel' on a creature, barnacled wreckage on an actual beach — and
+    vehicle/ship/* keeps its naval words because those really are boats. The
+    threshold is 2 so a single flavour word ('speeder skiff', 'drone-carrier
+    gunship') never trips it. A one-word item can still be bad prose; this
+    test is the floor, not the whole standard."""
+    for slug in lib.section_slugs():
+        if not slug.startswith("vehicle/"):
+            continue
+        section = lib.load_section(slug)
+        if "scifi" not in section.tags and "scifi" not in slug:
+            continue
+        for item in section.items:
+            reason = referent_defect(item.text, item.text_short or "")
+            assert reason is None, f"'{slug}/{item.name}': {reason}"
+
+
+def test_referent_rule_catches_a_new_defect():
+    """The rule must catch newly authored content, not just today's ten items:
+    the pre-fix lines are the regression fixtures."""
+    assert referent_defect(
+        "a wedge of kilometer-class dreadnoughts in staggered echelon, gun batteries the "
+        "size of city blocks along each flank, escort frigates holding tight to the hulls",
+        "dreadnought wedge formation",
+    )
+    assert referent_defect(
+        "a fleet carrier at the center of its screen, launch bays glowing along the "
+        "ventral spine, fighter wings streaming out of the catapult decks",
+        "carrier with fighter screen",
+    )
+    # anchored long text, un-anchored short: SDXL/Pony still get the boat
+    assert referent_defect(
+        "a battle group limping home, scorched hulls open to vacuum, one cruiser under tow",
+        "scarred returning battle group",
+    )
+    # ...and stays quiet on legitimate incidental use
+    assert referent_defect("a low desert speeder skiff kicking up twin dust ribbons", "") is None
+    assert (
+        referent_defect(
+            "a drone-carrier gunship on station, launch cells cycling along its flanks",
+            "drone-carrier gunship",
+        )
+        is None
+    )
+    assert referent_defect("a starship carrier at the head of its escort screen", "") is None
+
+
 def test_constraint_demo_present(lib):
     """The neon/night dependency showcase must survive content edits."""
     urban = lib.load_section("location/urban")

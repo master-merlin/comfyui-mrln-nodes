@@ -7,10 +7,12 @@ import json
 
 from .. import promptlib as pl
 
-# lora.py owns the secret registry (it imports neither this module nor anything
-# reaching back here). Module object, not the name — same seam style as
-# decompose.py: every NEW client-visible string goes through _scrub_secrets.
-from . import lora
+# Module objects, not names — the same seam style as decompose.py, so a test
+# can patch either module and every caller here sees it. lora.py owns the
+# secret registry (every NEW client-visible string goes through
+# _scrub_secrets); thumbs.py owns the two-tier thumbnail layout, and the
+# listings below only tag each row with whether a thumbnail exists.
+from . import lora, thumbs
 from .core import (
     ApiError,
     _factory_raw,
@@ -73,6 +75,13 @@ def handle_library(lib, payload):
         except pl.PromptLibError as exc:
             entry.update(label=slug, error=str(exc))
         sections.append(entry)
+    # One flag per row so the card grid knows whether to request a tile or draw
+    # its domain glyph. Index-backed (thumbs.thumb_index): one directory walk
+    # per tier for the whole listing, not a stat per row — 268 rows of
+    # per-entry path resolution measured 362 ms on Windows, the index 0.2 ms
+    # with no thumbnails on disk and 18 ms with all 268 present.
+    thumbs.annotate_entries(lib, templates, "templates")
+    thumbs.annotate_entries(lib, sections, "sections")
     factory_profiles = set(_profiles_file(lib.factory_root))
     user_profiles = set(_profiles_file(lib.user_root))
     profiles = [
@@ -115,7 +124,10 @@ def handle_template(lib, payload):
         if ref in pools or ref in missing_refs:  # twin slots on one section share a pool
             continue
         try:
-            pools[ref] = _pool(lib, ref)
+            # LoRA-bearing pool rows get has_thumb: an item's face is its
+            # LoRA's Civitai preview (thumbs.annotate_items says why nothing
+            # else is tagged)
+            pools[ref] = thumbs.annotate_items(lib, _pool(lib, ref))
         except pl.SectionNotFoundError:
             missing_refs.append(ref)  # dead ref: detail still loads, slot flags missing
     detail = {
@@ -153,6 +165,7 @@ def handle_template(lib, payload):
         "slug": resolved,
         "requested": slug,  # so a client that asked under a retired name can correlate
         "tier": lib.tier_of("templates", resolved),
+        "has_thumb": thumbs.has_thumb(lib, "templates", resolved),
         "template": detail,
         "raw": _raw_file(lib, "templates", resolved),
         "pools": pools,
@@ -172,32 +185,36 @@ def handle_section(lib, payload):
         "slug": resolved,
         "requested": slug,
         "tier": tier,
+        "has_thumb": thumbs.has_thumb(lib, "sections", resolved),
         "merged": section.merged,
         "replaces": section.replaces,
         "label": section.label,
         "description": section.description,
         "negative": section.negative,
         "tags": list(section.tags),
-        "items": [
-            {
-                "name": item.name,
-                "text": item.text,
-                "negative": item.negative,
-                "weight": item.weight,
-                "data": item.data,
-                "tags": list(item.tags),
-                "excludes": list(item.excludes),
-                "requires": list(item.requires),
-                "hidden": item.hidden,
-                "origin": item.origin or tier,
-                # child slots MUST round-trip: the editor writes items back
-                # whole and a user item replaces a factory one by name, so
-                # omitting these silently destroys every nested item
-                # (human/profile carries 17) the moment a row is edited
-                "slots": [pl.dump_slot(slot) for slot in item.slots],
-            }
-            for item in section.items
-        ],
+        "items": thumbs.annotate_items(
+            lib,
+            [
+                {
+                    "name": item.name,
+                    "text": item.text,
+                    "negative": item.negative,
+                    "weight": item.weight,
+                    "data": item.data,
+                    "tags": list(item.tags),
+                    "excludes": list(item.excludes),
+                    "requires": list(item.requires),
+                    "hidden": item.hidden,
+                    "origin": item.origin or tier,
+                    # child slots MUST round-trip: the editor writes items back
+                    # whole and a user item replaces a factory one by name, so
+                    # omitting these silently destroys every nested item
+                    # (human/profile carries 17) the moment a row is edited
+                    "slots": [pl.dump_slot(slot) for slot in item.slots],
+                }
+                for item in section.items
+            ],
+        ),
         "raw": _raw_file(lib, "sections", resolved),
         "factory_raw": _factory_raw(lib, "sections", resolved),
         "fingerprint": fingerprint,
@@ -207,7 +224,7 @@ def handle_section(lib, payload):
 @_guarded
 def handle_items(lib, payload):
     ref = _require_str(payload, "ref")
-    return 200, {"ref": ref, "items": _pool(lib, ref)}
+    return 200, {"ref": ref, "items": thumbs.annotate_items(lib, _pool(lib, ref))}
 
 
 @_guarded

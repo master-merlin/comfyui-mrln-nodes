@@ -305,6 +305,9 @@ def handle_lora_civitai(lib, payload):
     out["catchword"] = render_catchword(
         out["trained_words"], default_trigger_selection(out["trained_words"])
     )
+    from . import thumbs  # local: thumbs imports lora, so not at module load
+
+    out["preview"] = thumbs.capture_lora_preview(data, file=real, lib=lib)
     return 200, out
 
 
@@ -558,6 +561,13 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
                 (stat.st_mtime_ns, stat.st_size),
                 digest.hexdigest(),
             )
+        # Give the LoRA a face while we are already holding the version
+        # response. Runs only after SHA verification and os.replace, and only
+        # decides to fetch when a safe image exists — never blocks, never
+        # raises, and a missing preview is normal.
+        from . import thumbs  # local: thumbs imports lora, so not at module load
+
+        thumbs.capture_lora_preview(meta, file=filename)
         status["name"] = filename
         return filename
     except Exception:

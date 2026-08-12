@@ -35,6 +35,7 @@ from .lora import (
     lora_status,
 )
 from .settings import handle_profile, handle_save_profile, handle_save_settings, handle_settings
+from .thumbs import handle_lora_preview, handle_thumb, handle_thumb_delete, handle_thumb_set
 
 ROUTES = (
     ("get", "/mrln/prompt/library", handle_library, False),
@@ -67,6 +68,13 @@ ROUTES = (
     # Composer's existing plan preview renders them with no new UI
     ("post", "/mrln/prompt/import-wildcards", handle_import_wildcards, True),
     ("post", "/mrln/prompt/import-styles", handle_import_styles, True),
+    # thumbnails: the GET is the one route that answers with bytes rather than
+    # JSON. 'thumb-delete' is a POST because the route-table lint freezes the
+    # methods to get/post — the pack already spells this idea /delete
+    ("get", "/mrln/prompt/thumb", handle_thumb, False),
+    ("post", "/mrln/prompt/thumb", handle_thumb_set, True),
+    ("post", "/mrln/prompt/thumb-delete", handle_thumb_delete, True),
+    ("post", "/mrln/prompt/lora-preview", handle_lora_preview, True),
     ("get", "/mrln/prompt/history", handle_history, False),
     # clearing is destructive, so it takes JSON true like every other start
     # flag here — a query string can never trigger it
@@ -175,11 +183,26 @@ def register_routes():
                 # rides POST JSON bodies exclusively, so a bare cross-site
                 # GET (no CORS preflight) can never trigger a download
                 payload.pop("start", None)
+                # only the thumbnail route reads this; passing it conditionally
+                # keeps every other GET payload exactly as it was
+                stamp = request.headers.get("If-Modified-Since")
+                if stamp:
+                    payload["if_modified_since"] = stamp
             # handlers are pure/synchronous — run them in the executor so
             # they never block (or wait behind) the busy boot-time loop
             loop = asyncio.get_running_loop()
             status, data = await loop.run_in_executor(None, handler, pl.open_library(), payload)
-            return web.json_response(data, status=status)
+            # every handler answers with a dict except the thumbnail GET, which
+            # serves image bytes; Content-Type is passed separately because
+            # aiohttp refuses it duplicated inside headers
+            if isinstance(data, dict):
+                return web.json_response(data, status=status)
+            return web.Response(
+                status=status,
+                body=data.body,
+                content_type=data.content_type,
+                headers=data.headers,
+            )
 
         return endpoint
 
