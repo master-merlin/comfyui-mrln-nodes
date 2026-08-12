@@ -1,5 +1,53 @@
 /* MRLN Prompt Composer — everything scoped under .mrln-composer.
-   Colors ride ComfyUI theme variables with dark fallbacks. */
+   Surfaces (backgrounds, borders, text) ride ComfyUI theme variables with
+   dark fallbacks. State accents ride the --mrln-* token palette below:
+   every accent literal in this file lives in exactly one of these two
+   blocks, so re-theming is a token edit, never a hunt. */
+
+/* Accent palette — DARK values are the pack's shipped look, unchanged.
+   Deliberately NOT var(--error-text): ComfyUI's stock dark --error-text is
+   #f44, which would visibly brighten every red here, and its light value
+   (#F44336) only reaches 3.7:1 on a white panel / 2.2:1 on the light input
+   surface — below the contrast this palette guarantees. */
+.mrln-composer {
+  --mrln-accent: #4a8; /* structure/border green */
+  --mrln-accent-soft: #6ca; /* same family, text weight */
+  --mrln-warn: #a84; /* override amber, border */
+  --mrln-warn-soft: #ca8; /* override amber, text */
+  --mrln-info: #58c; /* merged blue, border */
+  --mrln-info-soft: #8ae; /* merged blue, text */
+  --mrln-mute: #e77; /* slot mute state */
+  --mrln-solo: #dc5; /* slot solo state */
+  --mrln-new: #77ff00; /* brand accent: the "new template" affordance */
+  --mrln-error: #e66; /* error/armed/missing */
+  --mrln-error-soft: #e88; /* error, text weight */
+  --mrln-error-dim: #a55; /* broken/missing container borders */
+}
+
+/* Light ComfyUI palettes. The frontend stamps the `dark-theme` class on the
+   html element for every dark palette (immediate watcher, set long before
+   this panel can render) and removes it for light ones, so "no dark-theme
+   anywhere" is the only light signal available to CSS — prefers-color-scheme
+   is the OS setting, not ComfyUI's, and would wrongly repaint a dark panel.
+   The :has() guard covers builds that stamp the body element instead; where
+   :has() is unsupported the whole selector drops and the dark values simply
+   stay. Values are the same hues darkened to >=4.5:1 (text) / >=3:1 (borders,
+   graphics) against BOTH light surfaces (--comfy-menu-bg #fff and
+   --comfy-input-bg #c9c9c9). */
+:root:not(.dark-theme):not(:has(body.dark-theme)) .mrln-composer {
+  --mrln-accent: #2a7259;
+  --mrln-accent-soft: #1d5c48;
+  --mrln-warn: #7f6329;
+  --mrln-warn-soft: #6b4f26;
+  --mrln-info: #3268b0;
+  --mrln-info-soft: #26518f;
+  --mrln-mute: #a22222;
+  --mrln-solo: #63530c;
+  --mrln-new: #2b5c00;
+  --mrln-error: #a00f0f;
+  --mrln-error-soft: #8f2222;
+  --mrln-error-dim: #864040;
+}
 
 .mrln-composer {
   display: flex;
@@ -88,11 +136,11 @@
   opacity: 0.9;
   white-space: nowrap;
 }
-.mrln-chip.mrln-user { border-color: #4a8; color: #6ca; }
+.mrln-chip.mrln-user { border-color: var(--mrln-accent); color: var(--mrln-accent-soft); }
 .mrln-chip.mrln-factory { opacity: 0.6; }
-.mrln-chip.mrln-override { border-color: #a84; color: #ca8; }
-.mrln-chip.mrln-merged { border-color: #58c; color: #8ae; }
-.mrln-chip.mrln-missing { border-color: #e66; color: #e88; }
+.mrln-chip.mrln-override { border-color: var(--mrln-warn); color: var(--mrln-warn-soft); }
+.mrln-chip.mrln-merged { border-color: var(--mrln-info); color: var(--mrln-info-soft); }
+.mrln-chip.mrln-missing { border-color: var(--mrln-error); color: var(--mrln-error-soft); }
 button.mrln-chip-btn { cursor: pointer; font: inherit; font-size: 10px; }
 button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; }
 
@@ -106,11 +154,11 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
   white-space: nowrap;
 }
 .mrln-composer button.mrln-btn:hover { background: var(--comfy-menu-bg, #333); }
-.mrln-composer button.mrln-primary { border-color: #4a8; }
+.mrln-composer button.mrln-primary { border-color: var(--mrln-accent); }
 /* two-step confirm: first click arms (question label), second executes */
 .mrln-composer button.mrln-armed {
-  border-color: #e66 !important;
-  color: #e88;
+  border-color: var(--mrln-error) !important;
+  color: var(--mrln-error-soft);
   opacity: 1;
 }
 .mrln-actions { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -152,7 +200,14 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
   border-color: var(--border-color, #444);
 }
 .mrln-ms .mrln-mini:hover { opacity: 1; }
-.mrln-mini.mrln-new-tpl { color: #77FF00; font-weight: bold; }
+/* Must out-specify `.mrln-composer button.mrln-mini` (0,2,1), which sets
+   `color: inherit` — a bare `.mrln-mini.mrln-new-tpl` (0,2,0) loses to it and
+   the accent silently never rendered. Same reason the m-on/s-on rules below
+   carry the same prefix. */
+.mrln-composer button.mrln-mini.mrln-new-tpl {
+  color: var(--mrln-new);
+  font-weight: bold;
+}
 .mrln-combine-picks {
   max-height: 190px;
   overflow-y: auto;
@@ -164,8 +219,16 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
 .mrln-combine-chosen { display: flex; flex-direction: column; gap: 3px; }
 .mrln-import-plan { margin: 4px 0; padding-left: 16px; }
 .mrln-import-plan li { margin: 2px 0; }
-.mrln-mini.mrln-m-on { opacity: 1 !important; color: #e77; border-color: #e77 !important; }
-.mrln-mini.mrln-s-on { opacity: 1 !important; color: #dc5; border-color: #dc5 !important; }
+.mrln-composer button.mrln-mini.mrln-m-on {
+  opacity: 1 !important;
+  color: var(--mrln-mute);
+  border-color: var(--mrln-mute) !important;
+}
+.mrln-composer button.mrln-mini.mrln-s-on {
+  opacity: 1 !important;
+  color: var(--mrln-solo);
+  border-color: var(--mrln-solo) !important;
+}
 .mrln-slot.mrln-muted { opacity: 0.45; }
 .mrln-slot.mrln-muted .mrln-ms { opacity: 1; }
 
@@ -178,8 +241,8 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
 }
 .mrln-slot:hover .mrln-drag { opacity: 0.8; }
 .mrln-dragging { opacity: 0.45; }
-.mrln-drop-before { box-shadow: 0 -2px 0 0 #4a8; }
-.mrln-drop-after { box-shadow: 0 2px 0 0 #4a8; }
+.mrln-drop-before { box-shadow: 0 -2px 0 0 var(--mrln-accent); }
+.mrln-drop-after { box-shadow: 0 2px 0 0 var(--mrln-accent); }
 
 textarea.mrln-auto {
   overflow-y: auto;
@@ -221,12 +284,12 @@ textarea.mrln-auto {
 .mrln-nest {
   margin: 2px 0 2px 10px;
   padding-left: 8px;
-  border-left: 2px solid #4a8;
+  border-left: 2px solid var(--mrln-accent);
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
-.mrln-nest > .mrln-field-name { margin: 0; color: #6ca; opacity: 0.9; }
+.mrln-nest > .mrln-field-name { margin: 0; color: var(--mrln-accent-soft); opacity: 0.9; }
 .mrln-slot.mrln-nest-row {
   padding: 3px 5px;
   background: var(--comfy-menu-bg, #202020);
@@ -237,12 +300,12 @@ textarea.mrln-auto {
   font-size: 11px;
   opacity: 0.8;
   padding: 2px 4px;
-  color: #6ca;
+  color: var(--mrln-accent-soft);
 }
 .mrln-nest-branch > summary:hover { background: var(--comfy-menu-bg, #2a2a2a); }
 .mrln-nest-branch > .mrln-nest { margin-top: 2px; }
 .mrln-variant-head { border-style: dashed; }
-.mrln-slot.mrln-broken { border-color: #a55; }
+.mrln-slot.mrln-broken { border-color: var(--mrln-error-dim); }
 .mrln-items-table tr.mrln-hidden-item td { opacity: 0.45; text-decoration: line-through; }
 .mrln-items-table tr.mrln-lora-row td { padding-top: 0; }
 .mrln-inline > input.mrln-lora-filter { flex: 0 0 90px; }
@@ -253,8 +316,8 @@ textarea.mrln-auto {
 .mrln-items-table tr.mrln-lora-row .mrln-inline input { min-width: 34px; }
 .mrln-composer input.mrln-input-error,
 .mrln-composer textarea.mrln-input-error {
-  border-color: #e66;
-  box-shadow: 0 0 0 1px #e66;
+  border-color: var(--mrln-error);
+  box-shadow: 0 0 0 1px var(--mrln-error);
 }
 
 /* '{' reference assist: menu anchored under the field */
@@ -296,8 +359,11 @@ textarea.mrln-auto {
   white-space: nowrap;
 }
 .mrln-lora-menu { max-height: 260px; }
-.mrln-brace-item.mrln-lora-dir { font-weight: bold; color: #6ca; }
-.mrln-brace-item.mrln-lora-sel { border-left: 2px solid #4a8; background: var(--comfy-input-bg, #1a1a1a); }
+.mrln-brace-item.mrln-lora-dir { font-weight: bold; color: var(--mrln-accent-soft); }
+.mrln-brace-item.mrln-lora-sel {
+  border-left: 2px solid var(--mrln-accent);
+  background: var(--comfy-input-bg, #1a1a1a);
+}
 .mrln-items-table tr.mrln-hidden-item td.mrln-w-act { text-decoration: none; opacity: 1; }
 .mrln-items-table .mrln-w-act { width: 46px; white-space: nowrap; }
 .mrln-items-table .mrln-w-origin { width: 24px; }
@@ -348,7 +414,7 @@ textarea.mrln-auto {
   font-size: 11px;
 }
 details.mrln-fold .mrln-pre { max-height: 18vh; }
-.mrln-error { color: #e66; white-space: pre-wrap; }
+.mrln-error { color: var(--mrln-error); white-space: pre-wrap; }
 .mrln-note { opacity: 0.7; font-size: 11px; margin: 0; }
 .mrln-loading { padding: 14px 4px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
 .mrln-spinner {
@@ -361,7 +427,7 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
   animation: mrln-spin 0.8s linear infinite;
 }
 @keyframes mrln-spin { to { transform: rotate(360deg); } }
-.mrln-modified { color: #ca8; }
+.mrln-modified { color: var(--mrln-warn-soft); }
 
 .mrln-lib-filter { margin: 2px 0; }
 .mrln-tree { margin: 0; padding: 0; list-style: none; }
@@ -402,7 +468,7 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
   flex-direction: column;
   gap: 4px;
   padding: 5px 6px;
-  border: 1px solid #a55;
+  border: 1px solid var(--mrln-error-dim);
   border-radius: 6px;
 }
 .mrln-lora-banner li { word-break: break-word; }
@@ -411,7 +477,6 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 .mrln-items-table td { padding: 2px; vertical-align: top; }
 .mrln-items-table .mrln-w-name { width: 26%; }
 .mrln-items-table .mrln-w-weight { width: 52px; }
-.mrln-items-table .mrln-w-del { width: 24px; }
 
 details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font-size: 11px; }
 .mrln-sep { border: none; border-top: 1px solid var(--border-color, #333); margin: 2px 0; }

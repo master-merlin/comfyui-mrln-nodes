@@ -12,7 +12,9 @@ app.registerExtension({
     if (nodeData?.name !== "MRLN_ShowText") return;
 
     function showText(node, message) {
-      const text = Array.isArray(message?.text) ? message.text.join("") : "";
+      // one entry per execution; several only when ComfyUI list-maps the node
+      // over a list input — a blank line keeps those values apart
+      const text = Array.isArray(message?.text) ? message.text.join("\n\n") : "";
       try {
         let widget = (node.widgets ?? []).find((w) => w.name === "display");
         if (!widget) {

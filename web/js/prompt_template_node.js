@@ -9,12 +9,14 @@ import { app } from "../../scripts/app.js";
 
 app.registerExtension({
   name: "mrln.promptTemplateNode",
-  beforeRegisterNodeDef(nodeType, nodeData) {
-    if (nodeData?.name !== "MRLN_PromptTemplate") return;
-    const onNodeCreated = nodeType.prototype.onNodeCreated;
-    nodeType.prototype.onNodeCreated = function () {
-      onNodeCreated?.apply(this, arguments);
-      const widgets = this.widgets ?? [];
+  nodeCreated(node) {
+    // the extension-level hook fires for every constructed node with its
+    // widgets already built — prototype onNodeCreated is NOT reliably
+    // invoked across frontend versions (where it does not fire, this whole
+    // enhancement would silently not exist)
+    if ((node.comfyClass ?? node.type) !== "MRLN_PromptTemplate") return;
+    try {
+      const widgets = node.widgets ?? [];
       const templateWidget = widgets.find((w) => w.name === "template");
       const selectionWidget = widgets.find((w) => w.name === "selection");
       if (!templateWidget || !selectionWidget) return;
@@ -26,9 +28,9 @@ app.registerExtension({
       let lastTemplate = templateWidget.value;
       // Workflow loads assign widget values without firing callbacks on
       // legacy frontends — resync so a post-load same-value re-pick is not
-      // mistaken for a switch.
-      const onConfigure = this.onConfigure;
-      this.onConfigure = function (...args) {
+      // mistaken for a switch. Per-instance patch only, never the prototype.
+      const onConfigure = node.onConfigure;
+      node.onConfigure = function (...args) {
         const result = onConfigure?.apply(this, args);
         lastTemplate = templateWidget.value;
         return result;
@@ -42,10 +44,16 @@ app.registerExtension({
         if (changed && (selectionWidget.value ?? "") !== "") {
           selectionWidget.value = "";
           selectionWidget.callback?.("");
+          // change() notifies the frontend's change tracker — setDirtyCanvas
+          // alone is only a redraw flag, so without it a programmatic widget
+          // write can miss the serialized workflow
+          app.graph?.change?.();
           app.graph?.setDirtyCanvas(true, true);
         }
         return result;
       };
-    };
+    } catch (err) {
+      console.log("[MRLN] Prompt Template selection-clear enhancement unavailable:", err);
+    }
   },
 });
