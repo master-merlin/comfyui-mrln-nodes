@@ -489,11 +489,15 @@ class LoraApply:
     CATEGORY = category("prompt")
     DESCRIPTION = cleandoc(__doc__)
     FUNCTION = "execute"
-    RETURN_TYPES = ("MODEL", "CLIP")
-    RETURN_NAMES = ("model", "clip")
+    RETURN_TYPES = ("MODEL", "CLIP", "STRING")
+    RETURN_NAMES = ("model", "clip", "report")
     OUTPUT_TOOLTIPS = (
         "The model with every drawn LoRA applied at its authored strength.",
         "The CLIP with every drawn LoRA applied at its authored strength.",
+        "What actually happened, line by line: each LoRA applied with its "
+        "strengths, plus any base-model mismatch, missing file, skip or "
+        "download. Wire it into Show Text (MRLN) to see it in the graph — "
+        "silent degradation is the failure mode this catches.",
     )
 
     @classmethod
@@ -555,8 +559,9 @@ class LoraApply:
 
     def execute(self, model, clip, loras, on_missing="error", on_mismatch="warn"):
         entries = parse_loras_json(loras)
+        report = []
         if not entries:
-            return (model, clip)
+            return (model, clip, "no LoRA blocks drawn — model and clip pass through")
         import comfy.sd  # ComfyUI runtime only — keeps the pack importable anywhere
         import comfy.utils
         import folder_paths
@@ -585,8 +590,12 @@ class LoraApply:
                     )
                 if on_mismatch == "skip":
                     logger.warning("MRLN LoRA Apply: %s — skipped", note)
+                    report.append(f"⚠ SKIPPED {name} — trained for {declared}, model is {target}")
                     continue
                 logger.warning("MRLN LoRA Apply: %s (applied anyway)", note)
+                report.append(
+                    f"⚠ MISMATCH {name} — trained for {declared}, model is {target}; applied anyway"
+                )
             real, available = lookup(name)
             if real is None and on_missing == "download" and air:
                 # the workflow can heal itself without the Composer: fetch by
@@ -597,6 +606,7 @@ class LoraApply:
                 fetched = promptapi.download_lora_by_air(
                     pl.open_library(), air, filename=name.replace("\\", "/").rsplit("/", 1)[-1]
                 )
+                report.append(f"⬇ DOWNLOADED {fetched} from {air}")
                 real, available = lookup(fetched)
             if real is None:
                 if on_missing == "skip":
@@ -604,6 +614,10 @@ class LoraApply:
                         "MRLN LoRA Apply: '%s' not installed — skipped (trigger words "
                         "remain in the prompt, the LoRA's influence does not)",
                         name,
+                    )
+                    report.append(
+                        f"⚠ MISSING {name} — skipped; its trigger words are still in "
+                        "the prompt, its influence is not"
                     )
                     continue
                 hint = (
@@ -625,7 +639,16 @@ class LoraApply:
             logger.info(
                 "MRLN LoRA Apply: %s (model %.2f / clip %.2f)", real, strength_model, strength_clip
             )
-        return (model, clip)
+            report.append(
+                f"✓ {real} (model {strength_model:g} / clip {strength_clip:g})"
+                + (f" · {declared}" if declared else "")
+            )
+        applied = sum(1 for line in report if line.startswith("✓"))
+        issues = sum(1 for line in report if line.startswith("⚠"))
+        head = f"{applied} of {len(entries)} LoRA(s) applied"
+        head += f" onto {target}" if target else ""
+        head += f" · {issues} issue(s)" if issues else ""
+        return (model, clip, "\n".join([head, *report]))
 
 
 def parse_llm_spec(llm):

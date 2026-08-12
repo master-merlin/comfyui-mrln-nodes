@@ -185,8 +185,9 @@ def test_missing_lora_skip_passes_through(monkeypatch):
     fake_folder_paths(monkeypatch, [])
     fake_comfy(monkeypatch)
     node = node_class()()
-    model, clip = node.execute(model="M", clip="C", loras=loras_json(), on_missing="skip")
+    model, clip, report = node.execute(model="M", clip="C", loras=loras_json(), on_missing="skip")
     assert (model, clip) == ("M", "C")  # untouched, run continues
+    assert "MISSING" in report and "trigger words" in report
 
 
 def test_missing_lora_download_fetches_then_loads(monkeypatch):
@@ -205,7 +206,10 @@ def test_missing_lora_download_fetches_then_loads(monkeypatch):
         return "kits/hycade.safetensors"
 
     monkeypatch.setattr(api, "download_lora_by_air", fake_download)
-    model, clip = cls().execute(model="M", clip="C", loras=loras_json(), on_missing="download")
+    model, clip, report = cls().execute(
+        model="M", clip="C", loras=loras_json(), on_missing="download"
+    )
+    assert "DOWNLOADED" in report
     assert calls and calls[0][0] == AIR
     assert (model, clip) == ("M+lora", "C+lora")  # actually applied after the fetch
     assert loaded == ["/loras/kits/hycade.safetensors"]
@@ -315,19 +319,23 @@ def mismatched(name="kits/hycade.safetensors"):
 def test_mismatch_warns_but_still_applies(monkeypatch, caplog):
     fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
     fake_comfy(monkeypatch)
-    _model, clip = node_class()().execute(model=fake_model("SDXL"), clip="C", loras=mismatched())
+    _model, clip, report = node_class()().execute(
+        model=fake_model("SDXL"), clip="C", loras=mismatched()
+    )
     assert clip == "C+lora"  # warn = applied anyway, the user decides
     assert any("trained for flux1" in r.message for r in caplog.records)
+    assert "MISMATCH" in report and "applied anyway" in report
 
 
 def test_mismatch_skip_leaves_the_lora_out(monkeypatch):
     fake_folder_paths(monkeypatch, ["kits/hycade.safetensors"])
     loaded = fake_comfy(monkeypatch)
     sentinel = fake_model("SDXL")
-    model, clip = node_class()().execute(
+    model, clip, report = node_class()().execute(
         model=sentinel, clip="C", loras=mismatched(), on_mismatch="skip"
     )
     assert (model, clip) == (sentinel, "C") and loaded == []
+    assert report.startswith("0 of 1 LoRA(s) applied")
 
 
 def test_mismatch_error_names_both_families(monkeypatch):
