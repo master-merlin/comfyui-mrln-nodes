@@ -138,7 +138,7 @@ def _run_worker(
     return promptapi._LORA_DL_STATUS[AIR], calls, dest
 
 
-def test_worker_picks_primary_and_rides_token_in_query(tmp_path, monkeypatch):
+def test_worker_picks_primary_and_keeps_the_token_out_of_the_url(tmp_path, monkeypatch):
     status, calls, dest = _run_worker(tmp_path, monkeypatch, token="tok-SECRET-123")
     assert status["status"] == "done", status
     assert status["name"] == "bmw_m4_cs.safetensors"  # primary pick, not files[0]
@@ -148,8 +148,11 @@ def test_worker_picks_primary_and_rides_token_in_query(tmp_path, monkeypatch):
     assert "/api/v1/model-versions/444" in meta_req.full_url
     assert meta_req.has_header("Authorization")  # metadata may use the header
     assert dl_req.full_url.startswith("https://civitai.com/api/download/models/444")
-    assert "token=tok-SECRET-123" in dl_req.full_url  # query survives presigned redirects
-    assert not dl_req.has_header("Authorization")  # NEVER a header on the download
+    # The key now rides a header so it can never reach a reflected URL string.
+    # The query form survives only as the 401/403 presigned-CDN fallback —
+    # covered in tests/test_security_secrets.py.
+    assert dl_req.get_header("Authorization") == "Bearer tok-SECRET-123"
+    assert "token=" not in dl_req.full_url
     assert "tok-SECRET-123" not in json.dumps(status)  # the key is never echoed
 
 

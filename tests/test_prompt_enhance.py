@@ -277,13 +277,16 @@ def test_llm_keys_roundtrip_never_echoed(tmp_path):
 def test_settings_roundtrip_llm_urls(tmp_path):
     lib = build_library(tmp_path)
     status, body = promptapi.handle_save_settings(
-        lib, {"llm": {"ollama_url": "http://10.0.0.5:11434/"}}
+        lib, {"llm": {"ollama_url": "http://127.0.0.1:11434/"}}
     )
     assert status == 200
     status, body = promptapi.handle_settings(lib, {})
-    assert body["llm"]["ollama_url"] == "http://10.0.0.5:11434"  # trailing slash stripped
+    assert body["llm"]["ollama_url"] == "http://127.0.0.1:11434"  # trailing slash stripped
     assert body["llm"]["lmstudio_url"] == promptapi.DEFAULT_LMSTUDIO_URL
     assert promptapi.handle_save_settings(lib, {"llm": "nope"})[0] == 400
+    # A non-loopback backend now needs llm.allow_remote (SSRF gate, spec 2.1).
+    lan = {"llm": {"ollama_url": "http://10.0.0.5:11434"}}
+    assert promptapi.handle_save_settings(lib, lan)[0] == 400
 
 
 # -- success path (canned llm_chat — no network) -------------------------------

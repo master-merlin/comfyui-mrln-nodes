@@ -7,11 +7,16 @@ import json
 import threading
 
 from .core import ApiError, _guarded, _require_str
+
+# lora.py owns the secret registry; it imports neither this module nor
+# anything that reaches back here, so this stays acyclic.
+from .lora import _remember_secret, _scrub_secrets
 from .settings import (
     DEFAULT_LMSTUDIO_URL,
     DEFAULT_OLLAMA_URL,
-    _llm_settings,
+    BackendUrlError,
     _read_settings,
+    backend_url,
 )
 
 CLOUD_PROVIDERS = ("anthropic", "openai", "gemini", "openrouter")
@@ -46,6 +51,27 @@ CLOUD_MODEL_SUGGESTIONS = {
     "gemini": ("gemini-2.5-flash", "gemini-2.5-pro"),
     "openrouter": (),
 }
+
+
+def _exc_detail(exc, limit=200):
+    """Exception class + message, whitespace-collapsed, secret-scrubbed and
+    capped — these strings are reflected to the panel (the pull poll route is
+    not authenticated), so they stay diagnostic without pasting back whatever
+    the remote end sent in its response body, and without ever carrying a
+    credential that happened to sit in a URL the exception quoted."""
+    text = " ".join(_scrub_secrets(str(exc)).split())
+    if len(text) > limit:
+        text = text[:limit] + "..."
+    return f"{type(exc).__name__}: {text}" if text else type(exc).__name__
+
+
+def _backend_url_or_raise(settings, key, default):
+    """Same gate as the save handler, but in llm_chat's contract: a
+    RuntimeError whose message already says how to fix it."""
+    try:
+        return backend_url(settings, key, default)
+    except BackendUrlError as exc:
+        raise RuntimeError(f"{exc} — {exc.remediation}") from None
 
 
 def _post_json(url, payload, timeout, headers=None):
@@ -140,14 +166,13 @@ def llm_chat(
     any failure (callers decide pass-through vs raise). Keys live in the
     user tier's settings.json and are never echoed anywhere."""
     settings = _read_settings(lib)
-    llm = _llm_settings(settings)
     model = str(model or "").strip()
     if backend == "ollama":
         if not model:
             raise RuntimeError(
                 "Ollama needs a model name — the node's dropdown lists installed models"
             )
-        url = llm.get("ollama_url") or DEFAULT_OLLAMA_URL
+        url = _backend_url_or_raise(settings, "ollama_url", DEFAULT_OLLAMA_URL)
         data = _post_json(
             f"{url}/api/chat",
             {
@@ -165,14 +190,16 @@ def llm_chat(
         )
         return str((data.get("message") or {}).get("content") or "")
     if backend == "lm studio":
-        url = llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL
+        url = _backend_url_or_raise(settings, "lmstudio_url", DEFAULT_LMSTUDIO_URL)
         _, _, payload, extract = _cloud_request(
             "openai", "", model or "local-model", system, prompt, temperature, seed, max_tokens
         )
         return extract(_post_json(f"{url}/v1/chat/completions", payload, timeout))
     if backend not in CLOUD_PROVIDERS:
         raise RuntimeError(f"unknown backend '{backend}'")
-    key = str((settings.get("llm_api_keys") or {}).get(backend) or "")
+    # register before use: a cloud key that later surfaces inside an exception
+    # message is scrubbed by _exc_detail even from a thread that never saw it
+    key = _remember_secret(str((settings.get("llm_api_keys") or {}).get(backend) or ""))
     if not key:
         raise RuntimeError(f"no {backend} API key stored — add it in the Composer's Settings tab")
     model = model or DEFAULT_CLOUD_MODELS.get(backend, "")
@@ -192,7 +219,6 @@ def handle_llm_validate(lib, payload):
     model dropdown (Enhance node, De-compose tab)."""
     provider = _require_str(payload, "provider")
     settings = _read_settings(lib)
-    llm = _llm_settings(settings)
     if provider in CLOUD_PROVIDERS:
         key_set = bool((settings.get("llm_api_keys") or {}).get(provider))
         return 200, {
@@ -206,20 +232,24 @@ def handle_llm_validate(lib, payload):
     import urllib.request
 
     if provider == "ollama":
-        url = f"{llm.get('ollama_url') or DEFAULT_OLLAMA_URL}/api/tags"
+        key, default, path = "ollama_url", DEFAULT_OLLAMA_URL, "/api/tags"
     elif provider == "lmstudio":
-        url = f"{llm.get('lmstudio_url') or DEFAULT_LMSTUDIO_URL}/v1/models"
+        key, default, path = "lmstudio_url", DEFAULT_LMSTUDIO_URL, "/v1/models"
     else:
         raise ApiError(
             f"unknown provider '{provider}' (have: ollama, lmstudio, {', '.join(CLOUD_PROVIDERS)})"
         )
+    try:  # re-checked here, not just at save: an old settings.json is not trusted
+        url = f"{backend_url(settings, key, default)}{path}"
+    except BackendUrlError as exc:
+        return 400, exc.body()
     try:
         request = urllib.request.Request(url, headers={"User-Agent": "ComfyUI-MRLN-Nodes"})
         with urllib.request.urlopen(request, timeout=5) as resp:
             data = json.loads(resp.read().decode("utf-8"))
     except Exception as exc:  # URLError / timeout / bad JSON — all mean "not reachable"
         return 502, {
-            "error": f"{provider} unreachable at {url}: {exc}",
+            "error": f"{provider} unreachable at {url}: {_exc_detail(exc)}",
             "remediation": "start the server or fix the URL, then Validate again",
         }
     if provider == "ollama":
@@ -240,6 +270,8 @@ _PULL_STATUS = {}
 
 
 def _pull_worker(url, model):
+    """`url` is already through the backend-URL gate (handle_llm_pull refuses
+    to start otherwise) — this thread never re-reads settings."""
     import urllib.request
 
     try:
@@ -253,7 +285,8 @@ def _pull_worker(url, model):
             data = json.loads(resp.read().decode("utf-8"))
         _PULL_STATUS[model] = {"status": "done", "detail": str(data.get("status") or "success")}
     except Exception as exc:
-        _PULL_STATUS[model] = {"status": "error", "detail": str(exc)}
+        # the poll route is unauthenticated: class + message, never a body
+        _PULL_STATUS[model] = {"status": "error", "detail": _exc_detail(exc)}
 
 
 @_guarded
@@ -267,8 +300,10 @@ def handle_llm_pull(lib, payload):
         current = _PULL_STATUS.get(model)
         if current and current.get("status") == "pulling":
             return 200, {"model": model, "status": "pulling", "detail": "already running"}
-        llm = _llm_settings(_read_settings(lib))
-        url = llm.get("ollama_url") or DEFAULT_OLLAMA_URL
+        try:  # same gate as save/validate — no thread starts on a bad URL
+            url = backend_url(_read_settings(lib), "ollama_url", DEFAULT_OLLAMA_URL)
+        except BackendUrlError as exc:
+            return 400, exc.body()
         _PULL_STATUS[model] = {"status": "pulling", "detail": ""}
         threading.Thread(target=_pull_worker, args=(url, model), daemon=True).start()
         return 200, {"model": model, "status": "pulling", "detail": "started"}

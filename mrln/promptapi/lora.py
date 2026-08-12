@@ -13,6 +13,52 @@ from .. import promptlib as pl
 from .core import ApiError, _guarded, _require_str
 from .settings import _read_settings
 
+# -- secret scrubbing ---------------------------------------------------------
+# Hard invariant: an API key is NEVER echoed by any API. The download-status
+# poll route is unauthenticated and returns `detail` verbatim, so every string
+# that can reach a client — error bodies, status details, raised messages —
+# goes through _scrub_secrets first. Unconditional: it holds whichever auth
+# route the download actually took (header or query fallback).
+
+_TOKEN_QUERY_RE = re.compile(r"(token=)[^&\s\"'<>]+", re.IGNORECASE)
+# below this length a value is not a credential, and redacting it would
+# mangle ordinary words out of otherwise useful error text
+_SECRET_MIN_LEN = 8
+# ONE list, only ever mutated in place (worker threads scrub against it while
+# handlers append to it). Never serialized, never logged, bounded.
+_KNOWN_SECRETS = []
+
+
+def _remember_secret(value):
+    """Record a credential so later messages can be scrubbed even where the
+    value itself is out of scope (worker threads, other modules). Returns the
+    value unchanged so call sites can wrap the settings read directly."""
+    value = str(value or "")
+    if len(value) >= _SECRET_MIN_LEN and value not in _KNOWN_SECRETS:
+        _KNOWN_SECRETS.append(value)
+        del _KNOWN_SECRETS[:-8]  # keep the list bounded
+    return value
+
+
+def _scrub_secrets(text, *secrets):
+    """Redact credentials out of anything a client may see: `token=…` query
+    values plus the literal key (percent-encoded form included), both the ones
+    passed in and every key seen this session. Pure, never raises."""
+    import urllib.parse
+
+    out = _TOKEN_QUERY_RE.sub(r"\1***", str(text))
+    literals = set()
+    for secret in (*secrets, *_KNOWN_SECRETS):
+        secret = str(secret or "")
+        if len(secret) < _SECRET_MIN_LEN:
+            continue
+        literals.add(secret)
+        literals.add(urllib.parse.quote(secret, safe=""))
+    for secret in sorted(literals, key=len, reverse=True):
+        out = out.replace(secret, "***")
+    return out
+
+
 _ECO_MAP = (
     ("flux", "flux1"),
     ("sdxl", "sdxl"),
@@ -108,7 +154,7 @@ def handle_lora_civitai(lib, payload):
 
     digest = _sha256_of(path)
     headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
-    key = str(_read_settings(lib).get("civitai_api_key") or "")
+    key = _remember_secret(str(_read_settings(lib).get("civitai_api_key") or ""))
     if key:
         headers["Authorization"] = f"Bearer {key}"
     request = urllib.request.Request(
@@ -129,7 +175,7 @@ def handle_lora_civitai(lib, payload):
         }
     except Exception as exc:  # URLError / timeout / bad JSON
         return 502, {
-            "error": f"Civitai unreachable: {exc}",
+            "error": _scrub_secrets(f"Civitai unreachable: {exc}", key),
             "remediation": "check your network and retry",
         }
     out = _civitai_summary(data)
@@ -158,7 +204,10 @@ def handle_lora_meta(lib, payload):
     try:
         meta = pl.read_safetensors_metadata(path)
     except ValueError as exc:
-        return 400, {"error": str(exc), "remediation": "type the catchword manually"}
+        return 400, {
+            "error": _scrub_secrets(str(exc)),
+            "remediation": "type the catchword manually",
+        }
     trigger, source = pl.trigger_from_metadata(meta)
     if not trigger:
         return 404, {
@@ -236,13 +285,47 @@ def _heal_section_lora(lib, section_slug, item_name, new_lora):
     lib.save_user("sections", section_slug, raw)
 
 
+def _open_download(url, token, timeout=120):
+    """Open the Civitai download stream, authenticated WITHOUT putting the key
+    in the URL: it rides an `Authorization: Bearer` header, so no url-bearing
+    exception, log line or status detail can carry it.
+
+    Fallback, deliberately kept: Civitai answers a download with a redirect to
+    presigned storage, and urllib's redirect handler forwards request headers
+    to the new host. A presigned URL already carries its signature in the
+    query, so the extra Authorization header makes such backends answer 401/403
+    ("only one auth mechanism allowed"). That is the breakage an earlier
+    session hit and worked around with the query param. On exactly those two
+    codes — and only then — we retry once with `token=` in the query. Nothing
+    is written to disk before this call succeeds, so the retry is clean, and
+    _scrub_secrets covers the query form unconditionally either way.
+    """
+    import urllib.error
+    import urllib.parse
+    import urllib.request
+
+    headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    try:
+        return urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=timeout)
+    except urllib.error.HTTPError as exc:
+        if not token or exc.code not in (401, 403):
+            raise
+    sep = "&" if "?" in url else "?"
+    request = urllib.request.Request(
+        f"{url}{sep}token={urllib.parse.quote(token)}",
+        headers={"User-Agent": "ComfyUI-MRLN-Nodes"},
+    )
+    return urllib.request.urlopen(request, timeout=timeout)
+
+
 def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status):
     """Civitai version metadata -> stream the primary .safetensors file ->
     SHA256 verify -> move into place. Returns the final file name; RAISES on
     any failure (partial .part always removed). `status` is a plain progress
     sink so both the threaded and the synchronous caller can watch it."""
     import os
-    import urllib.parse
     import urllib.request
 
     part_path = None
@@ -265,12 +348,6 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
         url = str(chosen.get("downloadUrl") or "")
         if not url:
             url = f"https://civitai.com/api/download/models/{version_id}"
-        if token:
-            # token rides the QUERY, not a header: the download redirects to
-            # presigned storage where an Authorization header breaks the
-            # signature
-            sep = "&" if "?" in url else "?"
-            url = f"{url}{sep}token={urllib.parse.quote(token)}"
         os.makedirs(dest_dir, exist_ok=True)
         final_path = os.path.join(dest_dir, filename)
         part_path = final_path + ".part"
@@ -278,8 +355,7 @@ def _fetch_lora_file(meta_headers, token, version_id, dest_dir, filename, status
 
         digest = hashlib.sha256()
         loaded = 0
-        request = urllib.request.Request(url, headers={"User-Agent": "ComfyUI-MRLN-Nodes"})
-        with urllib.request.urlopen(request, timeout=120) as resp:
+        with _open_download(url, token) as resp:
             status["total"] = int(resp.headers.get("Content-Length") or 0)
             with open(part_path, "wb") as fh:
                 for chunk in iter(lambda: resp.read(1 << 20), b""):
@@ -319,10 +395,11 @@ def _lora_download_worker(status_key, meta_headers, token, version_id, dest_dir,
                 _heal_section_lora(lib, section_slug, item_name, new_name)
                 status["healed"] = new_name
         status["status"] = "done"
-        status["detail"] = f"saved as {filename}"
+        status["detail"] = _scrub_secrets(f"saved as {filename}", token)
     except Exception as exc:
+        # an UNAUTHENTICATED poll returns this string verbatim: scrub first
         status["status"] = "error"
-        status["detail"] = str(exc)
+        status["detail"] = _scrub_secrets(str(exc), token)
 
 
 @_guarded
@@ -362,7 +439,7 @@ def handle_lora_download(lib, payload):
 
     dest_dir = os.path.join(roots[0], *folder.split("/")) if folder else roots[0]
     _, version_id = parsed
-    token = str(_read_settings(lib).get("civitai_api_key") or "")
+    token = _remember_secret(str(_read_settings(lib).get("civitai_api_key") or ""))
     meta_headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
     if token:
         meta_headers["Authorization"] = f"Bearer {token}"
@@ -476,17 +553,26 @@ def download_lora_by_air(lib, air, *, folder="", filename="", section="", item="
     folder = _sanitize_subfolder(folder)
     dest_dir = os.path.join(roots[0], *folder.split("/")) if folder else roots[0]
     _, version_id = parsed
-    token = str(_read_settings(lib).get("civitai_api_key") or "")
+    token = _remember_secret(str(_read_settings(lib).get("civitai_api_key") or ""))
     headers = {"User-Agent": "ComfyUI-MRLN-Nodes"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     status = {"status": "downloading", "detail": "", "loaded": 0, "total": 0}
     _LORA_DL_STATUS[air] = status  # the Composer can watch a node-side fetch
-    name = _fetch_lora_file(
-        headers, token, version_id, dest_dir, _sanitize_lora_filename(filename), status
-    )
+    try:
+        name = _fetch_lora_file(
+            headers, token, version_id, dest_dir, _sanitize_lora_filename(filename), status
+        )
+    except Exception as exc:
+        # the Composer polls this shared status: leave it resolved (not stuck
+        # on "downloading") and scrubbed, and re-raise a message the node can
+        # show without `from exc` dragging an unscrubbed cause into the log
+        detail = _scrub_secrets(f"{type(exc).__name__}: {exc}", token)
+        status["status"] = "error"
+        status["detail"] = detail
+        raise RuntimeError(detail) from None
     status["status"] = "done"
-    status["detail"] = f"saved as {name}"
+    status["detail"] = _scrub_secrets(f"saved as {name}", token)
     final = f"{folder}/{name}" if folder else name
     if section and item and str(stored or "").replace("\\", "/").lower() != final.lower():
         with contextlib.suppress(Exception):  # the file is there; healing is a bonus

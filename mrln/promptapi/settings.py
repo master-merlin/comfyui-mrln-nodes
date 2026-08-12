@@ -2,9 +2,11 @@
 the profiles.json overlay, plus the handlers that read and write them.
 """
 
+import ipaddress
 import json
 import re
 import threading
+from urllib.parse import urlsplit
 
 from .. import promptlib as pl
 from .core import ApiError, _guarded, _require_str, _write_json_atomic
@@ -16,6 +18,96 @@ _SETTINGS_LOCK = threading.Lock()
 
 DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434"
 DEFAULT_LMSTUDIO_URL = "http://127.0.0.1:1234"
+
+# SSRF hardening: the LLM backend URLs are FETCHED BY THE SERVER, so an
+# attacker-supplied value would make ComfyUI probe whatever the attacker
+# names. Two gates, both in _validate_backend_url below:
+#   shape   — plain http(s), a host, no credentials, no query/fragment;
+#   reach   — loopback only unless llm.allow_remote is explicitly enabled.
+LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+
+BACKEND_URL_REMEDIATION = (
+    "use a plain http:// or https:// URL with a host and no credentials, "
+    "e.g. http://127.0.0.1:11434"
+)
+BACKEND_REMOTE_REMEDIATION = (
+    "enable 'allow_remote' in the Composer's Settings tab (LLM section) to use "
+    "an LLM backend on another machine — only do that on a trusted network"
+)
+
+
+class BackendUrlError(ApiError):
+    """A refused LLM backend URL. Carries its own remediation so save,
+    validate, pull and chat all tell the user the same actionable thing —
+    especially that `allow_remote` is what unblocks a legitimate LAN box."""
+
+    def __init__(self, message, remediation=BACKEND_URL_REMEDIATION):
+        super().__init__(message)
+        self.remediation = remediation
+
+    def body(self):
+        """The {"error", "remediation"} shape every handler returns."""
+        return {"error": str(self), "remediation": self.remediation}
+
+
+def _is_loopback_host(host):
+    """True for this machine only. urlsplit() hands back IPv6 hosts without
+    their brackets, so `::1` arrives bare."""
+    host = (host or "").strip().strip("[]").lower()
+    if host in LOOPBACK_HOSTS:
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False  # a name we do not know is not loopback
+
+
+def _validate_backend_url(value, *, key="url", allow_remote=False):
+    """Parse a local LLM backend URL and return it normalized (no trailing
+    slash), or raise BackendUrlError. THE single gate — used at save time and
+    again at every fetch site, so a LAN URL left behind in an old
+    settings.json is refused when it is used, not just when it is written."""
+    if not isinstance(value, str):
+        raise BackendUrlError(f"'{key}' must be a string")
+    raw = value.strip()
+    if not raw:
+        raise BackendUrlError(f"'{key}' must not be empty")
+    try:
+        parts = urlsplit(raw)
+        host, _port = parts.hostname, parts.port  # .port raises on a bogus port
+    except ValueError as exc:
+        raise BackendUrlError(f"'{key}' is not a valid URL: {exc}") from None
+    if parts.scheme not in ("http", "https"):
+        raise BackendUrlError(
+            f"'{key}' must be an http:// or https:// URL (got '{raw}') — "
+            "other schemes (file:, gopher:, ...) are never fetched"
+        )
+    if not host:
+        raise BackendUrlError(f"'{key}' needs a host, e.g. http://127.0.0.1:11434 (got '{raw}')")
+    if parts.username is not None or parts.password is not None or "@" in parts.netloc:
+        raise BackendUrlError(f"'{key}' must not embed credentials (user:pass@host)")
+    if parts.fragment or parts.query:
+        raise BackendUrlError(f"'{key}' must not carry a query string or '#' fragment")
+    if not allow_remote and not _is_loopback_host(host):
+        raise BackendUrlError(
+            f"'{key}' points at '{host}', which is not this machine (loopback)",
+            BACKEND_REMOTE_REMEDIATION,
+        )
+    return raw.rstrip("/")
+
+
+def allow_remote_backends(settings):
+    """The llm.allow_remote flag — default False: out of the box the server
+    only ever talks to an LLM backend on localhost."""
+    return bool(_llm_settings(settings).get("allow_remote"))
+
+
+def backend_url(settings, key, default):
+    """The URL a fetch site should actually use: the stored value (or the
+    packaged default) re-validated NOW. Raises BackendUrlError."""
+    raw = _llm_settings(settings).get(key) or default
+    remote_ok = allow_remote_backends(settings)
+    return _validate_backend_url(raw, key=f"llm.{key}", allow_remote=remote_ok)
 
 
 def _settings_path(lib):
@@ -61,6 +153,9 @@ def handle_settings(lib, payload):
         "llm": {
             "ollama_url": llm.get("ollama_url") or DEFAULT_OLLAMA_URL,
             "lmstudio_url": llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL,
+            # the stored value is echoed as-is even when it would be refused
+            # now (old settings.json): the user has to SEE it to fix it
+            "allow_remote": allow_remote_backends(settings),
         },
         "llm_keys_set": {p: bool(keys.get(p)) for p in CLOUD_PROVIDERS},
     }
@@ -90,14 +185,28 @@ def handle_save_settings(lib, payload):
             if not isinstance(raw_llm, dict):
                 raise ApiError("'llm' must be an object")
             llm = _llm_settings(settings)
+            # parse the flag FIRST: one save may legitimately turn remote
+            # backends on and set the LAN URL in the same request
+            if "allow_remote" in raw_llm:
+                flag = raw_llm["allow_remote"]
+                if not isinstance(flag, bool):
+                    raise ApiError("'llm.allow_remote' must be true or false")
+                llm["allow_remote"] = flag
+            remote_ok = bool(llm.get("allow_remote"))
             for key in ("ollama_url", "lmstudio_url"):
                 if key in raw_llm:
                     value = raw_llm[key]
                     if not isinstance(value, str):
                         raise ApiError(f"'llm.{key}' must be a string")
-                    value = value.strip().rstrip("/")
-                    if value:
-                        llm[key] = value
+                    if value.strip():
+                        try:
+                            llm[key] = _validate_backend_url(
+                                value, key=f"llm.{key}", allow_remote=remote_ok
+                            )
+                        except BackendUrlError as exc:
+                            # nothing is written: the whole save aborts, so an
+                            # invalid URL never reaches settings.json
+                            return 400, exc.body()
                     else:
                         llm.pop(key, None)  # empty reverts to the default
             settings["llm"] = llm
