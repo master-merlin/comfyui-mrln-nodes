@@ -219,3 +219,46 @@ def test_download_without_air_still_errors(monkeypatch):
 def test_download_by_air_rejects_a_bogus_urn(lib):
     with pytest.raises(RuntimeError, match="not a Civitai AIR"):
         promptapi.download_lora_by_air(lib, "not-an-air")
+
+
+# -- nested child slots must round-trip through the editor -------------------
+
+
+def test_section_payload_carries_child_slots(lib):
+    """A user item REPLACES a factory one by name, and the editor writes rows
+    back whole — so an item's child slots have to reach the client or the
+    first edit silently destroys every nested draw (human/profile ships 17)."""
+    lib.save_user(
+        "sections",
+        "crewed",
+        {
+            "items": [
+                {
+                    "name": "pair",
+                    "text": "a pair: {left} and {right}",
+                    "slots": [
+                        {"id": "left", "ref": "color", "default": "red"},
+                        {"id": "right", "ref": "color", "tags_any": ["warm"]},
+                    ],
+                }
+            ]
+        },
+    )
+    status, body = promptapi.handle_section(lib, {"slug": "crewed"})
+    assert status == 200
+    slots = body["items"][0]["slots"]
+    assert [s["id"] for s in slots] == ["left", "right"]
+    assert slots[0]["ref"] == "color" and slots[0]["default"] == "red"
+    assert slots[1]["tags_any"] == ["warm"]
+    # and the shape is exactly what save-section accepts back
+    status, _ = promptapi.handle_save_section(
+        lib,
+        {"slug": "crewed", "data": {"items": [{**body["items"][0], "origin": None}]}},
+    )
+    assert status == 200
+    assert len(lib.load_section("crewed").items[0].slots) == 2
+
+
+def test_items_without_children_report_an_empty_list(lib):
+    _status, body = promptapi.handle_section(lib, {"slug": "lora/kits"})
+    assert all(item["slots"] == [] for item in body["items"])

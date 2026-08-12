@@ -249,6 +249,11 @@ def handle_section(lib, payload):
                 "requires": list(item.requires),
                 "hidden": item.hidden,
                 "origin": item.origin or tier,
+                # child slots MUST round-trip: the editor writes items back
+                # whole and a user item replaces a factory one by name, so
+                # omitting these silently destroys every nested item
+                # (human/profile carries 17) the moment a row is edited
+                "slots": [pl.dump_slot(slot) for slot in item.slots],
             }
             for item in section.items
         ],

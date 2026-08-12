@@ -50,7 +50,7 @@ from .schema import (
     parse_section,
     parse_template,
 )
-from .serialize import dump_item, dump_section, dump_template
+from .serialize import dump_item, dump_section, dump_slot, dump_template
 
 __all__ = [
     "CONFLICT_POLICIES",
@@ -88,6 +88,7 @@ __all__ = [
     "default_roots",
     "dump_item",
     "dump_section",
+    "dump_slot",
     "dump_template",
     "export_bundle",
     "fill_json_template",
