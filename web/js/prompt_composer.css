@@ -480,3 +480,492 @@ details.mrln-fold .mrln-pre { max-height: 18vh; }
 
 details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font-size: 11px; }
 .mrln-sep { border: none; border-top: 1px solid var(--border-color, #333); margin: 2px 0; }
+
+
+/* ===========================================================================
+   Pre-ship campaign additions. Same two rules as everything above: surfaces
+   ride ComfyUI's theme variables with dark fallbacks, and every accent comes
+   from the --mrln-* tokens at the top of this file — so both themes follow
+   without a second literal anywhere below.
+   =========================================================================== */
+
+/* MRLN Prompt Composer — LoRA trigger-word chips (SPEC 4.3).
+   HANDOFF: merge verbatim into web/js/prompt_composer.css (the stylesheet is
+   owned by another agent this round, so these rules live here until then).
+
+   Everything below is REFINEMENT ONLY. The chips are built from classes that
+   already exist — .mrln-chip for the pill, .mrln-ms + .mrln-mini with
+   .mrln-m-on / .mrln-s-on for the mute/solo pair (the exact affordance
+   compose.js gives a slot row), .mrln-note and .mrln-error for the two
+   messages — so without this file the editor still renders and still reads
+   correctly: an active word's M is dim, a muted word's M glows in the mute
+   colour, the soloed word's S glows in the solo colour. These rules only make
+   the pills wrap tidily and the muted ones recede.
+
+   Placement note for whoever merges: put this next to the .mrln-lora-row rules
+   (~line 310), NOT next to .mrln-chip — the m-on/s-on rules it leans on are
+   already defined above at ~222. */
+
+.mrln-triggers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 0 2px;
+}
+
+/* .mrln-chip carries margin-left: 4px for inline use after a heading; inside
+   the flex row the gap does that job instead. */
+.mrln-chip.mrln-trigger {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0;
+  padding: 0 6px 0 2px;
+  max-width: 100%;
+}
+.mrln-chip.mrln-trigger .mrln-ms { margin-right: 3px; }
+.mrln-trigger-word { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Muted = the word is still provenance, it just does not render. Mirrors
+   .mrln-slot.mrln-muted (dim the row, keep the M/S readable). */
+.mrln-chip.mrln-trigger-muted { border-style: dotted; }
+.mrln-chip.mrln-trigger-muted .mrln-trigger-word { opacity: 0.5; text-decoration: line-through; }
+
+/* User-added: no provenance entry, so its M removes rather than mutes. */
+.mrln-chip.mrln-trigger-extra { border-color: var(--mrln-accent); border-style: dashed; }
+.mrln-chip.mrln-trigger-extra .mrln-trigger-word { color: var(--mrln-accent-soft); }
+
+/* the two messages take a full row of their own rather than squeezing between
+   chips: "no trained words recorded…" and the all-muted warning */
+.mrln-triggers > .mrln-note,
+.mrln-triggers > .mrln-error { flex: 1 1 100%; font-size: 11px; }
+
+/* image → template intake (composer/intake.js) — appended to
+   web/js/prompt_composer.css by the orchestrator. Everything else this card
+   needs already exists: mrln-note / mrln-error / mrln-chip / mrln-btn /
+   mrln-actions / mrln-inline / mrln-slot / mrln-slot-list / mrln-pre /
+   mrln-loading / mrln-spinner / mrln-sep. */
+
+.mrln-intake {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* the drop target. image.js toggles .mrln-drop-hot while something hovers it,
+   and listens for paste ON THE NODE — hence tabindex/focus styling, so
+   "click here, then Ctrl+V" is a discoverable instruction rather than a
+   guess. */
+.mrln-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: copy;
+  border: 1px dashed var(--border-color, #444);
+  border-radius: 6px;
+  background: var(--comfy-input-bg, #1a1a1a);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.mrln-drop:hover { border-color: var(--mrln-accent); }
+.mrln-drop:focus-visible {
+  outline: none;
+  border-color: var(--mrln-accent);
+  box-shadow: 0 0 0 1px var(--mrln-accent);
+}
+.mrln-drop-label { font-size: 12px; opacity: 0.9; }
+/* The hover FILL is intake's own (a big zone reads better filled); the border
+   treatment is the shared .mrln-drop-hot rule at the end of this file, which
+   every image.js drop zone gets. */
+.mrln-drop.mrln-drop-hot { background: var(--comfy-menu-bg, #242424); }
+
+/* the resolve=true opt-in: a checkbox that must not inherit the panel's
+   width:100% input rule, and whose label wraps under its own box */
+.mrln-intake-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+.mrln-intake-opt input[type="checkbox"] { flex: 0 0 auto; margin: 1px 0 0; }
+
+.mrln-intake-picker,
+.mrln-intake-paths,
+.mrln-intake-applied {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.mrln-intake-paths { border-top: 1px solid var(--border-color, #333); padding-top: 6px; }
+.mrln-intake-warn { color: var(--mrln-warn-soft); opacity: 0.95; }
+
+/* generation settings as a key/value grid: the keys are short and the values
+   are not, so an auto column beats two equal ones (mrln-grid2) here */
+.mrln-params {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1px 8px;
+  font-size: 11px;
+}
+.mrln-params-key { opacity: 0.65; white-space: nowrap; }
+.mrln-params-value { word-break: break-word; user-select: text; }
+
+/* SPEC 5.3 — the Compose tab's "Optimize for …" comparison.
+   Merge into web/js/prompt_composer.css (owned by the panel/CSS agent).
+   Everything else this feature draws reuses existing classes: mrln-note,
+   mrln-error, mrln-chip, mrln-btn/mrln-primary/mrln-mini, mrln-actions,
+   mrln-inline, mrln-field/mrln-field-name, mrln-pre, mrln-spinner. */
+
+.mrln-optimize {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid var(--border-color, #333);
+}
+
+/* auto-fit, not a hard 2 columns: the panel is a sidebar and two <pre> blocks
+   side by side stop being readable below ~440px — they stack instead */
+.mrln-optimize-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 6px;
+  align-items: start;
+}
+.mrln-optimize-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.mrln-optimize-side {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.mrln-optimize-side .mrln-field-name {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+.mrln-optimize-col .mrln-pre {
+  max-height: 20vh;
+}
+
+.mrln-optimize-order {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mrln-optimize-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  min-width: 0;
+}
+.mrln-optimize-row.mrln-moved {
+  background: var(--comfy-input-bg, #161616);
+}
+.mrln-optimize-idx {
+  flex: 0 0 auto;
+  opacity: 0.55;
+  font-family: monospace;
+  min-width: 14px;
+  text-align: right;
+}
+.mrln-optimize-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mrln-optimize-row .mrln-chip {
+  flex: 0 0 auto;
+}
+.mrln-optimize-row .mrln-note {
+  flex: 0 0 auto;
+}
+
+.mrln-optimize-stale {
+  opacity: 1;
+  color: var(--mrln-warn-soft);
+}
+
+/* MRLN Prompt Composer — thumbnails (SPEC §6.1): the tile, the set/reset
+   controls with their drop zone, and the Library tab's card grid.
+
+   For the orchestrator: append verbatim to web/js/prompt_composer.css. Nothing
+   here redefines an existing rule; every selector below is new. Conventions
+   followed from that file: bare class selectors (the panel root already scopes
+   them), ComfyUI theme variables with dark fallbacks for surfaces, and the
+   --mrln-* accent tokens for state colour, so re-theming stays a token edit.
+
+   `.mrln-drop-hot` is NOT thumbnail-specific — composer/image.js toggles it on
+   every drop zone it wires (thumbnails today, the image intake next door). It
+   is defined here because nothing styled it yet; if another module's sheet also
+   defines it, keep ONE copy. */
+
+/* ---- the tile ------------------------------------------------------------ */
+
+.mrln-thumb {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border-color, #444);
+  border-radius: 4px;
+  background: var(--comfy-input-bg, #222);
+  line-height: 1;
+  /* a tile is decoration next to a label — it must never eat a click meant
+     for the row/card it sits in */
+  pointer-events: none;
+}
+.mrln-thumb-sm { width: 20px; height: 20px; border-radius: 3px; }
+.mrln-thumb-md { width: 40px; height: 40px; }
+.mrln-thumb-lg { width: 100%; aspect-ratio: 1 / 1; }
+.mrln-thumb-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mrln-thumb-glyph {
+  /* plain px per size class, not cqmin: container query units would gate the
+     fallback tile — the thing that draws when NOTHING else works — on a
+     recent-enough engine */
+  font-size: 22px;
+  opacity: 0.55;
+  filter: grayscale(0.35);
+  user-select: none;
+}
+.mrln-thumb-sm .mrln-thumb-glyph { font-size: 12px; }
+.mrln-thumb-lg .mrln-thumb-glyph { font-size: 40px; }
+.mrln-thumb-empty { border-style: dashed; opacity: 0.9; }
+
+/* ---- set / reset / refresh ----------------------------------------------- */
+
+.mrln-thumb-controls { align-items: flex-start; gap: 8px; margin: 4px 0; }
+.mrln-thumb-controls > .mrln-thumb-drop { flex: 0 0 96px; }
+.mrln-thumb-controls > .mrln-thumb-side { flex: 1 1 auto; min-width: 0; }
+.mrln-thumb-drop {
+  width: 96px;
+  padding: 3px;
+  border: 1px dashed var(--border-color, #444);
+  border-radius: 5px;
+  cursor: pointer;
+  background: var(--comfy-menu-bg, #2a2a2a);
+}
+.mrln-thumb-drop:hover { border-color: var(--mrln-accent); }
+/* the zone carries tabindex so a paste can reach it — say so visibly */
+.mrln-thumb-drop:focus-visible { outline: 2px solid var(--mrln-accent); outline-offset: 1px; }
+.mrln-thumb-side .mrln-actions { margin-bottom: 4px; }
+.mrln-thumb-hint { max-width: 46ch; }
+
+/* ---- the Library tab card grid ------------------------------------------- */
+
+.mrln-lib-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 6px;
+  margin: 2px 0 6px;
+}
+.mrln-tree-group > .mrln-lib-cards { margin-left: 12px; }
+.mrln-lib-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 0;
+  text-align: center;
+}
+.mrln-lib-card:hover {
+  background: var(--comfy-menu-bg, #2a2a2a);
+  border-color: var(--border-color, #444);
+}
+.mrln-lib-card:focus-visible { outline: 2px solid var(--mrln-accent); outline-offset: 1px; }
+.mrln-lib-card-error { border-color: var(--mrln-error-dim); }
+.mrln-lib-card-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.mrln-lib-card-slug {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.55;
+  font-size: 10px;
+}
+.mrln-lib-card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The rows/cards switch — pressed state for a button that is a MODE, not an
+   action (the panel's only other toggled buttons are the tab strip's, which is
+   scoped to .mrln-tabs). */
+.mrln-btn.mrln-toggled {
+  border-color: var(--mrln-accent);
+  color: var(--mrln-accent-soft);
+}
+
+/* History tab (composer/history.js) — rows of what this install rendered.
+   Surfaces ride the same ComfyUI theme variables with dark fallbacks as the
+   rest of the sheet; the cards themselves reuse .mrln-slot, so only the
+   row's internal layout lives here. */
+
+.mrln-history-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mrln-history-head .mrln-tree-head { flex: 1; margin-top: 0; }
+
+/* date separator: the rows carry the time, the run of rows carries the day */
+.mrln-history-day {
+  font-size: 11px;
+  opacity: 0.55;
+  margin: 8px 0 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--border-color, #333);
+}
+
+.mrln-history-row { gap: 3px; }
+
+.mrln-history-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+}
+.mrln-history-time {
+  flex: 0 0 auto;
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+.mrln-history-template {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+/* two lines of prompt, never more: a row must not grow with the prompt (the
+   full text, negative included, is the element's title) */
+.mrln-history-excerpt {
+  font-size: 11px;
+  opacity: 0.75;
+  overflow: hidden;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* one queue click, collapsed */
+.mrln-history-batch {
+  background: var(--comfy-input-bg, #1b1b1b);
+  border: 1px solid var(--border-color, #333);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+/* The summary is a flex row, which drops display:list-item and with it the
+   native disclosure marker — hence an explicit one. */
+.mrln-history-batch > summary {
+  cursor: pointer;
+  padding: 2px 0;
+  list-style: none;
+}
+.mrln-history-batch > summary::-webkit-details-marker { display: none; }
+.mrln-history-batch > summary::before {
+  content: "▸";
+  flex: 0 0 auto;
+  opacity: 0.6;
+  color: var(--mrln-accent-soft);
+}
+.mrln-history-batch[open] > summary::before { content: "▾"; }
+.mrln-history-batch[open] > summary { margin-bottom: 4px; }
+.mrln-history-batch > summary:hover { background: var(--comfy-menu-bg, #2a2a2a); }
+.mrln-history-items {
+  margin-left: 8px;
+  padding-left: 6px;
+  border-left: 2px solid var(--border-color, #3a3a3a);
+}
+
+.mrln-history-pager {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.mrln-history-pager .mrln-note { flex: 1; text-align: center; }
+
+/* Settings tab — the remote-backend gate (llm.allow_remote) and the render
+   history retention row. Append verbatim to web/js/prompt_composer.css; every
+   accent rides the --mrln-* tokens declared at the top of that file, so both
+   themes follow without a second literal.
+
+   New classes: mrln-gate, mrln-gate-open, mrln-gate-closed, mrln-check,
+   mrln-months. Everything else in these two blocks reuses mrln-chip,
+   mrln-inline, mrln-note, mrln-btn. */
+
+/* The one control in the panel that WIDENS what the server may fetch, so it
+   gets a box of its own instead of dissolving into the rows above it. */
+.mrln-gate {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0 2px;
+  padding: 6px;
+  border: 1px solid var(--border-color, #333);
+  border-radius: 4px;
+}
+
+/* Gate state, in the chip vocabulary the rest of the panel already speaks:
+   amber = a deliberate widening is in effect, green = the safe default. */
+.mrln-chip.mrln-gate-open { border-color: var(--mrln-warn); color: var(--mrln-warn-soft); }
+.mrln-chip.mrln-gate-closed { border-color: var(--mrln-accent); color: var(--mrln-accent-soft); }
+
+/* A checkbox and its words as ONE unit that does not stretch: .mrln-inline
+   makes every child flex: 1, and a checkbox told to grow renders as a smear in
+   most themes. The <label> wrapper is also what makes the words clickable. */
+.mrln-check { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.mrln-composer .mrln-inline > .mrln-check { flex: 0 0 auto; }
+.mrln-composer .mrln-check > input { flex: 0 0 auto; width: auto; margin: 0; }
+
+/* Retention months: a two- or three-digit field never needs the whole row. */
+.mrln-composer .mrln-check > input.mrln-months { width: 58px; }
+
+/* ---- shared: every composer/image.js drop zone ---------------------------
+   image.js toggles .mrln-drop-hot on ANY node it wires (the intake card, the
+   thumbnail setters), so the hover treatment is defined once, here.
+
+   It sits LAST on purpose. `.mrln-drop:hover` and `.mrln-thumb-drop:hover`
+   both score (0,2,0); a bare `.mrln-drop-hot` scores (0,1,0) and would lose to
+   the hover it is meant to replace — a drag over a zone the pointer is also
+   hovering would show the idle border. Matching their specificity and coming
+   later wins the cascade honestly, which beats the !important this rule wants
+   to be written with. */
+.mrln-composer .mrln-drop-hot {
+  border-color: var(--mrln-accent);
+  border-style: dashed;
+  box-shadow: inset 0 0 0 1px var(--mrln-accent);
+}

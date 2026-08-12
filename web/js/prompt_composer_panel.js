@@ -10,14 +10,18 @@
 //   util.js            pure data helpers — no DOM, no network
 //   api.js             the fetch layer (instantiated by prompt_composer.js)
 //   dom.js             DOM primitives: el, menus, small controls, button guards
+//   image.js           image bytes: metadata upload, downscale, drop/paste
 //   state.js           the ONE state object + everything that owns it
 //   compose.js         the Compose tab + node interop
+//   intake.js          image → template intake (mounted in the De-compose tab)
 //   decompose.js       the De-compose tab
 //   tree.js            the Library tab tree, editor mount, profiles, delete
+//   thumbs.js          thumbnail tiles, set/reset controls, the URL rule
 //   section_editor.js  the section editor + combine builder
 //   template_editor.js the raw-JSON template editor
 //   bundles.js         import/export of shareable bundles
 //   loras.js           missing-LoRA banner, downloads, file picker
+//   history.js         the History tab
 //   settings.js        the Settings tab
 //
 // The 'hub' below is how they reach each other: ONE state object, the ctx
@@ -29,10 +33,13 @@ import { createState, createStore } from "./composer/state.js";
 import { createBundles } from "./composer/bundles.js";
 import { createCompose } from "./composer/compose.js";
 import { createDecompose } from "./composer/decompose.js";
+import { createHistory } from "./composer/history.js";
+import { createIntake } from "./composer/intake.js";
 import { createLoras } from "./composer/loras.js";
 import { createSectionEditor } from "./composer/section_editor.js";
 import { createSettings } from "./composer/settings.js";
 import { createTemplateEditor } from "./composer/template_editor.js";
+import { createThumbs } from "./composer/thumbs.js";
 import { createTree } from "./composer/tree.js";
 import { el } from "./composer/dom.js";
 
@@ -46,12 +53,16 @@ export function createComposerPanel(root, ctx) {
   const composeTab = el("div", { class: "mrln-tab-body" });
   const decomposeTab = el("div", { class: "mrln-tab-body", style: "display:none" });
   const libraryTab = el("div", { class: "mrln-tab-body", style: "display:none" });
+  const historyTab = el("div", { class: "mrln-tab-body", style: "display:none" });
   const settingsTab = el("div", { class: "mrln-tab-body", style: "display:none" });
-  const tabNames = ["compose", "decompose", "library", "settings"];
+  // Order is the workflow order — compose, take one apart, browse what you
+  // have, look at what you rendered, configure. Settings stays last.
+  const tabNames = ["compose", "decompose", "library", "history", "settings"];
   const tabBodies = {
     compose: composeTab,
     decompose: decomposeTab,
     library: libraryTab,
+    history: historyTab,
     settings: settingsTab,
   };
   const tabButtons = el(
@@ -60,9 +71,17 @@ export function createComposerPanel(root, ctx) {
     el("button", { class: "mrln-active", onclick: () => switchTab("compose") }, "Compose"),
     el("button", { onclick: () => switchTab("decompose") }, "De-compose"),
     el("button", { onclick: () => switchTab("library") }, "Library"),
+    el("button", { onclick: () => switchTab("history") }, "History"),
     el("button", { onclick: () => switchTab("settings") }, "Settings")
   );
-  root.replaceChildren(tabButtons, composeTab, decomposeTab, libraryTab, settingsTab);
+  root.replaceChildren(
+    tabButtons,
+    composeTab,
+    decomposeTab,
+    libraryTab,
+    historyTab,
+    settingsTab
+  );
 
   function switchTab(name) {
     state.tab = name;
@@ -72,6 +91,7 @@ export function createComposerPanel(root, ctx) {
     });
     if (name === "library") hub.renderLibraryTab();
     if (name === "decompose") hub.renderDecomposeTab();
+    if (name === "history") hub.renderHistoryTab();
     if (name === "settings") hub.renderSettingsTab();
   }
 
@@ -87,17 +107,21 @@ export function createComposerPanel(root, ctx) {
     composeTab,
     decomposeTab,
     libraryTab,
+    historyTab,
     settingsTab,
     switchTab,
   };
   Object.assign(hub, createLoras(hub));
+  Object.assign(hub, createThumbs(hub));
   Object.assign(hub, createTree(hub));
   Object.assign(hub, createBundles(hub));
   Object.assign(hub, createSectionEditor(hub));
   Object.assign(hub, createTemplateEditor(hub));
   Object.assign(hub, createCompose(hub));
   Object.assign(hub, createStore(hub));
+  Object.assign(hub, createIntake(hub));
   Object.assign(hub, createDecompose(hub));
+  Object.assign(hub, createHistory(hub));
   Object.assign(hub, createSettings(hub));
 
   // ---- boot ----------------------------------------------------------------

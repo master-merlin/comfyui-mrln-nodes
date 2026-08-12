@@ -119,3 +119,39 @@ def test_template_order_appends_variant():
 def test_template_errors(data, match):
     with pytest.raises(SchemaError, match=match):
         parse_template(data, "t", "f.json")
+
+
+# -- the trigger-less LoRA item ------------------------------------------------
+# Most FLUX LoRAs ship no trigger word, and the Composer lets an author mute
+# every trigger a LoRA does have ("all-muted is legal and renders no trigger
+# text", SPEC 4.3). Such an item exists to LOAD weights, so it is stored with
+# an empty text — but only when it really does load something.
+
+
+def test_a_lora_item_may_render_no_text_at_all():
+    section = parse_section(
+        sec(items=[{"name": "detail-boost", "text": "", "data": {"lora": "d.safetensors"}}]),
+        "loralab/quiet",
+        "f.json",
+    )
+    item = section.items[0]
+    assert item.text == ""
+    assert item.data["lora"] == "d.safetensors"
+
+
+def test_an_item_that_neither_says_nor_loads_anything_is_still_refused():
+    with pytest.raises(SchemaError, match="missing a non-empty 'text'"):
+        parse_section(sec(items=[{"name": "x", "text": ""}]), "s", "f.json")
+    # data without a lora is not a licence either
+    with pytest.raises(SchemaError, match="missing a non-empty 'text'"):
+        parse_section(sec(items=[{"name": "x", "text": "", "data": {"hex": ["#fff"]}}]), "s", "f")
+    # nor is a blank one
+    with pytest.raises(SchemaError, match="missing a non-empty 'text'"):
+        parse_section(sec(items=[{"name": "x", "text": "", "data": {"lora": "   "}}]), "s", "f")
+
+
+def test_a_textless_lora_item_needs_its_own_name():
+    # slugify("") is empty, so the generic name error would blame the wrong
+    # field — the message has to name the missing one.
+    with pytest.raises(SchemaError, match="needs an explicit 'name'"):
+        parse_section(sec(items=[{"text": "", "data": {"lora": "d.safetensors"}}]), "s", "f.json")

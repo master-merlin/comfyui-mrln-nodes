@@ -15,10 +15,13 @@ back with slots bound to real library items.
 import base64
 import io
 import json
+import pathlib
+import re
 import sys
 import types
 import urllib.error
 import urllib.request
+import zlib
 
 import pytest
 import support  # noqa: F401
@@ -838,3 +841,76 @@ def test_both_routes_are_declared_as_body_reading_posts():
     )
     # no GET twin: both write-ish paths stay off the CSRF-reachable verb
     assert not any(m == "get" and "extract" in p for m, p, _h, _b in promptapi.ROUTES)
+
+
+# -- the browser's side of the contract ---------------------------------------
+# web/js/composer/image.js cannot send a raw head slice: PngImageFile.text is
+# lazy and calls load(), which raises "image file is truncated" on a headless
+# PNG. So the browser re-wraps the text chunks it walked around a frozen 1x1
+# greyscale scaffold. Those three constants are hex literals in that file, and
+# they are READ OUT OF IT here rather than copied — a scaffold edited on the JS
+# side without a matching Pillow check fails this test instead of failing in a
+# user's browser.
+
+JS_IMAGE_MODULE = (
+    pathlib.Path(__file__).resolve().parents[1] / "web" / "js" / "composer" / "image.js"
+)
+
+
+def _js_hex_const(name):
+    source = JS_IMAGE_MODULE.read_text(encoding="utf-8")
+    match = re.search(rf'export const {name} = "([0-9a-fA-F]+)";', source)
+    assert match, f"{name} is no longer a hex literal in {JS_IMAGE_MODULE.name}"
+    return bytes.fromhex(match.group(1))
+
+
+def _png_text_chunk(keyword, text):
+    payload = keyword.encode("latin-1") + b"\x00" + text.encode("latin-1")
+    return (
+        len(payload).to_bytes(4, "big")
+        + b"tEXt"
+        + payload
+        + (zlib.crc32(b"tEXt" + payload) & 0xFFFFFFFF).to_bytes(4, "big")
+    )
+
+
+def _browser_metadata_png(chunks):
+    """Exactly what composer/image.js::pngMetadataFile builds."""
+    return (
+        _js_hex_const("PNG_SIGNATURE_HEX")
+        + _js_hex_const("PNG_STUB_IHDR_HEX")
+        + b"".join(chunks)
+        + _js_hex_const("PNG_STUB_TAIL_HEX")
+    )
+
+
+def test_the_browsers_rebuilt_png_is_a_png_pillow_reads(lib):
+    rebuilt = _browser_metadata_png([_png_text_chunk("parameters", A1111)])
+    # ~200 bytes standing in for a multi-megabyte drop, and a REAL png: the
+    # head slice this replaces raised UnidentifiedImageError here.
+    assert len(rebuilt) < 2048
+    fmt, fields = intake_mod.read_image_metadata(rebuilt)
+    assert fmt == "PNG"
+    assert fields["parameters"] == A1111
+    status, body = promptapi.handle_extract_image(
+        lib, {"image": base64.b64encode(rebuilt).decode("ascii")}
+    )
+    assert status == 200
+    assert body["positive"].startswith("a red {sports} car")
+    assert body["negative"] == "blurry, lowres"
+
+
+def test_the_scaffold_alone_carries_no_metadata_and_still_opens():
+    # A PNG the generator never wrote (a screenshot) must reach the server as a
+    # valid image with nothing in it — an empty extraction, not a parse error.
+    fmt, fields = intake_mod.read_image_metadata(_browser_metadata_png([]))
+    assert fmt == "PNG"
+    assert not [key for key, value in fields.items() if str(value).strip()]
+
+
+def test_the_scaffold_is_a_1x1_greyscale_pixel():
+    # The size is what makes it ~150 bytes; a scaffold that ever grew to carry
+    # real pixels would put the payload cap back in play.
+    with Image.open(io.BytesIO(_browser_metadata_png([]))) as img:
+        assert img.size == (1, 1)
+        assert img.mode == "L"

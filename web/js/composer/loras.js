@@ -7,7 +7,7 @@
 // (the installed-LoRA promise cache, the banner element) lives inside
 // createLoras().
 import { downloadableAir, loraKey, loraProgressText, missingLoraRows } from "./util.js";
-import { el, placeMenu } from "./dom.js";
+import { el, mount, placeMenu } from "./dom.js";
 
 export function createLoras(hub) {
   const { ctx, state } = hub;
@@ -126,7 +126,7 @@ export function createLoras(hub) {
   function renderLoraBanner(status) {
     const rows = missingLoraRows(status);
     if (!rows.length) {
-      loraBanner.replaceChildren();
+      mount(loraBanner);
       loraBanner.style.display = "none";
       return;
     }
@@ -194,7 +194,7 @@ export function createLoras(hub) {
       );
       action = el("div", { class: "mrln-actions" }, button);
     }
-    loraBanner.replaceChildren(
+    mount(loraBanner, 
       el(
         "div",
         { class: "mrln-error" },
@@ -401,7 +401,7 @@ export function createLoras(hub) {
           );
         }
       }
-      menu.replaceChildren(...out);
+      mount(menu, ...out);
       menu.style.display = "";
       placeMenu(control, menu);
       if (!open) window.addEventListener("scroll", onScroll, true);

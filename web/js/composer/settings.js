@@ -1,12 +1,128 @@
 // MRLN Prompt Composer — the Settings tab: the Civitai key, the two local LLM
-// backend URLs and the cloud API keys. Every secret is stored SERVER-side in
-// the user tier and never echoed back — this tab only ever shows whether one
-// exists, and never puts a key into a node widget (widget values persist into
-// workflow PNGs).
+// backend URLs, the remote-backend gate, the cloud API keys and how much render
+// history is kept. Every secret is stored SERVER-side in the user tier and never
+// echoed back — this tab only ever shows whether one exists, and never puts a
+// key into a node widget (widget values persist into workflow PNGs).
+//
+// TWO GUARDS RUN THROUGH THE WHOLE FILE:
+//  1. `settingsLoaded`. A failed GET /settings leaves every control at its
+//     empty/default rendering for a reason that has NOTHING to do with what is
+//     stored, so no control may save from that state: an empty URL reverts the
+//     stored one to the packaged default, an unchecked box would turn recording
+//     off, and a "loopback only" chip would clamp a gate that is actually open.
+//     The controls disable themselves AND the pure payload builders below
+//     refuse — belt and braces, because only the builders are testable and
+//     `busy()` re-enables a button in its finally.
+//  2. The remote-backend gate widens what the SERVER may fetch (the URL is
+//     user-supplied and ComfyUI is the one that makes the request), so turning
+//     it ON is armed like a destructive action. window.confirm throws on the
+//     Electron frontend — dom.js `armDestructive` is this panel's confirm.
 //
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
-import { armDestructive, busy, el } from "./dom.js";
+import { armDestructive, busy, el, mount } from "./dom.js";
+
+// ---- pure logic (exported for tests) ---------------------------------------
+
+/** Why a control refuses to save when GET /settings never landed. */
+export const SETTINGS_NOT_LOADED =
+  "The stored settings never loaded, so this control does not know what it "
+  + "would be overwriting and will not save. Reopen the tab once the server answers.";
+
+/**
+ * Verbatim from `handle_save_settings` in mrln/promptapi/settings.py, so a
+ * value the client refuses and a value the server refuses read identically.
+ * A bool is refused ON PURPOSE: bool is an int in Python and `true` would
+ * silently mean "1 month" — hence `typeof raw === "boolean"` first below,
+ * before any numeric coercion (Number(true) === 1).
+ */
+export const HISTORY_MONTHS_ERROR =
+  "'history_months' must be a whole number of months >= 0 (0 keeps everything)";
+
+/** Verbatim from the same handler. */
+export const HISTORY_ENABLED_ERROR =
+  "'history_enabled' must be a JSON boolean (true or false)";
+
+/** Verbatim from the same handler. */
+export const ALLOW_REMOTE_ERROR = "'llm.allow_remote' must be true or false";
+
+/**
+ * The hint appended to a backend failure that the loopback gate caused. The
+ * server sends BACKEND_REMOTE_REMEDIATION with every such refusal, but the
+ * cached probe path (api.js keeps only `err.message` in a cache entry) drops
+ * it, and that is precisely the path the green/red marks use — so the message
+ * that names a control gets to name a control that now exists.
+ */
+export const REMOTE_GATE_HINT =
+  "'Allow remote backends' below is the switch that permits a backend on another "
+  + "machine, and only belongs on a network you trust";
+
+/**
+ * A months value as the number input hands it over (string), or already a
+ * number. Returns {ok: true, value} | {ok: false, error}. Mirrors the server's
+ * rule exactly: a whole number >= 0, never a bool.
+ */
+export function parseHistoryMonths(raw) {
+  if (typeof raw === "boolean") return { ok: false, error: HISTORY_MONTHS_ERROR };
+  if (typeof raw === "number") {
+    // Number.isSafeInteger also rejects NaN, Infinity and 1e21 — a value JSON
+    // would hand the server as something it never typed
+    if (!Number.isSafeInteger(raw) || raw < 0) return { ok: false, error: HISTORY_MONTHS_ERROR };
+    return { ok: true, value: raw };
+  }
+  if (typeof raw !== "string") return { ok: false, error: HISTORY_MONTHS_ERROR };
+  // digits only: "" (an emptied input), "-1", "1.5", "1e3" and " 12 months"
+  // all mean the user is mid-edit or wrong, never "keep everything"
+  const text = raw.trim();
+  if (!/^\d+$/.test(text)) return { ok: false, error: HISTORY_MONTHS_ERROR };
+  const value = Number(text);
+  if (!Number.isSafeInteger(value)) return { ok: false, error: HISTORY_MONTHS_ERROR };
+  return { ok: true, value };
+}
+
+/**
+ * The POST /save-settings body for the retention row, or the reason there
+ * isn't one. `enabled` is the checkbox's `.checked`, `months` the number
+ * input's `.value`.
+ */
+export function historySavePayload({ settingsLoaded, enabled, months } = {}) {
+  if (!settingsLoaded) return { ok: false, error: SETTINGS_NOT_LOADED };
+  if (typeof enabled !== "boolean") return { ok: false, error: HISTORY_ENABLED_ERROR };
+  const parsed = parseHistoryMonths(months);
+  if (!parsed.ok) return parsed;
+  return { ok: true, body: { history_enabled: enabled, history_months: parsed.value } };
+}
+
+/**
+ * The POST /save-settings body for the remote gate, or the reason there isn't
+ * one. Refuses in BOTH directions when the settings never loaded: the tab is
+ * then showing a default, not a stored value, so "turn it off" would be the
+ * same blind overwrite as "turn it on" — and the user cannot see what they are
+ * changing either way.
+ */
+export function allowRemotePayload({ settingsLoaded, next } = {}) {
+  if (typeof next !== "boolean") return { ok: false, error: ALLOW_REMOTE_ERROR };
+  if (!settingsLoaded) return { ok: false, error: SETTINGS_NOT_LOADED };
+  return { ok: true, body: { llm: { allow_remote: next } } };
+}
+
+/** Suffix for a red backend status line: the server's remediation if it
+ *  survived the trip, else the gate hint when the gate is what refused. */
+export function backendFailureHint(message, remediation, allowRemote) {
+  const fromServer = String(remediation ?? "").trim();
+  if (fromServer) return ` — ${fromServer}`;
+  const text = String(message ?? "");
+  if (!allowRemote && /loopback|not this machine/i.test(text)) return ` — ${REMOTE_GATE_HINT}`;
+  return "";
+}
+
+/** One line of English for the retention state, for the toast and the row. */
+export function describeHistory(enabled, months) {
+  const kept = months === 0 ? "every month is kept" : `${months} month file(s) kept`;
+  return `${enabled ? "recording on" : "recording off"} · ${kept}`;
+}
+
+// ---- the tab ---------------------------------------------------------------
 
 export function createSettings(hub) {
   const { ctx, state, settingsTab } = hub;
@@ -28,6 +144,17 @@ export function createSettings(hub) {
     // Validate must NOT persist them — an empty string reverts the stored URL
     // to the default server-side, silently discarding a custom endpoint.
     let settingsLoaded = false;
+    // Mirror of llm.allow_remote. Read by the backend rows (a red line caused
+    // by the gate has to say so) and written only by a successful save.
+    let allowRemote = false;
+    const bad = (node, text) => {
+      node.textContent = text;
+      node.style.color = "var(--mrln-error-soft)";
+    };
+    const good = (node, text) => {
+      node.textContent = text;
+      node.style.color = "var(--mrln-accent-soft)";
+    };
     const backendRow = (label, key, provider) => {
       const urlInput = el("input", {
         type: "text",
@@ -35,10 +162,12 @@ export function createSettings(hub) {
         title: `${label} endpoint used by the Prompt Enhance (MRLN) node`,
       });
       const rowStatus = el("span", { class: "mrln-note" }, "checking…");
-      const check = async (persist = false) => {
+      // `force` re-probes without saving: flipping the remote gate changes the
+      // ANSWER for an unchanged URL, and the cached probe (30 s TTL) would
+      // otherwise keep showing the refusal the user just fixed.
+      const check = async (persist = false, force = persist) => {
         if (persist && !settingsLoaded) {
-          rowStatus.textContent = "✗ stored settings could not be read — not saving";
-          rowStatus.style.color = "#e88";
+          bad(rowStatus, "✗ stored settings could not be read — not saving");
           ctx.toast(
             "error",
             "Settings unavailable",
@@ -48,6 +177,7 @@ export function createSettings(hub) {
           return;
         }
         rowStatus.textContent = "…";
+        rowStatus.style.color = "";
         try {
           if (persist) {
             await ctx.apiJson("/mrln/prompt/save-settings", {
@@ -58,18 +188,22 @@ export function createSettings(hub) {
           // cached probe on tab entry (this used to re-ping on every open,
           // each one blocking a server executor thread up to 5 s when the
           // backend is down); an explicit Validate ignores the TTL
-          const entry = persist
+          const entry = force
             ? await ctx.api.refreshLlmModels(provider)
             : await ctx.api.llmModels(provider);
           if (entry.error) throw new Error(entry.error);
-          rowStatus.textContent = `✓ ${entry.models.length} model(s): ${entry.models
-            .slice(0, 3)
-            .join(", ")}${entry.models.length > 3 ? ", …" : ""}`;
-          rowStatus.style.color = "#6ca";
+          good(
+            rowStatus,
+            `✓ ${entry.models.length} model(s): ${entry.models
+              .slice(0, 3)
+              .join(", ")}${entry.models.length > 3 ? ", …" : ""}`
+          );
           rowStatus.title = entry.models.join("\n");
         } catch (err) {
-          rowStatus.textContent = `✗ ${err.message}`;
-          rowStatus.style.color = "#e88";
+          // the gate's refusal is the one error that names a control — keep
+          // the remediation instead of dropping it on the floor
+          const hint = backendFailureHint(err.message, err.remediation, allowRemote);
+          bad(rowStatus, `✗ ${err.message}${hint}`);
           rowStatus.title = "";
         }
       };
@@ -87,6 +221,122 @@ export function createSettings(hub) {
     };
     const ollama = backendRow("Ollama", "ollama_url", "ollama");
     const lmstudio = backendRow("LM Studio", "lmstudio_url", "lmstudio");
+    // ---- the remote-backend gate (llm.allow_remote) ------------------------
+    // Off by default: the SERVER fetches these URLs, so an address anywhere but
+    // this machine turns "my endpoint" into "probe that host for me". Both
+    // gates live in one server helper used at save time AND at every fetch
+    // site, which is why a URL stored before the gate existed is still echoed
+    // back here (the user has to SEE it to fix it) while being refused in use.
+    const remoteChip = el("span", { class: "mrln-chip" }, "checking…");
+    const remoteBtn = el("button", { class: "mrln-btn", disabled: "" }, "Allow remote backends…");
+    const setAllowRemote = async (next) => {
+      const payload = allowRemotePayload({ settingsLoaded, next });
+      if (!payload.ok) {
+        ctx.toast("error", "Remote backends unchanged", payload.error);
+        return;
+      }
+      try {
+        await ctx.apiJson("/mrln/prompt/save-settings", { method: "POST", body: payload.body });
+      } catch (err) {
+        ctx.toast("error", "Settings save failed", err.message);
+        return;
+      }
+      allowRemote = next;
+      renderRemote();
+      ctx.toast(
+        next ? "warn" : "success",
+        next ? "Remote LLM backends allowed" : "LLM backends restricted to this machine",
+        next
+          ? "ComfyUI may now fetch the Ollama / LM Studio URL you store, wherever it "
+            + "points — click Validate to save and test one. Turn this back off when "
+            + "you no longer need it."
+          : "A stored URL on another machine is kept so you can see and fix it, but "
+            + "is refused every time it is used."
+      );
+      // the gate is enforced at every fetch site, so both rows can change
+      // verdict without either URL changing
+      ollama.check(false, true);
+      lmstudio.check(false, true);
+    };
+    const renderRemote = () => {
+      remoteBtn.disabled = !settingsLoaded;
+      if (!settingsLoaded) {
+        remoteChip.className = "mrln-chip";
+        remoteChip.textContent = "unknown";
+        remoteBtn.textContent = "Allow remote backends…";
+        remoteBtn.title = "the stored settings could not be read — nothing can be changed here";
+        return;
+      }
+      remoteChip.className = `mrln-chip ${allowRemote ? "mrln-gate-open" : "mrln-gate-closed"}`;
+      remoteChip.textContent = allowRemote ? "remote allowed" : "loopback only";
+      remoteBtn.textContent = allowRemote ? "Restrict to this machine" : "Allow remote backends…";
+      remoteBtn.title = allowRemote
+        ? "go back to the default: only localhost / 127.0.0.1 / ::1 may be fetched"
+        : "allow LLM backends on other machines — only enable on trusted networks";
+    };
+    remoteBtn.addEventListener("click", (e) => {
+      const button = e.currentTarget;
+      // Turning it OFF only ever narrows what the server may reach, so it is a
+      // single click. Turning it ON widens it — that one arms first (the panel
+      // never calls window.confirm: it throws on the Electron frontend).
+      if (allowRemote) return busy(button, () => setAllowRemote(false));
+      return armDestructive(button, "Really allow remote?", () =>
+        busy(button, () => setAllowRemote(true))
+      );
+    });
+    // ---- render history retention -----------------------------------------
+    const historyEnabled = el("input", {
+      type: "checkbox",
+      title: "whether NEW renders are appended to the history — it never deletes anything",
+    });
+    const monthsInput = el("input", {
+      type: "number",
+      min: "0",
+      step: "1",
+      class: "mrln-months",
+      title: "how many month files to keep; 0 keeps everything. Applied when ComfyUI starts.",
+    });
+    const historyStatus = el("span", { class: "mrln-note" }, "checking…");
+    const historySave = el("button", { class: "mrln-btn", disabled: "" }, "Save");
+    const applyHistory = (body) => {
+      // the server echoes both values back on GET and on save — render what it
+      // stored, never what we hoped it stored
+      historyEnabled.checked = body.history_enabled !== false;
+      monthsInput.value = String(body.history_months ?? "");
+      historyStatus.style.color = "";
+      historyStatus.textContent = describeHistory(
+        historyEnabled.checked,
+        Number(monthsInput.value)
+      );
+    };
+    const saveHistory = async () => {
+      const payload = historySavePayload({
+        settingsLoaded,
+        enabled: historyEnabled.checked,
+        months: monthsInput.value,
+      });
+      if (!payload.ok) {
+        bad(historyStatus, `✗ ${payload.error}`);
+        ctx.toast("error", "History settings not saved", payload.error);
+        return;
+      }
+      try {
+        const body = await ctx.apiJson("/mrln/prompt/save-settings", {
+          method: "POST",
+          body: payload.body,
+        });
+        applyHistory(body);
+        ctx.toast(
+          "success",
+          "History settings saved",
+          describeHistory(body.history_enabled !== false, Number(body.history_months ?? 0))
+        );
+      } catch (err) {
+        bad(historyStatus, `✗ ${err.message}`);
+        ctx.toast("error", "History settings not saved", err.message);
+      }
+    };
+    historySave.addEventListener("click", (e) => busy(e.currentTarget, saveHistory));
     // Cloud keys: stored server-side (user tier settings.json), NEVER echoed
     // back — the response only says whether one exists (green check).
     const cloudRow = (label, provider) => {
@@ -98,7 +348,7 @@ export function createSettings(hub) {
       const mark = el("span", { class: "mrln-note" }, "");
       const setMark = (isSet) => {
         mark.textContent = isSet ? "✓ key stored" : "no key";
-        mark.style.color = isSet ? "#6ca" : "";
+        mark.style.color = isSet ? "var(--mrln-accent-soft)" : "";
       };
       const push = async (value) => {
         try {
@@ -161,13 +411,19 @@ export function createSettings(hub) {
           : "no key stored — public models still resolve by hash";
         ollama.urlInput.value = body.llm?.ollama_url ?? "";
         lmstudio.urlInput.value = body.llm?.lmstudio_url ?? "";
+        allowRemote = body.llm?.allow_remote === true;
         for (const [provider, cloud] of clouds) cloud.setMark(body.llm_keys_set?.[provider]);
         settingsLoaded = true;
+        applyHistory(body);
       } catch (err) {
         settingsLoaded = false;
         status.textContent = "settings unavailable — nothing shown here is what is stored";
+        bad(historyStatus, "✗ unavailable");
         ctx.toast("error", "Cannot read Composer settings", err.message);
       }
+      // the two controls that must never save a value they did not read
+      historySave.disabled = !settingsLoaded;
+      renderRemote();
       // auto-check the local backends — green marks without a click
       ollama.check();
       lmstudio.check();
@@ -191,7 +447,7 @@ export function createSettings(hub) {
         ctx.toast("error", "Settings save failed", err.message);
       }
     };
-    settingsTab.replaceChildren(
+    mount(settingsTab, 
       el("div", { class: "mrln-tree-head" }, "Civitai"),
       el(
         "div",
@@ -239,6 +495,24 @@ export function createSettings(hub) {
       ollama.rowStatus,
       lmstudio.row,
       lmstudio.rowStatus,
+      el(
+        "div",
+        { class: "mrln-gate" },
+        el("div", { class: "mrln-inline" }, remoteChip, remoteBtn),
+        el(
+          "div",
+          { class: "mrln-note" },
+          "Off by default, and the default is the safe one: ComfyUI itself makes "
+            + "the request to the URL above, so only this machine (localhost, "
+            + "127.0.0.1, ::1) is fetched — a URL pointing anywhere else would turn "
+            + "this box into a probe for whatever address is in that field. Turn it "
+            + "on only for an Ollama / LM Studio you run yourself on a network you "
+            + "trust; it covers both URLs above, stays on until you turn it off, and "
+            + "is re-checked every single time a backend is used. Turning it back "
+            + "off leaves a stored remote URL visible above — on purpose, so you can "
+            + "see and fix it — and refuses it from then on."
+        )
+      ),
       el("hr", { class: "mrln-sep" }),
       el("div", { class: "mrln-tree-head" }, "Cloud LLM API keys"),
       el(
@@ -248,7 +522,38 @@ export function createSettings(hub) {
           + "Keys are stored server-side in your user tier, never echoed back "
           + "and never in a node widget (widgets persist into workflow PNGs)."
       ),
-      ...clouds.flatMap(([, cloud]) => [cloud.row])
+      ...clouds.flatMap(([, cloud]) => [cloud.row]),
+      el("hr", { class: "mrln-sep" }),
+      el("div", { class: "mrln-tree-head" }, "Render history"),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "The Prompt Template node appends one line per render to a month file in "
+          + "your user library; the History tab reads them back."
+      ),
+      el(
+        "div",
+        { class: "mrln-inline" },
+        el("label", { class: "mrln-check" }, historyEnabled, el("span", {}, "Record renders")),
+        el(
+          "label",
+          { class: "mrln-check" },
+          el("span", {}, "keep"),
+          monthsInput,
+          el("span", {}, "months")
+        ),
+        historySave,
+        historyStatus
+      ),
+      el(
+        "div",
+        { class: "mrln-note" },
+        "Recording governs what is WRITTEN, not what is kept: switching it off "
+          + "stops new lines and deletes nothing — the old records stay until they "
+          + "age out, or until you use Clear history in the History tab. Retention "
+          + "is applied when ComfyUI starts, keeps the newest N month files "
+          + "regardless of the switch above, and 0 keeps everything forever."
+      )
     );
   }
 

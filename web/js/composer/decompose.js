@@ -7,7 +7,7 @@
 // every .js under WEB_DIRECTORY — see composer/util.js). The persistent
 // progress row lives inside createDecompose().
 import { defaultPlan, jsSlugify, uniqueName } from "./util.js";
-import { armDestructive, autoArea, busy, el, field, loadingNote } from "./dom.js";
+import { armDestructive, autoArea, busy, el, field, loadingNote, mount } from "./dom.js";
 // Model-dropdown value encoding — the SAME builder and sentinels the Enhance
 // node's combo uses (composer/api.js), so the two dropdowns cannot drift apart.
 // Pure exports only; the fetching instance arrives as ctx.api.
@@ -28,6 +28,15 @@ export function createDecompose(hub) {
   const sectionSelect = (...a) => hub.sectionSelect(...a);
   const selectTemplate = (...a) => hub.selectTemplate(...a);
   const switchTab = (...a) => hub.switchTab(...a);
+  // composer/intake.js — the image → template card mounted above this tab's
+  // text area, plus the two things this tab has to ask it: which path the user
+  // is looking at (path A uses no LLM, so the engine controls are dead for it)
+  // and what an intake-fed decomposition must not lose on the way to a file.
+  const renderIntakeCard = (...a) => hub.renderIntakeCard(...a);
+  const intakePath = (...a) => hub.intakePath(...a);
+  const setIntakePath = (...a) => hub.setIntakePath(...a);
+  const intakeCarry = (...a) => hub.intakeCarry(...a);
+  const clearIntakeCarry = (...a) => hub.clearIntakeCarry(...a);
 
   // ---- de-compose tab ------------------------------------------------------
   // Paste a finished prompt, map every fragment against the library
@@ -96,6 +105,10 @@ export function createDecompose(hub) {
     // and let only the NEWEST run write d.report/d.plans (d.runNo).
     const no = ++d.runNo;
     d.running = true;
+    // This run is of the PASTED text, so whatever an image intake asked to
+    // carry into the saved template (the extracted negative) no longer belongs
+    // to it — dropping it here is what keeps the two sources from crossing.
+    clearIntakeCarry();
     decomposeBusyText.textContent =
       engine === "programmatic"
         ? " De-composing…"
@@ -161,7 +174,7 @@ export function createDecompose(hub) {
       });
       const conditional = el("div", { class: "mrln-inline" });
       const syncConditional = () => {
-        conditional.replaceChildren(
+        mount(conditional, 
           plan.action === "new-item" ? sectionPicker : null,
           plan.action === "new-section" ? newSectionInput : null
         );
@@ -357,6 +370,12 @@ export function createDecompose(hub) {
     if (type.length) data.type = type;
     if (prefixParts.length) data.prefix = prefixParts.join("\n");
     if (suffixParts.length) data.suffix = suffixParts.join("\n");
+    // /extract-apply forwards the POSITIVE prompt only (intake.py's allowlist),
+    // so a negative that WAS in the image would otherwise be read, shown, and
+    // then silently dropped between the two tabs. It is the one thing the
+    // fragment cards cannot represent, so it rides straight into the file.
+    const carried = intakeCarry();
+    if (carried?.negative) data.negative = carried.negative;
     try {
       await ctx.apiJson("/mrln/prompt/save-template", {
         method: "POST",
@@ -375,7 +394,7 @@ export function createDecompose(hub) {
 
   function renderDecomposeTab() {
     if (!state.library) {
-      decomposeTab.replaceChildren(
+      mount(decomposeTab, 
         state.libraryError
           ? libraryErrorNote(state.libraryError)
           : loadingNote("Loading prompt library…")
@@ -383,6 +402,11 @@ export function createDecompose(hub) {
       return;
     }
     const d = state.decompose;
+    // Path A (verbatim image intake) consults no LLM at all — it is the path
+    // that works with every backend unset. So while it is what the user is
+    // looking at, these three controls are DISABLED rather than hidden: a
+    // hidden control teaches nothing, a greyed one with a reason does.
+    const verbatimLock = intakePath() === "verbatim";
     const promptArea = autoArea(
       {
         placeholder: "Paste a full prompt here — each fragment is matched against your library…",
@@ -402,6 +426,7 @@ export function createDecompose(hub) {
       },
     });
     const engineSelect = el("select", {
+      disabled: verbatimLock ? "" : null,
       title: "programmatic: token matcher, offline. llm: the model splits and "
         + "maps against the library catalog. hybrid: the programmatic result "
         + "rides in the LLM system prompt as suggestions to verify or correct. "
@@ -416,6 +441,7 @@ export function createDecompose(hub) {
     }
     engineSelect.value = d.engine ?? "programmatic";
     const backendSelect = el("select", {
+      disabled: verbatimLock ? "" : null,
       title: "LLM backend for the llm/hybrid engines — locals need the URL, "
         + "clouds the API key from the Settings tab",
       onchange: (e) => {
@@ -428,6 +454,7 @@ export function createDecompose(hub) {
     }
     backendSelect.value = d.backend ?? "ollama";
     const modelSelect = el("select", {
+      disabled: verbatimLock ? "" : null,
       title: "Model for the llm/hybrid engines. Locals list installed models; "
         + "'⬇ pull' entries download via Ollama when picked; clouds fall back "
         + "to a sensible default when empty.",
@@ -468,7 +495,7 @@ export function createDecompose(hub) {
       // and a slow response for the PREVIOUS backend must not write the shared
       // d.model (an Ollama tag posted to a cloud backend) behind the new one.
       const gen = ++d.modelGen;
-      modelSelect.replaceChildren(el("option", { value: current }, current || "…"));
+      mount(modelSelect, el("option", { value: current }, current || "…"));
       // shared 30 s cache + in-flight dedup (composer/api.js): this ran on
       // EVERY render, and each local-backend probe blocks a server executor
       // thread for up to 5 s when the backend is down
@@ -490,7 +517,7 @@ export function createDecompose(hub) {
       }
       // one shared value encoding (⬇ pull … / ✏ custom… / ⚠ note) instead of
       // this tab's own __pull__:/__custom__ sentinels
-      modelSelect.replaceChildren(
+      mount(modelSelect, 
         ...(isCloud ? [el("option", { value: "" }, "(backend default)")] : []),
         ...buildModelValues({ provider, current, entry }).map((value) =>
           el("option", { value }, value)
@@ -503,6 +530,11 @@ export function createDecompose(hub) {
       }
     })();
     const parts = [
+      // composer/intake.js: drop an image, see what it carried, pick a path.
+      // It sits ABOVE the text area on purpose — an extraction is an input to
+      // this tab, and its two buttons are the first fork in the road.
+      renderIntakeCard(),
+      el("hr", { class: "mrln-sep" }),
       el(
         "div",
         { class: "mrln-note" },
@@ -516,6 +548,30 @@ export function createDecompose(hub) {
       (d.engine ?? "programmatic") === "programmatic"
         ? null
         : field("Model", el("div", { class: "mrln-inline" }, modelSelect, modelNote)),
+      verbatimLock
+        ? el(
+            "div",
+            { class: "mrln-note mrln-inline" },
+            el(
+              "span",
+              {},
+              "Disabled: the image intake above is on the 'Use as-is' path, which "
+                + "reproduces the found prompt with no LLM at all. These apply to "
+                + "'Decompose' only."
+            ),
+            // the way out that does NOT run anything: without it the controls
+            // needed to configure path B would be locked by path A
+            el(
+              "button",
+              {
+                class: "mrln-btn mrln-mini",
+                title: "re-enable them — nothing is run",
+                onclick: () => setIntakePath("decompose"),
+              },
+              "Enable"
+            )
+          )
+        : null,
       el(
         "div",
         { class: "mrln-actions" },
@@ -563,7 +619,7 @@ export function createDecompose(hub) {
         )
       );
     }
-    decomposeTab.replaceChildren(...parts);
+    mount(decomposeTab, ...parts);
   }
 
   return { renderDecomposeTab };

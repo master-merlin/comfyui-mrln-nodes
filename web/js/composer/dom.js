@@ -30,6 +30,21 @@ export function el(tag, attrs = {}, ...children) {
   return node;
 }
 
+/**
+ * Replace a node's children, dropping null/undefined the way el() does.
+ *
+ * `replaceChildren` is NOT el(): its arguments are (Node or DOMString), so a
+ * null child is COERCED TO THE STRING "null" and rendered as visible text
+ * (verified in Chromium: `box.replaceChildren(kid, null)` gives
+ * textContent "realnull"). Every render function in this panel builds its
+ * children as `condition ? el(…) : null` lists — the pattern el() was designed
+ * around — so the one call that cannot filter them needs this.
+ */
+export function mount(node, ...children) {
+  node.replaceChildren(...children.flat(2).filter((child) => child != null));
+  return node;
+}
+
 const REF_RE = /(?<!\{)\{([A-Za-z_][A-Za-z0-9_-]*)\}(?!\})/g;
 
 export function validateRefs(field, knownNames) {

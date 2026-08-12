@@ -352,6 +352,15 @@ app.registerExtension({
           // the same cache and the same single URL encoding instead of a
           // second implementation.
           api: mrln,
+          // ADDITIVE: route -> the URL the BROWSER must use. Everything else
+          // in the panel goes through api.fetchApi, which applies ComfyUI's
+          // api_base itself; a thumbnail is fetched by an <img src>, which
+          // cannot. Without this a root-relative /mrln/prompt/thumb 404s on
+          // every install served under a sub-path (a reverse proxy, or
+          // ComfyUI's own --base-directory style deployments) while the JSON
+          // routes keep working — a failure that looks like "thumbnails are
+          // broken" rather than "the base path is missing".
+          apiUrl: (route) => (typeof api.apiURL === "function" ? api.apiURL(route) : route),
         });
       },
     });

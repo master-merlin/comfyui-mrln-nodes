@@ -12,6 +12,7 @@ import json
 import pytest
 import support  # noqa: F401
 
+from mrln import promptapi
 from mrln.promptlib import (
     NEUTRAL_RANK,
     Library,
@@ -22,6 +23,7 @@ from mrln.promptlib import (
     render,
     resolve_template,
 )
+from mrln.promptlib.render import ordered_slot_ids
 
 # authored order of templates/shot.json — the order on disk, never rewritten
 AUTHORED = ("subject", "setting", "style", "lighting", "camera", "mood")
@@ -335,6 +337,86 @@ def test_choices_mentions_the_reorder_only_when_something_moved(lib):
     assert "order: optimized" not in run(lib).rendered.choices
     assert "negative:" not in run(lib, profile="keeper").rendered.choices
     assert "order: optimized for partial" in run(lib, profile="partial").rendered.choices
+
+
+# -- the optimized order, exposed for the Composer ---------------------------
+# The choices report says only THAT a profile moved something; the "Optimize
+# for …" comparison in the Composer shows the order itself and can write it
+# back into a template, and must never reimplement this sort in JS.
+
+
+def ok(result):
+    status, body = result
+    assert status == 200, body
+    return body
+
+
+def test_ordered_slot_ids_is_authored_order_without_a_reorder(lib):
+    resolved = run(lib).resolved
+    assert ordered_slot_ids(resolved, None) == list(AUTHORED)
+    # a profile with a negative policy but no block_order ranks nothing
+    policy = RenderPolicy.from_render({"negative_policy": "drop"}, profile="prose")
+    assert ordered_slot_ids(resolved, policy) == list(AUTHORED)
+
+
+def test_ordered_slot_ids_is_the_order_the_positive_came_out_in(lib):
+    tpl = lib.load_template("shot")
+    resolved = resolve_template(lib, tpl, seed=0, mode="as configured", selection={}, variables={})
+    policy = RenderPolicy.from_render({"block_order": {"camera": 10, "style": 20}}, profile="t")
+    ids = ordered_slot_ids(resolved, policy)
+    assert ids == ["camera", "style", "subject", "setting", "lighting", "mood"]
+    # the parity that matters: JSON keys ARE the assembly order
+    assert list(json.loads(render(resolved, "json", tpl.render, policy=policy).positive)) == ids
+
+
+def test_ordered_slot_ids_names_every_top_level_slot(lib):
+    # 'subject' is muted, so it renders nothing and the visible blocks come
+    # out in the same order either way — render() reports no reorder. The
+    # exposed order still moves it, because an order written back into a
+    # template has to place every slot, for the draws where they DO render.
+    tpl = lib.load_template("shot")
+    resolved = resolve_template(
+        lib, tpl, seed=0, mode="as configured", selection={"subject": "off"}, variables={}
+    )
+    policy = RenderPolicy.from_render({"block_order": {"setting": 10}}, profile="p")
+    assert "order: optimized" not in render(resolved, "string", tpl.render, policy=policy).choices
+    ids = ordered_slot_ids(resolved, policy)
+    assert sorted(ids) == sorted(AUTHORED)  # nothing dropped
+    assert ids == ["setting", "subject", "style", "lighting", "camera", "mood"]
+    # …but a muted slot carries no section, so it sorts at the NEUTRAL rank
+    # whatever its domain: the exposed order is only ever as specific as the
+    # draw it describes — the Composer warns before writing one back.
+    assert block_domain(next(s for s in resolved.slots if s.id == "subject")) == ""
+
+
+def test_preview_exposes_the_reading_order(lib):
+    plain = ok(promptapi.handle_preview(lib, {"template": "shot"}))
+    assert plain["render_order"] == list(AUTHORED)
+    optimized = ok(promptapi.handle_preview(lib, {"template": "shot", "profile": "prose"}))
+    assert optimized["render_order"] == [
+        "subject",
+        "setting",
+        "style",
+        "lighting",
+        "mood",  # unlisted, so it lands at the neutral rank …
+        "camera",  # … ahead of camera, which the profile ranks 60
+    ]
+    # 'slots' keeps AUTHORED order on both sides — it mirrors the template
+    for body in (plain, optimized):
+        assert [s["id"] for s in body["slots"]] == list(AUTHORED)
+    # a profile that ranks nothing changes no key
+    for profile in ("plain", "keeper", "noop-order"):
+        body = ok(promptapi.handle_preview(lib, {"template": "shot", "profile": profile}))
+        assert body["render_order"] == list(AUTHORED), profile
+
+
+def test_preview_render_order_matches_the_rendered_positive(lib):
+    # the endpoint's key and the endpoint's own render can never disagree
+    body = ok(
+        promptapi.handle_preview(lib, {"template": "shot", "profile": "partial", "format": "json"})
+    )
+    assert list(json.loads(body["positive"])) == body["render_order"]
+    assert body["render_order"][0] == "camera"
 
 
 # -- malformed policy data ---------------------------------------------------

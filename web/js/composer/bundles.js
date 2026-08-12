@@ -5,7 +5,7 @@
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
 import { bundleFilename } from "./util.js";
-import { el, field } from "./dom.js";
+import { el, field, mount } from "./dom.js";
 
 export function createBundles(hub) {
   const { ctx } = hub;
@@ -162,7 +162,7 @@ export function createBundles(hub) {
           method: "POST",
           body: importBody(true),
         });
-        planList.replaceChildren(...importPlanLines(fresh));
+        mount(planList, ...importPlanLines(fresh));
         errorLine.textContent = "";
       } catch (err) {
         errorLine.textContent = err.message;

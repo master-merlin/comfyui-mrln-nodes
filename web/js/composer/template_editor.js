@@ -15,6 +15,7 @@ export function createTemplateEditor(hub) {
   const markEditorClean = (...a) => hub.markEditorClean(...a);
   const selectTemplate = (...a) => hub.selectTemplate(...a);
   const setEditor = (...a) => hub.setEditor(...a);
+  const thumbControls = (...a) => hub.thumbControls(...a);
 
   async function openTemplateEditor(slug) {
     let body;
@@ -84,6 +85,10 @@ export function createTemplateEditor(hub) {
       body.tier === "factory"
         ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
         : null,
+      // The thumbnail is the template's face in the browse grid, and it is
+      // independent of the JSON below: setting one writes an image file, never
+      // this template. thumbControls owns the whole set/reset interaction.
+      thumbControls("templates", slug, {}),
       field("Slug", slugInput),
       el("span", { class: "mrln-field-name" }, "Template JSON (validated on save)"),
       textarea,

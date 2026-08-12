@@ -353,6 +353,138 @@ export function loraProgressText(body) {
   return body.total ? `${mb(body.loaded)} / ${mb(body.total)} MB` : `${mb(body.loaded)} MB`;
 }
 
+// ---- LoRA trigger words: provenance vs truth -------------------------------
+// SERVER TWIN: mrln/promptapi/lora.py — CATCHWORD_JOINER, split_catchword,
+// render_catchword, trigger_selection. The three functions below are a
+// deliberate mirror of those, so the editor can draw its chips per keystroke
+// without a round trip.
+//
+// A LoRA item stores TWO fields and neither is new:
+//   data.lora_info.trained_words = PROVENANCE — the full list the source
+//     (Civitai / safetensors metadata) gave us. Mute and solo NEVER edit it.
+//   the item's text            = the CATCHWORD, i.e. TRUTH — the words that
+//     actually render, joined ", " in trained_words order.
+// Mute is therefore ABSENCE (in provenance, not in the catchword) and solo is
+// "the only one present" — chip state is a set difference over what is already
+// on disk, so a reload re-derives it and there is nothing widget-only to lose.
+//
+// WHAT DRIFT FROM THE SERVER TWIN COSTS: nothing that renders. Only the
+// catchword reaches a prompt and only the SERVER renders it; this derivation is
+// display-only. A disagreement shows a WRONG CHIP (a provenance word drawn as
+// user-added, say) and never a wrong prompt, a wrong LoRA or a corrupted file.
+// The one known divergence, deliberately accepted: Python compares with
+// casefold() and this compares with toLowerCase(), which differ for a handful
+// of exotic spellings ("STRASSE" vs "straße"). Worst case there: the chip says
+// "user-added" while the server counts the word as provenance.
+
+export const CATCHWORD_JOINER = ", ";
+
+export function cleanTriggerWords(values) {
+  return (values ?? []).map((word) => String(word ?? "").trim()).filter(Boolean);
+}
+
+export function splitCatchword(catchword) {
+  // A catchword string -> the words it renders, in written order.
+  return String(catchword ?? "")
+    .split(",")
+    .map((word) => word.trim())
+    .filter(Boolean);
+}
+
+export function renderCatchword(trainedWords, selected) {
+  // The catchword TEXT for a selection: provenance words in trained_words
+  // order first (determinism — the click order must not change the prompt),
+  // then free-text extras in the order given. Empty when everything is muted.
+  const words = cleanTriggerWords(trainedWords);
+  const picked = cleanTriggerWords(selected);
+  const wanted = new Set(picked.map((word) => word.toLowerCase()));
+  const known = new Set(words.map((word) => word.toLowerCase()));
+  const out = words.filter((word) => wanted.has(word.toLowerCase()));
+  const seen = new Set(out.map((word) => word.toLowerCase()));
+  for (const word of picked) {
+    const folded = word.toLowerCase();
+    if (!known.has(folded) && !seen.has(folded)) {
+      out.push(word);
+      seen.add(folded);
+    }
+  }
+  return out.join(CATCHWORD_JOINER);
+}
+
+export function triggerSelection(trainedWords, catchword) {
+  // The chip state, derived from the FILE alone: which provenance words
+  // render, which are muted (in provenance, absent from the catchword), and
+  // which rendered words are user-added free text.
+  const words = cleanTriggerWords(trainedWords);
+  const rendered = splitCatchword(catchword);
+  const renderedFold = new Set(rendered.map((word) => word.toLowerCase()));
+  const knownFold = new Set(words.map((word) => word.toLowerCase()));
+  return {
+    words,
+    active: words.filter((word) => renderedFold.has(word.toLowerCase())),
+    muted: words.filter((word) => !renderedFold.has(word.toLowerCase())),
+    extra: rendered.filter((word) => !knownFold.has(word.toLowerCase())),
+    catchword: String(catchword ?? "").trim(),
+  };
+}
+
+// The three below are EDITOR-ONLY (no server twin): what the M/S buttons on a
+// trigger chip do. Each takes the stored pair and returns the NEXT catchword,
+// so the click path stays "derive -> compute text -> write the input".
+
+export function triggerSoloed(selection, word) {
+  // Derived, never stored: a word is soloed exactly when it is the only
+  // provenance word that renders. That is why solo needs no schema field.
+  const folded = String(word ?? "").trim().toLowerCase();
+  return (
+    selection.words.length > 1 &&
+    selection.active.length === 1 &&
+    selection.active[0].toLowerCase() === folded
+  );
+}
+
+export function muteTriggerWord(trainedWords, catchword, word) {
+  // M on a provenance word: absence IS the mute, so this only drops it from
+  // (or restores it to) the selection — the provenance list is untouched, and
+  // free-text extras ride along unchanged.
+  const selection = triggerSelection(trainedWords, catchword);
+  const folded = String(word ?? "").trim().toLowerCase();
+  const active = selection.active.filter((w) => w.toLowerCase() !== folded);
+  if (active.length === selection.active.length) {
+    active.push(...selection.words.filter((w) => w.toLowerCase() === folded));
+  }
+  return renderCatchword(selection.words, [...active, ...selection.extra]);
+}
+
+export function soloTriggerWord(trainedWords, catchword, word) {
+  // S on a provenance word: it becomes the only trained word that renders.
+  // Clicking S on a word that is ALREADY alone un-solos by un-muting every
+  // trained word — there is no remembered mute set to restore, because the
+  // file is the only state.
+  //
+  // DIVERGENCE FROM THE SPEC, deliberate: "solo = mute every other word" is
+  // only true for provenance words. Free-text extras have no provenance entry,
+  // so silencing one would DELETE it and solo would stop being reversible —
+  // the one thing M/S is everywhere else in this system. Solo therefore never
+  // touches extras, and its persisted state equals "mute every other TRAINED
+  // word", not "mute everything else".
+  const selection = triggerSelection(trainedWords, catchword);
+  const folded = String(word ?? "").trim().toLowerCase();
+  const active = triggerSoloed(selection, word)
+    ? selection.words
+    : selection.words.filter((w) => w.toLowerCase() === folded);
+  return renderCatchword(selection.words, [...active, ...selection.extra]);
+}
+
+export function dropTriggerWord(catchword, word) {
+  // The extras' M: a user-added word has no provenance entry to fall back to,
+  // so muting it can only REMOVE it. Destructive — the editor arms this one.
+  const folded = String(word ?? "").trim().toLowerCase();
+  return splitCatchword(catchword)
+    .filter((w) => w.toLowerCase() !== folded)
+    .join(CATCHWORD_JOINER);
+}
+
 // ---- de-compose ------------------------------------------------------------
 
 export function jsSlugify(text, maxLen = 40) {
@@ -423,6 +555,17 @@ export function itemRowEdited(edited, item) {
     if (num(edited.sc, sm) !== (data.strength_clip ?? data.strength_model ?? 1)) return true;
     if ((edited.comment ?? "").trim() !== (data.comment ?? "")) return true;
     if ((edited.base ?? "").trim().toLowerCase() !== (data.base ?? "")) return true;
+    // Trigger-word PROVENANCE (data.lora_info) is stored on the item as well,
+    // and refreshing it changes nothing else on the row — without this, a
+    // factory-origin row whose words were just fetched would fall out of the
+    // thin extend diff and its chips would be gone on the next open. Compared
+    // key-order-independently so a re-fetch that says the same thing is not an
+    // edit. Rows that pass no `loraInfo` at all are unaffected.
+    const infoSig = (info) =>
+      JSON.stringify(Object.entries(info ?? {}).sort(([a], [b]) => (a < b ? -1 : 1)));
+    if (edited.loraInfo !== undefined && infoSig(edited.loraInfo) !== infoSig(data.lora_info)) {
+      return true;
+    }
   }
   return false;
 }

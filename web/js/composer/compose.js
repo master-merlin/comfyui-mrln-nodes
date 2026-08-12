@@ -5,7 +5,15 @@
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js). Every element this
 // tab keeps across re-renders is created inside createCompose().
-import { moveInArray, overrideTweakCount, parseKvLines, parseToken, uniqueName } from "./util.js";
+import {
+  buildDraftData,
+  buildSelectionLines as selectionLinesFor,
+  moveInArray,
+  overrideTweakCount,
+  parseKvLines,
+  parseToken,
+  uniqueName,
+} from "./util.js";
 import {
   armDestructive,
   autoArea,
@@ -14,10 +22,129 @@ import {
   dragHandle,
   el,
   field,
+  loadingNote,
+  mount,
   smallBtn,
   tierChip,
   validateRefs,
 } from "./dom.js";
+
+// ---- "Optimize for …": the pure half (SPEC 5.3) -----------------------------
+// Reading order is a render-time function of the PROFILE (its block_order), so
+// one template on disk reads differently per target model — which is exactly
+// what the per-model showcases proved changes results. The comparison is two
+// preview renders that differ in exactly ONE request field. Request shaping,
+// the authored/optimized diff and the write-back mapping live here so they are
+// testable without a DOM (tests/js/optimize.test.mjs).
+
+/**
+ * The two preview bodies of one comparison — identical except `profile`.
+ *
+ * The trap: `state.profile` is the TEMPLATE VARIANT target (a template's
+ * `profiles.<name>.overrides`) and rides the very same `profile` key. So the
+ * baseline is whatever the live preview is showing — the "before" the user
+ * would otherwise ship — and this builds its own bodies from the same pieces
+ * doPreview uses instead of going through it. Nothing here writes state.
+ */
+export function optimizeBodies(state, target) {
+  const base = {
+    template: state.slug,
+    seed: state.seed,
+    mode: state.mode,
+    selection: selectionLinesFor(state),
+    variables: state.variables,
+    trigger: state.trigger,
+    format: state.format,
+    conflict_policy: state.conflictPolicy,
+    text_length: state.textLength,
+  };
+  // same rule as doPreview: unsaved structural edits travel as a draft
+  if (state.modified) base.template_data = buildDraftData(state);
+  return [
+    { ...base, profile: state.profile ?? "standard" },
+    { ...base, profile: target },
+  ];
+}
+
+/** Fingerprint of a comparison's inputs — a result whose signature no longer
+ * matches the current settings is stale and says so rather than lying. */
+export function optimizeSignature(state, target) {
+  return JSON.stringify(optimizeBodies(state, target));
+}
+
+/**
+ * What actually differs between the two renders. `render_order` is the server's
+ * one additive key for this feature (mrln/promptapi/library.py::_render_order):
+ * the top-level slot ids in the reading order the render used. The sort itself
+ * lives in mrln/promptlib/render.py and is never reimplemented here — an older
+ * server that does not send the key leaves `known` false and the comparison
+ * degrades to the two rendered texts.
+ */
+export function orderComparison(authored, optimized) {
+  const before = Array.isArray(authored?.render_order) ? authored.render_order : null;
+  const after = Array.isArray(optimized?.render_order) ? optimized.render_order : null;
+  const key = (ids) => ids.join("\u0000");
+  const sameSet = !!before && !!after && key([...before].sort()) === key([...after].sort());
+  const rows = [];
+  for (const [at, id] of (after ?? []).entries()) {
+    rows.push({ id, at, was: before ? before.indexOf(id) : -1 });
+  }
+  const drawn = (body) => (body?.slots ?? []).map((s) => `${s.id}=${s.item ?? ""}`).join("\u0000");
+  return {
+    known: !!before && !!after,
+    sameSet,
+    moved: sameSet && key(before) !== key(after),
+    rows,
+    textChanged: (authored?.positive ?? "") !== (optimized?.positive ?? ""),
+    negativeChanged: (authored?.negative ?? "") !== (optimized?.negative ?? ""),
+    formatChanged: (authored?.format ?? "") !== (optimized?.format ?? ""),
+    // a profile can also carry template overrides or a different text_length —
+    // then the two sides are not a pure order difference and must say so
+    drawChanged: drawn(authored) !== drawn(optimized),
+    // slots that drew nothing carry no section, so block_order cannot rank
+    // them: they keep their authored position in anything written back
+    unranked: (optimized?.slots ?? []).filter((s) => !s.section_slug).map((s) => s.id),
+  };
+}
+
+/**
+ * The template `order` array (slot ids + "@variant") that reproduces a
+ * render's reading order, or `{error}` when it cannot be expressed.
+ *
+ * Resolved variant slots render as "<variant>/<slot id>" and the whole block
+ * rides ONE "@variant" token, so a policy that interleaves variant slots with
+ * shared ones has no representation on disk — refuse instead of writing an
+ * order that renders differently from the comparison the user just approved.
+ */
+export function orderWriteBack(renderOrder, orderIds) {
+  const shared = new Set((orderIds ?? []).filter((id) => id !== "@variant"));
+  const out = [];
+  let variantPlaced = false;
+  for (const id of renderOrder ?? []) {
+    if (shared.has(id)) {
+      out.push(id);
+      continue;
+    }
+    if (!id.includes("/")) return { error: `'${id}' is not a slot of this template` };
+    if (out[out.length - 1] === "@variant") continue; // still inside the block
+    if (variantPlaced) {
+      return {
+        error: "this order splits the variant block apart, and a template stores it as one "
+          + "'@variant' entry — reorder the slots by hand instead",
+      };
+    }
+    out.push("@variant");
+    variantPlaced = true;
+  }
+  const missing = (orderIds ?? []).filter((id) => !out.includes(id));
+  if (missing.length) {
+    return {
+      error: `this draw never rendered ${missing.join(", ")}, so the order cannot place `
+        + "them — un-mute them (and pick a variant) and compare again",
+    };
+  }
+  return { order: out };
+}
 
 export function createCompose(hub) {
   const { ctx, state, composeTab } = hub;
@@ -36,6 +163,7 @@ export function createCompose(hub) {
   const confirmReplaceEditor = (...a) => hub.confirmReplaceEditor(...a);
   const ensurePool = (...a) => hub.ensurePool(...a);
   const exportBtn = (...a) => hub.exportBtn(...a);
+  const loadLibrary = (...a) => hub.loadLibrary(...a);
   const newTemplate = (...a) => hub.newTemplate(...a);
   const openSectionEditor = (...a) => hub.openSectionEditor(...a);
   const overridesFor = (...a) => hub.overridesFor(...a);
@@ -84,6 +212,9 @@ export function createCompose(hub) {
   // ---- compose tab ---------------------------------------------------------
 
   const previewBox = el("div");
+  // Persistent like previewBox/modifiedNote: an async comparison must survive
+  // the re-renders that fire while it is in flight.
+  const optimizeBox = el("div", { class: "mrln-optimize" });
   const footer = el(
     "div",
     { class: "mrln-footer" },
@@ -311,7 +442,7 @@ export function createCompose(hub) {
         (s) => s.id === mount.dataset.mrlnNested
       );
       if (resolved && (resolved.children ?? []).length) {
-        mount.replaceChildren(
+        mount(mount, 
           el(
             "div",
             {
@@ -324,7 +455,7 @@ export function createCompose(hub) {
         );
         mount.style.display = "";
       } else {
-        mount.replaceChildren();
+        mount(mount);
         mount.style.display = "none";
       }
     }
@@ -402,7 +533,7 @@ export function createCompose(hub) {
 
   function renderComposeTab() {
     if (!state.rawData) {
-      composeTab.replaceChildren(
+      mount(composeTab, 
         el(
           "div",
           { class: "mrln-note" },
@@ -665,10 +796,11 @@ export function createCompose(hub) {
       )
     );
 
-    parts.push(footer);
+    parts.push(optimizeBox, footer);
 
-    composeTab.replaceChildren(...parts);
+    mount(composeTab, ...parts);
     renderPreview(state.lastPreview, null);
+    renderOptimize(); // persistent box — refill it for the fresh mount
     renderNested(); // fresh mounts need refilling from the last preview
   }
 
@@ -1301,7 +1433,7 @@ export function createCompose(hub) {
 
   function renderPreview(preview, err) {
     if (err) {
-      previewBox.replaceChildren(
+      mount(previewBox, 
         el(
           "div",
           { class: "mrln-error" },
@@ -1312,7 +1444,7 @@ export function createCompose(hub) {
       return;
     }
     if (!preview) {
-      previewBox.replaceChildren(el("div", { class: "mrln-note" }, "Previewing…"));
+      mount(previewBox, el("div", { class: "mrln-note" }, "Previewing…"));
       return;
     }
     const children = [
@@ -1384,7 +1516,299 @@ export function createCompose(hub) {
       );
     children.push(fold("Choices (what was drawn per section)", preview.choices, "choicesOpen"));
     if (preview.negative) children.push(fold("Negative", preview.negative, "negativeOpen"));
-    previewBox.replaceChildren(...children);
+    mount(previewBox, ...children);
+  }
+
+  // ---- "Optimize for …" (SPEC 5.3) -----------------------------------------
+  // Two preview renders side by side: the template as it reads now, and the
+  // same draw in the reading order the target profile asks for. Writing that
+  // order into a template is a separate, explicit step — never automatic.
+
+  function optimizeProfiles() {
+    return Object.entries(state.detail?.template?.profiles ?? {}).sort((a, b) =>
+      a[0].localeCompare(b[0])
+    );
+  }
+
+  function baselineLabel() {
+    const profile = state.profile ?? "standard";
+    return profile === "standard" ? "authored order" : `current: ${profile}`;
+  }
+
+  function setOptimizeProfile(name) {
+    state.optimize.profile = name;
+    state.optimize.result = null;
+    state.optimize.busy = false;
+    state.optimize.runNo += 1; // orphan whatever is in flight
+    renderOptimize();
+    if (name) runOptimize();
+  }
+
+  async function runOptimize() {
+    const target = state.optimize.profile;
+    if (!target || !state.slug || !state.rawData) return;
+    const no = ++state.optimize.runNo;
+    const signature = optimizeSignature(state, target);
+    const [baseBody, targetBody] = optimizeBodies(state, target);
+    state.optimize.busy = true;
+    renderOptimize();
+    let result;
+    try {
+      // one round trip, not two sequential ones — the endpoint is pure
+      const [authored, optimized] = await Promise.all([
+        ctx.apiJson("/mrln/prompt/preview", { method: "POST", body: baseBody }),
+        ctx.apiJson("/mrln/prompt/preview", { method: "POST", body: targetBody }),
+      ]);
+      result = { slug: state.slug, target, signature, authored, optimized };
+    } catch (err) {
+      result = { slug: state.slug, target, signature, error: err.message };
+    }
+    if (no !== state.optimize.runNo) return; // a newer comparison owns the box
+    state.optimize.busy = false;
+    state.optimize.result = result;
+    renderOptimize();
+  }
+
+  function optimizeColumn(title, body, showNegative) {
+    return el(
+      "div",
+      { class: "mrln-optimize-col" },
+      el(
+        "div",
+        { class: "mrln-optimize-side" },
+        el("span", { class: "mrln-field-name" }, title),
+        el("span", { class: "mrln-chip" }, body.format)
+      ),
+      el("pre", { class: "mrln-pre" }, body.positive),
+      showNegative
+        ? el("div", { class: "mrln-note" }, `negative: ${body.negative || "(empty)"}`)
+        : null
+    );
+  }
+
+  function optimizeOrderList(cmp, body) {
+    const byId = new Map((body.slots ?? []).map((slot) => [slot.id, slot]));
+    return el(
+      "div",
+      { class: "mrln-optimize-order" },
+      ...cmp.rows.map((row) => {
+        const slot = byId.get(row.id);
+        const domain = (slot?.section_slug ?? "").split("/")[0];
+        return el(
+          "div",
+          { class: row.was === row.at ? "mrln-optimize-row" : "mrln-optimize-row mrln-moved" },
+          el("span", { class: "mrln-optimize-idx" }, `${row.at + 1}`),
+          el("span", { class: "mrln-optimize-name" }, slot?.label || row.id),
+          domain ? el("span", { class: "mrln-chip" }, domain) : null,
+          row.was === row.at
+            ? null
+            : el("span", { class: "mrln-note" }, row.was < 0 ? "new" : `was ${row.was + 1}`)
+        );
+      })
+    );
+  }
+
+  function optimizeVerdict(cmp, target) {
+    const notes = [];
+    if (!cmp.known) {
+      notes.push(
+        "This server does not report the reading order, so only the two renders can be "
+          + "compared — the write-back needs it."
+      );
+    } else if (!cmp.sameSet) {
+      notes.push(
+        `'${target}' renders a different SET of blocks (it changes which slots draw, not just `
+          + "their order) — compare the two texts; there is no order to write back."
+      );
+    } else if (cmp.moved) {
+      const moves = cmp.rows.filter((row) => row.was !== row.at).length;
+      notes.push(`'${target}' reads this template in a different order — ${moves} block(s) move.`);
+    } else {
+      notes.push(`'${target}' asks for the order this template already has — nothing to write.`);
+    }
+    if (cmp.drawChanged) {
+      notes.push(
+        `⚠ '${target}' also draws different text (its template overrides or text_length), so `
+          + "what you see is not the order alone."
+      );
+    }
+    if (cmp.formatChanged) notes.push(`⚠ '${target}' also changes the render format.`);
+    if (cmp.negativeChanged) {
+      notes.push(`⚠ '${target}' also changes the negative (its negative_policy).`);
+    }
+    if (cmp.unranked.length) {
+      notes.push(
+        `${cmp.unranked.length} slot(s) drew nothing here (${cmp.unranked.join(", ")}); they carry `
+          + "no section, so the profile cannot rank them — they keep their authored position."
+      );
+    }
+    return notes;
+  }
+
+  async function writeOptimizedOrder(button, order) {
+    const target = state.optimize.profile;
+    const slug = await askString(
+      "Write the optimized order",
+      `Save a copy of '${state.slug}' whose slot order IS the one '${target}' asks for `
+        + "(the saved file is the source — unsaved edits are not included).\n"
+        + "Slug for the copy (lowercase, '/' for folders):",
+      `${state.slug}-${target}`
+    );
+    if (!slug?.trim()) return;
+    const clean = slug.trim().toLowerCase().replace(/\s+/g, "-");
+    if ((state.library?.templates ?? []).some((t) => t.slug === clean)) {
+      // overwriting an existing template is destructive — arm, never confirm()
+      armDestructive(button, `Really overwrite '${clean}'?`, () => saveOrderedCopy(clean, order));
+      return;
+    }
+    await saveOrderedCopy(clean, order);
+  }
+
+  async function saveOrderedCopy(slug, order) {
+    // Source is baseRaw — the file on DISK — not rawData: the working copy has
+    // the active Target profile's overrides baked in and may carry unsaved
+    // edits, and this action must change the reading order and nothing else.
+    const target = state.optimize.profile;
+    const data = structuredClone(state.baseRaw);
+    data.order = [...order];
+    data.version = 1;
+    try {
+      await ctx.apiJson("/mrln/prompt/save-template", {
+        method: "POST",
+        body: { slug, data },
+      });
+    } catch (err) {
+      ctx.toast("error", "Write failed", err.message);
+      return;
+    }
+    ctx.toast(
+      "success",
+      "Optimized order written",
+      `${slug} — ${order.length} block(s) in '${target}' reading order. The profile still `
+        + "applies its own order on top; this is the order every other profile now reads."
+    );
+    ctx.refreshCombos();
+    // the comparison described the template we just left
+    state.optimize.profile = "";
+    state.optimize.result = null;
+    state.optimize.runNo += 1;
+    await loadLibrary();
+    await selectTemplate(slug);
+  }
+
+  function optimizeResultNodes(result) {
+    const cmp = orderComparison(result.authored, result.optimized);
+    const nodes = [];
+    if (result.signature !== optimizeSignature(state, result.target)) {
+      nodes.push(
+        el(
+          "div",
+          { class: "mrln-note mrln-optimize-stale" },
+          "⚠ settings changed since this comparison — press ↻ to re-run it"
+        )
+      );
+    }
+    nodes.push(
+      el(
+        "div",
+        { class: "mrln-optimize-cols" },
+        optimizeColumn(baselineLabel(), result.authored, cmp.negativeChanged),
+        optimizeColumn(`optimized for ${result.target}`, result.optimized, cmp.negativeChanged)
+      )
+    );
+    if (cmp.known) nodes.push(optimizeOrderList(cmp, result.optimized));
+    for (const note of optimizeVerdict(cmp, result.target)) {
+      nodes.push(el("div", { class: "mrln-note" }, note));
+    }
+    if (!cmp.moved) return nodes; // nothing moved (or nothing comparable) — no button at all
+
+    const write = orderWriteBack(result.optimized.render_order, state.orderIds);
+    const blocked = state.modified
+      ? "save your unsaved template edits first — the copy is made from the saved file"
+      : (write.error ?? null);
+    nodes.push(
+      el(
+        "div",
+        { class: "mrln-actions" },
+        el(
+          "button",
+          {
+            class: "mrln-btn mrln-primary",
+            disabled: blocked ? "" : null,
+            title: blocked
+              ?? `Save a COPY of '${state.slug}' whose slot order is this one. Never automatic, `
+                + "and the original is untouched.",
+            onclick: (e) => {
+              const button = e.currentTarget;
+              return busy(button, async () => {
+                if (button.mrlnArmed) {
+                  await armDestructive(button); // second click — run the armed overwrite
+                  return;
+                }
+                await writeOptimizedOrder(button, write.order);
+              });
+            },
+          },
+          "write this order into the template…"
+        )
+      )
+    );
+    if (blocked) nodes.push(el("div", { class: "mrln-note" }, blocked));
+    return nodes;
+  }
+
+  function renderOptimize() {
+    const opt = state.optimize;
+    if (opt.result && opt.result.slug !== state.slug) opt.result = null; // template switched
+    const profiles = optimizeProfiles();
+    if (opt.profile && !profiles.some(([name]) => name === opt.profile)) {
+      opt.profile = ""; // this template does not offer it
+      opt.result = null;
+    }
+    const select = el("select", {
+      title: "Render this template twice — as it reads now, and in the reading order the "
+        + "target profile asks for (its block_order). Nothing is written and the Target "
+        + "profile above is not touched.",
+      onchange: (e) => setOptimizeProfile(e.target.value),
+    });
+    select.append(el("option", { value: "" }, "— off —"));
+    for (const [name, profile] of profiles) {
+      const render = profile?.render;
+      const ranked =
+        render && typeof render === "object" && Object.keys(render.block_order ?? {}).length > 0;
+      select.append(el("option", { value: name }, ranked ? `${name} · reading order` : name));
+    }
+    select.value = opt.profile ?? "";
+    const controls = el("div", { class: "mrln-inline" }, select);
+    if (opt.profile) {
+      controls.append(
+        smallBtn(
+          "Run the comparison again with the current settings",
+          "↻",
+          (e) => busy(e.currentTarget, runOptimize),
+          opt.busy // the box re-renders while it runs; a live ↻ would just queue work
+        ),
+        smallBtn("Close the comparison", "✕", () => setOptimizeProfile(""))
+      );
+    }
+    const children = [field("Optimize for", controls)];
+    if (!opt.profile) {
+      children.push(
+        el(
+          "div",
+          { class: "mrln-note" },
+          "Pick a target model to see this template read the way that model wants it — "
+            + "authored vs optimized, side by side. Nothing is written unless you ask."
+        )
+      );
+    } else if (opt.busy) {
+      children.push(loadingNote(`Rendering ${baselineLabel()} and '${opt.profile}' …`));
+    } else if (opt.result?.error) {
+      children.push(el("div", { class: "mrln-error" }, opt.result.error));
+    } else if (opt.result) {
+      children.push(...optimizeResultNodes(opt.result));
+    }
+    mount(optimizeBox, ...children);
   }
 
   // ---- node interop --------------------------------------------------------
@@ -1526,6 +1950,7 @@ export function createCompose(hub) {
     markModified,
     renderComposeTab,
     renderNested,
+    renderOptimize,
     renderPreview,
     sectionSelect,
   };

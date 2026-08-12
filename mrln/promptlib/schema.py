@@ -184,14 +184,34 @@ def _parse_item(raw, index, source):
     if not isinstance(raw, dict):
         raise SchemaError(source, f"items[{index}] must be an object or string")
     hidden = bool(raw.get("hidden", False))
+    # An item normally has to SAY something. Two kinds legitimately do not:
+    # a tombstone (hidden), and a LoRA block whose whole job is to LOAD
+    # weights — most FLUX LoRAs ship no trigger word at all, and the Composer
+    # lets an author mute every trigger a LoRA does have ("all-muted is legal
+    # and renders no trigger text"). Refusing to store that made the editor
+    # promise something the file format then rejected. Widening is safe on the
+    # render side because the positive assembly already drops empty blocks
+    # (`joiner.join(p for p in parts if p)`), so no dangling separator can
+    # appear. An item that neither says anything nor loads anything is still a
+    # mistake and still refused.
+    data_raw = raw.get("data")
+    loads_lora = isinstance(data_raw, dict) and bool(str(data_raw.get("lora") or "").strip())
     text = raw.get("text")
     if not isinstance(text, str) or not text.strip():
-        if not hidden:
+        if not hidden and not loads_lora:
             raise SchemaError(source, f"items[{index}] is missing a non-empty 'text'")
-        text = text if isinstance(text, str) else ""  # bare tombstone: name only
+        text = text if isinstance(text, str) else ""  # tombstone / trigger-less LoRA
     name = raw.get("name")
     if name is None and hidden:
         raise SchemaError(source, f"items[{index}]: a hidden item needs an explicit 'name'")
+    if name is None and not text.strip():
+        # slugify("") is empty, so the generic "invalid 'name'" below would
+        # blame the name for a missing text. Say which one is actually absent.
+        raise SchemaError(
+            source,
+            f"items[{index}]: a LoRA item that renders no text needs an explicit 'name' "
+            "— the name is what a template slot's default refers to",
+        )
     name = name or slugify(text)
     if not isinstance(name, str) or not name.strip():
         raise SchemaError(source, f"items[{index}] has an invalid 'name'")

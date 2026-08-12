@@ -5,8 +5,20 @@
 //
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
-import { combineItem, isCombineItem, itemRowEdited, loraProgressText, uniqueName } from "./util.js";
-import { braceAssist, busy, el, field, smallBtn, tierChip, validateRefs } from "./dom.js";
+import {
+  cleanTriggerWords,
+  combineItem,
+  dropTriggerWord,
+  isCombineItem,
+  itemRowEdited,
+  loraProgressText,
+  muteTriggerWord,
+  soloTriggerWord,
+  triggerSelection,
+  triggerSoloed,
+  uniqueName,
+} from "./util.js";
+import { armDestructive, braceAssist, busy, el, field, mount, smallBtn, tierChip, validateRefs } from "./dom.js";
 
 export function createSectionEditor(hub) {
   const { ctx, state } = hub;
@@ -23,6 +35,7 @@ export function createSectionEditor(hub) {
   const refreshDetail = (...a) => hub.refreshDetail(...a);
   const refreshLoraBanner = (...a) => hub.refreshLoraBanner(...a);
   const setEditor = (...a) => hub.setEditor(...a);
+  const thumbControls = (...a) => hub.thumbControls(...a);
 
   // ---- combine sections ----------------------------------------------------
   // A "combine" is an ordinary section whose every item just delegates to
@@ -76,7 +89,7 @@ export function createSectionEditor(hub) {
           })
         )
       );
-      chosenList.replaceChildren(
+      mount(chosenList, 
         el("div", { class: "mrln-field-name" }, `Combining ${chosen.size} section(s)`),
         ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "nothing picked yet")])
       );
@@ -103,7 +116,7 @@ export function createSectionEditor(hub) {
             el("span", { class: "mrln-slug" }, ` ${s.item_count ?? "?"} items`)
           )
         );
-      pickList.replaceChildren(
+      mount(pickList, 
         ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "no matches")])
       );
     }
@@ -341,6 +354,169 @@ export function createSectionEditor(hub) {
             + "qwen, pony…). LoRA Apply warns when it does not match the connected "
             + "model. Left empty, it is read from the AIR's ecosystem segment.",
         });
+        // ---- trigger words: the LoRA's own pool, with the composer's M/S ----
+        // data.lora_info.trained_words is PROVENANCE — what the source said,
+        // never edited here. The text field above is the CATCHWORD: truth, the
+        // words that actually render. So mute = absent from the catchword,
+        // solo = the only one present, and the chips are a pure derivation
+        // over two fields already on disk (see util.js triggerSelection, whose
+        // server twin is mrln/promptapi/lora.py). Nothing is widget-only:
+        // reopening this editor re-derives every chip from the FILE.
+        row.loraInfo = { ...(item.data.lora_info ?? {}) };
+        const triggerBox = el("div", { class: "mrln-triggers" });
+        const trainedWords = () => cleanTriggerWords(row.loraInfo?.trained_words);
+
+        function setCatchword(text) {
+          // the input stays the truth: chips write THROUGH it, so both halves
+          // can never disagree (and validateRefs/brace assist still run)
+          row.text.value = text;
+          row.text.dispatchEvent(new Event("input", { bubbles: false }));
+          renderTriggers();
+        }
+
+        function msButton(label, on, title, onclick) {
+          return el(
+            "button",
+            {
+              class: `mrln-btn mrln-mini${on ? (label === "M" ? " mrln-m-on" : " mrln-s-on") : ""}`,
+              title,
+              onclick,
+            },
+            label
+          );
+        }
+
+        function provenanceChip(word, selection) {
+          const muted = selection.muted.includes(word);
+          const soloed = triggerSoloed(selection, word);
+          return el(
+            "span",
+            {
+              class: `mrln-chip mrln-trigger${muted ? " mrln-trigger-muted" : ""}`,
+              title: `trained word from ${row.loraInfo?.model_name ?? "this LoRA"} — `
+                + `${muted ? "muted: kept as provenance, dropped from the catchword" : "renders"}`,
+            },
+            el(
+              "span",
+              { class: "mrln-ms" },
+              msButton(
+                "M",
+                muted,
+                "Mute — the word stays in the LoRA's trained words but drops out of "
+                  + "the catchword, so it stops rendering. Click again to bring it back.",
+                () => setCatchword(muteTriggerWord(selection.words, row.text.value, word))
+              ),
+              msButton(
+                "S",
+                soloed,
+                "Solo — render only this trained word (every other one mutes; click "
+                  + "again to un-mute them all). Words you typed yourself are left alone.",
+                () => setCatchword(soloTriggerWord(selection.words, row.text.value, word))
+              )
+            ),
+            el("span", { class: "mrln-trigger-word" }, word)
+          );
+        }
+
+        function extraChip(word) {
+          // A word with no provenance entry: there is nothing to un-mute from,
+          // so its M can only REMOVE it — armed, never one click.
+          const button = el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
+              title: "You typed this word — it is NOT one of this LoRA's trained words, "
+                + "so there is nothing to un-mute from: muting REMOVES it. Click twice.",
+              onclick: () =>
+                armDestructive(button, "Remove?", () =>
+                  setCatchword(dropTriggerWord(row.text.value, word))
+                ),
+            },
+            "M"
+          );
+          return el(
+            "span",
+            { class: "mrln-chip mrln-trigger mrln-trigger-extra", title: "user-added word" },
+            el("span", { class: "mrln-ms" }, button),
+            el("span", { class: "mrln-trigger-word" }, word)
+          );
+        }
+
+        const wordsButton = el(
+          "button",
+          {
+            class: "mrln-btn mrln-mini",
+            title: "Re-read this LoRA's trained words from Civitai (by file hash). "
+              + "Provenance only — your catchword is never overwritten.",
+            onclick: (e) => busy(e.currentTarget, refreshTriggerWords),
+          },
+          "⟳ words"
+        );
+
+        function renderTriggers() {
+          const words = trainedWords();
+          const selection = triggerSelection(words, row.text.value);
+          const nodes = [];
+          if (!words.length) {
+            nodes.push(
+              el(
+                "span",
+                { class: "mrln-note" },
+                "no trained words recorded for this file — ⟳ asks Civitai for them"
+              )
+            );
+          } else {
+            for (const word of words) nodes.push(provenanceChip(word, selection));
+            for (const word of selection.extra) nodes.push(extraChip(word));
+            if (!selection.catchword) {
+              // All-muted derives fine (nothing renders) but does NOT save: a
+              // section item needs non-empty text (promptlib/schema.py
+              // _parse_item), so say that here instead of letting the save fail.
+              nodes.push(
+                el(
+                  "span",
+                  { class: "mrln-error" },
+                  "every word muted — nothing would render, and an item cannot be "
+                    + "saved with empty text: keep one word or type your own"
+                )
+              );
+            }
+          }
+          nodes.push(wordsButton);
+          mount(triggerBox, ...nodes);
+        }
+
+        async function refreshTriggerWords() {
+          const file = row.lora.value.trim();
+          if (!file) {
+            ctx.toast("error", "No LoRA file", "pick a file first — provenance follows the file");
+            return;
+          }
+          let civ;
+          try {
+            civ = await ctx.apiJson(`/mrln/prompt/lora-civitai?name=${encodeURIComponent(file)}`);
+          } catch (err) {
+            ctx.toast("error", "Civitai lookup failed", err.message);
+            return;
+          }
+          // merge, exactly like the server-side healer: the catchword is NOT
+          // touched — overwriting a selection the user curated is the whole
+          // thing the provenance/truth split exists to prevent
+          row.loraInfo = { ...(row.loraInfo ?? {}), ...(civ.lora_info ?? {}) };
+          renderTriggers();
+          const found = trainedWords().length;
+          ctx.toast(
+            found ? "success" : "error",
+            found ? "Trained words refreshed" : "Civitai lists no trained words",
+            found ? `${found} word(s) — your catchword is unchanged` : "type the catchword yourself"
+          );
+        }
+
+        // typing in the catchword feeds the chips: a word typed by hand that
+        // IS a trained word un-mutes its chip, with no separate state to sync
+        row.text.addEventListener("input", renderTriggers);
+        renderTriggers();
+
         let loraMetaReq = 0;
         row.lora.addEventListener("change", async () => {
           if (!row.name.value.trim()) {
@@ -351,6 +527,10 @@ export function createSectionEditor(hub) {
           // Civitai by file hash (trigger fallback + AIR tag for the comment)
           const file = row.lora.value;
           row.text.classList.remove("mrln-input-error");
+          // provenance describes a FILE — never let the old file's words
+          // linger as chips over a new file's catchword
+          row.loraInfo = {};
+          renderTriggers();
           if (!file) return;
           const req = ++loraMetaReq;
           let found = false;
@@ -361,6 +541,10 @@ export function createSectionEditor(hub) {
             if (req !== loraMetaReq) return; // superseded by a newer switch
             row.text.value = meta.trigger;
             row.text.title = `trigger word from LoRA metadata (${meta.source})`;
+            // safetensors metadata yields exactly ONE trigger, so the
+            // provenance list derived from it has one entry — enough for a
+            // chip, and the Civitai answer below replaces it when it has more
+            row.loraInfo = { trained_words: [meta.trigger], file: meta.name ?? file };
             found = true;
           } catch {
             if (req !== loraMetaReq) return;
@@ -376,10 +560,16 @@ export function createSectionEditor(hub) {
               `/mrln/prompt/lora-civitai?name=${encodeURIComponent(file)}`
             );
             if (req !== loraMetaReq) return;
-            if (!found && civ.trigger) {
-              row.text.value = civ.trigger;
+            // provenance from the same answer that names the trigger, so the
+            // chips are populated without a second round trip
+            row.loraInfo = { ...(row.loraInfo ?? {}), ...(civ.lora_info ?? {}) };
+            if (!found && (civ.catchword || civ.trigger)) {
+              // the server's DEFAULT selection (first trained word) — taking
+              // its text rather than re-deriving one keeps a new item
+              // byte-identical to what the lookup has always written
+              row.text.value = civ.catchword || civ.trigger;
               row.text.title = `trigger word from Civitai (${civ.model_name ?? "model"}`
-                + `${civ.trained_words?.length > 1 ? `; all: ${civ.trained_words.join(", ")}` : ""})`;
+                + `${civ.trained_words?.length > 1 ? "; the rest are muted chips below" : ""})`;
               found = true;
             }
             if (commentIsAuto()) {
@@ -401,6 +591,7 @@ export function createSectionEditor(hub) {
             row.text.title = "No trigger word found in file metadata or on Civitai — "
               + "type the trigger word / catchword yourself";
           }
+          renderTriggers(); // chips follow the new file's provenance + catchword
         });
         // Missing-file healer: a template shared across machines carries the
         // file name + AIR urn — when the file is absent here, offer the
@@ -435,7 +626,7 @@ export function createSectionEditor(hub) {
             return;
           }
           const progress = el("span", { class: "mrln-note" }, "starting download…");
-          row.missingBox.replaceChildren(progress);
+          mount(row.missingBox, progress);
           const body = await pollLoraDownload(air, (tick) => {
             progress.textContent = `downloading… ${loraProgressText(tick)}`;
           });
@@ -471,7 +662,7 @@ export function createSectionEditor(hub) {
           }
           const air = (row.comment.value || "").trim();
           row.missingBox.style.display = "";
-          row.missingBox.replaceChildren(
+          mount(row.missingBox, 
             el("span", { class: "mrln-error" }, "file missing on this machine"),
             air.toLowerCase().startsWith("urn:air:")
               ? el(
@@ -494,13 +685,53 @@ export function createSectionEditor(hub) {
         };
         row.lora.addEventListener("change", checkMissing);
         checkMissing();
+        // The row's head cell — nothing reads its children, so a LoRA preview
+        // tile mounts by prepending here (or by inserting a cell into
+        // row.loraRow). Kept as a named handle for exactly that.
+        row.loraTileMount = el(
+          "td",
+          { class: "mrln-w-origin" },
+          el("span", { class: "mrln-chip mrln-user" }, "LoRA")
+        );
+        row.loraRow = el(
+          "tr",
+          { class: "mrln-lora-row" },
+          row.loraTileMount,
+          el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.loraControl)),
+          el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
+          el("td", { class: "mrln-w-act" })
+        );
+        // The preview tile + its set/reset/refresh controls. Keyed on the
+        // FILE, not the item: a Civitai preview is stored per LoRA, so one
+        // download serves every item referencing the same weights — which
+        // means the tile has to follow a file change, not an item rename.
+        // `hasThumb` is passed ONLY while the file still matches the row the
+        // server annotated; after an edit the flag describes a different file,
+        // and omitting it makes the tile ask instead of assume.
+        const thumbBox = el("span", {});
+        const paintThumb = () => {
+          const file = row.lora.value.trim();
+          const known = file && file === (item.data?.lora ?? "");
+          mount(thumbBox, 
+            file
+              ? thumbControls("loras", file, {
+                  section: slug ?? "",
+                  item: row.name.value.trim(),
+                  domain: slug ?? "",
+                  ...(known ? { hasThumb: Boolean(item.has_thumb) } : {}),
+                })
+              : el("span", { class: "mrln-note" }, "pick a LoRA file to give it a preview")
+          );
+        };
+        row.lora.addEventListener("change", paintThumb);
+        paintThumb();
         table.append(
+          row.loraRow,
           el(
             "tr",
             { class: "mrln-lora-row" },
-            el("td", { class: "mrln-w-origin" }, el("span", { class: "mrln-chip mrln-user" }, "LoRA")),
-            el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.loraControl)),
-            el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
+            el("td", { class: "mrln-w-origin" }),
+            el("td", { colspan: 3 }, triggerBox),
             el("td", { class: "mrln-w-act" })
           ),
           el(
@@ -511,6 +742,7 @@ export function createSectionEditor(hub) {
               "td",
               { colspan: 3 },
               el("div", { class: "mrln-inline" }, row.comment, row.base),
+              thumbBox,
               row.missingBox
             ),
             el("td", { class: "mrln-w-act" })
@@ -550,11 +782,18 @@ export function createSectionEditor(hub) {
           const base = row.base?.value.trim().toLowerCase();
           if (base) item.data.base = base;
           else delete item.data.base;
+          // provenance for the trigger chips: what the SOURCE said, never what
+          // the user selected (the selection is the text). Only written when
+          // there is something to say, so no pointless key lands in a file.
+          const info = row.loraInfo ?? {};
+          if (Object.keys(info).length) item.data.lora_info = info;
+          else delete item.data.lora_info;
         } else if (item.data) {
           delete item.data.lora;
           delete item.data.strength_model;
           delete item.data.strength_clip;
           delete item.data.base;
+          delete item.data.lora_info; // provenance about a file no longer referenced
         }
       }
       if (item.data == null || (typeof item.data === "object" && !Object.keys(item.data).length)) {
@@ -580,6 +819,7 @@ export function createSectionEditor(hub) {
           sc: row.sc?.value,
           comment: row.comment?.value,
           base: row.base?.value,
+          loraInfo: row.loraInfo, // trigger-word provenance, see itemRowEdited
         },
         row.orig
       );
@@ -594,6 +834,22 @@ export function createSectionEditor(hub) {
 
     async function save() {
       const targetSlug = slugInput.value.trim();
+      // An all-muted LoRA renders nothing, which is a legal SELECTION but not
+      // a legal FILE: promptlib/schema.py rejects an item without non-empty
+      // text. Catch it here so the user gets the fix instead of "items[3] is
+      // missing a non-empty 'text'" after the round trip.
+      const empty = itemRows.find((row) => row.lora?.value.trim() && !row.text.value.trim() && !row.hidden);
+      if (empty) {
+        ctx.toast(
+          "error",
+          "A LoRA block has no catchword",
+          `'${empty.name.value.trim() || empty.lora.value}': every trigger word is muted. `
+            + "Un-mute one, or type your own catchword — an item cannot be saved "
+            + "with empty text."
+        );
+        empty.text.classList.add("mrln-input-error");
+        return;
+      }
       const extending = saveMode === "extend" && factoryBaseline;
       const data = extending ? { version: 1 } : { ...body.raw, version: 1 };
       delete data.replaces;
@@ -735,6 +991,11 @@ export function createSectionEditor(hub) {
               "Factory file — saving creates a user-tier file that extends (or replaces) it."
             )
           : null,
+      // The section's face in the browse grid. Only for a section that exists
+      // on disk: a thumbnail is stored under a slug, and a section still being
+      // typed has none to store it under (the field above is editable, so a
+      // guessed slug could write a file for a section that never gets saved).
+      slug ? thumbControls("sections", slug, {}) : null,
       field("Slug", slugInput),
       field("Label", labelInput),
       field("Description", descInput),

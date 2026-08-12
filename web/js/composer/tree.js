@@ -1,11 +1,18 @@
 // MRLN Prompt Composer — Library tab: the collapsible section/template tree,
-// the shared editor mount (every editor renders into it), the profile list and
-// its editor, and the user-file delete flow.
+// the browse CARD GRID over the same entries, the shared editor mount (every
+// editor renders into it), the profile list and its editor, and the user-file
+// delete flow.
+//
+// ROWS AND CARDS ARE ONE TREE. `state.grid` flips only the leaf renderer:
+// grouping, the filter, the fold state and every action are shared, so the two
+// views can never drift apart and a filtered/expanded state survives the
+// toggle. Cards draw thumbs.js tiles (a thumbnail when the row has one, the
+// domain glyph otherwise — see thumbs.js for the resolution order).
 //
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js). The editor mount and
 // its dirty flag live inside createTree().
-import { armDestructive, autoArea, busy, el, field, loadingNote, tierChip } from "./dom.js";
+import { armDestructive, autoArea, busy, el, field, loadingNote, mount, tierChip } from "./dom.js";
 
 export function createTree(hub) {
   const { ctx, state, libraryTab } = hub;
@@ -21,6 +28,7 @@ export function createTree(hub) {
   const openSectionEditor = (...a) => hub.openSectionEditor(...a);
   const openTemplateEditor = (...a) => hub.openTemplateEditor(...a);
   const refreshDetail = (...a) => hub.refreshDetail(...a);
+  const thumbTile = (...a) => hub.thumbTile(...a);
 
   const editorBox = el("div");
   // Editor forms live only in closures — replacing editorBox drops typed
@@ -31,7 +39,7 @@ export function createTree(hub) {
   editorBox.addEventListener("change", () => (editorDirty = true), true);
 
   function setEditor(...children) {
-    editorBox.replaceChildren(...children);
+    mount(editorBox, ...children);
     editorDirty = false; // fresh (or cleared) content — typing starts clean
   }
 
@@ -65,20 +73,17 @@ export function createTree(hub) {
     );
   }
 
-  function sectionLi(section) {
-    return el(
-      "li",
-      {
-        onclick: () => {
-          if (confirmReplaceEditor()) openSectionEditor(section.slug);
-        },
-      },
-      section.error ? `⚠ ${section.slug}` : section.label,
-      el(
-        "span",
-        { class: "mrln-slug" },
-        `${section.slug} · ${section.item_count ?? "?"} items`
-      ),
+  function openEntry(kind, slug) {
+    if (!confirmReplaceEditor()) return;
+    if (kind === "sections") openSectionEditor(slug);
+    else openTemplateEditor(slug);
+  }
+
+  // Chips and the export button are identical in both views — built once here
+  // so a row and a card can never end up saying different things about the
+  // same entry.
+  function sectionChips(section) {
+    return [
       section.has_lora
         ? el(
             "span",
@@ -109,26 +114,102 @@ export function createTree(hub) {
           )
         : tierChip(section.tier),
       // factory-pure sections ship with every install — nothing to share
-      section.tier === "user" || section.merged ? exportBtn("section", section.slug) : null
+      section.tier === "user" || section.merged ? exportBtn("section", section.slug) : null,
+    ];
+  }
+
+  function templateChips(template) {
+    return [tierChip(template.tier), exportBtn("template", template.slug)];
+  }
+
+  function sectionLi(section) {
+    return el(
+      "li",
+      { onclick: () => openEntry("sections", section.slug) },
+      section.error ? `⚠ ${section.slug}` : section.label,
+      el(
+        "span",
+        { class: "mrln-slug" },
+        `${section.slug} · ${section.item_count ?? "?"} items`
+      ),
+      ...sectionChips(section)
     );
   }
 
   function templateLi(template) {
     return el(
       "li",
-      {
-        onclick: () => {
-          if (confirmReplaceEditor()) openTemplateEditor(template.slug);
-        },
-      },
+      { onclick: () => openEntry("templates", template.slug) },
       template.error ? `⚠ ${template.slug}` : template.label,
       el("span", { class: "mrln-slug" }, template.slug),
-      tierChip(template.tier),
-      exportBtn("template", template.slug)
+      ...templateChips(template)
     );
   }
 
-  function groupedTree(kind, entries, itemEl) {
+  function entryCard(kind, entry) {
+    // The tile decides for itself whether to request an image: `has_thumb`
+    // comes straight from the listing row (thumbs.annotate_entries), so a
+    // library with no thumbnails at all costs ZERO requests here.
+    return el(
+      "div",
+      {
+        class: `mrln-lib-card${entry.error ? " mrln-lib-card-error" : ""}`,
+        tabindex: "0",
+        title: entry.error
+          ? `⚠ ${entry.error}`
+          : entry.description || `${entry.slug} — click to edit`,
+        onclick: () => openEntry(kind, entry.slug),
+        onkeydown: (e) => {
+          // A card is a div (it holds the export button, and a button inside a
+          // button is invalid HTML), so Enter/Space are wired by hand — but
+          // ONLY for the card itself: a Space landing on the nested export
+          // button bubbles here, and acting on it would both export and open
+          // the editor.
+          if (e.target !== e.currentTarget) return;
+          if (e.key !== "Enter" && e.key !== " ") return;
+          e.preventDefault();
+          openEntry(kind, entry.slug);
+        },
+      },
+      thumbTile(kind, entry.slug, {
+        hasThumb: entry.has_thumb,
+        size: "lg",
+        alt: "",
+      }),
+      el(
+        "span",
+        { class: "mrln-lib-card-name" },
+        entry.error ? `⚠ ${entry.slug}` : entry.label || entry.slug
+      ),
+      el(
+        "span",
+        { class: "mrln-slug mrln-lib-card-slug" },
+        kind === "sections"
+          ? `${entry.slug} · ${entry.item_count ?? "?"} items`
+          : entry.slug
+      ),
+      el(
+        "span",
+        { class: "mrln-lib-card-chips" },
+        ...(kind === "sections" ? sectionChips(entry) : templateChips(entry))
+      )
+    );
+  }
+
+  /** The leaf renderer — the ONLY thing `state.grid` changes. */
+  function entryList(kind, members) {
+    if (state.grid) {
+      return el(
+        "div",
+        { class: "mrln-lib-cards" },
+        members.map((entry) => entryCard(kind, entry))
+      );
+    }
+    const itemEl = kind === "sections" ? sectionLi : templateLi;
+    return el("ul", { class: "mrln-tree" }, members.map(itemEl));
+  }
+
+  function groupedTree(kind, entries) {
     // Collapsible group per top-level slug segment — the flat list would
     // overspill as soon as more domains land. Expansion state survives
     // re-renders within the session. An active filter narrows entries and
@@ -178,14 +259,14 @@ export function createTree(hub) {
               ` ${members.length}${userCount ? ` · ${userCount} yours` : ""}`
             )
           ),
-          el("ul", { class: "mrln-tree" }, members.map(itemEl))
+          entryList(kind, members)
         )
       );
     }
     return nodes;
   }
 
-  function treeBlock(kind, title, entries, itemEl) {
+  function treeBlock(kind, title, entries) {
     // The whole block collapses too — with a multiverse-sized library even
     // the group list is long. Sections open by default, templates closed.
     const stateKey = `${kind}:@block`;
@@ -213,13 +294,30 @@ export function createTree(hub) {
         title,
         el("span", { class: "mrln-slug" }, ` ${entries.length}`)
       ),
-      ...groupedTree(kind, entries, itemEl)
+      ...groupedTree(kind, entries)
+    );
+  }
+
+  function viewToggle() {
+    return el(
+      "button",
+      {
+        class: `mrln-btn${state.grid ? " mrln-toggled" : ""}`,
+        title: state.grid
+          ? "Back to the compact row list"
+          : "Browse as thumbnail cards — rows without a thumbnail show their domain glyph",
+        onclick: () => {
+          state.grid = !state.grid;
+          renderLibraryTab();
+        },
+      },
+      state.grid ? "☰ Rows" : "▦ Cards"
     );
   }
 
   function renderLibraryTab() {
     if (!state.library) {
-      libraryTab.replaceChildren(
+      mount(libraryTab, 
         state.libraryError
           ? libraryErrorNote(state.libraryError)
           : loadingNote("Loading prompt library…")
@@ -245,7 +343,7 @@ export function createTree(hub) {
         }
       },
     });
-    libraryTab.replaceChildren(
+    mount(libraryTab, 
       el(
         "div",
         { class: "mrln-actions" },
@@ -288,11 +386,12 @@ export function createTree(hub) {
           },
           "Import…"
         ),
-        el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload")
+        el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload"),
+        viewToggle()
       ),
       filterInput,
-      treeBlock("sections", "Sections", lib.sections, sectionLi),
-      treeBlock("templates", "Templates", lib.templates, templateLi),
+      treeBlock("sections", "Sections", lib.sections),
+      treeBlock("templates", "Templates", lib.templates),
       profilesBlock(),
       el("hr", { class: "mrln-sep" }),
       editorBox

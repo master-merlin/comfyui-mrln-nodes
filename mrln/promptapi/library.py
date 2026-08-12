@@ -7,6 +7,10 @@ import json
 
 from .. import promptlib as pl
 
+# Direct submodule import: promptlib's __init__ rebinds the name 'render' to
+# render() itself, so `pl.render` is the function, not this module.
+from ..promptlib.render import ordered_slot_ids
+
 # Module objects, not names — the same seam style as decompose.py, so a test
 # can patch either module and every caller here sees it. lora.py owns the
 # secret registry (every NEW client-visible string goes through
@@ -227,6 +231,26 @@ def handle_items(lib, payload):
     return 200, {"ref": ref, "items": thumbs.annotate_items(lib, _pool(lib, ref))}
 
 
+def _render_order(lib, tpl, composed):
+    """Top-level slot ids in the READING ORDER this render used: the target
+    profile's block_order as render.py sorts it, authored order when the
+    profile ranks nothing.
+
+    'slots' below stays in AUTHORED order (it mirrors the template, and the
+    Composer's rows are keyed off it) and `choices` reports only THAT a
+    profile moved something — so the Composer's "Optimize for …" comparison,
+    which shows the optimized order and can write it back into a template,
+    had no way to learn the order itself without reimplementing the sort in
+    JS. This is that one additive key. The policy is rebuilt exactly the way
+    compose() builds it (from_render tolerates a wrong-shaped render block
+    there and here alike); 'standard' is not a profile, so it never has one."""
+    policy = None
+    if composed.profile != pl.STANDARD:
+        prof = pl.merged_profiles(lib, tpl).get(composed.profile) or {}
+        policy = pl.RenderPolicy.from_render(prof.get("render") or {}, profile=composed.profile)
+    return ordered_slot_ids(composed.resolved, policy)
+
+
 @_guarded
 def handle_preview(lib, payload):
     # first, like handle_template — /preview fires on every 300 ms-debounced
@@ -285,6 +309,7 @@ def handle_preview(lib, payload):
         "variant": resolved.variant,
         "variant_random": resolved.variant_random,
         "slots": [_resolved_slot_json(s) for s in resolved.slots],
+        "render_order": _render_order(lib, tpl, composed),
         "fingerprint": fingerprint,
     }
 

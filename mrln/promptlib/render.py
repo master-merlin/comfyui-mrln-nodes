@@ -141,25 +141,48 @@ def _body_ids(slots):
     return [s.id for s in slots if not s.inline and (s.item_name is not None or s.text)]
 
 
-def _ordered(resolved, policy):
-    """(prompt-for-the-positive-assembly, reordered?). Stable sort of the
-    TOP-LEVEL slots by (rank, authored index) — nested children ride inside
-    their parent's text and never move. The ResolvedPrompt is never mutated:
-    the choices report and every other consumer keep authored order, and a
-    policy that changes no position hands back the very same object."""
-    if policy is None or not policy.block_order:
-        return resolved, False
-    ranks = policy.block_order
-    ordered = tuple(
+def _sorted_slots(slots, ranks):
+    """Stable sort of the TOP-LEVEL slots by (rank, authored index) — the ONE
+    definition of the reorder. Nested children ride inside their parent's text
+    and never move."""
+    return tuple(
         slot
         for _, slot in sorted(
-            enumerate(resolved.slots),
+            enumerate(slots),
             key=lambda pair: (ranks.get(block_domain(pair[1]), NEUTRAL_RANK), pair[0]),
         )
     )
+
+
+def _ordered(resolved, policy):
+    """(prompt-for-the-positive-assembly, reordered?). The ResolvedPrompt is
+    never mutated: the choices report and every other consumer keep authored
+    order, and a policy that changes no position hands back the very same
+    object."""
+    if policy is None or not policy.block_order:
+        return resolved, False
+    ordered = _sorted_slots(resolved.slots, policy.block_order)
     if _body_ids(ordered) == _body_ids(resolved.slots):
         return resolved, False
     return replace(resolved, slots=ordered), True
+
+
+def ordered_slot_ids(resolved, policy):
+    """The TOP-LEVEL slot ids in the reading order `policy` gives this render.
+
+    render() applies the order to the positive assembly and reports only THAT
+    it moved something ('order: optimized for <profile>' in choices) — the
+    order itself never leaves this module. The Composer's "Optimize for …"
+    comparison has to show that order, and can write it back into a template,
+    so it is exposed here rather than reimplemented client-side.
+
+    Unlike _ordered's internal use this reports the FULL sorted order,
+    including slots that drew nothing this run: they render no text today, but
+    an order written back into a template has to place them for the draws
+    where they do. Authored order when the profile ranks nothing."""
+    if policy is None or not policy.block_order:
+        return [s.id for s in resolved.slots]
+    return [s.id for s in _sorted_slots(resolved.slots, policy.block_order)]
 
 
 def _emphasized(slot):

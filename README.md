@@ -15,7 +15,11 @@ cd ComfyUI/custom_nodes
 git clone <repo-url> ComfyUI-MRLN-Nodes
 ```
 
-Restart ComfyUI afterwards. No extra Python dependencies are required.
+Restart ComfyUI afterwards. No extra Python dependencies are required: the
+prompt engine and the nodes are pure standard library, and the two features
+that read image files (dropping a generated image on the Composer, and
+thumbnails) use Pillow and PyYAML — which ComfyUI itself ships — through soft
+imports that disable just those features if the libraries are ever absent.
 
 ## Nodes
 
@@ -24,7 +28,7 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 
 | Domain | Nodes |
 | ------ | ----- |
-| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template, `loras` + `llm` outputs); **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
+| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template *and* reorder the rendered blocks into the reading order that model rewards; six outputs — `prompt`, `negative`, `choices`, `loras`, `llm`, `gen_info`). `batch_count` renders a whole batch from one queue: `increment seed` draws item *i* at seed + *i*, so four images are four different draws instead of four copies of one; `combinatorial` instead enumerates every combination of the slots left on random, capped at 512. Every output is a list, and a length-1 list is indistinguishable from a single value downstream, so existing workflows are untouched. `gen_info` is an A1111 `parameters` string a metadata-capable save node can embed — carrying only what this node actually knows (the prompts, the seed it drew with, and the Civitai ids of the LoRAs it selected), never a guessed Steps/Sampler/CFG/Model; **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: a multiverse of factory content ships
@@ -140,12 +144,64 @@ local or cloud backend splits and maps against the library catalog) and
 `hybrid` (the programmatic result rides in the LLM system prompt as
 suggestions to verify or correct); every LLM assignment is validated
 against the real library, and a failing backend falls back to the
-programmatic result instead of erroring. The Settings tab holds the local
-backend URLs (Ollama / LM Studio, auto-validated with installed-model
-lists) and the cloud API keys — stored server-side in your user tier,
-never echoed back and never written into workflows. On frontends without
-the API the panel simply doesn't appear — the nodes work identically
-without it.
+programmatic result instead of erroring.
+
+**Start from an image you like.** Drop a generated PNG/JPEG/WebP on the
+De-compose tab (or paste its civitai.com URL) and the metadata it carries is
+read server-side — A1111 / Forge / Civitai `parameters`, an embedded ComfyUI
+graph, or EXIF `UserComment`. You then pick one of two things to do with it,
+and the panel never decides for you: **Use as-is** builds a template that
+reproduces that prompt byte for byte (no LLM on this path, so it works with
+every backend unset), or **Decompose** hands the extracted text to the
+de-composer above. Inline `<lora:…>` tags are lifted out and resolved to
+local files or Civitai AIRs. When an embedded graph is genuinely ambiguous
+about which string is the positive, you get a picker rather than a guess.
+
+**Optimize for a model without duplicating the template.** Reading order
+changes results, and one template cannot store a copy per target — so order
+is a render-time function of the profile. The Compose tab's *Optimize for…*
+select renders the current and the target profile side by side, lists the
+reading order with the blocks that moved, and separates "the order changed"
+from the things that are not order (format, negative policy, a different
+draw). If you want the new order made permanent, one explicit button writes
+it into a copy — never automatically.
+
+**Trigger words get mute/solo.** A LoRA's full trained-word list is
+provenance and is never edited; the words that actually render are the
+truth. Muting one drops it, soloing collapses to the rest muted, and the
+state round-trips through the file itself, so re-opening the editor
+re-derives it with nothing to lose. A LoRA whose trigger is baked in (or
+unwanted) can mute all of them and contribute no text at all while still
+loading its weights.
+
+**Thumbnails.** Sections, templates and LoRAs can carry a 256 px webp tile,
+and the Library tab switches between rows and a card grid. Drop or paste an
+image to set one; *reset to factory* removes yours and the shipped one
+reappears. A LoRA downloaded from Civitai brings its own preview along
+(PG/PG-13 only, and nothing at all rather than something you did not ask
+for). Your thumbnails live in the user tier, so a pack update can neither
+overwrite nor delete them.
+
+**History.** Every render the Prompt Template node makes is recorded as one
+line — newest first, with restore (template, profile, seed, mode, selection,
+variables, format, length and conflict policy, all nine, so it reproduces
+rather than approximates) and copy-prompt. A batch collapses to one row.
+Recording and retention are settings, clearing is a two-step confirm, and a
+failed history write can never break a render that already succeeded.
+
+**Coming from A1111 or a wildcard collection?** Two importers read a folder
+of `.txt`/`.yaml` wildcards or an A1111 `styles.csv` and dry-run the result
+through the same plan preview the bundle importer uses, so you see exactly
+what would be written before anything is.
+
+The Settings tab holds the local backend URLs (Ollama / LM Studio,
+auto-validated with installed-model lists), the cloud API keys — stored
+server-side in your user tier, never echoed back and never written into
+workflows — the history retention controls, and the switch that allows an
+LLM backend on another machine (off by default: ComfyUI itself makes that
+request, so a non-loopback URL turns the box into a probe for whatever
+address is in the field). On frontends without the API the panel simply
+doesn't appear — the nodes work identically without it.
 
 Templates and sections travel: every template/section row offers **⤓
 Export**, which bundles the template together with all your user-tier
@@ -176,7 +232,10 @@ before connecting anything to a sampler.
   frontend patching.
 - **Zero-dependency core** — the pack installs nothing beyond what ComfyUI
   ships; domains that need optional libraries disable themselves gracefully
-  when the library is missing instead of breaking the pack.
+  when the library is missing instead of breaking the pack. Anything ComfyUI
+  already guarantees (Pillow, PyYAML) is used through a soft import and never
+  appears in `requirements.txt`, so installing this pack can never change the
+  versions your other nodes depend on.
 - **Stable node IDs** — node IDs (`MRLN_*`) are part of your saved workflows
   and are never renamed once released.
 
@@ -190,8 +249,9 @@ mrln/
   promptapi/         # /mrln/prompt/* endpoints (soft-fails outside ComfyUI)
   promptlib/         # prompt engine (pure Python, zero dependencies)
   nodes/             # one module per domain (prompt.py, text.py, ...)
-  data/prompt/       # factory prompt library (sections + templates)
+  data/prompt/       # factory prompt library (sections + templates + thumbs)
 web/js/              # Prompt Composer sidebar panel (progressive enhancement)
+  composer/          # its modules — one per tab/concern, no side effects
 ```
 
 ## Acknowledgements

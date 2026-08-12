@@ -102,3 +102,56 @@ def test_choices_fixed_first_marker(lib):
         lib, tpl, seed=0, mode="all fixed defaults", selection={}, variables={}
     )
     assert "[fixed:first]" in render(resolved, "string", tpl.render).choices
+
+
+def test_a_trigger_less_lora_leaves_no_gap_in_the_prompt(tmp_path):
+    """A LoRA item that renders no text (SPEC 4.3 'all-muted is legal') must
+    still load its weights — and must not leave the dangling separator that
+    would betray an empty block."""
+    from mrln.promptlib import Library, compose, lora_entries
+
+    root = tmp_path / "factory"
+    (root / "sections" / "loralab").mkdir(parents=True)
+    (root / "templates").mkdir(parents=True)
+    (root / "sections" / "subject.json").write_text(
+        json.dumps({"version": 1, "items": [{"name": "car", "text": "a red sports car"}]}),
+        encoding="utf-8",
+    )
+    (root / "sections" / "loralab" / "quiet.json").write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "items": [
+                    {
+                        "name": "detail-boost",
+                        "text": "",
+                        "data": {"lora": "detail.safetensors", "strength_model": 0.7},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (root / "templates" / "t.json").write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "slots": [
+                    {"id": "subject", "ref": "subject", "default": "car"},
+                    {"id": "lora", "ref": "loralab/quiet", "default": "detail-boost"},
+                ],
+                "suffix": "cinematic lighting",
+            }
+        ),
+        encoding="utf-8",
+    )
+    lib = Library(factory_root=root, user_root=None)
+    composed = compose(
+        lib, lib.load_template("t"), seed=1, mode="as configured", selection={}, variables={}
+    )
+    # the empty block is dropped whole: no ", ," and no trailing comma
+    assert composed.rendered.positive == "a red sports car, cinematic lighting"
+    # ...and the weights still leave through the loras wire at their strength
+    assert lora_entries(composed.resolved) == [
+        {"lora": "detail.safetensors", "strength_model": 0.7, "strength_clip": 0.7}
+    ]

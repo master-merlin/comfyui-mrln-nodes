@@ -18,7 +18,7 @@
 // second import cannot see it.
 import * as util from "./util.js";
 import { diffProfileOverrides, overrideTweakCount, parseToken, structuralDrift } from "./util.js";
-import { el, loadingNote } from "./dom.js";
+import { el, loadingNote, mount } from "./dom.js";
 
 /** The panel's single state object — created once, shared by every module. */
 export function createState() {
@@ -53,6 +53,23 @@ export function createState() {
     // De-compose tab state — runNo/modelGen are supersede tokens (mirror
     // previewNo), running keeps the button disabled across re-renders
     decompose: { text: "", type: "", report: null, plans: [], runNo: 0, modelGen: 0, running: false },
+    // Image intake, above the De-compose box: the extraction result and which
+    // of the two paths (verbatim / decompose) the user is looking at. `runNo`
+    // supersedes like every other async token here; `extraction` is the whole
+    // server payload, passed back untouched on the second call.
+    intake: { extraction: null, source: "", url: "", busy: false, runNo: 0, error: null },
+    // Compose tab: the "Optimize for…" comparison. `profile` is the target
+    // being compared against (empty = comparison closed), `result` holds the
+    // two renders once both have landed.
+    optimize: { profile: "", result: null, runNo: 0, busy: false },
+    // History tab: one page of records plus the keyset cursor stack that walks
+    // back to page 1 (the endpoint pages forward only).
+    history: { records: [], cursor: "", stack: [], loading: false, error: null, settings: null },
+    // Library tab: cards instead of rows, and the counter that busts the
+    // browser's thumbnail cache after a set/reset (the URL is otherwise
+    // identical and Last-Modified would keep the old tile on screen).
+    grid: false,
+    thumbEpoch: 0,
     libGroups: new Set(), // Library tab: expanded top-level slug groups
     nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed
   };
@@ -121,7 +138,7 @@ export function createStore(hub) {
 
   async function loadLibrary(keepSelection = true) {
     if (!state.library) {
-      composeTab.replaceChildren(loadingNote("Loading prompt library…"));
+      mount(composeTab, loadingNote("Loading prompt library…"));
     }
     try {
       state.library = await ctx.apiJson("/mrln/prompt/library");
@@ -132,7 +149,7 @@ export function createStore(hub) {
         return;
       }
       state.libraryError = err.message;
-      composeTab.replaceChildren(libraryErrorNote(err.message));
+      mount(composeTab, libraryErrorNote(err.message));
       if (state.tab === "library") renderLibraryTab();
       if (state.tab === "decompose") renderDecomposeTab();
       return;
@@ -278,7 +295,7 @@ export function createStore(hub) {
     // the wrong file). Returns true when this call took effect.
     const no = ++state.templateNo;
     if (!state.detail) {
-      composeTab.replaceChildren(loadingNote(`Loading '${slug}'…`));
+      mount(composeTab, loadingNote(`Loading '${slug}'…`));
     }
     let detail;
     try {
@@ -303,7 +320,7 @@ export function createStore(hub) {
         renderComposeTab();
         composeTab.prepend(banner);
       } else {
-        composeTab.replaceChildren(banner);
+        mount(composeTab, banner);
       }
       return false;
     }
