@@ -1,0 +1,363 @@
+{
+  "version": 1,
+  "label": "Sport & Discipline",
+  "description": "What the person is actually doing, in the language the sport uses about itself. location/sport owns the venue; this owns the act. A measured hole: of 62 sports enumerated from the world the library answered 25, and the misses were entire families rather than stragglers.",
+  "items": [
+    {
+      "name": "boxing-round",
+      "text": "boxing at close quarters, guard high and chin tucked, weight rolling onto the lead foot as the shot goes out",
+      "text_short": "boxing close in, guard high and chin tucked",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "kickboxing",
+      "text": "kickboxing at range, a roundhouse turning over at hip height, the support foot pivoting through onto the ball",
+      "text_short": "kickboxing, roundhouse turning over at hip height",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "judo-throw",
+      "text": "a judo throw at the moment of commitment, both grips fixed on the lapel and sleeve, one hip driven under the opponent's centre",
+      "text_short": "judo throw at the point of commitment",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "karate-kata",
+      "text": "a karate kata held at full extension, gi sleeve snapping, stance low and every angle deliberate",
+      "text_short": "karate kata at full extension, gi snapping",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "taekwondo-kick",
+      "text": "a taekwondo head kick at full height, chambering knee already past the guard, body flat and horizontal in the air",
+      "text_short": "taekwondo head kick, body flat in the air",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "wrestling-clinch",
+      "text": "a wrestling clinch on the mat edge, foreheads locked and hands fighting for underhooks, neither pair of feet still",
+      "text_short": "wrestling clinch, hands fighting for underhooks",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "fencing-lunge",
+      "text": "a fencing lunge at full stretch, back arm thrown open for balance, blade bending on the hit and the lamé lit",
+      "text_short": "fencing lunge, blade bending on the hit",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "name": "archery-anchor",
+      "text": "an archer at full draw with the string touching the corner of the mouth, back tension held, the whole body a single line to the target",
+      "text_short": "archer at full draw, string to the mouth",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "basketball-drive",
+      "text": "a basketball drive to the rim, ball palmed away from a trailing defender, the last step already leaving the floor",
+      "text_short": "basketball drive, last step leaving the floor",
+      "tags": [
+        "team",
+        "ball"
+      ]
+    },
+    {
+      "name": "volleyball-spike",
+      "text": "a volleyball spike at the top of the jump, hitting arm cocked behind the ear, the block rising a fraction late",
+      "text_short": "volleyball spike over a late block",
+      "tags": [
+        "team",
+        "ball"
+      ]
+    },
+    {
+      "name": "handball-shot",
+      "text": "a handball shot fired from the six-metre line, body twisted through the air past a defender's outstretched arm",
+      "text_short": "handball shot fired mid-air past a defender",
+      "tags": [
+        "team",
+        "ball"
+      ]
+    },
+    {
+      "name": "tennis-serve",
+      "text": "a tennis serve at full extension, toss still hanging, racket head dropped behind the back and the front foot rolling in",
+      "text_short": "tennis serve, racket dropped behind the back",
+      "tags": [
+        "racket"
+      ]
+    },
+    {
+      "name": "badminton-smash",
+      "text": "a badminton smash struck downward from above the head, shuttle deforming on contact, the follow-through already recovering",
+      "text_short": "badminton smash struck steeply downward",
+      "tags": [
+        "racket"
+      ]
+    },
+    {
+      "name": "table-tennis-loop",
+      "text": "a table tennis loop played close to the table, bat brushing up the back of the ball, body coiled low over the edge",
+      "text_short": "table tennis loop brushed up the back of the ball",
+      "tags": [
+        "racket"
+      ]
+    },
+    {
+      "name": "golf-swing",
+      "text": "a golf swing at the top, shoulders fully turned against a braced lower half, clubhead pointing back down the target line",
+      "text_short": "golf swing at the top, shoulders fully turned",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "snowboarding",
+      "text": "snowboarding through soft snow, a heelside turn throwing a wall of spray, knees deep and shoulders quiet",
+      "text_short": "snowboarding heelside, throwing a wall of spray",
+      "tags": [
+        "winter"
+      ]
+    },
+    {
+      "name": "ice-skating",
+      "text": "figure skating mid-spin, free leg extended and arms drawn in, blade tracing a tight circle into fresh ice",
+      "text_short": "figure skating spin, blade tracing tight ice",
+      "tags": [
+        "winter"
+      ]
+    },
+    {
+      "name": "ice-hockey",
+      "text": "ice hockey along the boards, skates biting at an angle, sticks tangled and breath showing under rink lights",
+      "text_short": "ice hockey on the boards, skates biting",
+      "tags": [
+        "winter",
+        "team"
+      ]
+    },
+    {
+      "name": "curling",
+      "text": "a curling delivery out of the hack, stone released with a quiet handle turn while two sweepers work ahead of it",
+      "text_short": "curling delivery, sweepers working ahead",
+      "tags": [
+        "winter",
+        "precision"
+      ]
+    },
+    {
+      "name": "bobsleigh",
+      "text": "a bobsleigh push start, four athletes driving in unison before folding into the shell, runners already singing on the ice",
+      "text_short": "bobsleigh push start, runners singing",
+      "tags": [
+        "winter",
+        "team"
+      ]
+    },
+    {
+      "name": "mountaineering",
+      "text": "mountaineering on a corniced ridge, roped together and moving one at a time, axes planted with every step",
+      "text_short": "roped mountaineering on a corniced ridge",
+      "tags": [
+        "winter",
+        "endurance"
+      ]
+    },
+    {
+      "name": "bouldering",
+      "text": "a bouldering problem mid-crux, one heel hooked high and fingers crimped white, mats scattered below",
+      "text_short": "bouldering crux, heel hooked and fingers crimped"
+    },
+    {
+      "name": "gymnastics-beam",
+      "text": "a gymnastics beam routine at the point of balance, arms held in line and toes pointed hard, ten centimetres of confidence",
+      "text_short": "gymnastics beam, held at the point of balance"
+    },
+    {
+      "name": "weightlifting-clean",
+      "text": "a weightlifting clean caught in the front rack, elbows whipped through and the bar bending across the shoulders",
+      "text_short": "clean caught in the front rack, bar bending",
+      "tags": [
+        "strength"
+      ]
+    },
+    {
+      "name": "crossfit-wod",
+      "text": "a crossfit workout mid-set, chalk in the air and a clock on the wall, form holding together by decision rather than freshness",
+      "text_short": "crossfit set, chalk in the air and a clock running",
+      "tags": [
+        "strength"
+      ]
+    },
+    {
+      "name": "pilates-reformer",
+      "text": "a pilates reformer session, carriage drawn against the springs, straps taut and the spine articulating one vertebra at a time",
+      "text_short": "pilates reformer, carriage drawn on the springs"
+    },
+    {
+      "name": "marathon-wall",
+      "text": "a marathon somewhere past the wall, gait shortened, salt dried on the temples and a bottle carried too long",
+      "text_short": "marathon past the wall, gait gone short",
+      "tags": [
+        "endurance"
+      ]
+    },
+    {
+      "name": "obstacle-mud-race",
+      "text": "an obstacle race through a mud pit, competitors crawling under low wire, everyone the same colour from the neck down",
+      "text_short": "mud race under low wire, everyone one colour",
+      "tags": [
+        "endurance",
+        "mud"
+      ]
+    },
+    {
+      "name": "motocross-jump",
+      "text": "a motocross rider off the lip of a tabletop, bike whipped sideways in the air, roost still hanging where the rear wheel left",
+      "text_short": "motocross whip off a tabletop, roost hanging",
+      "tags": [
+        "motorsport",
+        "mud"
+      ]
+    },
+    {
+      "name": "enduro-hillclimb",
+      "text": "an enduro hillclimb in deep ruts, front wheel light, boot dabbed out for the slide and mud packed solid into the fender",
+      "text_short": "enduro hillclimb in deep ruts, boot dabbed out",
+      "tags": [
+        "motorsport",
+        "mud"
+      ]
+    },
+    {
+      "name": "drag-racing",
+      "text": "a drag racing launch, front wheels lifting clear, tyres ballooning at the sidewall and smoke boiling off the line",
+      "text_short": "drag launch, front wheels clear and tyres ballooning",
+      "tags": [
+        "motorsport"
+      ]
+    },
+    {
+      "name": "karting",
+      "text": "kart racing three abreast into a hairpin, chassis flexing on the inside wheel, helmets almost at kerb height",
+      "text_short": "karts three abreast into a hairpin",
+      "tags": [
+        "motorsport"
+      ]
+    },
+    {
+      "name": "bmx-air",
+      "text": "a BMX rider at the peak of a quarter-pipe air, bars turned and the coping already behind, the whole park tilting below",
+      "text_short": "BMX air over the coping, bars turned"
+    },
+    {
+      "name": "horse-riding-cross-country",
+      "text": "a cross-country horse and rider over a solid fence, ears pricked and forelegs tucked, ground churned on the take-off side",
+      "text_short": "horse and rider over a solid cross-country fence",
+      "tags": [
+        "equestrian"
+      ]
+    },
+    {
+      "name": "dressage",
+      "text": "a dressage passage, the horse suspended in a trot that goes upward more than forward, rider's hands unmoving",
+      "text_short": "dressage passage, suspension over forward motion",
+      "tags": [
+        "equestrian"
+      ]
+    },
+    {
+      "name": "polo-chukka",
+      "text": "a polo chukka at the gallop, mallet swung through under the neck, divots flying and ponies shoulder to shoulder",
+      "text_short": "polo at the gallop, mallet under the neck",
+      "tags": [
+        "equestrian",
+        "team"
+      ]
+    },
+    {
+      "name": "sailing-upwind",
+      "text": "a yacht hard on the wind, rail buried and crew stacked on the windward side, spray coming back the length of the deck",
+      "text_short": "yacht hard on the wind, rail buried",
+      "tags": [
+        "water"
+      ]
+    },
+    {
+      "name": "kayaking-whitewater",
+      "text": "a whitewater kayak dropping into a stopper, paddle braced low, the boat half buried in aerated water",
+      "text_short": "whitewater kayak dropping into a stopper",
+      "tags": [
+        "water"
+      ]
+    },
+    {
+      "name": "scuba-diving",
+      "text": "a scuba diver neutrally buoyant over a reef wall, exhaust bubbles climbing in silver plates, torch beam finding colour the depth had taken",
+      "text_short": "scuba diver neutral over a reef wall",
+      "tags": [
+        "water"
+      ]
+    },
+    {
+      "name": "skydiving-freefall",
+      "text": "skydivers in freefall formation, suits rippling at terminal velocity, grips taken and the ground still an abstraction",
+      "text_short": "skydivers gripped in freefall formation",
+      "tags": [
+        "air"
+      ]
+    },
+    {
+      "name": "paragliding",
+      "text": "a paraglider working a thermal, lines taut and wing tipped into the turn, the valley floor a long way under the harness",
+      "text_short": "paraglider tipped into a thermal turn",
+      "tags": [
+        "air"
+      ]
+    },
+    {
+      "name": "bowling",
+      "text": "a bowling delivery at the foul line, slide foot planted and the ball rolling out over the arrows into the oil pattern",
+      "text_short": "bowling delivery over the arrows",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "billiards",
+      "text": "a billiards shot with the bridge hand locked and the cue level, chalk on the tip and the object ball already lined up",
+      "text_short": "billiards, bridge locked and cue level",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "darts",
+      "text": "a darts throw at the moment of release, elbow high and still, the flight tracking toward a treble",
+      "text_short": "darts throw, elbow high and unmoving",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "ballet-arabesque",
+      "text": "a ballet arabesque held on pointe, supporting leg turned out and the line running unbroken from fingertip to toe",
+      "text_short": "ballet arabesque held on pointe"
+    }
+  ]
+}

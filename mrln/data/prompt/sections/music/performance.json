@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "label": "Performance Setting",
+  "description": "Where music happens, from the concert platform to the practice room. Composes with location/nightlife, which owns the venues people drink in.",
+  "items": [
+    {
+      "name": "concert-platform",
+      "text": "a concert platform under house lights, chairs and stands laid out in an arc, an audience just visible past the edge",
+      "text_short": "concert platform under house lights",
+      "tags": [
+        "formal"
+      ]
+    },
+    {
+      "name": "orchestra-pit",
+      "text": "an orchestra pit sunk below the stage lip, players lit only by stand lamps, the score the brightest thing in the frame",
+      "text_short": "orchestra pit lit only by stand lamps",
+      "tags": [
+        "formal"
+      ]
+    },
+    {
+      "name": "recording-booth",
+      "text": "a vocal booth behind glass, a large-diaphragm microphone on a shock mount, foam wedges and a headphone cable looping down",
+      "text_short": "vocal booth behind glass, mic on a shock mount",
+      "tags": [
+        "studio"
+      ]
+    },
+    {
+      "name": "control-room",
+      "text": "a studio control room with a large-format desk, monitors on stands and the live room visible through the glass beyond",
+      "text_short": "control room desk, live room through the glass",
+      "tags": [
+        "studio"
+      ]
+    },
+    {
+      "name": "rehearsal-room",
+      "text": "a rehearsal room with carpet on the walls, mismatched chairs and a kit that never leaves, cases stacked in the corner",
+      "text_short": "rehearsal room with carpet on the walls",
+      "tags": [
+        "worn"
+      ]
+    },
+    {
+      "name": "practice-room",
+      "text": "a bare practice room with one chair, a stand and a mirror, a clock deliberately placed out of eye line",
+      "text_short": "bare practice room, one chair and a mirror",
+      "tags": [
+        "quiet"
+      ]
+    },
+    {
+      "name": "club-stage",
+      "text": "a small club stage barely raised above the floor, the crowd close enough to touch the monitors, a low ceiling holding the sound in",
+      "text_short": "small club stage, crowd on the monitors",
+      "tags": [
+        "night",
+        "crowd"
+      ]
+    },
+    {
+      "name": "festival-mainstage",
+      "text": "a festival main stage in full daylight, scaffolding and screens either side, the front barrier packed and the field running back for ever",
+      "text_short": "festival main stage in full daylight",
+      "tags": [
+        "crowd",
+        "day"
+      ]
+    },
+    {
+      "name": "street-corner",
+      "text": "a street corner pitch with good reflections off the shopfronts, a case open on the flagstones and a shifting audience",
+      "text_short": "street corner pitch with good reflections",
+      "tags": [
+        "outdoor"
+      ]
+    },
+    {
+      "name": "church-loft",
+      "text": "a church organ loft above the nave, console tucked behind the pipe case, a mirror angled to see the altar",
+      "text_short": "organ loft above the nave, mirror to the altar",
+      "tags": [
+        "quiet"
+      ]
+    },
+    {
+      "name": "bedroom-setup",
+      "text": "a bedroom setup on a desk, an interface and a microphone on a boom, a duvet pinned to the wall behind for deadening",
+      "text_short": "bedroom setup, duvet pinned up for deadening",
+      "tags": [
+        "worn"
+      ]
+    },
+    {
+      "name": "open-air-bandstand",
+      "text": "a cast-iron bandstand in a park, ornamental roof and deck chairs scattered on the grass at a polite distance",
+      "text_short": "cast-iron bandstand, deck chairs on the grass",
+      "tags": [
+        "outdoor",
+        "day"
+      ]
+    }
+  ]
+}

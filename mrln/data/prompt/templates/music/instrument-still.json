@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Music — Instrument Portrait",
+  "type": [
+    "object",
+    "product"
+  ],
+  "description": "The instrument alone, treated as a portrait subject. Wear is the story: rosin dust, worn lacquer, dished frets, a chin rest polished pale. Lit like a product shot but graded like a portrait.",
+  "prefix": "A still-life portrait of ({instrument}:1.35), alone and worth looking at.",
+  "slots": [
+    {
+      "id": "instrument",
+      "ref": "music/instrument",
+      "label": "Instrument",
+      "emphasis": 1.35
+    },
+    {
+      "id": "setting",
+      "ref": "music/performance",
+      "label": "Setting"
+    },
+    {
+      "id": "surface",
+      "ref": "product/surface",
+      "label": "Surface"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/still-life",
+      "label": "Lighting",
+      "emphasis": 1.25
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "negative-space"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Still-Life Rendering: (every mark of use held in focus — worn finish, dust, patina:1.3), (material honesty: lacquer, brass, rosewood, skin and gut read as themselves:1.25), controlled falloff into an unlit background, no human hands in frame.",
+  "negative": "hands, people, clutter, watermark, text, logo",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

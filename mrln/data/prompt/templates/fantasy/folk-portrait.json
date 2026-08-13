@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Fantasy Folk Portrait",
+  "type": [
+    "human",
+    "creature"
+  ],
+  "description": "A portrait of one of the peoples of fantasy — elf, dwarf, orc, fae, tiefling — treated as a person rather than a monster. Build and bearing come from creature/folk; everything else is ordinary portraiture, which is exactly what makes it land.",
+  "prefix": "A portrait of {folk}, {expression}, painted with the seriousness of a court portrait.",
+  "slots": [
+    {
+      "id": "folk",
+      "ref": "creature/folk",
+      "label": "Folk",
+      "emphasis": 1.35
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "wardrobe",
+      "ref": "wardrobe/fantasy",
+      "label": "Wearing",
+      "emphasis": 1.15
+    },
+    {
+      "id": "setting",
+      "ref": "location/fantasy",
+      "label": "Setting"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Lighting",
+      "emphasis": 1.2
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portraiture",
+      "label": "Treatment"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Portrait Rendering: (anatomy of the folk held consistently — ear set, jaw, proportion, skin:1.3), (dignity and interiority, a person rather than a creature study:1.25), (perfect hands, detailed fingers:1.2), controlled dramatic light, background subordinate to the face.",
+  "negative": "monster, grotesque, cartoon, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Period Medium",
-  "description": "How the era's own cameras and film rendered the world — the look people read as 'from then' before they read anything else.",
+  "description": "How the era's own cameras and film rendered the world — the look people read as 'from then' before they read anything else. Periods covered: the roaring twenties, the great depression and wartime nineteen-forties, the nineteen-fifties, the disco era seventies, the eighties, and post apocalypse, and the grunge nineties.",
   "items": [
     {
       "name": "orthochromatic-plate",
@@ -97,6 +97,22 @@
       "text_short": "sun-bleached, dust-marked",
       "tags": [
         "post-apocalypse"
+      ]
+    },
+    {
+      "name": "nineties-point-and-shoot",
+      "text": "shot on a compact point-and-shoot with on-camera flash, a date stamp burned orange into the lower corner and colour running slightly warm",
+      "text_short": "point-and-shoot flash with an orange date stamp",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-camcorder",
+      "text": "shot on a consumer camcorder, interlaced fields combing on any movement, tape noise in the shadows and timecode in the corner",
+      "text_short": "camcorder interlacing, tape noise and timecode",
+      "tags": [
+        "1990s"
       ]
     }
   ]

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Period Signature",
-  "description": "The room, street or machine that tells you the year without anyone having to say it.",
+  "description": "The room, street or machine that tells you the year without anyone having to say it. Periods covered: the roaring twenties, the great depression and wartime nineteen-forties, the nineteen-fifties, the disco era seventies, the eighties, and post apocalypse, and the grunge nineties.",
   "items": [
     {
       "name": "jazz-interior",
@@ -97,6 +97,22 @@
       "text_short": "scrap settlement, drums and smoke",
       "tags": [
         "post-apocalypse"
+      ]
+    },
+    {
+      "name": "nineties-cathode-living-room",
+      "text": "a living room built around a deep cathode television, a games console on the carpet in a nest of cables and a stack of jewel cases beside it",
+      "text_short": "cathode TV, console on the carpet, jewel cases stacked",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-record-shop",
+      "text": "a record shop of racked CDs and listening posts on coiled cables, a wall of gig flyers stapled over one another",
+      "text_short": "racked CDs, listening posts and stapled flyers",
+      "tags": [
+        "1990s"
       ]
     }
   ]

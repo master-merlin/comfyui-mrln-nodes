@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Period Hair",
-  "description": "Hair and grooming that dates an image as precisely as the clothes do.",
+  "description": "Hair and grooming that dates an image as precisely as the clothes do. Periods covered: the roaring twenties, the great depression and wartime nineteen-forties, the nineteen-fifties, the disco era seventies, the eighties, and post apocalypse, and the grunge nineties.",
   "suits": [
     "human"
   ],
@@ -100,6 +100,22 @@
       "text_short": "wire-bound tight braids",
       "tags": [
         "post-apocalypse"
+      ]
+    },
+    {
+      "name": "nineties-curtains",
+      "text": "hair parted dead centre and feathered back into curtains either side of the face, length just past the jaw",
+      "text_short": "nineties curtains parted dead centre",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-crimped-half-up",
+      "text": "crimped lengths with the top half pulled into a small clip, baby hairs gelled flat at the temples",
+      "text_short": "nineties crimped lengths with a small top clip",
+      "tags": [
+        "1990s"
       ]
     }
   ]

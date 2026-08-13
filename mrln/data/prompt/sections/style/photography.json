@@ -62,7 +62,9 @@
       "name": "boudoir-artistic",
       "text": "artistic boudoir photography, tasteful intimate elegance, soft window key with deep falloff, grace implied rather than shown",
       "text_short": "artistic boudoir",
-      "tags": ["boudoir"]
+      "tags": [
+        "boudoir"
+      ]
     },
     {
       "name": "beauty-closeup",
@@ -83,13 +85,32 @@
       "name": "underwater",
       "text": "underwater photography, cyan depth haze, sunbeams shafting down from the surface, suspended particulate glittering in the light",
       "text_short": "underwater sunbeams",
-      "tags": ["underwater"]
+      "tags": [
+        "underwater"
+      ]
     },
     {
       "name": "astro-landscape",
       "text": "astro-landscape photography, the Milky Way core arching over a dark foreground, long-exposure star detail, faint green airglow on the horizon",
       "text_short": "Milky Way astroscape",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "selfie",
+      "text": "shot as a selfie, arm's-length perspective with the near features enlarged, front-camera softness and the shooter's own eyeline into the lens",
+      "text_short": "selfie: arm's length, near features enlarged"
+    },
+    {
+      "name": "studio-session",
+      "text": "shot as a booked studio session, a lighting plot that shows, wardrobe changes implied and a subject who knows the camera is there",
+      "text_short": "booked studio session, the lighting plot showing"
+    },
+    {
+      "name": "blacklight-uv",
+      "text": "shot under ultraviolet blacklight, whites and fluorescents blazing while everything else falls to near black, colour pushed to unnatural violet",
+      "text_short": "blacklight UV, fluorescents blazing out of near black"
     }
   ]
 }

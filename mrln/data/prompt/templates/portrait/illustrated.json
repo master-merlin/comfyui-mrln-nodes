@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "label": "Illustrated Portrait",
+  "type": [
+    "human"
+  ],
+  "description": "A portrait rendered as a drawing rather than a photograph, in the western comics and illustration register: clear line, crosshatching, cartoon flats or a caricature. The treatment slot is the whole template — everything else just gives it something to draw.",
+  "prefix": "An illustrated portrait, {treatment}. The subject is {nationality}, {age}, with ({hair-color} hair in {hair}:1.15), {expression}.",
+  "slots": [
+    {
+      "id": "treatment",
+      "ref": "style/cartoon-comics",
+      "label": "Drawn As",
+      "emphasis": 1.4
+    },
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "hair-color",
+      "ref": "human/hair-color",
+      "label": "Hair Colour"
+    },
+    {
+      "id": "hair",
+      "ref": "human/hair-style",
+      "label": "Hair"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/casual",
+      "label": "Wearing"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "negative-space"
+    }
+  ],
+  "suffix": "Illustration Rendering: (a drawing, not a photograph — the mark-making visible throughout:1.35), (line weight consistent with the chosen register:1.2), flat or limited colour held inside the drawing, paper or board tone allowed to show, (perfect hands, detailed fingers:1.2).",
+  "negative": "photographic, photorealistic, 3d render, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

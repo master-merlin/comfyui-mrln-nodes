@@ -2,15 +2,54 @@
   "version": 1,
   "label": "Volcanic",
   "description": "Volcanic landforms as hero subjects — the planet under construction, temperature readable as color.",
-  "suits": ["nature"],
+  "suits": [
+    "nature"
+  ],
   "items": [
-    { "name": "lava-fountain", "text": "a gas-driven lava fountain roaring from the vent, clots of spatter cooling from yellow through orange as they fly, incandescent rivers draining downslope", "text_short": "roaring lava fountain" },
-    { "name": "crater-lake", "text": "a caldera lake of impossible blue ringed by ash slopes — fed by nothing but rain and snowmelt, so clear it holds only the color of scattered light", "text_short": "blue crater lake" },
-    { "name": "basalt-columns", "text": "hexagonal basalt columns stacked like organ pipes down to the sea, shrinkage joints from a lava flow that cooled slowly enough to crack into geometry", "text_short": "hexagonal basalt organ" },
-    { "name": "lava-meets-sea", "text": "molten lava pouring into the sea through bursts of steam, new black land shattering into glassy sand as it quenches, the white plume leaning downwind", "text_short": "lava meeting sea" },
-    { "name": "geothermal-field", "text": "a hissing geothermal field of grey mudpots and fumaroles, vents ringed in yellow sulfur crystals and rust-stained clay, steam leaning with the wind", "text_short": "hissing geothermal field" },
-    { "name": "ash-lightning", "text": "an eruption column laced with volcanic lightning, static charge born of ash grinding against ash, the plume's anvil top shearing off downwind", "text_short": "volcanic lightning column" },
-    { "name": "pahoehoe-skin", "text": "silver pahoehoe lava skin wrinkling into rope coils, the red interior glowing only through the cracks", "text_short": "ropy pahoehoe skin" },
-    { "name": "lava-lake", "text": "a convecting lava lake, black crust plates rifting apart along incandescent seams — plate tectonics in miniature", "text_short": "convecting lava lake" }
+    {
+      "name": "lava-fountain",
+      "text": "a gas-driven lava fountain roaring from the vent, clots of spatter cooling from yellow through orange as they fly, incandescent rivers draining downslope",
+      "text_short": "roaring lava fountain"
+    },
+    {
+      "name": "crater-lake",
+      "text": "a caldera lake of impossible blue ringed by ash slopes — fed by nothing but rain and snowmelt, so clear it holds only the color of scattered light",
+      "text_short": "blue crater lake"
+    },
+    {
+      "name": "basalt-columns",
+      "text": "hexagonal basalt columns stacked like organ pipes down to the sea, shrinkage joints from a lava flow that cooled slowly enough to crack into geometry",
+      "text_short": "hexagonal basalt organ"
+    },
+    {
+      "name": "lava-meets-sea",
+      "text": "molten lava pouring into the sea through bursts of steam, new black land shattering into glassy sand as it quenches, the white plume leaning downwind",
+      "text_short": "lava meeting sea"
+    },
+    {
+      "name": "geothermal-field",
+      "text": "a hissing geothermal field of grey mudpots and fumaroles, vents ringed in yellow sulfur crystals and rust-stained clay, steam leaning with the wind",
+      "text_short": "hissing geothermal field"
+    },
+    {
+      "name": "ash-lightning",
+      "text": "an eruption column laced with volcanic lightning, static charge born of ash grinding against ash, the plume's anvil top shearing off downwind",
+      "text_short": "volcanic lightning column"
+    },
+    {
+      "name": "pahoehoe-skin",
+      "text": "silver pahoehoe lava skin wrinkling into rope coils, the red interior glowing only through the cracks",
+      "text_short": "ropy pahoehoe skin"
+    },
+    {
+      "name": "lava-lake",
+      "text": "a convecting lava lake, black crust plates rifting apart along incandescent seams — plate tectonics in miniature",
+      "text_short": "convecting lava lake"
+    },
+    {
+      "name": "geyser-eruption",
+      "text": "a geyser erupting in a column of scalding water and steam, sinter terraces stained rust and white around the vent",
+      "text_short": "geyser column over stained sinter terraces"
+    }
   ]
 }

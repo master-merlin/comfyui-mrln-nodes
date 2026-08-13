@@ -48,8 +48,14 @@ def test_a_plain_language_intent_finds_something(lib, group, term):
 def test_the_probe_list_stays_honest():
     """Guards against the two ways this instrument gets quietly switched off."""
     terms = [term for terms in PROBES.values() for term in terms]
-    assert len(terms) >= 300, "the probe list shrank — gaps are appended, never removed"
-    assert len(terms) == len(set(terms)), "duplicate probes inflate the count without testing more"
+    assert len(set(terms)) >= 700, "the probe list shrank — gaps are appended, never removed"
+    # Overlap BETWEEN groups is legitimate and all_probes() dedupes it: the
+    # hand-written waves came from intuition and the 'world:' waves are
+    # mechanical enumerations of real domains, so landing on the same word is
+    # the two sources agreeing. What must not happen is a group repeating
+    # itself, which pads the count without testing anything more.
+    for group, group_terms in PROBES.items():
+        assert len(group_terms) == len(set(group_terms)), f"'{group}' repeats a probe"
     assert len(KNOWN_GAPS) <= 10, (
         "KNOWN_GAPS is the argued escape hatch; a long one means coverage is being "
         "declared rather than measured"

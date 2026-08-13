@@ -2,35 +2,177 @@
   "version": 1,
   "label": "Mammal",
   "description": "Mammal subjects for wildlife work — posture and pelage detail an editor would keep.",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "lion", "text": "a black-maned lion surveying the grassland from a termite mound, low light turning the mane's fringe into a rim of fire", "text_short": "black-maned lion on mound" },
-    { "name": "snow-leopard", "text": "a snow leopard draped over a rock ledge, meter-long tail wrapped around itself for warmth, rosettes dissolving into the scree behind", "text_short": "snow leopard on ledge" },
-    { "name": "tiger", "text": "a Bengal tiger shoulder-deep in dry elephant grass, stripes breaking its outline until only the white ear spots give it away", "text_short": "tiger hidden in tall grass" },
-    { "name": "wolf", "text": "a grey wolf paused mid-trot in falling snow, one forepaw curled under, guard hairs frosted, pale eyes steady on the lens", "text_short": "wolf paused in snowfall" },
-    { "name": "brown-bear", "text": "a brown bear braced chest-deep at the lip of the rapids, jaws open toward a leaping salmon, spray beading its soaked shoulder hump", "text_short": "bear catching salmon at rapids" },
-    { "name": "elephant", "text": "a dust-red elephant matriarch leading the herd in single file, trunk raised to test the wind, calves shielded between the cows", "text_short": "elephant matriarch leading herd" },
-    { "name": "red-fox", "text": "a winter-coated red fox with a snow-dusted muzzle, black-stockinged legs, brush tail flagged with its white tip", "text_short": "winter red fox" },
-    { "name": "mountain-gorilla", "text": "a silverback mountain gorilla hunched in dripping foliage, rain running off the silver saddle across his back, knuckles planted wide", "text_short": "silverback in wet foliage" },
-    { "name": "red-deer-stag", "text": "a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist", "text_short": "rutting stag roaring in mist" },
-    { "name": "bison", "text": "a frost-caked bison sweeping snow aside with sideways swings of its massive head, exhaling steam, hump ridged with rime", "text_short": "frosted bison sweeping snow" },
-    { "name": "cheetah", "text": "a cheetah at full stretch mid-gallop, all four feet airborne, tail flung wide as a counterweight to the turn", "text_short": "cheetah at full stretch" },
-    { "name": "giraffe", "text": "a giraffe silhouetted beside a lone flat-topped acacia, neck and legs echoing the tree's own branching lines", "text_short": "giraffe and acacia silhouette" },
-    { "name": "orangutan", "text": "an orangutan mother bridging a canopy gap with her own body while her infant crosses along her back", "text_short": "orangutan mother bridging" },
-    { "name": "arctic-hare", "text": "an arctic hare bolt upright on packed snow, forepaws tucked to its chest, all white except the black ear tips", "text_short": "arctic hare upright" },
-    { "name": "wild-horse", "text": "wild horses running through shallow surf, spray exploding at their knees, manes and tails streaming into one line of motion", "text_short": "horses running in surf" },
-    { "name": "hedgehog", "text": "a hedgehog plowing nose-first through autumn leaf litter, a skewered leaf riding on its dew-tipped spines", "text_short": "hedgehog in leaf litter" },
-    { "name": "leopard", "text": "a leopard draped along a fever-tree limb, one forepaw and tail hanging vertical, its hoisted impala kill wedged in the fork above", "text_short": "leopard in tree with kill" },
-    { "name": "polar-bear", "text": "a polar bear lying flat on sea ice beside a seal breathing hole, utterly still, black nose the only break in the white", "text_short": "polar bear at breathing hole" },
-    { "name": "meerkat-sentinel", "text": "a meerkat sentinel upright on a termite mound, dark eye patches cutting the glare, head snapping between sky and horizon", "text_short": "meerkat sentinel upright" },
-    { "name": "alpine-ibex", "text": "an alpine ibex poised on a ledge no wider than its hooves, scimitar horns ridged with annual growth rings, cliff dropping away below", "text_short": "ibex on sheer ledge" },
-    { "name": "musk-ox-ring", "text": "musk oxen shoulder to shoulder in a defensive ring, calves hidden inside, ground blizzard streaming through their skirted guard hair", "text_short": "musk ox defensive ring" },
-    { "name": "red-kangaroo", "text": "a red kangaroo at full bound, body horizontal and thick tail curved as a counterbalance, heat shimmer rising off the red plain", "text_short": "bounding red kangaroo" },
-    { "name": "sea-otter", "text": "a sea otter floating on its back in a kelp bed, cracking a clam against the flat anvil stone balanced on its chest, a kelp frond wrapped around its middle as an anchor", "text_short": "sea otter cracking clam" },
-    { "name": "pangolin", "text": "a pangolin walking upright on its hind legs across red laterite earth, foreclaws curled to its chest, overlapping keratin scales shifting like roof tiles at every step", "text_short": "pangolin walking upright" },
-    { "name": "three-toed-sloth", "text": "a three-toed sloth hanging by all four hook claws beneath a cecropia branch, green algae tinting its grooved fur, one deliberate limb moving at a time", "text_short": "algae-green hanging sloth" },
-    { "name": "hippo-gape", "text": "a hippo threat-gaping at the waterline, jaw hinged open past ninety degrees, tusks bared, water streaming off its ears as it rears from the pool", "text_short": "hippo threat gape" },
-    { "name": "bat-emergence", "text": "free-tailed bats unwinding from a cave mouth in a smoke-like column at dusk, the spiral shearing downwind, a hawk cutting through the stream", "text_short": "bat emergence column", "tags": ["night"] },
-    { "name": "moose-feeding", "text": "a bull moose surfacing from a beaver pond with waterweed draped across his antlers, sheets of water pouring off the velvet-covered summer palms", "text_short": "moose surfacing with weed" }
+    {
+      "name": "lion",
+      "text": "a black-maned lion surveying the grassland from a termite mound, low light turning the mane's fringe into a rim of fire",
+      "text_short": "black-maned lion on mound"
+    },
+    {
+      "name": "snow-leopard",
+      "text": "a snow leopard draped over a rock ledge, meter-long tail wrapped around itself for warmth, rosettes dissolving into the scree behind",
+      "text_short": "snow leopard on ledge"
+    },
+    {
+      "name": "tiger",
+      "text": "a Bengal tiger shoulder-deep in dry elephant grass, stripes breaking its outline until only the white ear spots give it away",
+      "text_short": "tiger hidden in tall grass"
+    },
+    {
+      "name": "wolf",
+      "text": "a grey wolf paused mid-trot in falling snow, one forepaw curled under, guard hairs frosted, pale eyes steady on the lens",
+      "text_short": "wolf paused in snowfall"
+    },
+    {
+      "name": "brown-bear",
+      "text": "a brown bear braced chest-deep at the lip of the rapids, jaws open toward a leaping salmon, spray beading its soaked shoulder hump",
+      "text_short": "bear catching salmon at rapids"
+    },
+    {
+      "name": "elephant",
+      "text": "a dust-red elephant matriarch leading the herd in single file, trunk raised to test the wind, calves shielded between the cows",
+      "text_short": "elephant matriarch leading herd"
+    },
+    {
+      "name": "red-fox",
+      "text": "a winter-coated red fox with a snow-dusted muzzle, black-stockinged legs, brush tail flagged with its white tip",
+      "text_short": "winter red fox"
+    },
+    {
+      "name": "mountain-gorilla",
+      "text": "a silverback mountain gorilla hunched in dripping foliage, rain running off the silver saddle across his back, knuckles planted wide",
+      "text_short": "silverback in wet foliage"
+    },
+    {
+      "name": "red-deer-stag",
+      "text": "a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist",
+      "text_short": "rutting stag roaring in mist"
+    },
+    {
+      "name": "bison",
+      "text": "a frost-caked bison sweeping snow aside with sideways swings of its massive head, exhaling steam, hump ridged with rime",
+      "text_short": "frosted bison sweeping snow"
+    },
+    {
+      "name": "cheetah",
+      "text": "a cheetah at full stretch mid-gallop, all four feet airborne, tail flung wide as a counterweight to the turn",
+      "text_short": "cheetah at full stretch"
+    },
+    {
+      "name": "giraffe",
+      "text": "a giraffe silhouetted beside a lone flat-topped acacia, neck and legs echoing the tree's own branching lines",
+      "text_short": "giraffe and acacia silhouette"
+    },
+    {
+      "name": "orangutan",
+      "text": "an orangutan mother bridging a canopy gap with her own body while her infant crosses along her back",
+      "text_short": "orangutan mother bridging"
+    },
+    {
+      "name": "arctic-hare",
+      "text": "an arctic hare bolt upright on packed snow, forepaws tucked to its chest, all white except the black ear tips",
+      "text_short": "arctic hare upright"
+    },
+    {
+      "name": "wild-horse",
+      "text": "wild horses running through shallow surf, spray exploding at their knees, manes and tails streaming into one line of motion",
+      "text_short": "horses running in surf"
+    },
+    {
+      "name": "hedgehog",
+      "text": "a hedgehog plowing nose-first through autumn leaf litter, a skewered leaf riding on its dew-tipped spines",
+      "text_short": "hedgehog in leaf litter"
+    },
+    {
+      "name": "leopard",
+      "text": "a leopard draped along a fever-tree limb, one forepaw and tail hanging vertical, its hoisted impala kill wedged in the fork above",
+      "text_short": "leopard in tree with kill"
+    },
+    {
+      "name": "polar-bear",
+      "text": "a polar bear lying flat on sea ice beside a seal breathing hole, utterly still, black nose the only break in the white",
+      "text_short": "polar bear at breathing hole"
+    },
+    {
+      "name": "meerkat-sentinel",
+      "text": "a meerkat sentinel upright on a termite mound, dark eye patches cutting the glare, head snapping between sky and horizon",
+      "text_short": "meerkat sentinel upright"
+    },
+    {
+      "name": "alpine-ibex",
+      "text": "an alpine ibex poised on a ledge no wider than its hooves, scimitar horns ridged with annual growth rings, cliff dropping away below",
+      "text_short": "ibex on sheer ledge"
+    },
+    {
+      "name": "musk-ox-ring",
+      "text": "musk oxen shoulder to shoulder in a defensive ring, calves hidden inside, ground blizzard streaming through their skirted guard hair",
+      "text_short": "musk ox defensive ring"
+    },
+    {
+      "name": "red-kangaroo",
+      "text": "a red kangaroo at full bound, body horizontal and thick tail curved as a counterbalance, heat shimmer rising off the red plain",
+      "text_short": "bounding red kangaroo"
+    },
+    {
+      "name": "sea-otter",
+      "text": "a sea otter floating on its back in a kelp bed, cracking a clam against the flat anvil stone balanced on its chest, a kelp frond wrapped around its middle as an anchor",
+      "text_short": "sea otter cracking clam"
+    },
+    {
+      "name": "pangolin",
+      "text": "a pangolin walking upright on its hind legs across red laterite earth, foreclaws curled to its chest, overlapping keratin scales shifting like roof tiles at every step",
+      "text_short": "pangolin walking upright"
+    },
+    {
+      "name": "three-toed-sloth",
+      "text": "a three-toed sloth hanging by all four hook claws beneath a cecropia branch, green algae tinting its grooved fur, one deliberate limb moving at a time",
+      "text_short": "algae-green hanging sloth"
+    },
+    {
+      "name": "hippo-gape",
+      "text": "a hippo threat-gaping at the waterline, jaw hinged open past ninety degrees, tusks bared, water streaming off its ears as it rears from the pool",
+      "text_short": "hippo threat gape"
+    },
+    {
+      "name": "bat-emergence",
+      "text": "free-tailed bats unwinding from a cave mouth in a smoke-like column at dusk, the spiral shearing downwind, a hawk cutting through the stream",
+      "text_short": "bat emergence column",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "moose-feeding",
+      "text": "a bull moose surfacing from a beaver pond with waterweed draped across his antlers, sheets of water pouring off the velvet-covered summer palms",
+      "text_short": "moose surfacing with weed"
+    },
+    {
+      "name": "badger",
+      "text": "a badger low to the ground with the striped mask unmistakable, powerful digging claws and a body built like a wedge",
+      "text_short": "low striped badger built like a wedge"
+    },
+    {
+      "name": "elk",
+      "text": "a bull elk with a full antler spread carried high, dark mane at the throat and breath steaming in cold air",
+      "text_short": "bull elk carrying a full antler spread"
+    },
+    {
+      "name": "llama",
+      "text": "a llama with a long banana-curved ear set and a woolly neck, chewing sideways and looking directly at the lens",
+      "text_short": "woolly llama with banana-curved ears"
+    },
+    {
+      "name": "cow",
+      "text": "a cow at a gate with a broad wet muzzle and a slow blink, ear tag turned outward and flank marked in irregular patches",
+      "text_short": "cow at a gate, broad wet muzzle and a slow blink"
+    },
+    {
+      "name": "squirrel",
+      "text": "a squirrel upright on a branch with a nut turned in both forepaws, tail arched over the spine and ears tufted",
+      "text_short": "squirrel upright, nut turned in both forepaws"
+    }
   ]
 }

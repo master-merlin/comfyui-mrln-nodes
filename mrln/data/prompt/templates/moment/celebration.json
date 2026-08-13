@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "label": "Moment — The Occasion",
+  "type": [
+    "human"
+  ],
+  "description": "The photograph taken because the day mattered. Crowded frames, mixed light and people reacting to each other rather than to the lens — a wedding, a birthday, a countdown.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A photograph of an occasion in full swing. {nationality}, {age}, {expression}, in the middle of it. {trigger}",
+  "slots": [
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "laughing"
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/glamour",
+      "label": "Wearing"
+    },
+    {
+      "id": "occasion",
+      "ref": "location/celebration",
+      "label": "Occasion",
+      "emphasis": 1.3
+    },
+    {
+      "id": "light",
+      "ref": "lighting/night",
+      "label": "Lighting",
+      "emphasis": 1.15
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "layered-depth"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Occasion Rendering: (people reacting to each other and not to the camera:1.25), (mixed light sources left unbalanced — warm practicals against cool ambient:1.2), (perfect hands, detailed fingers:1.2), motion allowed at the frame edges, (sharp focal subject in a busy frame:1.15).",
+  "negative": "empty room, studio backdrop, single subject isolated, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

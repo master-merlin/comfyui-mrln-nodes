@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "label": "Music — Live Performance",
+  "type": [
+    "human"
+  ],
+  "description": "A band or player mid-set, lit only by what the venue has. Stage light is coloured, hard and from above, and the whole point is that it is not flattering — so the frame keeps the haze, the backlight and the grain rather than cleaning them away.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A live music photograph, lit entirely by the venue. {ensemble}, playing ({instrument}:1.2), {expression}. {trigger}",
+  "slots": [
+    {
+      "id": "ensemble",
+      "ref": "music/ensemble",
+      "label": "Who Is Playing",
+      "emphasis": 1.25
+    },
+    {
+      "id": "instrument",
+      "ref": "music/instrument",
+      "label": "Instrument",
+      "emphasis": 1.2
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "fierce"
+    },
+    {
+      "id": "stage",
+      "ref": "music/performance",
+      "label": "Setting",
+      "emphasis": 1.2
+    },
+    {
+      "id": "light",
+      "ref": "lighting/night",
+      "label": "Stage Light",
+      "emphasis": 1.25
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "layered-depth"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Live Rendering: (stage light only — hard coloured keys from above, haze holding every beam:1.3), (caught between beats, nobody posing:1.2), (perfect hands on the instrument, detailed fingers:1.25), high ISO grain kept rather than cleaned, silhouettes allowed to go black, (sharp focal subject in a dark room:1.15).",
+  "negative": "flat even lighting, studio backdrop, daylight, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

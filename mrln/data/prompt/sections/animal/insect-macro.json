@@ -2,25 +2,111 @@
   "version": 1,
   "label": "Insect / Macro",
   "description": "Macro-scale subjects — pair with the 100mm macro lens and focus stacking.",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "morpho-butterfly", "text": "a blue morpho wings-open on a dark leaf, structural blue shifting toward violet at the wing edges, brown owl-eye underwings just showing", "text_short": "blue morpho wings open" },
-    { "name": "dragonfly", "text": "a dragonfly grounded by cold, dew strung along every wing vein, compound eyes fogged with micro-droplets", "text_short": "dew-rigged dragonfly" },
-    { "name": "jewel-beetle", "text": "a jewel beetle crossing a lichened twig, metallic elytra cycling green, gold and copper with every shift of the light", "text_short": "metallic jewel beetle" },
-    { "name": "honeybee", "text": "a honeybee deep in a poppy, pollen baskets on its hind legs packed orange, loose pollen gilding every branched hair", "text_short": "pollen-loaded honeybee" },
-    { "name": "praying-mantis", "text": "a praying mantis tracking the lens, triangular head swiveling on a neck no other insect has, spiked forelegs folded in wait", "text_short": "head-tracking mantis" },
-    { "name": "jumping-spider", "text": "a jumping spider's huge headlamp eye pair filling the frame, iridescent green chelicerae below, one dew drop balanced on its brow", "text_short": "jumping spider eyes" },
-    { "name": "ant-teamwork", "text": "leafcutter ants hauling green leaf sails along a branch highway, tiny guard workers riding the cargo against parasitic flies", "text_short": "leafcutter ant highway" },
-    { "name": "snail-glass", "text": "a garden snail crossing glass shot from below, muscular ripple waves of its foot visible through the pane, eye stalks periscoping", "text_short": "snail foot on glass" },
-    { "name": "moth-frost", "text": "an emperor moth stiff with overnight frost, furred thorax rimed white, motionless until the sun can warm its flight muscles", "text_short": "frost-rimed moth" },
-    { "name": "ladybird-takeoff", "text": "a ladybird at the instant of takeoff, red wing cases flipped open, membranous flight wings unfolding to four times their packed length", "text_short": "ladybird takeoff" },
-    { "name": "orchid-mantis", "text": "an orchid mantis posed among real orchid petals, limbs flushed pink and petal-lobed, indistinguishable from the flower until it strikes", "text_short": "orchid mantis mimicry" },
-    { "name": "glasswing-butterfly", "text": "a glasswing butterfly resting on a fern, transparent wing panes bending the scene behind them, only the veins and amber borders solid", "text_short": "glasswing transparency" },
-    { "name": "stag-beetle-duel", "text": "two stag beetles locked antler-jaw to antler-jaw on an oak limb, one hoisted clean off its feet at the top of the throw", "text_short": "stag beetle duel" },
-    { "name": "damselfly-wheel", "text": "a damselfly pair joined in a mating wheel, electric-blue bodies arched into a heart shape above a reed", "text_short": "damselfly heart wheel" },
-    { "name": "cicada-eclosion", "text": "a cicada in mid-eclosion, pale and soft-bodied, hauling itself out of its split amber shell as crumpled wings slowly inflate", "text_short": "cicada emerging from shell" },
-    { "name": "firefly-synchrony", "text": "synchronous fireflies pulsing the same beat through a dark understory, cold yellow-green light with no heat in it, each wave answered on down the hillside", "text_short": "synchronized fireflies", "tags": ["night"], "requires": ["night"], "negative": "daylight" },
-    { "name": "monarch-cluster", "text": "overwintering monarch butterflies clustered in their thousands on oyamel fir boughs, branches bowing under the living load, a spill of wings flickering open where sun breaks through", "text_short": "monarch winter cluster" },
-    { "name": "bumblebee-buzz", "text": "a bumblebee buzz-pollinating a nightshade flower, jaws clamped on the anther cone, flight muscles shivering at a musical pitch until pollen pours out", "text_short": "buzz-pollinating bumblebee" }
+    {
+      "name": "morpho-butterfly",
+      "text": "a blue morpho wings-open on a dark leaf, structural blue shifting toward violet at the wing edges, brown owl-eye underwings just showing",
+      "text_short": "blue morpho wings open"
+    },
+    {
+      "name": "dragonfly",
+      "text": "a dragonfly grounded by cold, dew strung along every wing vein, compound eyes fogged with micro-droplets",
+      "text_short": "dew-rigged dragonfly"
+    },
+    {
+      "name": "jewel-beetle",
+      "text": "a jewel beetle crossing a lichened twig, metallic elytra cycling green, gold and copper with every shift of the light",
+      "text_short": "metallic jewel beetle"
+    },
+    {
+      "name": "honeybee",
+      "text": "a honeybee deep in a poppy, pollen baskets on its hind legs packed orange, loose pollen gilding every branched hair",
+      "text_short": "pollen-loaded honeybee"
+    },
+    {
+      "name": "praying-mantis",
+      "text": "a praying mantis tracking the lens, triangular head swiveling on a neck no other insect has, spiked forelegs folded in wait",
+      "text_short": "head-tracking mantis"
+    },
+    {
+      "name": "jumping-spider",
+      "text": "a jumping spider's huge headlamp eye pair filling the frame, iridescent green chelicerae below, one dew drop balanced on its brow",
+      "text_short": "jumping spider eyes"
+    },
+    {
+      "name": "ant-teamwork",
+      "text": "leafcutter ants hauling green leaf sails along a branch highway, tiny guard workers riding the cargo against parasitic flies",
+      "text_short": "leafcutter ant highway"
+    },
+    {
+      "name": "snail-glass",
+      "text": "a garden snail crossing glass shot from below, muscular ripple waves of its foot visible through the pane, eye stalks periscoping",
+      "text_short": "snail foot on glass"
+    },
+    {
+      "name": "moth-frost",
+      "text": "an emperor moth stiff with overnight frost, furred thorax rimed white, motionless until the sun can warm its flight muscles",
+      "text_short": "frost-rimed moth"
+    },
+    {
+      "name": "ladybird-takeoff",
+      "text": "a ladybird at the instant of takeoff, red wing cases flipped open, membranous flight wings unfolding to four times their packed length",
+      "text_short": "ladybird takeoff"
+    },
+    {
+      "name": "orchid-mantis",
+      "text": "an orchid mantis posed among real orchid petals, limbs flushed pink and petal-lobed, indistinguishable from the flower until it strikes",
+      "text_short": "orchid mantis mimicry"
+    },
+    {
+      "name": "glasswing-butterfly",
+      "text": "a glasswing butterfly resting on a fern, transparent wing panes bending the scene behind them, only the veins and amber borders solid",
+      "text_short": "glasswing transparency"
+    },
+    {
+      "name": "stag-beetle-duel",
+      "text": "two stag beetles locked antler-jaw to antler-jaw on an oak limb, one hoisted clean off its feet at the top of the throw",
+      "text_short": "stag beetle duel"
+    },
+    {
+      "name": "damselfly-wheel",
+      "text": "a damselfly pair joined in a mating wheel, electric-blue bodies arched into a heart shape above a reed",
+      "text_short": "damselfly heart wheel"
+    },
+    {
+      "name": "cicada-eclosion",
+      "text": "a cicada in mid-eclosion, pale and soft-bodied, hauling itself out of its split amber shell as crumpled wings slowly inflate",
+      "text_short": "cicada emerging from shell"
+    },
+    {
+      "name": "firefly-synchrony",
+      "text": "synchronous fireflies pulsing the same beat through a dark understory, cold yellow-green light with no heat in it, each wave answered on down the hillside",
+      "text_short": "synchronized fireflies",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    },
+    {
+      "name": "monarch-cluster",
+      "text": "overwintering monarch butterflies clustered in their thousands on oyamel fir boughs, branches bowing under the living load, a spill of wings flickering open where sun breaks through",
+      "text_short": "monarch winter cluster"
+    },
+    {
+      "name": "bumblebee-buzz",
+      "text": "a bumblebee buzz-pollinating a nightshade flower, jaws clamped on the anther cone, flight muscles shivering at a musical pitch until pollen pours out",
+      "text_short": "buzz-pollinating bumblebee"
+    },
+    {
+      "name": "honey-bee",
+      "text": "a honey bee on a flower head, pollen baskets loaded gold on the hind legs, wings blurred and thorax furred",
+      "text_short": "honey bee with pollen baskets loaded gold"
+    }
   ]
 }

@@ -2,29 +2,182 @@
   "version": 1,
   "label": "Marine Life",
   "description": "Ocean subjects, surface and submerged — underwater-tagged items pair naturally with location/underwater.",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "humpback-breach", "text": "a humpback whale breaching three-quarters clear of the sea, pleated throat and barnacled pectoral fins twisting before the fall", "text_short": "breaching humpback" },
-    { "name": "orca-pod", "text": "an orca pod surfacing in staggered formation, one tall straight bull dorsal among curved female fins, blows hanging backlit", "text_short": "surfacing orca pod" },
-    { "name": "great-white", "text": "a great white shark on slow patrol, countershaded to vanish from above and below, pilot fish holding station at its flank", "text_short": "patrolling great white", "tags": ["underwater"] },
-    { "name": "octopus", "text": "an octopus flowing across the reef mid-color-change, chromatophore waves of rust and white, skin papillae spiking to match the coral", "text_short": "color-shifting octopus", "tags": ["underwater"] },
-    { "name": "sea-turtle", "text": "a green sea turtle banking through cathedral light shafts, front flippers flying in slow wingbeats, two remoras riding its shell", "text_short": "gliding sea turtle", "tags": ["underwater"] },
-    { "name": "manta-ray", "text": "a manta ray barrel-rolling through a plankton cloud, cephalic fins unfurled into feeding scoops, white belly flashing on each loop", "text_short": "barrel-rolling manta", "tags": ["underwater"] },
-    { "name": "sardine-baitball", "text": "a sardine baitball collapsing into a mirrored sphere as gannets pierce it in bubble trails and a sailfish flickers below", "text_short": "baitball under attack", "tags": ["underwater"] },
-    { "name": "seahorse", "text": "a seahorse anchored to a seagrass blade by its coiled prehensile tail, eyes swiveling independently, dorsal fin a transparent blur", "text_short": "anchored seahorse", "tags": ["underwater"] },
-    { "name": "jellyfish-bloom", "text": "a moon jellyfish bloom drifting like slow lanterns, the four-leaf-clover ring glowing through each translucent bell", "text_short": "moon jellyfish bloom", "tags": ["underwater"] },
-    { "name": "seal-play", "text": "a young harbor seal spiraling around the camera, blowing a silver stream of bubbles, whiskers flared with curiosity", "text_short": "playful harbor seal", "tags": ["underwater"] },
-    { "name": "clownfish", "text": "a clownfish nestled deep in anemone tendrils, mucus-armored against the stings it lives inside, one white bar showing", "text_short": "clownfish in anemone", "tags": ["underwater"] },
-    { "name": "dolphin-bowride", "text": "dolphins bow-riding the pressure wave, surfing without a single tailbeat, backs slicing crystalline water", "text_short": "bow-riding dolphins" },
-    { "name": "sperm-whale-rest", "text": "a family of sperm whales sleeping vertically like standing stones, noses up in the featureless blue, motionless together", "text_short": "vertical sleeping sperm whales", "tags": ["underwater"] },
-    { "name": "hammerhead-school", "text": "scalloped hammerheads schooling in their hundreds overhead, layered silhouettes wheeling slowly around a seamount", "text_short": "hammerhead school overhead", "tags": ["underwater"] },
-    { "name": "cuttlefish-display", "text": "a cuttlefish hovering on its rippling skirt fin, hypnotic bands of dark and light pulsing down its body as the feeding arms take aim", "text_short": "pulsing cuttlefish display", "tags": ["underwater"] },
-    { "name": "whale-shark", "text": "a whale shark hanging vertically to gulp a spawn cloud at the surface, white-spotted checkerboard flanks fading into the deep", "text_short": "feeding whale shark", "tags": ["underwater"] },
-    { "name": "penguins-porpoising", "text": "a line of penguins porpoising at full speed, clearing the water in low synchronized arcs, bubble trails stitching the surface", "text_short": "porpoising penguins" },
-    { "name": "nudibranch", "text": "a jewel-bright nudibranch grazing across an orange sponge, gill plume fanned, warning colors advertising its stolen toxins", "text_short": "jewel nudibranch", "tags": ["underwater"] },
-    { "name": "leafy-seadragon", "text": "a leafy seadragon drifting among kelp fronds, every appendage grown into a trailing leaf-shaped lobe, only the blur of two tiny transparent fins betraying that it swims rather than drifts", "text_short": "leafy seadragon in kelp", "tags": ["underwater"] },
-    { "name": "mantis-shrimp", "text": "a peacock mantis shrimp squared up at its burrow mouth in full carnival color, raptorial clubs cocked to strike, stalked eyes ranging independently", "text_short": "mantis shrimp at burrow", "tags": ["underwater"] },
-    { "name": "coral-spawning", "text": "a reef spawning in synchrony nights after the full moon, pink egg bundles lifting off every coral head at once like snowfall in reverse", "text_short": "synchronized coral spawning", "tags": ["underwater", "night"], "requires": ["night"] },
-    { "name": "anglerfish", "text": "a deep-sea anglerfish hanging in absolute blackness, its bacterial lure the only point of light, needle teeth ajar, fin rays spread to feel for pressure waves", "text_short": "anglerfish with glowing lure", "tags": ["underwater"] }
+    {
+      "name": "humpback-breach",
+      "text": "a humpback whale breaching three-quarters clear of the sea, pleated throat and barnacled pectoral fins twisting before the fall",
+      "text_short": "breaching humpback"
+    },
+    {
+      "name": "orca-pod",
+      "text": "an orca pod surfacing in staggered formation, one tall straight bull dorsal among curved female fins, blows hanging backlit",
+      "text_short": "surfacing orca pod"
+    },
+    {
+      "name": "great-white",
+      "text": "a great white shark on slow patrol, countershaded to vanish from above and below, pilot fish holding station at its flank",
+      "text_short": "patrolling great white",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "octopus",
+      "text": "an octopus flowing across the reef mid-color-change, chromatophore waves of rust and white, skin papillae spiking to match the coral",
+      "text_short": "color-shifting octopus",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "sea-turtle",
+      "text": "a green sea turtle banking through cathedral light shafts, front flippers flying in slow wingbeats, two remoras riding its shell",
+      "text_short": "gliding sea turtle",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "manta-ray",
+      "text": "a manta ray barrel-rolling through a plankton cloud, cephalic fins unfurled into feeding scoops, white belly flashing on each loop",
+      "text_short": "barrel-rolling manta",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "sardine-baitball",
+      "text": "a sardine baitball collapsing into a mirrored sphere as gannets pierce it in bubble trails and a sailfish flickers below",
+      "text_short": "baitball under attack",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "seahorse",
+      "text": "a seahorse anchored to a seagrass blade by its coiled prehensile tail, eyes swiveling independently, dorsal fin a transparent blur",
+      "text_short": "anchored seahorse",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "jellyfish-bloom",
+      "text": "a moon jellyfish bloom drifting like slow lanterns, the four-leaf-clover ring glowing through each translucent bell",
+      "text_short": "moon jellyfish bloom",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "seal-play",
+      "text": "a young harbor seal spiraling around the camera, blowing a silver stream of bubbles, whiskers flared with curiosity",
+      "text_short": "playful harbor seal",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "clownfish",
+      "text": "a clownfish nestled deep in anemone tendrils, mucus-armored against the stings it lives inside, one white bar showing",
+      "text_short": "clownfish in anemone",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "dolphin-bowride",
+      "text": "dolphins bow-riding the pressure wave, surfing without a single tailbeat, backs slicing crystalline water",
+      "text_short": "bow-riding dolphins"
+    },
+    {
+      "name": "sperm-whale-rest",
+      "text": "a family of sperm whales sleeping vertically like standing stones, noses up in the featureless blue, motionless together",
+      "text_short": "vertical sleeping sperm whales",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "hammerhead-school",
+      "text": "scalloped hammerheads schooling in their hundreds overhead, layered silhouettes wheeling slowly around a seamount",
+      "text_short": "hammerhead school overhead",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "cuttlefish-display",
+      "text": "a cuttlefish hovering on its rippling skirt fin, hypnotic bands of dark and light pulsing down its body as the feeding arms take aim",
+      "text_short": "pulsing cuttlefish display",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "whale-shark",
+      "text": "a whale shark hanging vertically to gulp a spawn cloud at the surface, white-spotted checkerboard flanks fading into the deep",
+      "text_short": "feeding whale shark",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "penguins-porpoising",
+      "text": "a line of penguins porpoising at full speed, clearing the water in low synchronized arcs, bubble trails stitching the surface",
+      "text_short": "porpoising penguins"
+    },
+    {
+      "name": "nudibranch",
+      "text": "a jewel-bright nudibranch grazing across an orange sponge, gill plume fanned, warning colors advertising its stolen toxins",
+      "text_short": "jewel nudibranch",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "leafy-seadragon",
+      "text": "a leafy seadragon drifting among kelp fronds, every appendage grown into a trailing leaf-shaped lobe, only the blur of two tiny transparent fins betraying that it swims rather than drifts",
+      "text_short": "leafy seadragon in kelp",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "mantis-shrimp",
+      "text": "a peacock mantis shrimp squared up at its burrow mouth in full carnival color, raptorial clubs cocked to strike, stalked eyes ranging independently",
+      "text_short": "mantis shrimp at burrow",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "coral-spawning",
+      "text": "a reef spawning in synchrony nights after the full moon, pink egg bundles lifting off every coral head at once like snowfall in reverse",
+      "text_short": "synchronized coral spawning",
+      "tags": [
+        "underwater",
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "anglerfish",
+      "text": "a deep-sea anglerfish hanging in absolute blackness, its bacterial lure the only point of light, needle teeth ajar, fin rays spread to feel for pressure waves",
+      "text_short": "anglerfish with glowing lure",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "penguin",
+      "text": "a penguin standing upright on ice, flippers held slightly out for balance, plumage a hard-edged black and white",
+      "text_short": "upright penguin, flippers out for balance"
+    }
   ]
 }

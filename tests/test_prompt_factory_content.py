@@ -451,7 +451,7 @@ def test_alias_table_empty_pre_release(lib):
 # if the clothes, the hair, the room and the film stock land in the SAME year.
 # That coupling is a tag filter, so these guard the tags rather than the prose.
 
-ERA_TAGS = {"1920s", "wwii", "1950s", "1970s", "1980s", "post-apocalypse"}
+ERA_TAGS = {"1920s", "wwii", "1950s", "1970s", "1980s", "1990s", "post-apocalypse"}
 
 
 def test_every_era_item_carries_exactly_one_era_tag(lib):

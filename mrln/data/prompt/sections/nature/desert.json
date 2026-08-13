@@ -2,18 +2,74 @@
   "version": 1,
   "label": "Desert",
   "description": "Arid landforms as hero subjects — wind, flash floods and rare rain do all the carving.",
-  "suits": ["nature"],
+  "suits": [
+    "nature"
+  ],
   "items": [
-    { "name": "star-dunes", "text": "a sea of star dunes raised by winds from three directions, sinuous arms radiating from every peak, crests knife-sharp between lit face and slip face", "text_short": "knife-crested star dunes" },
-    { "name": "slot-canyon", "text": "a sandstone slot canyon barely a shoulder wide, walls spiraled smooth by flash floods, glowing orange with light bounced down from a sky it never shows", "text_short": "glowing slot canyon" },
-    { "name": "monument-buttes", "text": "monumental red buttes standing in haze-layered ranks, each one a mesa whittled down by the retreat of its own cliffs, talus cones aproned at every base", "text_short": "monumental red buttes" },
-    { "name": "salt-flat-mirror", "text": "a salt flat flooded by rare winter rain into one seamless mirror, sky above and sky below meeting at an invisible horizon line", "text_short": "mirror salt flat" },
-    { "name": "joshua-forest", "text": "a joshua tree woodland gesturing across pastel high-desert scrub, every branching arm ending in a spiked rosette, rounded granite boulder piles breaking the skyline", "text_short": "joshua tree forest" },
-    { "name": "wave-rock", "text": "wind-polished sandstone swirled into candy bands — the crossbeds of fossil dunes frozen mid-migration and sliced open by erosion", "text_short": "swirled wave rock" },
-    { "name": "desert-arch", "text": "a freestanding sandstone arch left standing where the soft heart of a rock fin fell away, framing hazed mesas through its span", "text_short": "sandstone arch frame" },
-    { "name": "cracked-playa", "text": "a dry lake bed tiled to the horizon with curling mudcrack polygons, one line of animal tracks stitched across the pale clay", "text_short": "cracked playa tiles" },
-    { "name": "palm-oasis", "text": "a spring-fed oasis pooled in a dune hollow, date palms ringing the water, the dune wall rising gold behind", "text_short": "date-palm oasis" },
-    { "name": "gypsum-dunes", "text": "gypsum dunes so white they read as snowfields, a lone yucca casting the only shadow for miles", "text_short": "white gypsum dunes" },
-    { "name": "superbloom", "text": "an arid valley carpeted in a superbloom after winter rains, orange poppies running up the alluvial fans", "text_short": "desert superbloom" }
+    {
+      "name": "star-dunes",
+      "text": "a sea of star dunes raised by winds from three directions, sinuous arms radiating from every peak, crests knife-sharp between lit face and slip face",
+      "text_short": "knife-crested star dunes"
+    },
+    {
+      "name": "slot-canyon",
+      "text": "a sandstone slot canyon barely a shoulder wide, walls spiraled smooth by flash floods, glowing orange with light bounced down from a sky it never shows",
+      "text_short": "glowing slot canyon"
+    },
+    {
+      "name": "monument-buttes",
+      "text": "monumental red buttes standing in haze-layered ranks, each one a mesa whittled down by the retreat of its own cliffs, talus cones aproned at every base",
+      "text_short": "monumental red buttes"
+    },
+    {
+      "name": "salt-flat-mirror",
+      "text": "a salt flat flooded by rare winter rain into one seamless mirror, sky above and sky below meeting at an invisible horizon line",
+      "text_short": "mirror salt flat"
+    },
+    {
+      "name": "joshua-forest",
+      "text": "a joshua tree woodland gesturing across pastel high-desert scrub, every branching arm ending in a spiked rosette, rounded granite boulder piles breaking the skyline",
+      "text_short": "joshua tree forest"
+    },
+    {
+      "name": "wave-rock",
+      "text": "wind-polished sandstone swirled into candy bands — the crossbeds of fossil dunes frozen mid-migration and sliced open by erosion",
+      "text_short": "swirled wave rock"
+    },
+    {
+      "name": "desert-arch",
+      "text": "a freestanding sandstone arch left standing where the soft heart of a rock fin fell away, framing hazed mesas through its span",
+      "text_short": "sandstone arch frame"
+    },
+    {
+      "name": "cracked-playa",
+      "text": "a dry lake bed tiled to the horizon with curling mudcrack polygons, one line of animal tracks stitched across the pale clay",
+      "text_short": "cracked playa tiles"
+    },
+    {
+      "name": "palm-oasis",
+      "text": "a spring-fed oasis pooled in a dune hollow, date palms ringing the water, the dune wall rising gold behind",
+      "text_short": "date-palm oasis"
+    },
+    {
+      "name": "gypsum-dunes",
+      "text": "gypsum dunes so white they read as snowfields, a lone yucca casting the only shadow for miles",
+      "text_short": "white gypsum dunes"
+    },
+    {
+      "name": "superbloom",
+      "text": "an arid valley carpeted in a superbloom after winter rains, orange poppies running up the alluvial fans",
+      "text_short": "desert superbloom"
+    },
+    {
+      "name": "badlands",
+      "text": "badlands eroded into ridged and gullied clay, banded strata running level through every spur, nothing growing anywhere",
+      "text_short": "banded badlands eroded into ridge and gully"
+    },
+    {
+      "name": "sinkhole",
+      "text": "a sinkhole opened straight down through rock, sheer walls with vegetation clinging to the rim and water far below catching light",
+      "text_short": "sinkhole opened sheer, water catching light below"
+    }
   ]
 }

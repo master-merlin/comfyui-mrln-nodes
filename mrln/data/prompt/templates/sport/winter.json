@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "label": "Sport — Winter & Mountain",
+  "type": [
+    "human",
+    "nature"
+  ],
+  "description": "Cold-weather sport where the environment is half the picture: snow light bouncing up into the face, breath in the air and a landscape that is genuinely dangerous. Shot with the flat contrast that real snow gives you rather than a studio's idea of it.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A winter sports photograph in hard mountain light. {nationality}, {age}, in ({kit}:1.2), {expression}, mid-({discipline}:1.35). {trigger}",
+  "slots": [
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "kit",
+      "ref": "wardrobe/athletic",
+      "label": "Kit",
+      "emphasis": 1.2,
+      "tags_any": [
+        "sportswear"
+      ]
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "determined"
+    },
+    {
+      "id": "discipline",
+      "ref": "sport/discipline",
+      "label": "Discipline",
+      "emphasis": 1.35,
+      "tags_any": [
+        "winter"
+      ]
+    },
+    {
+      "id": "place",
+      "ref": "nature/mountain",
+      "label": "Terrain",
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/day",
+      "label": "Light"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Winter Rendering: (snow bouncing light up under the chin, contrast flattened the way real snow flattens it:1.25), (breath visible in cold air, spindrift and loose crystals lit from behind:1.2), (perfect hands, detailed fingers:1.15), cold blue shadow against warm direct sun, (sharp focal subject in a big landscape:1.15).",
+  "negative": "summer, warm light, studio, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

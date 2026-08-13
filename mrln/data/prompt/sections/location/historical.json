@@ -85,6 +85,56 @@
       "name": "monastery-scriptorium",
       "text": "A monastery scriptorium, slanted oak desks beneath high windows, inkhorns and quills beside gilded manuscripts weighted open under candle sconces.",
       "text_short": "candlelit scriptorium"
+    },
+    {
+      "name": "ancient-egypt-temple",
+      "text": "an ancient Egypt temple hall of massive painted columns, hieroglyphs cut deep and light dropping through clerestory slots",
+      "text_short": "ancient Egyptian hall of painted columns"
+    },
+    {
+      "name": "ancient-greece-agora",
+      "text": "an ancient Greece agora with colonnaded stoa along one side, marble bright in the sun and awnings over the traders",
+      "text_short": "ancient Greek agora under a colonnaded stoa"
+    },
+    {
+      "name": "byzantine-interior",
+      "text": "a Byzantine interior of gold mosaic ground and a dome on pendentives, figures standing flat and frontal against the gold",
+      "text_short": "Byzantine gold mosaic under a pendentive dome"
+    },
+    {
+      "name": "viking-longhouse",
+      "text": "a Viking age longhouse with a turf roof and a central hearth, smoke finding the roof hole and benches down both long walls",
+      "text_short": "Viking longhouse, central hearth under a turf roof"
+    },
+    {
+      "name": "elizabethan-hall",
+      "text": "an Elizabethan great hall in linenfold panelling, a hammerbeam roof overhead and a long table set below the dais",
+      "text_short": "Elizabethan hall, linenfold under a hammerbeam roof"
+    },
+    {
+      "name": "prehistoric-cave",
+      "text": "a prehistoric painted cave, ochre and charcoal animals following the rock's own contours, torchlight reaching only part of the wall",
+      "text_short": "prehistoric painted cave following the rock's contours"
+    },
+    {
+      "name": "bronze-age-settlement",
+      "text": "a Bronze Age settlement of round huts inside a ditched enclosure, thatch blackened at the apex and livestock penned between",
+      "text_short": "Bronze Age round huts in a ditched enclosure"
+    },
+    {
+      "name": "iron-age-hillfort",
+      "text": "an Iron Age hillfort ringed by earth ramparts and ditches, a timber gateway and the whole country visible from the top",
+      "text_short": "Iron Age hillfort ringed by earth ramparts"
+    },
+    {
+      "name": "baroque-era-salon",
+      "text": "a Baroque era salon of gilded stucco and a painted ceiling, tall mirrors doubling a room already too full of ornament",
+      "text_short": "Baroque salon, gilded stucco under a painted ceiling"
+    },
+    {
+      "name": "roman-empire-villa",
+      "text": "a villa of the Roman empire around a colonnaded peristyle, mosaic floors and a shallow pool, frescoed walls in deep red",
+      "text_short": "Roman empire villa around a colonnaded peristyle"
     }
   ]
 }

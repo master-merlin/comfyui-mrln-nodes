@@ -12,13 +12,18 @@
       "name": "vaporwave",
       "text": "vaporwave aesthetic, pink-teal gradients, marble busts, grids and sunset palms",
       "text_short": "vaporwave gradients",
-      "tags": ["neon"]
+      "tags": [
+        "neon"
+      ]
     },
     {
       "name": "synthwave",
       "text": "synthwave aesthetic, neon wireframe horizon, chrome text glow and 80s dusk",
       "text_short": "synthwave horizon",
-      "tags": ["neon", "night"]
+      "tags": [
+        "neon",
+        "night"
+      ]
     },
     {
       "name": "dark-academia",
@@ -74,6 +79,11 @@
       "name": "quiet-luxury",
       "text": "quiet-luxury aesthetic, unbranded impeccable tailoring in camel, cream and greige, cashmere and calf leather, wealth whispered through fit and fabric",
       "text_short": "quiet luxury neutrals"
+    },
+    {
+      "name": "space-age-optimism",
+      "text": "space age optimism, atomic-era confidence in moulded plastic and swept chrome, starbursts and boomerang motifs, a future that was going to be clean",
+      "text_short": "space age optimism in moulded plastic and swept chrome"
     }
   ]
 }

@@ -2,22 +2,118 @@
   "version": 1,
   "label": "Structure",
   "description": "Engineering structures as hero subjects.",
-  "suits": ["architecture", "object"],
+  "suits": [
+    "architecture",
+    "object"
+  ],
   "items": [
-    { "name": "suspension-span", "text": "a great suspension bridge, main cables swooping between riveted towers, the red-painted deck dissolving into sea fog", "text_short": "suspension span in fog" },
-    { "name": "roman-aqueduct", "text": "a tiered Roman aqueduct striding a river valley, weathered arches stacked two deep, each span framing its own piece of sky", "text_short": "tiered aqueduct", "tags": ["historical"] },
-    { "name": "railway-viaduct", "text": "a curved stone railway viaduct crossing open moorland, tapered piers rooted in heather, arches echoing away to the far bank", "text_short": "curved stone viaduct" },
-    { "name": "radio-telescope", "text": "a giant radio telescope, white dish tilted at the sky, lattice backing and service gantries betraying its true scale", "text_short": "giant telescope dish" },
-    { "name": "wind-farm-offshore", "text": "an offshore wind farm marching to the horizon, blades stopped at differing clock angles, sea glinting between the towers", "text_short": "offshore wind farm" },
-    { "name": "dam-curve", "text": "a colossal arch dam curved into its gorge, spillway stains streaking the concrete face, a hairline service road along the crest", "text_short": "colossal arch dam" },
-    { "name": "ruined-abbey", "text": "a roofless ruined abbey, bare gothic arches framing racing clouds, fallen window tracery half-buried in mown grass", "text_short": "roofless abbey ruin", "tags": ["historical"] },
-    { "name": "torii-corridor", "text": "a corridor of a thousand vermilion torii winding uphill, lacquered posts receding to a bright vanishing point", "text_short": "thousand torii corridor", "tags": ["anime"] },
-    { "name": "cooling-towers", "text": "paired hyperbolic cooling towers, concrete shells thin as eggshell at the waist, one soft plume drifting off a rim", "text_short": "hyperbolic cooling towers" },
-    { "name": "geodesic-dome", "text": "a geodesic dome, triangulated struts and hub nodes resolving into a perfect slice of sphere against open sky", "text_short": "geodesic dome" },
-    { "name": "victorian-pier", "text": "a Victorian pleasure pier walking out to sea on barnacled cast-iron legs, a filigree pavilion at the far end", "text_short": "cast-iron pleasure pier", "tags": ["historical"] },
-    { "name": "grain-silos", "text": "a rank of concrete grain silos, bare cylinders stepping forward in raking light, conveyor gantries bridging the tops", "text_short": "concrete silo rank" },
-    { "name": "motorway-interchange", "text": "a stacked motorway interchange, ribbons of roadway looping over one another on slender piers, lane paint drawing white geometry through the knot, the top deck laying its curved shadow across the levels below", "text_short": "stacked interchange loops", "tags": ["city"] },
-    { "name": "victorian-train-shed", "text": "a Victorian railway train shed, one enormous arched span of wrought iron and glass over the platforms, smoke-blackened brick flanks, light falling in latticed sheets through the roof grid", "text_short": "iron train-shed vault", "tags": ["historical"] },
-    { "name": "cable-stayed-fan", "text": "a cable-stayed bridge, stays fanning from a single needle pylon like rigging, the deck drawing one taut line across the river", "text_short": "cable-stay fan pylon" }
+    {
+      "name": "suspension-span",
+      "text": "a great suspension bridge, main cables swooping between riveted towers, the red-painted deck dissolving into sea fog",
+      "text_short": "suspension span in fog"
+    },
+    {
+      "name": "roman-aqueduct",
+      "text": "a tiered Roman aqueduct striding a river valley, weathered arches stacked two deep, each span framing its own piece of sky",
+      "text_short": "tiered aqueduct",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "railway-viaduct",
+      "text": "a curved stone railway viaduct crossing open moorland, tapered piers rooted in heather, arches echoing away to the far bank",
+      "text_short": "curved stone viaduct"
+    },
+    {
+      "name": "radio-telescope",
+      "text": "a giant radio telescope, white dish tilted at the sky, lattice backing and service gantries betraying its true scale",
+      "text_short": "giant telescope dish"
+    },
+    {
+      "name": "wind-farm-offshore",
+      "text": "an offshore wind farm marching to the horizon, blades stopped at differing clock angles, sea glinting between the towers",
+      "text_short": "offshore wind farm"
+    },
+    {
+      "name": "dam-curve",
+      "text": "a colossal arch dam curved into its gorge, spillway stains streaking the concrete face, a hairline service road along the crest",
+      "text_short": "colossal arch dam"
+    },
+    {
+      "name": "ruined-abbey",
+      "text": "a roofless ruined abbey, bare gothic arches framing racing clouds, fallen window tracery half-buried in mown grass",
+      "text_short": "roofless abbey ruin",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "torii-corridor",
+      "text": "a corridor of a thousand vermilion torii winding uphill, lacquered posts receding to a bright vanishing point",
+      "text_short": "thousand torii corridor",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "cooling-towers",
+      "text": "paired hyperbolic cooling towers, concrete shells thin as eggshell at the waist, one soft plume drifting off a rim",
+      "text_short": "hyperbolic cooling towers"
+    },
+    {
+      "name": "geodesic-dome",
+      "text": "a geodesic dome, triangulated struts and hub nodes resolving into a perfect slice of sphere against open sky",
+      "text_short": "geodesic dome"
+    },
+    {
+      "name": "victorian-pier",
+      "text": "a Victorian pleasure pier walking out to sea on barnacled cast-iron legs, a filigree pavilion at the far end",
+      "text_short": "cast-iron pleasure pier",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "grain-silos",
+      "text": "a rank of concrete grain silos, bare cylinders stepping forward in raking light, conveyor gantries bridging the tops",
+      "text_short": "concrete silo rank"
+    },
+    {
+      "name": "motorway-interchange",
+      "text": "a stacked motorway interchange, ribbons of roadway looping over one another on slender piers, lane paint drawing white geometry through the knot, the top deck laying its curved shadow across the levels below",
+      "text_short": "stacked interchange loops",
+      "tags": [
+        "city"
+      ]
+    },
+    {
+      "name": "victorian-train-shed",
+      "text": "a Victorian railway train shed, one enormous arched span of wrought iron and glass over the platforms, smoke-blackened brick flanks, light falling in latticed sheets through the roof grid",
+      "text_short": "iron train-shed vault",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "cable-stayed-fan",
+      "text": "a cable-stayed bridge, stays fanning from a single needle pylon like rigging, the deck drawing one taut line across the river",
+      "text_short": "cable-stay fan pylon"
+    },
+    {
+      "name": "amphitheatre",
+      "text": "a Roman amphitheatre in tiers of arched openings, the elliptical bowl worn down to its structure and the arena floor opened up",
+      "text_short": "Roman amphitheatre worn back to its structure"
+    },
+    {
+      "name": "grain-elevator",
+      "text": "a grain elevator in ranked concrete silos, a headhouse across the top and a rail spur running in underneath",
+      "text_short": "ranked concrete grain silos under a headhouse"
+    },
+    {
+      "name": "cooling-tower",
+      "text": "a hyperboloid cooling tower with a waisted concrete shell, vapour rolling over the lip and dispersing",
+      "text_short": "hyperboloid cooling tower, vapour over the lip"
+    }
   ]
 }

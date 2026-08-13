@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "label": "Moment — Ordinary Life",
+  "type": [
+    "human"
+  ],
+  "description": "The unremarkable frames worth keeping: a domestic room, a person not performing, and nothing arranged for the camera. Deliberately the opposite register to the boudoir and editorial templates.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A quiet documentary photograph of ordinary life. {nationality}, {age}, {expression}, in a moment nobody arranged. {trigger}",
+  "slots": [
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression"
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/casual",
+      "label": "Wearing"
+    },
+    {
+      "id": "room",
+      "ref": "location/domestic",
+      "label": "Where",
+      "emphasis": 1.2
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting",
+      "emphasis": 1.2
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment",
+      "default": "intimate-documentary"
+    },
+    {
+      "id": "film",
+      "ref": "camera/film",
+      "label": "Film Character"
+    }
+  ],
+  "suffix": "Documentary Rendering: (nothing staged, nothing tidied, the room as it actually is:1.25), (available light only, shadows left where they fall:1.2), (perfect hands, detailed fingers:1.15), honest grain, focus soft enough to be human.",
+  "negative": "posed, studio lighting, glamour, retouched, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

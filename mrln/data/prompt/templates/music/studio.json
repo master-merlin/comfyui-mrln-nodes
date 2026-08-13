@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "label": "Music — Studio Session",
+  "type": [
+    "human"
+  ],
+  "description": "The room where records get made. Controlled, quiet and full of equipment that means something: a large-diaphragm microphone, a headphone cable, a desk with the faders in an obviously working position. Warm and close rather than theatrical.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A recording studio photograph. {ensemble} at work with ({instrument}:1.2), {expression}. {trigger}",
+  "slots": [
+    {
+      "id": "ensemble",
+      "ref": "music/ensemble",
+      "label": "Who Is Playing",
+      "emphasis": 1.2
+    },
+    {
+      "id": "instrument",
+      "ref": "music/instrument",
+      "label": "Instrument",
+      "emphasis": 1.25
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "contemplative"
+    },
+    {
+      "id": "room",
+      "ref": "music/performance",
+      "label": "Room",
+      "emphasis": 1.2,
+      "tags_any": [
+        "studio"
+      ]
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting",
+      "emphasis": 1.15
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment",
+      "default": "intimate-documentary"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Studio Rendering: (working equipment described accurately — capsule, shock mount, cable, fader travel:1.2), (concentration rather than performance:1.2), (perfect hands, detailed fingers:1.2), warm practical light with deep unlit corners, shallow focus picking one thing out of a crowded room.",
+  "negative": "stage lighting, crowd, live venue, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

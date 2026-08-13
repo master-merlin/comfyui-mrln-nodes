@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "label": "Ensemble",
+  "description": "Who is playing, and how many. The difference between a picture of an instrument and a picture of music being made.",
+  "items": [
+    {
+      "name": "solo-performer",
+      "text": "a single performer alone with the instrument, no one else in the frame and nothing to hide behind",
+      "text_short": "one performer alone with the instrument"
+    },
+    {
+      "name": "duo",
+      "text": "two players facing each other more than the audience, trading phrases and watching hands",
+      "text_short": "two players facing each other"
+    },
+    {
+      "name": "string-quartet",
+      "text": "a string quartet in a tight arc, four stands angled inward, bows moving as one line",
+      "text_short": "string quartet in a tight arc, bows as one"
+    },
+    {
+      "name": "jazz-trio",
+      "text": "a jazz trio crowded into a corner, piano, bass and brushes, everyone within arm's reach of everyone else",
+      "text_short": "jazz trio crowded into a corner"
+    },
+    {
+      "name": "rock-band",
+      "text": "a four-piece rock band spread across a stage, cables underfoot and monitors angled back, the drummer boxed in behind",
+      "text_short": "four-piece band, cables underfoot"
+    },
+    {
+      "name": "big-band",
+      "text": "a big band in tiered rows, sections standing to solo and sitting back down, matching stands across the front",
+      "text_short": "big band in tiered rows"
+    },
+    {
+      "name": "symphony-orchestra",
+      "text": "a full symphony orchestra fanned out under a conductor, strings forward and brass banked at the back, a hundred people watching one stick",
+      "text_short": "full orchestra fanned under a conductor"
+    },
+    {
+      "name": "choir",
+      "text": "a choir massed in ranks, folders raised in unison, mouths in the same shape at the same instant",
+      "text_short": "choir massed in ranks, folders raised"
+    },
+    {
+      "name": "marching-band",
+      "text": "a marching band mid-formation, sousaphone bells above the line, plumes moving together with the step",
+      "text_short": "marching band mid-formation, plumes moving"
+    },
+    {
+      "name": "street-buskers",
+      "text": "a busking group set up on a pavement, an open case seeded with coins, an amplifier running off a battery",
+      "text_short": "buskers with an open case on the pavement"
+    },
+    {
+      "name": "dj-solo",
+      "text": "a DJ alone behind the decks with the booth lit from below, one hand on the crossfader and headphones on one ear",
+      "text_short": "DJ alone behind the decks, one ear cupped"
+    },
+    {
+      "name": "gamelan-ensemble",
+      "text": "a gamelan ensemble seated on the floor around bronze keys and gongs, mallets damping each note by hand",
+      "text_short": "gamelan seated around bronze and gongs"
+    },
+    {
+      "name": "mariachi-group",
+      "text": "a mariachi group standing in a half circle, silver-studded suits and a vihuela at the centre of the sound",
+      "text_short": "mariachi in a half circle, silver-studded"
+    },
+    {
+      "name": "folk-session",
+      "text": "a pub folk session around a table rather than a stage, instruments passed along and pints between the tunes",
+      "text_short": "folk session round a table, not a stage"
+    }
+  ]
+}

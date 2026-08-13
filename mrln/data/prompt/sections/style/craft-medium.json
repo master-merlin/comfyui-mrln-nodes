@@ -62,6 +62,96 @@
       "name": "pastel-chalk-soft",
       "text": "soft chalk pastel, powdery hand-blended color, strokes breaking gently over the tooth of the paper",
       "text_short": "soft chalk pastel"
+    },
+    {
+      "name": "thrown-pottery",
+      "text": "rendered as thrown and glazed pottery, wheel rings left visible under a glaze that pools thicker in every groove",
+      "text_short": "thrown pottery, glaze pooling in the wheel rings"
+    },
+    {
+      "name": "hand-knitted",
+      "text": "rendered as hand knitting, stitch definition raised across every plane, cables travelling and a slight unevenness that says it was not machined",
+      "text_short": "hand-knitted, cables travelling and honestly uneven"
+    },
+    {
+      "name": "patchwork-quilt",
+      "text": "rendered as a patchwork quilt, pieced blocks meeting at hand-sewn seams, wadding lofting between lines of quilting",
+      "text_short": "patchwork quilt, wadding lofting between the stitching"
+    },
+    {
+      "name": "macrame-knotwork",
+      "text": "rendered as macrame knotwork, cotton cord in repeating square knots, fringed ends combed loose at the bottom",
+      "text_short": "macrame in square knots with combed fringe"
+    },
+    {
+      "name": "origami-folded",
+      "text": "rendered as folded origami, crisp mountain and valley creases holding the whole form, single sheet with no cuts and paper grain showing",
+      "text_short": "folded origami, crisp creases and no cuts"
+    },
+    {
+      "name": "quilled-paper",
+      "text": "rendered in paper quilling, narrow strips coiled and pinched on edge, every form built from the paper's thin profile",
+      "text_short": "paper quilling, strips coiled and pinched on edge"
+    },
+    {
+      "name": "kintsugi-repair",
+      "text": "rendered as kintsugi, breakage repaired with gold-dusted lacquer so the fracture becomes the most deliberate line in the piece",
+      "text_short": "kintsugi, the fracture repaired in gold lacquer"
+    },
+    {
+      "name": "batik-wax-resist",
+      "text": "rendered as batik, wax-resist lines cracking into fine veins, dye taken unevenly where the wax gave way",
+      "text_short": "batik with wax-resist crackle veining the dye"
+    },
+    {
+      "name": "block-printed",
+      "text": "rendered as hand block printing, the register drifting slightly between repeats and ink heavier where the block was pressed hardest",
+      "text_short": "hand block print, register drifting between repeats"
+    },
+    {
+      "name": "carved-wood",
+      "text": "rendered as wood carving, gouge facets left unsanded and catching light, grain running through the form and deciding its detail",
+      "text_short": "wood carving, gouge facets left unsanded"
+    },
+    {
+      "name": "tooled-leather",
+      "text": "rendered as tooled leatherwork, patterns beaten in with stamps and the surface burnished dark where the tool bore down",
+      "text_short": "tooled leatherwork burnished dark at the stamp lines"
+    },
+    {
+      "name": "woven-basketry",
+      "text": "rendered as woven basketry, willow rods alternating over and under a rigid frame, ends trimmed at an angle",
+      "text_short": "woven willow basketry over a rigid frame"
+    },
+    {
+      "name": "hand-bound-book",
+      "text": "rendered as hand bookbinding, exposed coptic stitching along the spine, boards covered in cloth with a paper label set slightly crooked",
+      "text_short": "hand bookbinding, coptic stitching exposed"
+    },
+    {
+      "name": "tie-dye",
+      "text": "rendered as tie dye, fabric bound and dipped so colour bleeds outward in concentric rings, every repeat slightly different",
+      "text_short": "tie dye bleeding outward in concentric rings"
+    },
+    {
+      "name": "fused-glass",
+      "text": "rendered as glass fusing, layered coloured sheets slumped together in the kiln, edges rounded and bubbles frozen inside the body",
+      "text_short": "glass fusing, bubbles frozen inside rounded edges"
+    },
+    {
+      "name": "whittled-wood",
+      "text": "rendered as whittling, a single small blade working a stick down, facets left broad and the wood pale where it has just been cut",
+      "text_short": "whittled with one blade, facets left broad"
+    },
+    {
+      "name": "chased-metal",
+      "text": "rendered as metal chasing, the design punched in from the front with the reverse repoussed out, hammer marks left as texture",
+      "text_short": "chased metal, hammer marks left as texture"
+    },
+    {
+      "name": "poured-candle",
+      "text": "rendered as candlemaking, wax poured in layers that show at the edge, wick set true and the surface dipped once for a clean skin",
+      "text_short": "candlemaking, poured layers showing at the edge"
     }
   ]
 }

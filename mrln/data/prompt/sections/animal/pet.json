@@ -2,23 +2,99 @@
   "version": 1,
   "label": "Pet",
   "description": "Companion animals with scenario-strong texts (the trending whimsy cluster).",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "black-cat", "text": "a black cat with lantern-amber eyes, fur rim-lit into a soft halo, tail curled precisely over both front paws", "text_short": "amber-eyed black cat" },
-    { "name": "ginger-cat-window", "text": "a ginger cat loafed on a sunny windowsill between plant pots, paws folded under, offering the garden a slow contented blink", "text_short": "ginger cat loafing on sill" },
-    { "name": "golden-retriever", "text": "a golden retriever mid-shake, the spray whipping off in a backlit spiral that travels from nose to tail tip, ears airborne", "text_short": "shaking golden retriever" },
-    { "name": "border-collie", "text": "a border collie frozen in a working crouch, one paw lifted, giving the flock the unblinking stare shepherds call the eye", "text_short": "border collie giving the eye" },
-    { "name": "dachshund", "text": "a long-haired dachshund trotting big-dog confident, coat feathers swinging, nose leading the entire parade of itself", "text_short": "confident trotting dachshund" },
-    { "name": "kitten-mischief", "text": "a kitten capsized in unraveling yarn, one hind foot in the air, pupils blown huge with play", "text_short": "yarn-capsized kitten" },
-    { "name": "husky-snow", "text": "a husky surfacing face-first from fresh powder, ice-blue eyes bright in a mask of caked snow", "text_short": "husky snow-masked" },
-    { "name": "rabbit-clover", "text": "a lop-eared rabbit nose-down in clover, ears spilled forward, nose working faster than the eye can follow", "text_short": "lop rabbit in clover" },
-    { "name": "parrot-shoulder", "text": "a parrot leaning into frame from a shoulder, head flipped fully upside down for attention, pupils pinning with excitement", "text_short": "upside-down shoulder parrot" },
-    { "name": "pug-blanket", "text": "a pug swaddled to the chin in a waffle blanket, brow folded in ancient worry, resigned to life as a small disgruntled king", "text_short": "blanket-swaddled pug" },
-    { "name": "maine-coon", "text": "a maine coon overflowing the armchair it has claimed, lynx-tufted ears alert, tail long enough to wrap the entire armrest", "text_short": "maine coon on armchair" },
-    { "name": "hamster-cheeks", "text": "a hamster sitting bolt upright with cheek pouches loaded past its shoulders, one last sunflower seed still in hand", "text_short": "full-cheeked hamster" },
-    { "name": "corgi-sploot", "text": "a corgi in a full sploot on cool tile, hind legs flat out behind, chin down, entirely satisfied with the decision", "text_short": "corgi sploot" },
-    { "name": "cockatiel-crest", "text": "a cockatiel with its crest sprung fully upright in surprise, round orange cheek patches like painted blush", "text_short": "surprised cockatiel" },
-    { "name": "guinea-pig-popcorn", "text": "a guinea pig mid-popcorn, all four feet off the ground in a vertical jump of pure excitement, a strand of hay still in its mouth", "text_short": "popcorning guinea pig" },
-    { "name": "betta-flare", "text": "a betta fish flaring at its own reflection, gill covers spread into a dark ruff, halfmoon fins unfurled into backlit silk banners", "text_short": "flaring betta fins" }
+    {
+      "name": "black-cat",
+      "text": "a black cat with lantern-amber eyes, fur rim-lit into a soft halo, tail curled precisely over both front paws",
+      "text_short": "amber-eyed black cat"
+    },
+    {
+      "name": "ginger-cat-window",
+      "text": "a ginger cat loafed on a sunny windowsill between plant pots, paws folded under, offering the garden a slow contented blink",
+      "text_short": "ginger cat loafing on sill"
+    },
+    {
+      "name": "golden-retriever",
+      "text": "a golden retriever mid-shake, the spray whipping off in a backlit spiral that travels from nose to tail tip, ears airborne",
+      "text_short": "shaking golden retriever"
+    },
+    {
+      "name": "border-collie",
+      "text": "a border collie frozen in a working crouch, one paw lifted, giving the flock the unblinking stare shepherds call the eye",
+      "text_short": "border collie giving the eye"
+    },
+    {
+      "name": "dachshund",
+      "text": "a long-haired dachshund trotting big-dog confident, coat feathers swinging, nose leading the entire parade of itself",
+      "text_short": "confident trotting dachshund"
+    },
+    {
+      "name": "kitten-mischief",
+      "text": "a kitten capsized in unraveling yarn, one hind foot in the air, pupils blown huge with play",
+      "text_short": "yarn-capsized kitten"
+    },
+    {
+      "name": "husky-snow",
+      "text": "a husky surfacing face-first from fresh powder, ice-blue eyes bright in a mask of caked snow",
+      "text_short": "husky snow-masked"
+    },
+    {
+      "name": "rabbit-clover",
+      "text": "a lop-eared rabbit nose-down in clover, ears spilled forward, nose working faster than the eye can follow",
+      "text_short": "lop rabbit in clover"
+    },
+    {
+      "name": "parrot-shoulder",
+      "text": "a parrot leaning into frame from a shoulder, head flipped fully upside down for attention, pupils pinning with excitement",
+      "text_short": "upside-down shoulder parrot"
+    },
+    {
+      "name": "pug-blanket",
+      "text": "a pug swaddled to the chin in a waffle blanket, brow folded in ancient worry, resigned to life as a small disgruntled king",
+      "text_short": "blanket-swaddled pug"
+    },
+    {
+      "name": "maine-coon",
+      "text": "a maine coon overflowing the armchair it has claimed, lynx-tufted ears alert, tail long enough to wrap the entire armrest",
+      "text_short": "maine coon on armchair"
+    },
+    {
+      "name": "hamster-cheeks",
+      "text": "a hamster sitting bolt upright with cheek pouches loaded past its shoulders, one last sunflower seed still in hand",
+      "text_short": "full-cheeked hamster"
+    },
+    {
+      "name": "corgi-sploot",
+      "text": "a corgi in a full sploot on cool tile, hind legs flat out behind, chin down, entirely satisfied with the decision",
+      "text_short": "corgi sploot"
+    },
+    {
+      "name": "cockatiel-crest",
+      "text": "a cockatiel with its crest sprung fully upright in surprise, round orange cheek patches like painted blush",
+      "text_short": "surprised cockatiel"
+    },
+    {
+      "name": "guinea-pig-popcorn",
+      "text": "a guinea pig mid-popcorn, all four feet off the ground in a vertical jump of pure excitement, a strand of hay still in its mouth",
+      "text_short": "popcorning guinea pig"
+    },
+    {
+      "name": "betta-flare",
+      "text": "a betta fish flaring at its own reflection, gill covers spread into a dark ruff, halfmoon fins unfurled into backlit silk banners",
+      "text_short": "flaring betta fins"
+    },
+    {
+      "name": "donkey",
+      "text": "a donkey with a broad grey muzzle and enormous ears turned independently, standing patiently in the shade of a wall",
+      "text_short": "grey-muzzled donkey with independently turning ears"
+    },
+    {
+      "name": "goat",
+      "text": "a goat on a wall it should not be on, rectangular pupils, a beard full of hay and no intention of coming down",
+      "text_short": "goat up a wall with rectangular pupils"
+    }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Period Wardrobe",
-  "description": "What the era actually put on a body, tagged by period so a variant can couple it to the matching hair, place and film.",
+  "description": "What the era actually put on a body, tagged by period so a variant can couple it to the matching hair, place and film. Periods covered: the roaring twenties, the great depression and wartime nineteen-forties, the nineteen-fifties, the disco era seventies, the eighties, and post apocalypse, and the grunge nineties.",
   "suits": [
     "human"
   ],
@@ -196,6 +196,38 @@
       "text_short": "road-sign plate over padding",
       "tags": [
         "post-apocalypse"
+      ]
+    },
+    {
+      "name": "nineties-grunge",
+      "text": "an oversized flannel shirt worn open over a faded band tee, ripped straight-leg jeans and scuffed lace-up boots, everything a size too big on purpose",
+      "text_short": "nineties grunge: open flannel over a faded band tee",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-minimal-slip",
+      "text": "a bias-cut satin slip dress in a muted colour, spaghetti straps and a hem cut on the diagonal, worn with a fine cardigan and square-toed mules",
+      "text_short": "nineties minimalism: bias satin slip and square-toe mules",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-hip-hop",
+      "text": "a boxy sports jersey over a long white tee, baggy carpenter jeans sitting low, box-fresh high tops and a puffer jacket carried rather than worn",
+      "text_short": "nineties hip-hop: boxy jersey, baggy carpenters, fresh high tops",
+      "tags": [
+        "1990s"
+      ]
+    },
+    {
+      "name": "nineties-rave",
+      "text": "a cropped mesh top over a bright bralette, phat-leg trousers with reflective tape and a small backpack worn high on the shoulders",
+      "text_short": "nineties rave: mesh crop and reflective phat-legs",
+      "tags": [
+        "1990s"
       ]
     }
   ]

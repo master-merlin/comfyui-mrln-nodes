@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "label": "Moment — The Maker at Work",
+  "type": [
+    "human"
+  ],
+  "description": "A trade portrait taken in the workshop rather than against a backdrop: the hands, the tools laid out the way that trade lays them out, and the light the room actually has. Reaches human/trade, which no other template touches.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "An environmental portrait of a craftsperson at work — {trade}, {expression}, absorbed in the job. {trigger}",
+  "slots": [
+    {
+      "id": "trade",
+      "ref": "human/trade",
+      "label": "Trade",
+      "emphasis": 1.3
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "determined"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "workshop",
+      "ref": "location/domestic",
+      "label": "Workshop"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Lighting",
+      "emphasis": 1.2
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment",
+      "default": "intimate-documentary"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Workshop Rendering: (hands doing the actual work, described in full detail:1.3), (perfect hands, detailed fingers, correct grip on the tool:1.25), (material and dust of the trade everywhere — swarf, shavings, slip, flour:1.2), practical light from the window or the work itself, background left honestly cluttered.",
+  "negative": "clean studio, empty background, posed to camera, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

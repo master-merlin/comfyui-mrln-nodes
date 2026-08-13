@@ -2,22 +2,138 @@
   "version": 1,
   "label": "Flora",
   "description": "Plant subjects (Civitai 'flower' category) — botany an editor could caption.",
-  "suits": ["nature"],
+  "suits": [
+    "nature"
+  ],
   "items": [
-    { "name": "sakura-full-bloom", "text": "cherry trees at absolute peak bloom, every crown opening in the same week, the first petals already letting go on the lightest air", "text_short": "peak sakura bloom", "tags": ["anime"] },
-    { "name": "wildflower-meadow", "text": "an alpine meadow in its brief high-summer flush, gentian, arnica and campion packed shoulder to shoulder, all racing to set seed before September snow", "text_short": "wildflower meadow" },
-    { "name": "lavender-rows", "text": "lavender rows combing a dry hillside in parallel purple cords, July heat lifting the oil scent in a visible shimmer, every spike bending under bees", "text_short": "lavender rows" },
-    { "name": "ancient-oak", "text": "a solitary ancient oak, crown wider than tall, lower limbs sagging to rest their elbows on the grass, dead stag-headed branches crowning five centuries of growth", "text_short": "ancient solitary oak" },
-    { "name": "lotus-pond", "text": "pink lotus blooms standing a meter above still dark water, rain beading into mercury drops and rolling off the unwettable leaves", "text_short": "lotus pond blooms" },
-    { "name": "sunflower-field", "text": "a sunflower field in disciplined unison, every mature head locked facing east where the young plants once tracked the sun", "text_short": "unison sunflowers" },
-    { "name": "moss-world", "text": "a macro moss world of star rosettes and cushion domes still holding yesterday's rain, spore capsules periscoping above on copper-wire stalks", "text_short": "macro moss world" },
-    { "name": "autumn-maple", "text": "a Japanese maple in full crimson against dark cedar, its finely cut leaves turning from the crown downward, a fallen red skirt doubling the tree on the moss", "text_short": "crimson maple", "tags": ["anime"] },
-    { "name": "wisteria-tunnel", "text": "a wisteria tunnel in full May cascade, meter-long flower chains opening from the top down so each one grades violet into green bud at the tip", "text_short": "wisteria tunnel", "tags": ["anime"] },
-    { "name": "single-rose", "text": "a single garden rose holding rain in its nested spiral of petals, every velvet edge beaded, each drop lensing the color beneath it", "text_short": "dew-heavy rose" },
-    { "name": "saguaro-sentinels", "text": "saguaro sentinels raising candelabra arms against a pastel sky — no arm before its seventieth year — pleated ribs swollen full with stored monsoon rain", "text_short": "saguaro sentinels" },
-    { "name": "fern-unfurl", "text": "a fern fiddlehead unfurling in a perfect logarithmic spiral, fine ginger fuzz on the coil, spring's fastest architecture caught mid-turn", "text_short": "unfurling fiddlehead" },
-    { "name": "giant-waterlily", "text": "giant Amazon waterlily pads two meters across, upturned rims ribbed like boat hulls, tiling the still backwater", "text_short": "giant waterlily pads" },
-    { "name": "dandelion-clock", "text": "a dandelion seed head backlit into a sphere of glass filaments, the first seeds already parachuting away", "text_short": "backlit dandelion clock" },
-    { "name": "bristlecone-pine", "text": "a bristlecone pine at the treeline, dead wood spiraled like driftwood around the one living strip of bark", "text_short": "twisted bristlecone pine" }
+    {
+      "name": "sakura-full-bloom",
+      "text": "cherry trees at absolute peak bloom, every crown opening in the same week, the first petals already letting go on the lightest air",
+      "text_short": "peak sakura bloom",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "wildflower-meadow",
+      "text": "an alpine meadow in its brief high-summer flush, gentian, arnica and campion packed shoulder to shoulder, all racing to set seed before September snow",
+      "text_short": "wildflower meadow"
+    },
+    {
+      "name": "lavender-rows",
+      "text": "lavender rows combing a dry hillside in parallel purple cords, July heat lifting the oil scent in a visible shimmer, every spike bending under bees",
+      "text_short": "lavender rows"
+    },
+    {
+      "name": "ancient-oak",
+      "text": "a solitary ancient oak, crown wider than tall, lower limbs sagging to rest their elbows on the grass, dead stag-headed branches crowning five centuries of growth",
+      "text_short": "ancient solitary oak"
+    },
+    {
+      "name": "lotus-pond",
+      "text": "pink lotus blooms standing a meter above still dark water, rain beading into mercury drops and rolling off the unwettable leaves",
+      "text_short": "lotus pond blooms"
+    },
+    {
+      "name": "sunflower-field",
+      "text": "a sunflower field in disciplined unison, every mature head locked facing east where the young plants once tracked the sun",
+      "text_short": "unison sunflowers"
+    },
+    {
+      "name": "moss-world",
+      "text": "a macro moss world of star rosettes and cushion domes still holding yesterday's rain, spore capsules periscoping above on copper-wire stalks",
+      "text_short": "macro moss world"
+    },
+    {
+      "name": "autumn-maple",
+      "text": "a Japanese maple in full crimson against dark cedar, its finely cut leaves turning from the crown downward, a fallen red skirt doubling the tree on the moss",
+      "text_short": "crimson maple",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "wisteria-tunnel",
+      "text": "a wisteria tunnel in full May cascade, meter-long flower chains opening from the top down so each one grades violet into green bud at the tip",
+      "text_short": "wisteria tunnel",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "single-rose",
+      "text": "a single garden rose holding rain in its nested spiral of petals, every velvet edge beaded, each drop lensing the color beneath it",
+      "text_short": "dew-heavy rose"
+    },
+    {
+      "name": "saguaro-sentinels",
+      "text": "saguaro sentinels raising candelabra arms against a pastel sky — no arm before its seventieth year — pleated ribs swollen full with stored monsoon rain",
+      "text_short": "saguaro sentinels"
+    },
+    {
+      "name": "fern-unfurl",
+      "text": "a fern fiddlehead unfurling in a perfect logarithmic spiral, fine ginger fuzz on the coil, spring's fastest architecture caught mid-turn",
+      "text_short": "unfurling fiddlehead"
+    },
+    {
+      "name": "giant-waterlily",
+      "text": "giant Amazon waterlily pads two meters across, upturned rims ribbed like boat hulls, tiling the still backwater",
+      "text_short": "giant waterlily pads"
+    },
+    {
+      "name": "dandelion-clock",
+      "text": "a dandelion seed head backlit into a sphere of glass filaments, the first seeds already parachuting away",
+      "text_short": "backlit dandelion clock"
+    },
+    {
+      "name": "bristlecone-pine",
+      "text": "a bristlecone pine at the treeline, dead wood spiraled like driftwood around the one living strip of bark",
+      "text_short": "twisted bristlecone pine"
+    },
+    {
+      "name": "bonsai",
+      "text": "a bonsai in a shallow glazed tray, trunk wired into a decades-long lean, foliage pads cloud-pruned and moss set over the root flare",
+      "text_short": "bonsai in a shallow tray, cloud-pruned pads"
+    },
+    {
+      "name": "saguaro-cactus",
+      "text": "a saguaro standing with arms raised, ribbed and pleated to hold water, spines lit into a halo against a low sun",
+      "text_short": "ribbed saguaro with arms raised, spines haloed"
+    },
+    {
+      "name": "succulent-cluster",
+      "text": "a cluster of succulents in tight geometric rosettes, leaves thick and faintly powdered, colour graduating toward the tips",
+      "text_short": "succulent rosettes, leaves powdered and graduated"
+    },
+    {
+      "name": "water-lily-pads",
+      "text": "water lilies on still dark water, pads floating in overlapping discs, one flower open and the rest still closed",
+      "text_short": "water lilies in overlapping pads, one flower open"
+    },
+    {
+      "name": "kelp-forest",
+      "text": "a kelp forest in slow motion, stipes rising in columns toward light broken on the surface, fronds all leaning the same way",
+      "text_short": "kelp forest leaning together toward broken light"
+    },
+    {
+      "name": "wheat-field",
+      "text": "a wheat field gone to gold, heavy heads bowing together and running in waves wherever the wind crosses it",
+      "text_short": "gold wheat field running in waves"
+    },
+    {
+      "name": "cornfield-rows",
+      "text": "a cornfield in dead-straight rows taller than a person, leaves dry enough to rasp, the row a green corridor to the horizon",
+      "text_short": "corn rows taller than a person, a green corridor"
+    },
+    {
+      "name": "tea-terraces",
+      "text": "a tea plantation terraced around a hillside in tight parallel bands, bushes clipped flat and pickers moving along the lines",
+      "text_short": "tea plantation in tight terraced bands"
+    },
+    {
+      "name": "thistle-heads",
+      "text": "thistles standing over rough grazing, purple heads above spined bracts, seed already lifting from the ones that have gone over",
+      "text_short": "thistles over rough grazing, seed lifting"
+    }
   ]
 }

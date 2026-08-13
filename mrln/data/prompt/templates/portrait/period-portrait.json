@@ -245,6 +245,47 @@
       ]
     },
     {
+      "name": "1990s",
+      "label": "1990s",
+      "description": "grunge, minimalism and the last of analogue",
+      "slots": [
+        {
+          "id": "wardrobe",
+          "ref": "era/wardrobe",
+          "label": "Wearing",
+          "tags_any": [
+            "1990s"
+          ],
+          "emphasis": 1.15
+        },
+        {
+          "id": "hair",
+          "ref": "era/hair",
+          "label": "Hair",
+          "tags_any": [
+            "1990s"
+          ]
+        },
+        {
+          "id": "place",
+          "ref": "era/signature",
+          "label": "Around Them",
+          "tags_any": [
+            "1990s"
+          ]
+        },
+        {
+          "id": "medium",
+          "ref": "era/media",
+          "label": "Shot On",
+          "tags_any": [
+            "1990s"
+          ],
+          "emphasis": 1.1
+        }
+      ]
+    },
+    {
       "name": "post-apocalypse",
       "label": "After the collapse",
       "description": "salvage, dust and reclaimed ground",

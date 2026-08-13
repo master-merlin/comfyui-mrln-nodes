@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "label": "Terrain Run",
+  "type": [
+    "object",
+    "vehicle",
+    "car"
+  ],
+  "description": "A car defined by what it IS and what it is driving through, rather than by a named model: an archetype on a surface, with the surface written all over it. Reaches vehicle/car/archetype and vehicle/terrain, the two sections the vehicle family added and never used.",
+  "prefix": "An automotive action photograph of ({archetype}:1.3), working ({terrain}:1.3).",
+  "slots": [
+    {
+      "id": "archetype",
+      "ref": "vehicle/car/archetype",
+      "label": "Archetype",
+      "emphasis": 1.3
+    },
+    {
+      "id": "terrain",
+      "ref": "vehicle/terrain",
+      "label": "Surface",
+      "emphasis": 1.3
+    },
+    {
+      "id": "paint",
+      "ref": "vehicle/car/color/paint",
+      "label": "Paint"
+    },
+    {
+      "id": "stance",
+      "ref": "vehicle/car/stance",
+      "label": "Stance"
+    },
+    {
+      "id": "wheel",
+      "ref": "vehicle/car/wheel",
+      "label": "Wheels"
+    },
+    {
+      "id": "place",
+      "ref": "location/automotive",
+      "label": "Location",
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Lighting",
+      "emphasis": 1.15
+    },
+    {
+      "id": "view",
+      "ref": "viewpoint/dynamic",
+      "label": "Viewing Angle"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/lens",
+      "label": "Optics"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Automotive Rendering: (the surface written onto the car — packed, thrown, filmed or polished exactly as that terrain does it:1.3), (suspension loaded and the body attitude honest to the speed:1.25), (correct panel gaps, accurate glass reflections, real tyre sidewall deformation:1.25), material separation between paint, rubber, glass and dirt, (tack-sharp vehicle:1.2).",
+  "negative": "clean showroom car, floating, incorrect wheel count, deformed body, watermark, text, logo",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

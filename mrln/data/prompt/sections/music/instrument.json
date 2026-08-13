@@ -1,0 +1,276 @@
+{
+  "version": 1,
+  "label": "Instrument",
+  "description": "Instruments as objects with a life on them: the wear, the setup, the way one is held. A measured hole rather than a guess. Of 30 instruments enumerated from the world the library answered none deliberately, and the apparent hits were accidents: 'organ' inside 'organic', 'flute' inside 'fluted', 'trumpet' inside 'trumpeter swan'.",
+  "items": [
+    {
+      "name": "grand-piano",
+      "text": "a grand piano with the lid on the long stick, hammers and strings open to view, ivory yellowed unevenly across the middle octaves",
+      "text_short": "open grand piano, lid on the long stick",
+      "tags": [
+        "keys",
+        "acoustic"
+      ]
+    },
+    {
+      "name": "upright-piano",
+      "text": "a battered upright piano against a wall, candle sconces still fitted, veneer lifting at the corners and a mug ring on the top",
+      "text_short": "battered upright with lifting veneer",
+      "tags": [
+        "keys",
+        "worn"
+      ]
+    },
+    {
+      "name": "pipe-organ",
+      "text": "a pipe organ rising in ranked metal towers above a carved console, stops drawn in rows, the whole instrument built into the building",
+      "text_short": "pipe organ in ranked metal towers",
+      "tags": [
+        "keys",
+        "acoustic",
+        "grand"
+      ]
+    },
+    {
+      "name": "violin",
+      "text": "a violin with the chin rest polished pale by use, rosin dust on the belly and a bow rehaired to a fresh white",
+      "text_short": "violin, rosin dust and a freshly rehaired bow",
+      "tags": [
+        "strings",
+        "acoustic"
+      ]
+    },
+    {
+      "name": "cello",
+      "text": "a cello resting on its endpin, spruce belly scuffed where knees have gripped it for years, scroll turned toward the light",
+      "text_short": "cello on its endpin, belly scuffed by knees",
+      "tags": [
+        "strings",
+        "acoustic"
+      ]
+    },
+    {
+      "name": "double-bass",
+      "text": "a double bass laid on its side, the sheer scale of it obvious, gut strings and a French bow tucked under the tailpiece",
+      "text_short": "double bass laid on its side, gut-strung",
+      "tags": [
+        "strings",
+        "acoustic"
+      ]
+    },
+    {
+      "name": "harp",
+      "text": "a concert harp with the gilded column catching light, forty-seven strings colour-coded down the register, pedals ranged at the base",
+      "text_short": "gilded concert harp, colour-coded strings",
+      "tags": [
+        "strings",
+        "acoustic",
+        "grand"
+      ]
+    },
+    {
+      "name": "acoustic-guitar",
+      "text": "an acoustic guitar worn through the finish where a forearm rests, pick scratches fanning out below the sound hole",
+      "text_short": "acoustic guitar worn through at the forearm",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "electric-guitar",
+      "text": "an electric guitar with the finish checked into a fine crazing, pickup covers removed and the whammy arm swung out of the way",
+      "text_short": "checked electric guitar, covers off the pickups",
+      "tags": [
+        "strings",
+        "electric"
+      ]
+    },
+    {
+      "name": "bass-guitar",
+      "text": "a bass guitar with flatwound strings gone dull, fretboard worn into shallow dishes at the first five frets",
+      "text_short": "bass with dull flatwounds and dished frets",
+      "tags": [
+        "strings",
+        "electric"
+      ]
+    },
+    {
+      "name": "banjo",
+      "text": "a five-string banjo with a skin head and a resonator back, mother-of-pearl inlay marking the frets, capo clipped high on the neck",
+      "text_short": "five-string banjo, capo clipped high",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "saxophone",
+      "text": "a tenor saxophone with the lacquer rubbed to bare brass under the palm keys, pads darkened and a reed drying on the mouthpiece",
+      "text_short": "tenor sax rubbed to bare brass under the palms",
+      "tags": [
+        "brass",
+        "reed"
+      ]
+    },
+    {
+      "name": "clarinet",
+      "text": "a clarinet broken down into its joints on a cloth, cork grease at the tenons and a reed clipped in its holder",
+      "text_short": "clarinet in joints on a cloth",
+      "tags": [
+        "reed"
+      ]
+    },
+    {
+      "name": "flute",
+      "text": "a silver concert flute assembled on a stand, keywork throwing small hard reflections, embouchure plate clouded from breath",
+      "text_short": "silver flute on a stand, breath-clouded plate",
+      "tags": [
+        "wind"
+      ]
+    },
+    {
+      "name": "trumpet",
+      "text": "a trumpet with the third valve slide worked shiny, mouthpiece seated with a twist and a straight mute standing beside the bell",
+      "text_short": "trumpet, slide worked shiny, mute beside the bell",
+      "tags": [
+        "brass"
+      ]
+    },
+    {
+      "name": "trombone",
+      "text": "a trombone with the slide extended to full seventh, lacquer gone at the brace where the hand grips",
+      "text_short": "trombone at full seventh, lacquer gone at the brace",
+      "tags": [
+        "brass"
+      ]
+    },
+    {
+      "name": "french-horn",
+      "text": "a french horn coiled tight around itself, the right hand set inside the bell, rotors and linkages exposed along the top",
+      "text_short": "coiled french horn, hand set inside the bell",
+      "tags": [
+        "brass"
+      ]
+    },
+    {
+      "name": "tuba",
+      "text": "a tuba standing upright on its bell, an instrument you wear rather than hold, valve caps polished by decades of thumbs",
+      "text_short": "upright tuba, polished valve caps",
+      "tags": [
+        "brass"
+      ]
+    },
+    {
+      "name": "drum-kit",
+      "text": "a drum kit with cymbals feathered at the edges from years of glancing hits, heads dented in a tight cluster at the centre",
+      "text_short": "drum kit, cymbals feathered and heads dented",
+      "tags": [
+        "percussion"
+      ]
+    },
+    {
+      "name": "timpani",
+      "text": "copper timpani set with pedals underneath and tuning gauges on the rims, mallets laid across a head in matched pairs",
+      "text_short": "copper timpani with pedals and tuning gauges",
+      "tags": [
+        "percussion",
+        "acoustic"
+      ]
+    },
+    {
+      "name": "marimba",
+      "text": "a marimba with rosewood bars graduated across five octaves, resonator tubes hanging beneath in a long descending row",
+      "text_short": "marimba over descending resonator tubes",
+      "tags": [
+        "percussion"
+      ]
+    },
+    {
+      "name": "djembe",
+      "text": "a djembe with a goatskin head and rope tuning in a diamond lacing, wood carved out of a single trunk",
+      "text_short": "djembe, goatskin head and diamond rope tuning",
+      "tags": [
+        "percussion"
+      ]
+    },
+    {
+      "name": "accordion",
+      "text": "a piano accordion with the bellows drawn halfway open, mother-of-pearl buttons on the bass side and straps worn thin at the shoulder",
+      "text_short": "accordion, bellows drawn halfway",
+      "tags": [
+        "reed"
+      ]
+    },
+    {
+      "name": "harmonica",
+      "text": "a harmonica cupped in two hands, cover plate rubbed to bare metal, breath fogging the reeds",
+      "text_short": "harmonica cupped in two hands",
+      "tags": [
+        "reed"
+      ]
+    },
+    {
+      "name": "bagpipes",
+      "text": "highland bagpipes with drones over the shoulder, tartan bag cover, blowpipe held in the corner of the mouth",
+      "text_short": "highland pipes, drones over the shoulder",
+      "tags": [
+        "wind"
+      ]
+    },
+    {
+      "name": "sitar",
+      "text": "a sitar with sympathetic strings running under the mains, a gourd resonator at the base and curved frets tied into place",
+      "text_short": "sitar with sympathetic strings and tied frets",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "koto",
+      "text": "a koto laid flat on the floor, thirteen strings over movable bridges, picks fitted to three fingers of the right hand",
+      "text_short": "koto flat on the floor, movable bridges",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "shamisen",
+      "text": "a shamisen with a skin-covered body and a long unfretted neck, played with a heavy wooden plectrum held like a blade",
+      "text_short": "shamisen and its heavy wooden plectrum",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "erhu",
+      "text": "an erhu held upright on the thigh, two strings with the bow hair threaded permanently between them, a small snakeskin drum for a body",
+      "text_short": "erhu upright on the thigh, bow threaded inside",
+      "tags": [
+        "strings"
+      ]
+    },
+    {
+      "name": "synthesizer",
+      "text": "a modular synthesizer patched into a thicket of coloured cables, knobs at deliberate angles and one oscillator drifting",
+      "text_short": "modular synth in a thicket of patch cables",
+      "tags": [
+        "electric"
+      ]
+    },
+    {
+      "name": "turntables",
+      "text": "a pair of turntables and a battle mixer, slipmats worn through in a ring, a crate of records open on the floor",
+      "text_short": "turntables and battle mixer, slipmats worn",
+      "tags": [
+        "electric"
+      ]
+    },
+    {
+      "name": "oboe",
+      "text": "an oboe with a double reed bound in red thread, keywork crowded down the upper joint, a reed case open beside it",
+      "text_short": "oboe and its red-bound double reed",
+      "tags": [
+        "reed"
+      ]
+    }
+  ]
+}

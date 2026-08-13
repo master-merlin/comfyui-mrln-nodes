@@ -155,6 +155,26 @@
       "name": "breakfast-spread",
       "text": "a full breakfast spread across a table, eggs and grilled tomato, toast racked upright and coffee going out in steam",
       "text_short": "full breakfast spread with coffee steaming"
+    },
+    {
+      "name": "ceviche-peruvian",
+      "text": "Peruvian ceviche in a cold bowl, fish cured white in lime with red onion, corn and sweet potato set alongside",
+      "text_short": "Peruvian ceviche cured white in lime"
+    },
+    {
+      "name": "jerk-caribbean",
+      "text": "Caribbean jerk chicken off the drum, skin blackened with allspice and scotch bonnet, rice and peas banked beside it",
+      "text_short": "Caribbean jerk chicken blackened with allspice"
+    },
+    {
+      "name": "gumbo-cajun",
+      "text": "a Cajun gumbo built on a dark roux, okra and andouille through it, rice mounded in the centre of the bowl",
+      "text_short": "Cajun gumbo on a dark roux"
+    },
+    {
+      "name": "persian-stew",
+      "text": "a Persian herb stew deep green with fenugreek and dried lime, saffron rice with a golden tahdig crust broken open beside it",
+      "text_short": "Persian herb stew with saffron tahdig"
     }
   ]
 }

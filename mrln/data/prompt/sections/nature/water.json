@@ -2,22 +2,106 @@
   "version": 1,
   "label": "Water",
   "description": "Waterscapes as hero subjects — the water explaining the landform it made.",
-  "suits": ["nature"],
+  "suits": [
+    "nature"
+  ],
   "items": [
-    { "name": "plunge-falls", "text": "a single plunge waterfall dropping unbroken into the mist-filled amphitheater it carved for itself, spray climbing back up the walls, everything within reach glossed in moss", "text_short": "plunging waterfall" },
-    { "name": "tiered-cascades", "text": "travertine terraces stepping down in milky turquoise pools, every rim built a little higher by the lime the water itself lays down", "text_short": "travertine cascades" },
-    { "name": "glacial-lake", "text": "a wind-still glacial lake doubling the peaks in perfect symmetry, suspended rock flour tinting the water milk-turquoise", "text_short": "mirror glacial lake" },
-    { "name": "river-bend", "text": "a river meander swinging through a shadowed gorge, bright gravel banked on the inside of the bend, the outside cut into a dark undercut wall", "text_short": "carving river bend" },
-    { "name": "wild-coast", "text": "storm surf detonating against black basalt sea stacks, spray thrown mast-high and stripped sideways off the crests by the gale", "text_short": "surf on sea stacks" },
-    { "name": "turquoise-cove", "text": "a sheltered cove of turquoise water over pale carbonate sand, ringed by white limestone cliffs, the seabed readable five meters down", "text_short": "turquoise cove" },
-    { "name": "braided-river", "text": "a glacial outwash river weaving silver channels across grey gravel, splitting and rejoining around bars the last flood built", "text_short": "braided silver river" },
-    { "name": "hot-spring-terrace", "text": "steaming hot-spring terraces banded orange, rust and white by thermophile microbial mats, each color ring marking a different water temperature", "text_short": "steaming mineral terraces" },
-    { "name": "tidal-flats", "text": "rippled tidal flats at low water holding the sky's colors in a skin of sheet water, drainage channels branching seaward like bare winter trees", "text_short": "rippled tidal flats" },
-    { "name": "bioluminescent-shore", "text": "waves breaking in electric blue bioluminescence along a dark shore, the dinoflagellate bloom flaring wherever the water is disturbed, wet sand glowing at every footprint", "text_short": "glowing blue surf", "tags": ["night"], "requires": ["night"], "negative": "daylight" },
-    { "name": "mangrove-maze", "text": "a mangrove channel maze threading glassy brackish water, each tree stilted on arched prop roots above its own reflection, fiddler crab burrows dimpling the exposed mud", "text_short": "mangrove channels" },
-    { "name": "spring-pool", "text": "a gin-clear artesian spring pool over white sand, the upwelling boil keeping loose grains dancing, light caustics wandering the bottom", "text_short": "gin-clear spring pool" },
-    { "name": "tide-pool-microcosm", "text": "a rocky tide pool at low water, jade anemones open below a mirror surface that doubles the cliffs", "text_short": "tide pool microcosm" },
-    { "name": "wave-barrel", "text": "inside a breaking barrel wave, the falling lip drawn into a curtain of green glass around the hollow", "text_short": "inside a barrel wave" },
-    { "name": "frozen-falls", "text": "a waterfall locked mid-plunge into blue-white ice pillars, meltwater still threading behind the deep-winter curtain", "text_short": "frozen waterfall pillars" }
+    {
+      "name": "plunge-falls",
+      "text": "a single plunge waterfall dropping unbroken into the mist-filled amphitheater it carved for itself, spray climbing back up the walls, everything within reach glossed in moss",
+      "text_short": "plunging waterfall"
+    },
+    {
+      "name": "tiered-cascades",
+      "text": "travertine terraces stepping down in milky turquoise pools, every rim built a little higher by the lime the water itself lays down",
+      "text_short": "travertine cascades"
+    },
+    {
+      "name": "glacial-lake",
+      "text": "a wind-still glacial lake doubling the peaks in perfect symmetry, suspended rock flour tinting the water milk-turquoise",
+      "text_short": "mirror glacial lake"
+    },
+    {
+      "name": "river-bend",
+      "text": "a river meander swinging through a shadowed gorge, bright gravel banked on the inside of the bend, the outside cut into a dark undercut wall",
+      "text_short": "carving river bend"
+    },
+    {
+      "name": "wild-coast",
+      "text": "storm surf detonating against black basalt sea stacks, spray thrown mast-high and stripped sideways off the crests by the gale",
+      "text_short": "surf on sea stacks"
+    },
+    {
+      "name": "turquoise-cove",
+      "text": "a sheltered cove of turquoise water over pale carbonate sand, ringed by white limestone cliffs, the seabed readable five meters down",
+      "text_short": "turquoise cove"
+    },
+    {
+      "name": "braided-river",
+      "text": "a glacial outwash river weaving silver channels across grey gravel, splitting and rejoining around bars the last flood built",
+      "text_short": "braided silver river"
+    },
+    {
+      "name": "hot-spring-terrace",
+      "text": "steaming hot-spring terraces banded orange, rust and white by thermophile microbial mats, each color ring marking a different water temperature",
+      "text_short": "steaming mineral terraces"
+    },
+    {
+      "name": "tidal-flats",
+      "text": "rippled tidal flats at low water holding the sky's colors in a skin of sheet water, drainage channels branching seaward like bare winter trees",
+      "text_short": "rippled tidal flats"
+    },
+    {
+      "name": "bioluminescent-shore",
+      "text": "waves breaking in electric blue bioluminescence along a dark shore, the dinoflagellate bloom flaring wherever the water is disturbed, wet sand glowing at every footprint",
+      "text_short": "glowing blue surf",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    },
+    {
+      "name": "mangrove-maze",
+      "text": "a mangrove channel maze threading glassy brackish water, each tree stilted on arched prop roots above its own reflection, fiddler crab burrows dimpling the exposed mud",
+      "text_short": "mangrove channels"
+    },
+    {
+      "name": "spring-pool",
+      "text": "a gin-clear artesian spring pool over white sand, the upwelling boil keeping loose grains dancing, light caustics wandering the bottom",
+      "text_short": "gin-clear spring pool"
+    },
+    {
+      "name": "tide-pool-microcosm",
+      "text": "a rocky tide pool at low water, jade anemones open below a mirror surface that doubles the cliffs",
+      "text_short": "tide pool microcosm"
+    },
+    {
+      "name": "wave-barrel",
+      "text": "inside a breaking barrel wave, the falling lip drawn into a curtain of green glass around the hollow",
+      "text_short": "inside a barrel wave"
+    },
+    {
+      "name": "frozen-falls",
+      "text": "a waterfall locked mid-plunge into blue-white ice pillars, meltwater still threading behind the deep-winter curtain",
+      "text_short": "frozen waterfall pillars"
+    },
+    {
+      "name": "estuary-flats",
+      "text": "a tidal estuary at low water, channels braiding through mud flats, wading birds spread out and the sea a long way off",
+      "text_short": "tidal estuary braiding through mud flats"
+    },
+    {
+      "name": "seaweed-shore",
+      "text": "a shore heaped with seaweed at the tide line, bladderwrack popping underfoot and kelp stipes tangled among the stones",
+      "text_short": "shore heaped with seaweed at the tide line"
+    },
+    {
+      "name": "rice-paddy",
+      "text": "a flooded rice paddy mirroring the sky between narrow bunds, seedlings set in ranks and a farmer working the line",
+      "text_short": "flooded rice paddy mirroring the sky"
+    }
   ]
 }

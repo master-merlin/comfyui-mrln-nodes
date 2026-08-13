@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "label": "Cartoon & Comics",
+  "description": "The western drawn register: cartoon, comic and graphic-novel language, described by line, colour and staging. style/anime ships eleven items and this side of the same axis was one item ('comic-ink') hidden in style/medium. Characteristics only, never a named artist, studio or title.",
+  "items": [
+    {
+      "name": "modern-cartoon",
+      "text": "modern cartoon drawing, confident uniform line weight, flat bright fills with almost no rendering, shapes simplified until they read instantly at any size",
+      "text_short": "modern cartoon: uniform line, flat bright fills"
+    },
+    {
+      "name": "rubber-hose",
+      "text": "rubber hose cartooning of the early animation era, limbs drawn as continuous curves without joints, pie-cut eyes and white gloves, everything bouncing on the beat",
+      "text_short": "rubber hose cartooning, jointless curving limbs"
+    },
+    {
+      "name": "saturday-morning",
+      "text": "broadcast cartoon styling, limited animation economy, held cels and reused angles, bold outlines over a small deliberate palette",
+      "text_short": "broadcast cartoon economy, bold outline, small palette"
+    },
+    {
+      "name": "cutout-satire",
+      "text": "cut-paper satire animation, deliberately crude construction, flat shapes hinged at the joints and staged almost entirely side-on",
+      "text_short": "cut-paper satire, crude shapes hinged and side-on"
+    },
+    {
+      "name": "comic-book-ink",
+      "text": "comic book inking, brush-weighted contours thickening into shadow, spot blacks anchoring the figure and open areas left for flat colour",
+      "text_short": "comic inking, brush-weighted contours and spot blacks"
+    },
+    {
+      "name": "american-comic-realism",
+      "text": "realist comic illustration, anatomy studied and foreshortened hard, musculature described by contour rather than shading, dramatic low angles",
+      "text_short": "realist comic anatomy, foreshortened and low-angled"
+    },
+    {
+      "name": "ligne-claire",
+      "text": "clear-line drawing, every contour the same weight with no hatching anywhere, flat unmodulated colour and backgrounds rendered as carefully as the figures",
+      "text_short": "clear line: uniform contour, flat colour, equal detail"
+    },
+    {
+      "name": "crosshatched-graphic-novel",
+      "text": "graphic novel crosshatching, form built entirely from directional pen strokes, tone achieved by density and the paper left to do the highlights",
+      "text_short": "graphic novel crosshatching, tone by stroke density"
+    },
+    {
+      "name": "underground-comix",
+      "text": "underground comix drawing, nervous scratchy line, dense obsessive hatching and figures pushed toward the grotesque",
+      "text_short": "underground comix: scratchy line, obsessive hatching"
+    },
+    {
+      "name": "newspaper-strip",
+      "text": "newspaper strip drawing, economical line built for coarse reproduction, exaggerated silhouettes and expression carried by two or three marks",
+      "text_short": "newspaper strip economy, expression in three marks"
+    },
+    {
+      "name": "benday-pop",
+      "text": "benday dot comic printing, visible halftone rosettes in the flats, misregistered colour edges and a limited process palette",
+      "text_short": "benday dots, misregistered colour, process palette"
+    },
+    {
+      "name": "caricature",
+      "text": "caricature drawing, the two or three features that identify a face pushed as far as they go while everything else recedes",
+      "text_short": "caricature: identifying features pushed hard"
+    },
+    {
+      "name": "childrens-book",
+      "text": "children's picture book illustration, soft edges and generous white space, warm limited palette and a gentleness in every proportion",
+      "text_short": "children's book: soft edges, warm limited palette"
+    },
+    {
+      "name": "vintage-storybook",
+      "text": "vintage storybook plate, ink outline with flat watercolour washes held slightly off register, decorative border and aged paper tone",
+      "text_short": "vintage storybook plate, wash off the outline"
+    },
+    {
+      "name": "bookplate-engraving",
+      "text": "engraved bookplate illustration, form entirely described by ruled and swelled burin lines, dense in shadow and open in light",
+      "text_short": "engraved bookplate, form built from burin lines"
+    },
+    {
+      "name": "storyboard-panel",
+      "text": "storyboard drawing, loose grey marker construction, arrows for movement and framing marks at the panel edges, made to be read not admired",
+      "text_short": "storyboard: grey marker, arrows, framing marks"
+    },
+    {
+      "name": "fashion-croquis",
+      "text": "fashion sketch croquis, figure elongated to nine heads, garment described in a few decisive strokes and the face barely indicated",
+      "text_short": "fashion croquis: nine heads, garment in few strokes"
+    },
+    {
+      "name": "marker-concept",
+      "text": "concept marker drawing, broad alcohol-marker planes laid over a ballpoint underdrawing, white gouache highlights added last",
+      "text_short": "marker concept over ballpoint, gouache highlights"
+    },
+    {
+      "name": "doodle-marginalia",
+      "text": "margin doodle, ballpoint on lined paper, unplanned and overlapping, the kind of drawing made while thinking about something else",
+      "text_short": "ballpoint margin doodle on lined paper"
+    },
+    {
+      "name": "scribble-portrait",
+      "text": "scribble drawing, a single continuous line looping back over itself thousands of times, form emerging only from where the loops crowd",
+      "text_short": "continuous scribble, form from where loops crowd"
+    }
+  ]
+}

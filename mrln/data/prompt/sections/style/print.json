@@ -57,6 +57,11 @@
       "name": "mezzotint",
       "text": "mezzotint print look, velvety continuous tone worked from dark to light, deep matte blacks, highlights burnished out of darkness",
       "text_short": "mezzotint velvet blacks"
+    },
+    {
+      "name": "grindhouse-poster",
+      "text": "grindhouse exploitation poster printing, four-colour process misregistered, heavy black key line, sun-bleached reds and creases printed in as if the sheet had already been folded",
+      "text_short": "grindhouse poster: misregistered process, bleached reds"
     }
   ]
 }

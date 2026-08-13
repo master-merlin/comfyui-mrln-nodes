@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "label": "Terrain & Surface State",
+  "description": "The surface a vehicle is working, and what that surface has done to it. The one cross-axis gap the terrain-by-vehicle matrix found that is not a composition artifact: only rally answered mud and gravel, and nothing at all answered snow, sand or ice.",
+  "suits": [
+    "object",
+    "vehicle"
+  ],
+  "items": [
+    {
+      "name": "deep-mud",
+      "text": "deep churned mud packed solid into every arch and recess, thrown up the flanks in overlapping arcs and still wet where it is thickest",
+      "text_short": "deep mud packed into the arches, thrown up the flanks",
+      "tags": [
+        "mud",
+        "soft"
+      ]
+    },
+    {
+      "name": "mud-ruts",
+      "text": "twin ruts cut into saturated ground, water standing in the bottom of them and the crown between scraped by the underbody",
+      "text_short": "twin ruts with water standing in the bottom",
+      "tags": [
+        "mud",
+        "soft"
+      ]
+    },
+    {
+      "name": "wet-clay",
+      "text": "slick wet clay giving no purchase at all, a thin bright film over everything and the tread filled smooth",
+      "text_short": "slick wet clay, tread filled smooth",
+      "tags": [
+        "mud",
+        "soft"
+      ]
+    },
+    {
+      "name": "loose-gravel",
+      "text": "loose gravel breaking away under load, stones pattering off the arches and a dust plume standing where the car has been",
+      "text_short": "loose gravel breaking away, dust plume standing",
+      "tags": [
+        "gravel",
+        "loose"
+      ]
+    },
+    {
+      "name": "shale-scree",
+      "text": "broken shale scree shifting downhill under the tyres, plates ringing as they slide over one another",
+      "text_short": "shale scree shifting downhill underfoot",
+      "tags": [
+        "gravel",
+        "loose"
+      ]
+    },
+    {
+      "name": "deep-sand",
+      "text": "deep soft sand with tyres aired down and bulging, tracks filling in behind almost as fast as they are made",
+      "text_short": "deep sand, tyres aired down and tracks refilling",
+      "tags": [
+        "sand",
+        "loose"
+      ]
+    },
+    {
+      "name": "dune-crest",
+      "text": "a dune crest with the wind stripping sand off the edge in a continuous sheet, the far face dropping away steeply",
+      "text_short": "dune crest with sand stripping off the edge",
+      "tags": [
+        "sand",
+        "loose"
+      ]
+    },
+    {
+      "name": "salt-crust",
+      "text": "a dry lake salt crust in hexagon plates, absolutely flat to the horizon, white dust worked into every seam of the bodywork",
+      "text_short": "hexagon salt crust, flat to the horizon",
+      "tags": [
+        "sand",
+        "hard"
+      ]
+    },
+    {
+      "name": "packed-snow",
+      "text": "packed snow ground to a polished sheen in the wheel tracks, banks thrown up either side and studs biting audibly",
+      "text_short": "packed snow polished in the wheel tracks",
+      "tags": [
+        "snow",
+        "cold"
+      ]
+    },
+    {
+      "name": "fresh-powder",
+      "text": "fresh powder deep enough to bury the sills, thrown up in a soft continuous bow wave that hangs in the air behind",
+      "text_short": "fresh powder thrown in a soft bow wave",
+      "tags": [
+        "snow",
+        "cold",
+        "soft"
+      ]
+    },
+    {
+      "name": "black-ice",
+      "text": "black ice reading as wet tarmac and behaving as glass, a mirror finish holding the sky and no texture anywhere",
+      "text_short": "black ice, a mirror finish reading as wet tarmac",
+      "tags": [
+        "ice",
+        "cold",
+        "hard"
+      ]
+    },
+    {
+      "name": "rutted-ice-track",
+      "text": "a studded ice track cut into grooves by the field, ice chips banked at the edge and blue showing where the surface has been carved back",
+      "text_short": "studded ice track carved into blue grooves",
+      "tags": [
+        "ice",
+        "cold"
+      ]
+    },
+    {
+      "name": "wet-tarmac",
+      "text": "wet tarmac holding a hard reflection of every light, standing water pushed out in fans and spray hanging behind",
+      "text_short": "wet tarmac reflecting hard, spray hanging behind",
+      "tags": [
+        "tarmac",
+        "hard"
+      ]
+    },
+    {
+      "name": "dry-hot-tarmac",
+      "text": "dry tarmac hot enough to shimmer, rubber laid down black through the braking zone and tar bleeding at the joints",
+      "text_short": "hot dry tarmac, rubber laid black into the braking zone",
+      "tags": [
+        "tarmac",
+        "hard"
+      ]
+    },
+    {
+      "name": "cobbled-pave",
+      "text": "rough cobbled pave hammering the suspension, stones crowned and uneven, everything on the car vibrating out of focus",
+      "text_short": "cobbled pave hammering everything out of focus",
+      "tags": [
+        "hard"
+      ]
+    },
+    {
+      "name": "river-crossing",
+      "text": "a river crossing at axle depth, a bow wave standing off the front and water finding its way up the doors",
+      "text_short": "river crossing at axle depth, bow wave standing",
+      "tags": [
+        "water",
+        "soft"
+      ]
+    },
+    {
+      "name": "flooded-road",
+      "text": "a flooded road with the surface gone entirely under standing water, depth guessed from the kerb line alone",
+      "text_short": "flooded road, depth guessed from the kerb line",
+      "tags": [
+        "water"
+      ]
+    },
+    {
+      "name": "desert-corrugations",
+      "text": "desert corrugations running across the track in endless ridges, the whole vehicle buzzing and every fixing working loose",
+      "text_short": "desert corrugations buzzing every fixing loose",
+      "tags": [
+        "sand",
+        "hard"
+      ]
+    }
+  ]
+}

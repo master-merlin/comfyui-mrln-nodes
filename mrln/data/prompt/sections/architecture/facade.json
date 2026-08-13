@@ -2,24 +2,124 @@
   "version": 1,
   "label": "Facade",
   "description": "Facade materials and building skins as hero close-ups.",
-  "suits": ["architecture", "object"],
+  "suits": [
+    "architecture",
+    "object"
+  ],
   "items": [
-    { "name": "corten-skin", "text": "a weathering-steel facade rusted to velvet orange, laser-cut perforations glowing from the lit interior behind", "text_short": "glowing corten facade" },
-    { "name": "curtain-wall", "text": "a glass curtain wall reflecting sliding clouds, the mullion grid imposing its rhythm on the sky", "text_short": "cloud-mirror curtain wall" },
-    { "name": "timber-slats", "text": "a screen of vertical larch slats silvering unevenly with weather, interior light striping out through the gaps", "text_short": "larch slat screen" },
-    { "name": "copper-patina", "text": "a copper-shingled facade caught mid-patina, bright penny fading through umber into streaks of malachite green", "text_short": "patina copper shingles" },
-    { "name": "azulejo-tiles", "text": "a townhouse front tiled edge to edge in blue-and-white azulejo, glaze crazed and chipped around the window reveals", "text_short": "azulejo-tiled front", "tags": ["historical"] },
-    { "name": "gabion-stone", "text": "a gabion facade of wire cages packed tight with river stone, texture shifting grey to russet bay by bay", "text_short": "gabion stone cages" },
-    { "name": "mashrabiya-screen", "text": "a carved timber mashrabiya screen, star-and-polygon lattice throwing patterned light deep into the room behind", "text_short": "mashrabiya lattice", "tags": ["historical"] },
-    { "name": "mirror-cladding", "text": "a mirror-clad volume dissolving into its own reflection of hills and sky, seams betraying the illusion only at the corners", "text_short": "mirror-clad volume" },
-    { "name": "clinker-brick", "text": "hand-laid clinker brick in Flemish bond, over-fired headers glinting purple-black among the reds", "text_short": "clinker brick bond" },
-    { "name": "living-wall", "text": "a living green wall shingled in overlapping fern and moss panels, drip lines glistening in the shade", "text_short": "living green wall" },
-    { "name": "terracotta-louvres", "text": "a sunscreen of terracotta baguette louvres, warm ochre bars stacking parallel shadows onto the glass behind", "text_short": "terracotta louvre screen" },
-    { "name": "rammed-earth", "text": "a rammed-earth wall banded in strata of ochre, rose and umber, every formwork lift line reading like sediment", "text_short": "banded rammed earth" },
-    { "name": "shou-sugi-ban", "text": "a charred shou-sugi-ban cedar facade, alligator-cracked black boards with a soft graphite sheen, the grain reading silver wherever light rakes across it", "text_short": "charred cedar facade" },
-    { "name": "etfe-pillows", "text": "an ETFE cushion facade, quilted translucent pillows bulging from a steel diagrid, frit dot-shading printed denser toward the sun side", "text_short": "etfe pillow diagrid" },
-    { "name": "glass-block-wall", "text": "a wall of glass block glowing like packed ice, each prism bending its own soft square of light, the joints reading as a dark grid through the glow", "text_short": "glowing glass block" },
-    { "name": "sgraffito-plaster", "text": "a sgraffito facade, allegorical figures scratched through white lime plaster to the grey coat beneath, ornament still crisp in the reveals and worn soft on the weather side", "text_short": "sgraffito plaster figures", "tags": ["historical"] },
-    { "name": "fluted-precast", "text": "fluted precast concrete panels, vertical ribs flipping from ivory to deep shadow as the sun moves off axis, panel joints aligned exactly to the flute rhythm", "text_short": "fluted precast ribs" }
+    {
+      "name": "corten-skin",
+      "text": "a weathering-steel facade rusted to velvet orange, laser-cut perforations glowing from the lit interior behind",
+      "text_short": "glowing corten facade"
+    },
+    {
+      "name": "curtain-wall",
+      "text": "a glass curtain wall reflecting sliding clouds, the mullion grid imposing its rhythm on the sky",
+      "text_short": "cloud-mirror curtain wall"
+    },
+    {
+      "name": "timber-slats",
+      "text": "a screen of vertical larch slats silvering unevenly with weather, interior light striping out through the gaps",
+      "text_short": "larch slat screen"
+    },
+    {
+      "name": "copper-patina",
+      "text": "a copper-shingled facade caught mid-patina, bright penny fading through umber into streaks of malachite green",
+      "text_short": "patina copper shingles"
+    },
+    {
+      "name": "azulejo-tiles",
+      "text": "a townhouse front tiled edge to edge in blue-and-white azulejo, glaze crazed and chipped around the window reveals",
+      "text_short": "azulejo-tiled front",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "gabion-stone",
+      "text": "a gabion facade of wire cages packed tight with river stone, texture shifting grey to russet bay by bay",
+      "text_short": "gabion stone cages"
+    },
+    {
+      "name": "mashrabiya-screen",
+      "text": "a carved timber mashrabiya screen, star-and-polygon lattice throwing patterned light deep into the room behind",
+      "text_short": "mashrabiya lattice",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "mirror-cladding",
+      "text": "a mirror-clad volume dissolving into its own reflection of hills and sky, seams betraying the illusion only at the corners",
+      "text_short": "mirror-clad volume"
+    },
+    {
+      "name": "clinker-brick",
+      "text": "hand-laid clinker brick in Flemish bond, over-fired headers glinting purple-black among the reds",
+      "text_short": "clinker brick bond"
+    },
+    {
+      "name": "living-wall",
+      "text": "a living green wall shingled in overlapping fern and moss panels, drip lines glistening in the shade",
+      "text_short": "living green wall"
+    },
+    {
+      "name": "terracotta-louvres",
+      "text": "a sunscreen of terracotta baguette louvres, warm ochre bars stacking parallel shadows onto the glass behind",
+      "text_short": "terracotta louvre screen"
+    },
+    {
+      "name": "rammed-earth",
+      "text": "a rammed-earth wall banded in strata of ochre, rose and umber, every formwork lift line reading like sediment",
+      "text_short": "banded rammed earth"
+    },
+    {
+      "name": "shou-sugi-ban",
+      "text": "a charred shou-sugi-ban cedar facade, alligator-cracked black boards with a soft graphite sheen, the grain reading silver wherever light rakes across it",
+      "text_short": "charred cedar facade"
+    },
+    {
+      "name": "etfe-pillows",
+      "text": "an ETFE cushion facade, quilted translucent pillows bulging from a steel diagrid, frit dot-shading printed denser toward the sun side",
+      "text_short": "etfe pillow diagrid"
+    },
+    {
+      "name": "glass-block-wall",
+      "text": "a wall of glass block glowing like packed ice, each prism bending its own soft square of light, the joints reading as a dark grid through the glow",
+      "text_short": "glowing glass block"
+    },
+    {
+      "name": "sgraffito-plaster",
+      "text": "a sgraffito facade, allegorical figures scratched through white lime plaster to the grey coat beneath, ornament still crisp in the reveals and worn soft on the weather side",
+      "text_short": "sgraffito plaster figures",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "fluted-precast",
+      "text": "fluted precast concrete panels, vertical ribs flipping from ivory to deep shadow as the sun moves off axis, panel joints aligned exactly to the flute rhythm",
+      "text_short": "fluted precast ribs"
+    },
+    {
+      "name": "neoclassical",
+      "text": "a neoclassical facade with a pedimented portico on giant columns, strict symmetry and mouldings copied from antiquity",
+      "text_short": "neoclassical portico, strict symmetry"
+    },
+    {
+      "name": "postmodern",
+      "text": "a postmodern facade quoting classical elements at the wrong scale and in the wrong colour, deliberately playful about it",
+      "text_short": "postmodern quotation at the wrong scale"
+    },
+    {
+      "name": "minaret",
+      "text": "a minaret rising slender above a courtyard, balconied galleries banded around it and a fluted cap at the top",
+      "text_short": "slender balconied minaret with a fluted cap"
+    },
+    {
+      "name": "stupa",
+      "text": "a stupa built as a solid whitewashed dome on a stepped plinth, a squared harmika above and a spire of rings rising from it",
+      "text_short": "whitewashed stupa dome under a ringed spire"
+    }
   ]
 }

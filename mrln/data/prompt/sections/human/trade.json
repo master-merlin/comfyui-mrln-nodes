@@ -1,0 +1,313 @@
+{
+  "version": 1,
+  "label": "Trade & Craft",
+  "description": "People who make physical things, described by the marks the work leaves on them. Measured gap: of 35 trades enumerated from the world the library answered 7. human/archetype covers roles you can recognise across a room; this covers hands that have done something for twenty years.",
+  "suits": [
+    "human"
+  ],
+  "items": [
+    {
+      "name": "blacksmith",
+      "text": "a blacksmith at the forge, leather apron scorched through in places, forearms corded and marked with old spark burns, soot in every crease of the knuckles",
+      "text_short": "blacksmith in a scorched leather apron, spark-burned forearms",
+      "tags": [
+        "metal",
+        "heat"
+      ]
+    },
+    {
+      "name": "farrier",
+      "text": "a farrier bent over a hoof cradled between the knees, chaps worn shiny at the thigh, nails held in the lips and a rasp in the free hand",
+      "text_short": "farrier with a hoof between the knees, nails held in the lips",
+      "tags": [
+        "metal",
+        "animal"
+      ]
+    },
+    {
+      "name": "welder",
+      "text": "a welder mid-bead, flip-front helmet down, spatter freckling the sleeves and a blue afterglow still on the seam",
+      "text_short": "welder mid-bead, helmet down and spatter on the sleeves",
+      "tags": [
+        "metal",
+        "heat"
+      ]
+    },
+    {
+      "name": "carpenter",
+      "text": "a carpenter with a pencil behind the ear and shavings caught in the turn-ups, a rule in the apron pocket and thumbs squared off from decades of chisels",
+      "text_short": "carpenter with a pencil behind the ear and shavings in the turn-ups",
+      "tags": [
+        "wood"
+      ]
+    },
+    {
+      "name": "wood-carver",
+      "text": "a wood carver working a gouge with both hands, chips banking around the boots, grain dust settled into the eyebrows",
+      "text_short": "wood carver two-handed on a gouge, chips banked at the boots",
+      "tags": [
+        "wood"
+      ]
+    },
+    {
+      "name": "cooper",
+      "text": "a cooper setting staves inside a barrel hoop, mallet in one fist, sleeves rolled past the elbow and oak dust standing in the light",
+      "text_short": "cooper setting staves, mallet in one fist",
+      "tags": [
+        "wood"
+      ]
+    },
+    {
+      "name": "luthier",
+      "text": "a luthier holding a half-built body to the light, glue drying on the fingertips, spruce shavings curled across the bench behind",
+      "text_short": "luthier sighting a half-built body against the light",
+      "tags": [
+        "wood",
+        "music"
+      ]
+    },
+    {
+      "name": "potter",
+      "text": "a potter at the wheel, clay slip to the elbows and drying pale on the forearms, wet thumbs opening a cylinder from the centre",
+      "text_short": "potter at the wheel, slip drying pale on the forearms",
+      "tags": [
+        "clay"
+      ]
+    },
+    {
+      "name": "glassblower",
+      "text": "a glassblower shaping blown glass on the pipe, face lit orange from the glory hole, one arm shielding against heat while the other keeps the rotation even",
+      "text_short": "glassblower shaping blown glass at the glory hole",
+      "tags": [
+        "glass",
+        "heat"
+      ]
+    },
+    {
+      "name": "stonemason",
+      "text": "a stonemason with a bolster and lump hammer, white dust settled into the hair and the seams of the jacket, cut stone squared up behind",
+      "text_short": "stonemason under white dust, bolster and lump hammer",
+      "tags": [
+        "stone"
+      ]
+    },
+    {
+      "name": "weaver",
+      "text": "a weaver at a floor loom, feet on the treadles and shuttle mid-throw, warp threads drawn taut into the distance",
+      "text_short": "weaver at a floor loom, shuttle mid-throw",
+      "tags": [
+        "textile"
+      ]
+    },
+    {
+      "name": "tailor",
+      "text": "a tailor with a tape around the neck and pins held between the lips, chalk marks down a half-made sleeve laid across the arm",
+      "text_short": "tailor with pins in the lips and chalk on a half-made sleeve",
+      "tags": [
+        "textile"
+      ]
+    },
+    {
+      "name": "cobbler",
+      "text": "a cobbler on a low stool with a last between the knees, tacks in a tin lid, hands blackened to the nail beds with wax and dye",
+      "text_short": "cobbler with a last between the knees, wax-blackened hands",
+      "tags": [
+        "leather"
+      ]
+    },
+    {
+      "name": "leatherworker",
+      "text": "a leatherworker burnishing an edge, awl and waxed thread laid out in order, hide draped over one shoulder and a stitching pony gripped between the thighs",
+      "text_short": "leatherworker burnishing an edge over a stitching pony",
+      "tags": [
+        "leather"
+      ]
+    },
+    {
+      "name": "upholsterer",
+      "text": "an upholsterer with a magnetic hammer and a mouth of tacks, webbing stretched across a stripped frame and horsehair spilling from an old seat",
+      "text_short": "upholsterer, tacks in the mouth and webbing stretched taut",
+      "tags": [
+        "textile"
+      ]
+    },
+    {
+      "name": "bookbinder",
+      "text": "a bookbinder paring leather to a whisper at the edge, bone folder in reach, presses standing loaded along the wall behind",
+      "text_short": "bookbinder paring leather thin, bone folder in reach",
+      "tags": [
+        "paper"
+      ]
+    },
+    {
+      "name": "printer",
+      "text": "a printer inking a forme by hand, fingertips permanently grey, type cases open and a proof still tacky on the stone",
+      "text_short": "printer inking a forme, fingertips permanently grey",
+      "tags": [
+        "paper"
+      ]
+    },
+    {
+      "name": "watchmaker",
+      "text": "a watchmaker with a loupe screwed into the eye socket, tweezers steady over a movement no bigger than a coin, breath deliberately shallow",
+      "text_short": "watchmaker under a loupe, tweezers steady over a movement",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "jeweller",
+      "text": "a jeweller at the bench peg, torch in one hand and a ring shank in the other, a leather catch-skin slung underneath for the filings",
+      "text_short": "jeweller at the bench peg, torch and ring shank",
+      "tags": [
+        "metal",
+        "precision"
+      ]
+    },
+    {
+      "name": "baker",
+      "text": "a baker sliding a peel into the oven mouth, flour to the elbows and worked into the apron, forearms marked with old rack burns",
+      "text_short": "baker at the oven mouth, flour to the elbows",
+      "tags": [
+        "food",
+        "heat"
+      ]
+    },
+    {
+      "name": "butcher",
+      "text": "a butcher breaking a side down, chainmail glove on the guiding hand, striped apron and a steel swinging at the hip",
+      "text_short": "butcher with a chainmail glove and a steel at the hip",
+      "tags": [
+        "food"
+      ]
+    },
+    {
+      "name": "vintner",
+      "text": "a vintner drawing a sample by pipette from the barrel, cellar cold in the breath, stained fingertips against the glass",
+      "text_short": "vintner drawing a barrel sample by pipette",
+      "tags": [
+        "food"
+      ]
+    },
+    {
+      "name": "beekeeper",
+      "text": "a beekeeper lifting a frame into the light, veil hazing the face, smoker sitting on the hive lid and bees loose in the air around",
+      "text_short": "beekeeper lifting a frame, smoker on the hive lid",
+      "tags": [
+        "animal",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "shepherd",
+      "text": "a shepherd leaning on a crook at a gate, weather worked into the face, a dog waiting flat in the grass a few paces off",
+      "text_short": "shepherd on a crook at a gate, dog flat in the grass",
+      "tags": [
+        "animal",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "logger",
+      "text": "a logger with a saw resting across the shoulder, hi-vis over checked flannel, sawdust down the front and chaps scarred along the shin",
+      "text_short": "logger with a saw across the shoulder, chaps scarred at the shin",
+      "tags": [
+        "wood",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "miner",
+      "text": "a miner surfacing with a lamp still burning on the helmet, dust masking everything but the eyes and the line where the respirator sat",
+      "text_short": "miner surfacing, dust masking all but the eyes",
+      "tags": [
+        "stone",
+        "underground"
+      ]
+    },
+    {
+      "name": "roofer",
+      "text": "a roofer astride a ridge with a nail bag at the hip, one boot braced on a batten, felt and slate stacked within reach",
+      "text_short": "roofer astride a ridge, nail bag at the hip",
+      "tags": [
+        "stone",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "plumber",
+      "text": "a plumber on one knee under a sink, wrench set out in size order, PTFE tape looped over a finger and a torch clamped in the teeth",
+      "text_short": "plumber under a sink, wrenches laid out in size order",
+      "tags": [
+        "metal"
+      ]
+    },
+    {
+      "name": "electrician",
+      "text": "an electrician stripping a run of cores at a consumer unit, testers clipped to the breast pocket, cable offcuts scattered underfoot",
+      "text_short": "electrician stripping cores at a consumer unit",
+      "tags": [
+        "precision"
+      ]
+    },
+    {
+      "name": "surveyor",
+      "text": "a surveyor sighting through a total station on a tripod, hi-vis and a hard hat, a staff held plumb by someone far down the line",
+      "text_short": "surveyor sighting a total station across the site",
+      "tags": [
+        "precision",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "florist",
+      "text": "a florist stripping thorns with a blade drawn toward the thumb, stems banked in buckets, offcuts deep across the bench",
+      "text_short": "florist stripping thorns, stems banked in buckets",
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "gardener",
+      "text": "a gardener kneeling with soil worked past the wrists, a fork stood upright in the bed and twine looped through a belt loop",
+      "text_short": "gardener with soil past the wrists, fork stood in the bed",
+      "tags": [
+        "plant",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "basket-maker",
+      "text": "a basket maker soaking willow in a long trough, rods gripped between the knees, fingers split at the tips from the weave",
+      "text_short": "basket maker with willow between the knees",
+      "tags": [
+        "plant"
+      ]
+    },
+    {
+      "name": "candle-maker",
+      "text": "a candle maker dipping a rack of wicks, wax cooling to a bloom on the fingers, a vat steaming behind at a careful temperature",
+      "text_short": "candle maker dipping a rack of wicks",
+      "tags": [
+        "heat"
+      ]
+    },
+    {
+      "name": "sign-painter",
+      "text": "a sign painter pulling a lettering stroke off a mahl stick, one-shot enamel on the brush, gold leaf book open on the trestle",
+      "text_short": "sign painter pulling a stroke off a mahl stick",
+      "tags": [
+        "paint",
+        "precision"
+      ]
+    },
+    {
+      "name": "barber",
+      "text": "a barber with clippers in one hand and a comb held flat against the head, a strop hanging from the chair and hair banked around the boots",
+      "text_short": "barber with clippers and a comb held flat",
+      "tags": [
+        "service"
+      ]
+    }
+  ]
+}

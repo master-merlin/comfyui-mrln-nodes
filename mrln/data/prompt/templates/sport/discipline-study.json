@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "label": "Sport — Discipline Study",
+  "type": [
+    "human"
+  ],
+  "description": "The craft rather than the contest: technique held at the point where it is hardest, shot clean enough to read the form. Closer, quieter and more instructional than the action frame, and it works as well for a kata as for a reformer. No venue slot: the discipline states its own environment, and an independent venue draw produced a tennis serve in a skate bowl.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A study of technique. {nationality}, {age}, ({physique}:1.1), in ({kit}:1.15), {expression}, holding ({discipline}:1.4). {trigger}",
+  "slots": [
+    {
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "physique",
+      "ref": "human/physique-female",
+      "label": "Physique"
+    },
+    {
+      "id": "kit",
+      "ref": "wardrobe/athletic",
+      "label": "Kit",
+      "emphasis": 1.2
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "determined"
+    },
+    {
+      "id": "discipline",
+      "ref": "sport/discipline",
+      "label": "Discipline",
+      "emphasis": 1.4
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Lighting",
+      "emphasis": 1.15
+    },
+    {
+      "id": "shot",
+      "ref": "viewpoint/portrait",
+      "label": "Shot Type"
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Technique Rendering: (form held exactly, every joint angle deliberate:1.3), (muscle definition under tension, tendon and line visible:1.2), (perfect hands, detailed fingers:1.2), clean uncluttered background, controlled light that describes the body rather than dramatising it.",
+  "negative": "chaotic background, crowd, motion blur, deformed, extra limbs, extra fingers, fused fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}
