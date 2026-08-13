@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "label": "Civic & Institutional",
+  "description": "Public rooms with rules: the places a story needs when it stops being about scenery. Hospitals, courts, schools, stations and the counters people queue at.",
+  "items": [
+    {
+      "name": "hospital-corridor",
+      "text": "A hospital corridor in flat overhead light, a polished vinyl floor running to a distant double door, a gurney parked against the wall.",
+      "text_short": "flat-lit hospital corridor",
+      "tags": [
+        "interior",
+        "clinical"
+      ]
+    },
+    {
+      "name": "operating-theatre",
+      "text": "An operating theatre under a cluster of surgical lamps, stainless trolleys laid out in order, green drapes and a monitor tracing steadily.",
+      "text_short": "operating theatre under surgical lamps",
+      "tags": [
+        "interior",
+        "clinical"
+      ]
+    },
+    {
+      "name": "courtroom",
+      "text": "A courtroom in dark panelled wood, a raised bench and empty jury box, rows of public benches and a stenographer's small table.",
+      "text_short": "panelled courtroom, raised bench",
+      "tags": [
+        "interior",
+        "formal"
+      ]
+    },
+    {
+      "name": "school-corridor",
+      "text": "A school corridor lined with dented lockers, scuffed floor tiles, noticeboards layered with paper and daylight from a door at the end.",
+      "text_short": "school corridor of dented lockers",
+      "tags": [
+        "interior",
+        "worn",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "lecture-hall",
+      "text": "A raked lecture hall of fold-down seats, a long whiteboard still half-written, a projector beam cutting the chalk-dry air.",
+      "text_short": "raked lecture hall, whiteboard half-written",
+      "tags": [
+        "interior"
+      ]
+    },
+    {
+      "name": "library-reading-room",
+      "text": "A library reading room under a vaulted ceiling, green-shaded lamps down long tables, galleries of shelves and complete silence.",
+      "text_short": "vaulted library reading room",
+      "tags": [
+        "interior",
+        "grand"
+      ]
+    },
+    {
+      "name": "church-nave",
+      "text": "A church nave in cool stone, light falling in coloured panels across the pews, candle racks glowing at the side aisles.",
+      "text_short": "stone church nave, coloured light on pews",
+      "tags": [
+        "interior",
+        "grand"
+      ]
+    },
+    {
+      "name": "town-hall-chamber",
+      "text": "A civic chamber in carved oak, a horseshoe of desks with brass name plates, portraits above and a public gallery behind railings.",
+      "text_short": "civic chamber in carved oak",
+      "tags": [
+        "interior",
+        "formal"
+      ]
+    },
+    {
+      "name": "police-station-desk",
+      "text": "A police station front desk behind reinforced glass, a strip-lit waiting bench, wanted notices curling and a clock running loud.",
+      "text_short": "police station front desk, strip-lit",
+      "tags": [
+        "interior",
+        "worn"
+      ]
+    },
+    {
+      "name": "supermarket-aisle",
+      "text": "A supermarket aisle in cold even light, shelves stacked to a vanishing point, a trolley abandoned mid-row and price tape everywhere.",
+      "text_short": "supermarket aisle in cold even light",
+      "tags": [
+        "interior",
+        "everyday"
+      ]
+    },
+    {
+      "name": "post-office-counter",
+      "text": "A post office counter with numbered windows, a snaking rope queue, franked parcels stacked and a pen chained to the writing shelf.",
+      "text_short": "post office counter with a rope queue",
+      "tags": [
+        "interior",
+        "everyday"
+      ]
+    },
+    {
+      "name": "station-concourse",
+      "text": "A station concourse under a glazed roof, a split-flap board clattering over a moving crowd, pigeons in the girders and light shafting down.",
+      "text_short": "glazed station concourse, board clattering",
+      "tags": [
+        "interior",
+        "crowd",
+        "grand"
+      ]
+    },
+    {
+      "name": "museum-gallery",
+      "text": "A museum gallery of pale walls and picture lights, a bench at the centre, floor markings keeping visitors back from the frames.",
+      "text_short": "pale museum gallery with picture lights",
+      "tags": [
+        "interior",
+        "grand"
+      ]
+    },
+    {
+      "name": "playground",
+      "text": "A playground of rubber matting and repainted steel, swings turning slightly on their chains, a climbing frame and a chalked hopscotch.",
+      "text_short": "rubber-matted playground, swings turning",
+      "tags": [
+        "outdoor",
+        "everyday"
+      ]
+    },
+    {
+      "name": "municipal-pool",
+      "text": "A municipal swimming pool hall, ceramic tile and lane ropes, light bouncing off water onto a high ceiling and echo on everything.",
+      "text_short": "tiled municipal pool hall",
+      "tags": [
+        "interior",
+        "everyday"
+      ]
+    },
+    {
+      "name": "waiting-room",
+      "text": "A waiting room of bolted plastic chairs, a ticket display above the door, old magazines fanned on a low table and one window blind askew.",
+      "text_short": "waiting room of bolted plastic chairs",
+      "tags": [
+        "interior",
+        "everyday"
+      ]
+    }
+  ]
+}

@@ -2,39 +2,209 @@
   "version": 1,
   "label": "Hair Style",
   "description": "The source's full style range plus staples; male cuts tagged 'male'. Female profiles compose as 'hair in {style}'.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "loose-waves", "text": "loose effortless waves", "text_short": "loose waves" },
-    { "name": "glass-straight", "text": "sleek pin-straight glass hair", "text_short": "glass-straight hair" },
-    { "name": "retro-curls", "text": "voluminous brushed-out retro curls", "text_short": "retro curls" },
-    { "name": "braided-crown", "text": "an intricate braided crown", "text_short": "braided crown" },
-    { "name": "glossy-blowout", "text": "a glossy blowout with soft volume", "text_short": "glossy blowout" },
-    { "name": "tousled-updo", "text": "a messy tousled high updo", "text_short": "tousled high updo" },
-    { "name": "pixie-cut", "text": "a chic textured pixie cut", "text_short": "textured pixie" },
-    { "name": "blunt-lob", "text": "a shoulder-length blunt lob", "text_short": "blunt lob" },
-    { "name": "high-ponytail", "text": "a sleek high ponytail with wrapped strands", "text_short": "sleek high ponytail" },
-    { "name": "blunt-bob", "text": "a blunt bob with soft inner curve", "text_short": "blunt bob" },
-    { "name": "finger-waves", "text": "wet-look finger waves", "text_short": "finger waves" },
-    { "name": "curtain-bangs", "text": "textured curtain bangs framing the face", "text_short": "curtain bangs" },
-    { "name": "beachy-waves", "text": "soft beachy waves", "text_short": "beachy waves" },
-    { "name": "hollywood-waves", "text": "retro Hollywood glamour waves", "text_short": "Hollywood waves" },
-    { "name": "shag-cut", "text": "a tousled shag cut with face-framing layers", "text_short": "tousled shag" },
-    { "name": "bouffant-updo", "text": "a messy bouffant updo with loose wisps", "text_short": "bouffant updo" },
-    { "name": "micro-bangs", "text": "micro-bangs with long straight layers", "text_short": "micro-bangs" },
-    { "name": "top-knot", "text": "an architectural sleek top knot", "text_short": "sleek top knot" },
-    { "name": "low-chignon", "text": "a messy tousled low chignon", "text_short": "low chignon" },
-    { "name": "nape-knot", "text": "a low nape knot with loose wavy tendrils", "text_short": "nape knot, tendrils" },
-    { "name": "mermaid-waves", "text": "beachy mermaid waves spilling over the shoulders", "text_short": "mermaid waves" },
-    { "name": "wolf-cut", "text": "a textured wolf cut", "text_short": "wolf cut" },
-    { "name": "slicked-back", "text": "a slicked-back wet look", "text_short": "slicked-back wet look" },
-    { "name": "box-braids", "text": "long glossy box braids gathered over one shoulder", "text_short": "box braids" },
-    { "name": "natural-afro", "text": "a full natural afro with a soft rounded halo outline", "text_short": "natural afro" },
-    { "name": "french-twist", "text": "a polished French twist with a clean vertical seam", "text_short": "French twist" },
-    { "name": "side-swept-glam", "text": "a deep side part with glossy waves swept across one eye", "text_short": "side-swept glossy waves" },
-    { "name": "textured-fade", "text": "short textured fade", "text_short": "textured fade", "tags": ["male"] },
-    { "name": "tapered-side-part", "text": "classic tapered side-part", "text_short": "tapered side-part", "tags": ["male"] },
-    { "name": "slicked-dark", "text": "precisely slicked-back", "text_short": "precisely slicked-back", "tags": ["male"] },
-    { "name": "messy-wavy", "text": "messy textured wavy", "text_short": "messy wavy", "tags": ["male"] },
-    { "name": "buzz-cut", "text": "close-cropped buzz cut", "text_short": "buzz cut", "tags": ["male"] }
+    {
+      "name": "loose-waves",
+      "text": "loose effortless waves",
+      "text_short": "loose waves"
+    },
+    {
+      "name": "glass-straight",
+      "text": "sleek pin-straight glass hair",
+      "text_short": "glass-straight hair"
+    },
+    {
+      "name": "retro-curls",
+      "text": "voluminous brushed-out retro curls",
+      "text_short": "retro curls"
+    },
+    {
+      "name": "braided-crown",
+      "text": "an intricate braided crown",
+      "text_short": "braided crown"
+    },
+    {
+      "name": "glossy-blowout",
+      "text": "a glossy blowout with soft volume",
+      "text_short": "glossy blowout"
+    },
+    {
+      "name": "tousled-updo",
+      "text": "a messy tousled high updo",
+      "text_short": "tousled high updo"
+    },
+    {
+      "name": "pixie-cut",
+      "text": "a chic textured pixie cut",
+      "text_short": "textured pixie"
+    },
+    {
+      "name": "blunt-lob",
+      "text": "a shoulder-length blunt lob",
+      "text_short": "blunt lob"
+    },
+    {
+      "name": "high-ponytail",
+      "text": "a sleek high ponytail with wrapped strands",
+      "text_short": "sleek high ponytail"
+    },
+    {
+      "name": "blunt-bob",
+      "text": "a blunt bob with soft inner curve",
+      "text_short": "blunt bob"
+    },
+    {
+      "name": "finger-waves",
+      "text": "wet-look finger waves",
+      "text_short": "finger waves"
+    },
+    {
+      "name": "curtain-bangs",
+      "text": "textured curtain bangs framing the face",
+      "text_short": "curtain bangs"
+    },
+    {
+      "name": "beachy-waves",
+      "text": "soft beachy waves",
+      "text_short": "beachy waves"
+    },
+    {
+      "name": "hollywood-waves",
+      "text": "retro Hollywood glamour waves",
+      "text_short": "Hollywood waves"
+    },
+    {
+      "name": "shag-cut",
+      "text": "a tousled shag cut with face-framing layers",
+      "text_short": "tousled shag"
+    },
+    {
+      "name": "bouffant-updo",
+      "text": "a messy bouffant updo with loose wisps",
+      "text_short": "bouffant updo"
+    },
+    {
+      "name": "micro-bangs",
+      "text": "micro-bangs with long straight layers",
+      "text_short": "micro-bangs"
+    },
+    {
+      "name": "top-knot",
+      "text": "an architectural sleek top knot",
+      "text_short": "sleek top knot"
+    },
+    {
+      "name": "low-chignon",
+      "text": "a messy tousled low chignon",
+      "text_short": "low chignon"
+    },
+    {
+      "name": "nape-knot",
+      "text": "a low nape knot with loose wavy tendrils",
+      "text_short": "nape knot, tendrils"
+    },
+    {
+      "name": "mermaid-waves",
+      "text": "beachy mermaid waves spilling over the shoulders",
+      "text_short": "mermaid waves"
+    },
+    {
+      "name": "wolf-cut",
+      "text": "a textured wolf cut",
+      "text_short": "wolf cut"
+    },
+    {
+      "name": "slicked-back",
+      "text": "a slicked-back wet look",
+      "text_short": "slicked-back wet look"
+    },
+    {
+      "name": "box-braids",
+      "text": "long glossy box braids gathered over one shoulder",
+      "text_short": "box braids"
+    },
+    {
+      "name": "natural-afro",
+      "text": "a full natural afro with a soft rounded halo outline",
+      "text_short": "natural afro"
+    },
+    {
+      "name": "french-twist",
+      "text": "a polished French twist with a clean vertical seam",
+      "text_short": "French twist"
+    },
+    {
+      "name": "side-swept-glam",
+      "text": "a deep side part with glossy waves swept across one eye",
+      "text_short": "side-swept glossy waves"
+    },
+    {
+      "name": "textured-fade",
+      "text": "short textured fade",
+      "text_short": "textured fade",
+      "tags": [
+        "male"
+      ]
+    },
+    {
+      "name": "tapered-side-part",
+      "text": "classic tapered side-part",
+      "text_short": "tapered side-part",
+      "tags": [
+        "male"
+      ]
+    },
+    {
+      "name": "slicked-dark",
+      "text": "precisely slicked-back",
+      "text_short": "precisely slicked-back",
+      "tags": [
+        "male"
+      ]
+    },
+    {
+      "name": "messy-wavy",
+      "text": "messy textured wavy",
+      "text_short": "messy wavy",
+      "tags": [
+        "male"
+      ]
+    },
+    {
+      "name": "buzz-cut",
+      "text": "close-cropped buzz cut",
+      "text_short": "buzz cut",
+      "tags": [
+        "male"
+      ]
+    },
+    {
+      "name": "long-waves-loose",
+      "text": "long waves falling well past the shoulders, loosely formed and heavy with movement",
+      "text_short": "long loose waves past the shoulders"
+    },
+    {
+      "name": "dreadlocks",
+      "text": "dreadlocks gathered back at the crown, some wrapped in thread, weight visible in how they hang",
+      "text_short": "dreadlocks gathered back at the crown"
+    },
+    {
+      "name": "windblown",
+      "text": "hair caught windblown across the face, strands lifted and crossing, nothing where it was put",
+      "text_short": "windblown hair crossing the face"
+    },
+    {
+      "name": "shaved-sides",
+      "text": "an undercut with shaved sides and length kept on top, the contrast sharp at the temple",
+      "text_short": "shaved sides with length kept on top"
+    },
+    {
+      "name": "ombre-fade",
+      "text": "an ombre fade from a dark root through to bright ends, the transition long and deliberately blurred",
+      "text_short": "ombre fade, dark root to bright ends"
+    }
   ]
 }

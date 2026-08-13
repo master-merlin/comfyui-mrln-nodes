@@ -17,8 +17,8 @@
     },
     {
       "name": "starfighter",
-      "text": "a battle-scarred starfighter with folded strike wings",
-      "text_short": "scarred starfighter"
+      "text": "a single-seat starfighter spaceship, stubby wings bristling with cannon, canopy set forward over engine bells",
+      "text_short": "single-seat starfighter spaceship"
     },
     {
       "name": "mech-walker",
@@ -55,8 +55,8 @@
     },
     {
       "name": "capital-ship",
-      "text": "a kilometer-long capital ship blotting out the stars",
-      "text_short": "kilometer capital ship",
+      "text": "a capital spaceship kilometres long, hull plating in city-sized panels, running lights receding to a vanishing point",
+      "text_short": "kilometres-long capital spaceship",
       "tags": [
         "capital"
       ]

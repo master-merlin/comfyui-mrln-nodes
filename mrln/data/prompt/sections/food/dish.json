@@ -2,31 +2,159 @@
   "version": 1,
   "label": "Dish",
   "description": "Hero dishes for food photography.",
-  "suits": ["food", "object"],
+  "suits": [
+    "food",
+    "object"
+  ],
   "items": [
-    { "name": "ramen-bowl", "text": "a steaming tonkotsu ramen bowl, cloudy broth beaded with fat, chashu fanned in petals, soft egg halved to a jammy amber yolk, nori standing crisp", "text_short": "steaming ramen bowl", "tags": ["anime", "steam"] },
-    { "name": "neapolitan-pizza", "text": "a wood-fired Neapolitan pizza, leopard-spotted cornicione, mozzarella still bubbling, basil wilting into the sauce shine", "text_short": "blistered wood-fired pizza" },
-    { "name": "sushi-selection", "text": "an omakase sushi selection on a hinoki board, tuna glowing ruby, salmon fat-striped, every rice grain distinct under a brush of glaze", "text_short": "omakase sushi board" },
-    { "name": "seared-steak", "text": "a crusted ribeye sliced to a rosy edge-to-edge center, mahogany sear glistening, herb butter melting into the board juices", "text_short": "sliced rosy ribeye" },
-    { "name": "layer-cake", "text": "a towering layer cake, one slice pulled to expose perfect strata, ganache drips arrested down the sides, crumb tight and moist", "text_short": "towering layer cake" },
-    { "name": "croissants", "text": "shattering-crisp croissants in deep amber egg-wash gloss, one torn open to a honeycomb of lamination, flakes scattered where it broke", "text_short": "laminated croissants" },
-    { "name": "paella-pan", "text": "a saffron paella pan crowded with shellfish, mussels agape, socarrat crackling toffee-dark at the rim", "text_short": "saffron paella pan" },
-    { "name": "pho", "text": "a fragrant pho bowl, clear beef broth, herbs stacked high, steam curling past a squeezed lime wedge and floating chilies", "text_short": "fragrant pho bowl", "tags": ["steam"] },
-    { "name": "cheeseburger-stack", "text": "a tall smashburger stack, lacy-edged patties, molten cheese cascading past the crust, brioche bun glossed and seeded", "text_short": "cheese-cascade burger" },
-    { "name": "tasting-plate", "text": "a fine-dining tasting plate, three precise elements and one confident sauce swipe, micro herbs set with tweezers, acres of white rim", "text_short": "fine-dining plate" },
-    { "name": "dumpling-basket", "text": "a bamboo steamer of pleated dumplings, wrappers turned translucent at the folds, steam breathing through the slats", "text_short": "steaming dumpling basket", "tags": ["steam"] },
-    { "name": "pancake-stack", "text": "a pancake stack, syrup caught mid-pour lensing light down each layer, a butter pat sliding on its own melt", "text_short": "syrup-pour pancakes" },
-    { "name": "chocolate-fondant", "text": "a chocolate fondant broken open, molten center escaping in a slow glossy flood from the cracked dome, cocoa dust settling", "text_short": "molten fondant break" },
-    { "name": "mezze-spread", "text": "a generous mezze spread from overhead, handmade ceramics, olive-oil pools catching light, sumac dust and torn charred flatbread", "text_short": "overhead mezze spread" },
-    { "name": "oyster-platter", "text": "freshly shucked oysters on crushed ice, liquor trembling in mother-of-pearl shells, lemon halves and mignonette in a tiny jug", "text_short": "oysters on crushed ice" },
-    { "name": "shakshuka-skillet", "text": "a cast-iron shakshuka, yolks set to a tremble in scarlet pepper sauce, crumbled feta and torn herbs, charred bread standing by", "text_short": "cast-iron shakshuka" },
-    { "name": "bento-box", "text": "a lacquered bento box packed in tidy compartments, pressed rice, tamagoyaki sliced into golden layers, one pickled plum centered on white", "text_short": "tidy lacquered bento", "tags": ["anime"] },
-    { "name": "tacos-al-pastor", "text": "tacos al pastor on charred corn tortillas, meat shaved straight from the spit, caramelized pineapple, cilantro and white-onion confetti", "text_short": "al pastor tacos" },
-    { "name": "seafood-tower", "text": "a tiered seafood tower on shaved ice, split lobster, cracked crab legs, shrimp hooked over the silver rims", "text_short": "tiered seafood tower" },
-    { "name": "sourdough-loaf", "text": "a torn sourdough boule, blistered crust crackling, open glossy crumb still steaming from the oven", "text_short": "torn steaming sourdough", "tags": ["steam"] },
-    { "name": "roast-chicken", "text": "a whole roast chicken burnished mahogany, skin crackled and lacquered with pan juices, thyme charred at the edges, steam escaping the first carving cut", "text_short": "burnished roast chicken", "tags": ["steam"] },
-    { "name": "pasta-twirl", "text": "a fork twirl of tagliatelle lifted off the plate, slow-cooked ragù clinging in the ribbon folds, parmesan snow mid-fall, one strand escaping the coil", "text_short": "lifted pasta twirl" },
-    { "name": "curry-and-naan", "text": "a copper karahi of butter chicken glowing brick-orange, swirled cream split by a chili-oil slick, blistered naan torn and caught mid-dip", "text_short": "butter chicken karahi" },
-    { "name": "charcuterie-board", "text": "a charcuterie board arranged in rivers, prosciutto folded into loose ribbons, fat-marbled salami coins, cornichons and a split fig, honey pooling against a wedge of blue cheese", "text_short": "charcuterie rivers" }
+    {
+      "name": "ramen-bowl",
+      "text": "a steaming tonkotsu ramen bowl, cloudy broth beaded with fat, chashu fanned in petals, soft egg halved to a jammy amber yolk, nori standing crisp",
+      "text_short": "steaming ramen bowl",
+      "tags": [
+        "anime",
+        "steam"
+      ]
+    },
+    {
+      "name": "neapolitan-pizza",
+      "text": "a wood-fired Neapolitan pizza, leopard-spotted cornicione, mozzarella still bubbling, basil wilting into the sauce shine",
+      "text_short": "blistered wood-fired pizza"
+    },
+    {
+      "name": "sushi-selection",
+      "text": "an omakase sushi selection on a hinoki board, tuna glowing ruby, salmon fat-striped, every rice grain distinct under a brush of glaze",
+      "text_short": "omakase sushi board"
+    },
+    {
+      "name": "seared-steak",
+      "text": "a crusted ribeye sliced to a rosy edge-to-edge center, mahogany sear glistening, herb butter melting into the board juices",
+      "text_short": "sliced rosy ribeye"
+    },
+    {
+      "name": "layer-cake",
+      "text": "a towering layer cake, one slice pulled to expose perfect strata, ganache drips arrested down the sides, crumb tight and moist",
+      "text_short": "towering layer cake"
+    },
+    {
+      "name": "croissants",
+      "text": "shattering-crisp croissants in deep amber egg-wash gloss, one torn open to a honeycomb of lamination, flakes scattered where it broke",
+      "text_short": "laminated croissants"
+    },
+    {
+      "name": "paella-pan",
+      "text": "a saffron paella pan crowded with shellfish, mussels agape, socarrat crackling toffee-dark at the rim",
+      "text_short": "saffron paella pan"
+    },
+    {
+      "name": "pho",
+      "text": "a fragrant pho bowl, clear beef broth, herbs stacked high, steam curling past a squeezed lime wedge and floating chilies",
+      "text_short": "fragrant pho bowl",
+      "tags": [
+        "steam"
+      ]
+    },
+    {
+      "name": "cheeseburger-stack",
+      "text": "a tall smashburger stack, lacy-edged patties, molten cheese cascading past the crust, brioche bun glossed and seeded",
+      "text_short": "cheese-cascade burger"
+    },
+    {
+      "name": "tasting-plate",
+      "text": "a fine-dining tasting plate, three precise elements and one confident sauce swipe, micro herbs set with tweezers, acres of white rim",
+      "text_short": "fine-dining plate"
+    },
+    {
+      "name": "dumpling-basket",
+      "text": "a bamboo steamer of pleated dumplings, wrappers turned translucent at the folds, steam breathing through the slats",
+      "text_short": "steaming dumpling basket",
+      "tags": [
+        "steam"
+      ]
+    },
+    {
+      "name": "pancake-stack",
+      "text": "a pancake stack, syrup caught mid-pour lensing light down each layer, a butter pat sliding on its own melt",
+      "text_short": "syrup-pour pancakes"
+    },
+    {
+      "name": "chocolate-fondant",
+      "text": "a chocolate fondant broken open, molten center escaping in a slow glossy flood from the cracked dome, cocoa dust settling",
+      "text_short": "molten fondant break"
+    },
+    {
+      "name": "mezze-spread",
+      "text": "a generous mezze spread from overhead, handmade ceramics, olive-oil pools catching light, sumac dust and torn charred flatbread",
+      "text_short": "overhead mezze spread"
+    },
+    {
+      "name": "oyster-platter",
+      "text": "freshly shucked oysters on crushed ice, liquor trembling in mother-of-pearl shells, lemon halves and mignonette in a tiny jug",
+      "text_short": "oysters on crushed ice"
+    },
+    {
+      "name": "shakshuka-skillet",
+      "text": "a cast-iron shakshuka, yolks set to a tremble in scarlet pepper sauce, crumbled feta and torn herbs, charred bread standing by",
+      "text_short": "cast-iron shakshuka"
+    },
+    {
+      "name": "bento-box",
+      "text": "a lacquered bento box packed in tidy compartments, pressed rice, tamagoyaki sliced into golden layers, one pickled plum centered on white",
+      "text_short": "tidy lacquered bento",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "tacos-al-pastor",
+      "text": "tacos al pastor on charred corn tortillas, meat shaved straight from the spit, caramelized pineapple, cilantro and white-onion confetti",
+      "text_short": "al pastor tacos"
+    },
+    {
+      "name": "seafood-tower",
+      "text": "a tiered seafood tower on shaved ice, split lobster, cracked crab legs, shrimp hooked over the silver rims",
+      "text_short": "tiered seafood tower"
+    },
+    {
+      "name": "sourdough-loaf",
+      "text": "a torn sourdough boule, blistered crust crackling, open glossy crumb still steaming from the oven",
+      "text_short": "torn steaming sourdough",
+      "tags": [
+        "steam"
+      ]
+    },
+    {
+      "name": "roast-chicken",
+      "text": "a whole roast chicken burnished mahogany, skin crackled and lacquered with pan juices, thyme charred at the edges, steam escaping the first carving cut",
+      "text_short": "burnished roast chicken",
+      "tags": [
+        "steam"
+      ]
+    },
+    {
+      "name": "pasta-twirl",
+      "text": "a fork twirl of tagliatelle lifted off the plate, slow-cooked ragù clinging in the ribbon folds, parmesan snow mid-fall, one strand escaping the coil",
+      "text_short": "lifted pasta twirl"
+    },
+    {
+      "name": "curry-and-naan",
+      "text": "a copper karahi of butter chicken glowing brick-orange, swirled cream split by a chili-oil slick, blistered naan torn and caught mid-dip",
+      "text_short": "butter chicken karahi"
+    },
+    {
+      "name": "charcuterie-board",
+      "text": "a charcuterie board arranged in rivers, prosciutto folded into loose ribbons, fat-marbled salami coins, cornichons and a split fig, honey pooling against a wedge of blue cheese",
+      "text_short": "charcuterie rivers"
+    },
+    {
+      "name": "dessert-plated",
+      "text": "a plated dessert built in layers, a quenelle set against a smear of coulis, tempered chocolate standing at an angle",
+      "text_short": "layered plated dessert with a chocolate shard"
+    },
+    {
+      "name": "breakfast-spread",
+      "text": "a full breakfast spread across a table, eggs and grilled tomato, toast racked upright and coffee going out in steam",
+      "text_short": "full breakfast spread with coffee steaming"
+    }
   ]
 }

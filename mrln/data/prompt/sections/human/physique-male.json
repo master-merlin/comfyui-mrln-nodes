@@ -2,7 +2,9 @@
   "version": 1,
   "label": "Physique (Male)",
   "description": "Male body types.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
     {
       "name": "athletic-broad",
@@ -43,6 +45,16 @@
       "name": "dad-bod-confident",
       "text": "comfortable natural build worn with unbothered confidence",
       "text_short": "comfortable natural build"
+    },
+    {
+      "name": "plus-size-broad",
+      "text": "a plus size male build, heavy through the chest and midsection, broad-backed and unmistakably powerful",
+      "text_short": "plus size male build, broad-backed and powerful"
+    },
+    {
+      "name": "androgynous-slim",
+      "text": "a slim androgynous build, fine-boned shoulders and a narrow waist, softness kept rather than trained away",
+      "text_short": "slim androgynous build, fine-boned"
     }
   ]
 }

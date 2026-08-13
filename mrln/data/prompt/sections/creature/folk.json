@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "label": "Fantasy Folk",
+  "description": "The peoples of high and dark fantasy — elves, dwarves, orcs, fae and the rest. Described by build and bearing rather than by any one setting's lore, so they carry into whatever world the template is building.",
+  "items": [
+    {
+      "name": "high-elf",
+      "text": "a high elf, tall and narrow-boned with long tapered ears, ageless features and a stillness that reads as patience rather than calm",
+      "text_short": "tall narrow-boned high elf with tapered ears",
+      "tags": ["elf", "fae"]
+    },
+    {
+      "name": "wood-elf",
+      "text": "a wood elf, wiry and weather-marked, leaf-cut hair and bark-toned skin, moving as though the ground were being asked rather than trodden",
+      "text_short": "wiry weather-marked wood elf",
+      "tags": ["elf", "fae", "wild"]
+    },
+    {
+      "name": "dark-elf",
+      "text": "a dark elf, ashen-skinned with pale hair and reflective eyes, sharp-featured and dressed for places that never see the sun",
+      "text_short": "ashen dark elf with pale hair and bright eyes",
+      "tags": ["elf", "dark"]
+    },
+    {
+      "name": "mountain-dwarf",
+      "text": "a mountain dwarf, broad and short-limbed with enormous forearms, a braided beard weighted with rings and hands scarred by hot metal",
+      "text_short": "broad mountain dwarf with a ringed braided beard",
+      "tags": ["dwarf"]
+    },
+    {
+      "name": "orc-warrior",
+      "text": "an orc warrior, heavy-jawed and tusked, green-grey hide over slabbed muscle, war paint dried into old scar lines",
+      "text_short": "tusked orc warrior, war paint over old scars",
+      "tags": ["orc", "dark"]
+    },
+    {
+      "name": "half-orc",
+      "text": "a half-orc, human proportion carrying orcish weight, a slight underbite and grey-toned skin, watchful in the way of someone used to being read wrong",
+      "text_short": "half-orc, human build carrying orcish weight",
+      "tags": ["orc"]
+    },
+    {
+      "name": "halfling",
+      "text": "a halfling, small and round-cheeked with bare curled feet, practical layered clothes and an expression of unhurried competence",
+      "text_short": "round-cheeked halfling with bare curled feet",
+      "tags": ["halfling"]
+    },
+    {
+      "name": "fae-sprite",
+      "text": "a fae sprite, palm-small and luminous, dragonfly wings blurring, trailing motes that go out slowly where they fall",
+      "text_short": "palm-small luminous fae sprite, dragonfly wings",
+      "tags": ["fae", "small"]
+    },
+    {
+      "name": "seelie-noble",
+      "text": "a seelie noble of the fair court, impossibly symmetrical, antler-branched crown grown rather than made, beautiful in a way that asks to be looked away from",
+      "text_short": "seelie noble with a grown antler crown",
+      "tags": ["fae", "court"]
+    },
+    {
+      "name": "troll",
+      "text": "a troll, hunched and enormous, hide like wet stone with lichen taking hold in the seams, small deep-set eyes under a heavy brow",
+      "text_short": "hunched troll with stone-like lichened hide",
+      "tags": ["giantkin", "dark"]
+    },
+    {
+      "name": "frost-giant",
+      "text": "a frost giant, three times a person's height, blue-white skin over a frame built for cold, rime in the beard and breath rolling out in sheets",
+      "text_short": "blue-white frost giant, rime in the beard",
+      "tags": ["giantkin"]
+    },
+    {
+      "name": "merfolk",
+      "text": "a merfolk of the deep shelf, iridescent scaling from the hips down, fin-veiled forearms and gill lines at the throat, hair moving as though still submerged",
+      "text_short": "iridescent merfolk with gill lines and fin veils",
+      "tags": ["aquatic"]
+    },
+    {
+      "name": "centaur",
+      "text": "a centaur, a human torso rising from a heavy-boned equine body, coat and hair matched, a bow slung across the human back",
+      "text_short": "centaur, human torso on a heavy equine body",
+      "tags": ["beastfolk", "wild"]
+    },
+    {
+      "name": "beastfolk-feline",
+      "text": "a feline beastfolk, fur-patterned and digitigrade, rounded ears set high, slit pupils and a tail that finishes every sentence",
+      "text_short": "digitigrade feline beastfolk with a telling tail",
+      "tags": ["beastfolk"]
+    },
+    {
+      "name": "tiefling",
+      "text": "a tiefling, warm-hued skin with swept horns and a slim tail, solid-colour eyes without a visible white, elegant and entirely unbothered by it",
+      "text_short": "horned tiefling with solid-colour eyes",
+      "tags": ["infernal"]
+    },
+    {
+      "name": "revenant-undead",
+      "text": "a revenant, grave-pale and hollow-cheeked with a cold light behind the eyes, clothing that outlasted its wearer, moving with unhurried intent",
+      "text_short": "grave-pale revenant with cold light in the eyes",
+      "tags": ["undead", "dark"]
+    },
+    {
+      "name": "vampire-noble",
+      "text": "a vampire of old blood, bloodless complexion over aristocratic bone, immaculate high-collared dress and a stillness that never quite breathes",
+      "text_short": "bloodless vampire noble in high-collared dress",
+      "tags": ["undead", "dark", "court"]
+    },
+    {
+      "name": "werewolf-shifted",
+      "text": "a werewolf mid-shift, a human frame lengthening into digitigrade legs, coarse pelt breaking through, jaw drawn forward and eyes gone gold",
+      "text_short": "werewolf mid-shift, pelt breaking through",
+      "tags": ["beastfolk", "dark", "wild"]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "label": "Piercings",
+  "description": "Body jewellery as its own axis, the way human/tattoos is. Leads with the clean options so a template can draw 'none' as a real choice rather than an absence.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "clean-no-piercings",
+      "text": "no piercings at all, ears and face entirely unadorned",
+      "text_short": "no piercings, entirely unadorned",
+      "tags": ["clean"]
+    },
+    {
+      "name": "clean-single-lobe",
+      "text": "a single small stud in each earlobe and nothing else",
+      "text_short": "one small stud in each lobe",
+      "tags": ["clean", "subtle"]
+    },
+    {
+      "name": "stacked-lobes",
+      "text": "stacked lobe piercings climbing the ear, graduated studs from small to smaller",
+      "text_short": "stacked graduated lobe studs",
+      "tags": ["ear", "subtle"]
+    },
+    {
+      "name": "curated-ear",
+      "text": "a curated ear of mixed metals, a helix hoop, a conch stud and two lobes, arranged to read as one piece",
+      "text_short": "curated ear of mixed hoops and studs",
+      "tags": ["ear"]
+    },
+    {
+      "name": "industrial-bar",
+      "text": "an industrial barbell spanning the upper ear between two points, plain surgical steel",
+      "text_short": "industrial barbell across the upper ear",
+      "tags": ["ear", "bold"]
+    },
+    {
+      "name": "nostril-stud",
+      "text": "a fine nostril stud catching the light, small enough to notice only in profile",
+      "text_short": "fine nostril stud",
+      "tags": ["face", "subtle"]
+    },
+    {
+      "name": "septum-ring",
+      "text": "a septum ring sitting close to the lip line, brushed metal with a small bead",
+      "text_short": "brushed septum ring",
+      "tags": ["face", "bold"]
+    },
+    {
+      "name": "eyebrow-barbell",
+      "text": "a short curved barbell through the outer eyebrow, two plain steel beads",
+      "text_short": "curved eyebrow barbell",
+      "tags": ["face", "bold"]
+    },
+    {
+      "name": "monroe-stud",
+      "text": "a single flat stud set above the lip like a beauty mark",
+      "text_short": "flat stud above the lip",
+      "tags": ["face", "subtle"]
+    },
+    {
+      "name": "snake-bites",
+      "text": "paired lower-lip rings sitting symmetrically either side of the centre",
+      "text_short": "paired symmetrical lower-lip rings",
+      "tags": ["face", "bold"]
+    },
+    {
+      "name": "navel-jewel",
+      "text": "a navel piercing with a small dropped jewel that moves with the breath",
+      "text_short": "navel piercing with a dropped jewel",
+      "tags": ["body"]
+    },
+    {
+      "name": "full-punk-set",
+      "text": "a full set of piercings — septum, bridge, multiple lobes and a stretched conch — worn as a single deliberate statement",
+      "text_short": "full punk set worn as one statement",
+      "tags": ["face", "ear", "bold"]
+    }
+  ]
+}

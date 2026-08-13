@@ -79,6 +79,11 @@
       "name": "dust-storm",
       "text": "an advancing dust storm, a rust-brown wall swallowing the horizon, the sun reduced to a pale disc and every edge fading with distance",
       "text_short": "advancing dust wall"
+    },
+    {
+      "name": "standing-puddles",
+      "text": "standing puddles across every low point, the sky doubled in them and rings still spreading where drops land",
+      "text_short": "standing puddles doubling the sky"
     }
   ]
 }

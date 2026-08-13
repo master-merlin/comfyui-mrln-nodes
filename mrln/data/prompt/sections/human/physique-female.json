@@ -2,7 +2,9 @@
   "version": 1,
   "label": "Physique (Female)",
   "description": "Female silhouettes from the source; contour detail varies via inline wildcard.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
     {
       "name": "hourglass",
@@ -68,6 +70,21 @@
       "name": "petite-delicate",
       "text": "petite delicately-proportioned silhouette with {natural soft contours|defined waist}",
       "text_short": "petite delicate frame"
+    },
+    {
+      "name": "plus-size-soft",
+      "text": "a plus size figure, full and softly rounded through the hips and upper arms, weight carried with easy confidence",
+      "text_short": "plus size, full and softly rounded"
+    },
+    {
+      "name": "plus-size-strong",
+      "text": "a plus size build with real strength under it, broad shoulders and thick thighs, solid rather than delicate",
+      "text_short": "plus size and strong, solid rather than delicate"
+    },
+    {
+      "name": "androgynous-lean",
+      "text": "a lean androgynous build, narrow through the hip and shoulder alike, lines that refuse to declare themselves",
+      "text_short": "lean androgynous build"
     }
   ]
 }

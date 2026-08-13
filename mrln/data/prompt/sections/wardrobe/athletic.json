@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "label": "Athletic & Sportswear",
+  "description": "What people actually train, ride and compete in. Sportswear was the one everyday wardrobe register the library had no entry for at all.",
+  "suits": ["human"],
+  "items": [
+    {
+      "name": "gym-training-set",
+      "text": "a matched gym training set in technical knit, a cropped support top and high-waisted leggings, flat seams and a phone pocket at the thigh",
+      "text_short": "matched technical gym training set",
+      "tags": ["sportswear", "female"]
+    },
+    {
+      "name": "running-kit",
+      "text": "lightweight running kit, a perforated singlet over split-hem shorts, reflective piping at the seams and a watch turned to the inside of the wrist",
+      "text_short": "lightweight running singlet and split shorts",
+      "tags": ["sportswear"]
+    },
+    {
+      "name": "yoga-layers",
+      "text": "soft yoga layers, a ribbed bodysuit under an oversized cotton wrap, bare feet and hair tied back without ceremony",
+      "text_short": "ribbed yoga bodysuit under a cotton wrap",
+      "tags": ["sportswear", "female"]
+    },
+    {
+      "name": "boxing-gear",
+      "text": "boxing gear, satin shorts with a high waistband, laced gloves and wrapped hands, a towel across the shoulders and tape at the ankles",
+      "text_short": "satin boxing shorts, laced gloves, wrapped hands",
+      "tags": ["sportswear"]
+    },
+    {
+      "name": "tennis-whites",
+      "text": "tennis whites, a pleated skirt and collared polo, a sweatband at the wrist and court shoes with a herringbone sole",
+      "text_short": "pleated tennis whites and a collared polo",
+      "tags": ["sportswear", "female"]
+    },
+    {
+      "name": "football-strip",
+      "text": "a football strip, a lightweight numbered shirt over shorts, socks pulled over shin guards and studs caked with turf",
+      "text_short": "numbered football strip, studs caked with turf",
+      "tags": ["sportswear"]
+    },
+    {
+      "name": "cycling-lycra",
+      "text": "a cycling kit in aero lycra, a full-zip jersey with rear pockets loaded, bib shorts with a gripper hem and mitts tanned at the wrist line",
+      "text_short": "aero cycling jersey and bib shorts",
+      "tags": ["sportswear"]
+    },
+    {
+      "name": "ski-shell",
+      "text": "a ski shell and salopettes, taped seams and a powder skirt, goggles pushed up onto a helmet and gloves clipped to the hip",
+      "text_short": "taped ski shell and salopettes, goggles up",
+      "tags": ["sportswear", "winter"]
+    },
+    {
+      "name": "swim-training-suit",
+      "text": "a one-piece training swimsuit in matte competition fabric, a high-cut leg and a crossed back, cap and goggles marked from a long session",
+      "text_short": "matte one-piece training swimsuit",
+      "tags": ["sportswear", "female"]
+    },
+    {
+      "name": "racing-suit",
+      "text": "a fireproof racing suit unzipped to the waist with the sleeves tied off, a nomex undershirt beneath and a balaclava pushed back off the head",
+      "text_short": "racing suit unzipped, sleeves tied at the waist",
+      "tags": ["sportswear", "motorsport"]
+    },
+    {
+      "name": "motocross-kit",
+      "text": "motocross kit, a vented jersey over a chest protector, reinforced pants and boots buckled to the shin, roost dried across one whole side",
+      "text_short": "vented motocross jersey over a chest protector",
+      "tags": ["sportswear", "motorsport"]
+    },
+    {
+      "name": "athleisure-street",
+      "text": "athleisure worn off the pitch, a zip-through track top over a crop, wide-leg joggers cuffed at the ankle and box-fresh trainers",
+      "text_short": "track top, wide-leg joggers and fresh trainers",
+      "tags": ["sportswear", "casual"]
+    },
+    {
+      "name": "climbing-gear",
+      "text": "climbing gear, a harness over cropped leggings, a chalk bag at the small of the back, taped fingers and shoes hooked to a belt loop",
+      "text_short": "climbing harness, chalk bag and taped fingers",
+      "tags": ["sportswear"]
+    },
+    {
+      "name": "gi-martial-arts",
+      "text": "a heavy cotton gi with a worn belt double-wrapped at the waist, lapels softened by years of washing and bare feet on a matted floor",
+      "text_short": "heavy cotton gi with a worn double-wrapped belt",
+      "tags": ["sportswear"]
+    }
+  ]
+}

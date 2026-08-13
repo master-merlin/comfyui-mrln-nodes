@@ -87,6 +87,16 @@
       "name": "radial-composition",
       "text": "radial composition, spokes, petals or converging streets raying outward from a bright hub that anchors the eye at the center",
       "text_short": "radial spokes from center"
+    },
+    {
+      "name": "over-the-shoulder-shot",
+      "text": "an over the shoulder shot, a near figure blurred at the frame edge giving depth to the subject beyond",
+      "text_short": "over the shoulder shot, near figure blurred"
+    },
+    {
+      "name": "dutch-angle",
+      "text": "a dutch angle, the horizon deliberately tilted so the frame refuses to settle",
+      "text_short": "dutch angle, horizon deliberately tilted"
     }
   ]
 }

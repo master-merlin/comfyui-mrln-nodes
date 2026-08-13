@@ -2,21 +2,96 @@
   "version": 1,
   "label": "Ship Type",
   "description": "Watercraft archetypes.",
-  "suits": ["object", "vehicle", "ship"],
+  "suits": [
+    "object",
+    "vehicle",
+    "ship"
+  ],
   "items": [
-    { "name": "tall-ship", "text": "a square-rigged tall ship under full canvas", "text_short": "tall ship, full sail", "tags": ["historical"] },
-    { "name": "racing-yacht", "text": "a carbon racing yacht heeled hard on a beat", "text_short": "heeled racing yacht" },
-    { "name": "classic-runabout", "text": "a varnished mahogany runabout with chrome fittings", "text_short": "mahogany runabout", "tags": ["historical"] },
-    { "name": "container-giant", "text": "an ultra-large container ship stacked like a floating city", "text_short": "container giant" },
-    { "name": "fishing-trawler", "text": "a working fishing trawler, nets and gulls astern", "text_short": "working trawler" },
-    { "name": "icebreaker", "text": "a red-hulled icebreaker shouldering through pack ice", "text_short": "red icebreaker" },
-    { "name": "submarine-surfacing", "text": "a submarine surfacing in a shed of white water", "text_short": "surfacing submarine" },
-    { "name": "expedition-cruiser", "text": "a polar expedition cruise ship anchored off glaciers", "text_short": "expedition cruiser" },
-    { "name": "viking-longship", "text": "a clinker-built longship with a dragon-carved prow", "text_short": "dragon-prow longship", "tags": ["historical"] },
-    { "name": "hydrofoil", "text": "a hydrofoil flying above its own spray on struts", "text_short": "flying hydrofoil" },
-    { "name": "lightship", "text": "a moored crimson lightship with its lattice light tower", "text_short": "crimson lightship" },
-    { "name": "superyacht", "text": "a glass-decked superyacht with a tender garage open", "text_short": "sleek superyacht" },
-    { "name": "steam-paddler", "text": "a river paddle steamer churning twin white wheels", "text_short": "paddle steamer", "tags": ["historical"] },
-    { "name": "solar-catamaran", "text": "a silent solar catamaran with panel-winged decks", "text_short": "solar catamaran", "tags": ["scifi"] }
+    {
+      "name": "tall-ship",
+      "text": "a square-rigged tall ship under full canvas",
+      "text_short": "tall ship, full sail",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "racing-yacht",
+      "text": "a racing sailboat under full sail, a carbon mast raked hard, crew hiked out along the windward rail and spray coming clean over the bow",
+      "text_short": "racing sailboat under full sail, crew hiked out"
+    },
+    {
+      "name": "classic-runabout",
+      "text": "a varnished mahogany runabout with chrome fittings",
+      "text_short": "mahogany runabout",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "container-giant",
+      "text": "an ultra-large container ship stacked like a floating city",
+      "text_short": "container giant"
+    },
+    {
+      "name": "fishing-trawler",
+      "text": "a working fishing trawler, nets and gulls astern",
+      "text_short": "working trawler"
+    },
+    {
+      "name": "icebreaker",
+      "text": "a red-hulled icebreaker shouldering through pack ice",
+      "text_short": "red icebreaker"
+    },
+    {
+      "name": "submarine-surfacing",
+      "text": "a submarine surfacing in a shed of white water",
+      "text_short": "surfacing submarine"
+    },
+    {
+      "name": "expedition-cruiser",
+      "text": "a polar expedition cruise ship anchored off glaciers",
+      "text_short": "expedition cruiser"
+    },
+    {
+      "name": "viking-longship",
+      "text": "a clinker-built longship with a dragon-carved prow",
+      "text_short": "dragon-prow longship",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "hydrofoil",
+      "text": "a hydrofoil flying above its own spray on struts",
+      "text_short": "flying hydrofoil"
+    },
+    {
+      "name": "lightship",
+      "text": "a moored crimson lightship with its lattice light tower",
+      "text_short": "crimson lightship"
+    },
+    {
+      "name": "superyacht",
+      "text": "a glass-decked superyacht with a tender garage open",
+      "text_short": "sleek superyacht"
+    },
+    {
+      "name": "steam-paddler",
+      "text": "a river paddle steamer churning twin white wheels",
+      "text_short": "paddle steamer",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "solar-catamaran",
+      "text": "a silent solar catamaran with panel-winged decks",
+      "text_short": "solar catamaran",
+      "tags": [
+        "scifi"
+      ]
+    }
   ]
 }

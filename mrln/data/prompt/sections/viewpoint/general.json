@@ -72,6 +72,11 @@
       "name": "reflection-composition",
       "text": "composed around a mirror surface, the subject and its reflection sharing equal weight",
       "text_short": "reflection composition"
+    },
+    {
+      "name": "wide-establishing",
+      "text": "a wide establishing shot placing the subject small within the whole location, geography stated before anything else",
+      "text_short": "wide establishing shot, subject small in the location"
     }
   ]
 }

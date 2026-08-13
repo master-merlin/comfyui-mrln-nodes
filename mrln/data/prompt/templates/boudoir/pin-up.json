@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "label": "Pin-Up & Glamour Heritage",
+  "type": ["human", "boudoir"],
+  "description": "The heritage glamour picture: mid-century pin-up, the classic centerfold, burlesque, the studio bombshell portrait. The treatment slot is what makes the frame period-correct, so the same wardrobe and pose read as illustration, printed page or stage depending on the lineage picked. Tasteful tier; all subjects adult.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A heritage glamour photograph of exceptional quality, elegant and knowingly composed — {subject}, {expression}. {trigger}",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/profile",
+      "label": "Subject",
+      "default": "female-glamour",
+      "emphasis": 1.15
+    },
+    {
+      "id": "treatment",
+      "ref": "style/glamour-heritage",
+      "label": "Heritage Treatment",
+      "default": "pin-up-photographic",
+      "emphasis": 1.3
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "mischievous"
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/lingerie-garment",
+      "label": "Wardrobe"
+    },
+    {
+      "id": "hair",
+      "ref": "human/hair-style",
+      "label": "Hair",
+      "default": "hollywood-waves"
+    },
+    {
+      "id": "makeup",
+      "ref": "human/makeup",
+      "label": "Makeup"
+    },
+    {
+      "id": "pose",
+      "ref": "pose/boudoir-solo",
+      "label": "Pose",
+      "emphasis": 1.15
+    },
+    {
+      "id": "setting",
+      "ref": "location/boudoir-interior",
+      "label": "Setting",
+      "emphasis": 1.15
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Lighting",
+      "emphasis": 1.2
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "85mm-f14"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Rendering Constants: (period-correct glamour language, poise held a beat longer than natural:1.2), (detailed natural skin texture with period retouching restraint, hair highlights catching the key:1.2), (perfect hands, detailed fingers:1.2), saturated print palette, (cinematic color grade:1.15), sharp focal subject.",
+  "negative": "modern smartphone snapshot, harsh on-camera flash, deformed, extra limbs, extra fingers, watermark, text, logo, child, chibi, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

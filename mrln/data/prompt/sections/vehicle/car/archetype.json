@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "label": "Car Archetype",
+  "description": "What KIND of car it is, in the words enthusiasts use — supercar, muscle car, hot rod, JDM tuner, restomod. The design-base and design-accent sections name specific machines; this is the class above them, and it was the axis missing when someone typed 'muscle car' and the library had 42 vehicle sections and no answer.",
+  "suits": [
+    "object",
+    "vehicle",
+    "car"
+  ],
+  "items": [
+    {
+      "name": "supercar",
+      "text": "a mid-engined supercar, cab-forward proportions over a long rear deck, huge intakes feeding the flanks and a low wide stance on staggered wheels",
+      "text_short": "mid-engined supercar, cab-forward and wide",
+      "tags": [
+        "performance",
+        "modern"
+      ]
+    },
+    {
+      "name": "hypercar",
+      "text": "a hypercar built to a lap time, active aero standing proud of the bodywork, exposed carbon weave and a cockpit pulled forward between the axles",
+      "text_short": "active-aero hypercar in exposed carbon",
+      "tags": [
+        "performance",
+        "modern"
+      ]
+    },
+    {
+      "name": "muscle-car",
+      "text": "an American muscle car, a long flat hood over a big-block V8, squared shoulders, a blacked-out grille and fat rubber under minimal arches",
+      "text_short": "American muscle car, long hood over a big-block V8",
+      "tags": [
+        "performance",
+        "retro",
+        "usa"
+      ]
+    },
+    {
+      "name": "pony-car",
+      "text": "a pony car in its classic proportion, short deck and long hood, fastback roofline, side scoops and a simple round-lamp face",
+      "text_short": "classic pony car, long hood and short deck",
+      "tags": [
+        "retro",
+        "usa"
+      ]
+    },
+    {
+      "name": "hot-rod",
+      "text": "a chopped and channelled hot rod, exposed chromed engine standing above the cowl, no fenders over the front wheels, pinstriping and raked stance",
+      "text_short": "chopped hot rod, engine standing proud",
+      "tags": [
+        "retro",
+        "usa",
+        "custom"
+      ]
+    },
+    {
+      "name": "lowrider",
+      "text": "a lowrider laid out on hydraulics, candy paint over deep flake, wire wheels with whitewalls and murals worked into the panels",
+      "text_short": "hydraulic lowrider in candy flake on wires",
+      "tags": [
+        "custom",
+        "usa"
+      ]
+    },
+    {
+      "name": "jdm-tuner",
+      "text": "a JDM tuner build, period-correct bolt-on aero and a bolted wing, deep-dish wheels with stretched tyres and a roll cage visible through the glass",
+      "text_short": "JDM tuner build with period aero and a cage",
+      "tags": [
+        "performance",
+        "custom",
+        "japan"
+      ]
+    },
+    {
+      "name": "drift-missile",
+      "text": "a stripped drift car, mismatched panels and a bashed bumper, huge angle kit at the front wheels, a hydraulic handbrake and a bare interior",
+      "text_short": "stripped drift missile, mismatched panels",
+      "tags": [
+        "performance",
+        "custom",
+        "worn",
+        "japan"
+      ]
+    },
+    {
+      "name": "kei-car",
+      "text": "a kei-class microcar, tall narrow body on tiny wheels, upright glasshouse and a face designed to be liked rather than feared",
+      "text_short": "tall narrow kei microcar on tiny wheels",
+      "tags": [
+        "japan",
+        "everyday"
+      ]
+    },
+    {
+      "name": "restomod",
+      "text": "a restomod, classic bodywork restored to better than new over modern running gear, flush glass, subtly widened arches and contemporary wheels in a period pattern",
+      "text_short": "restomod: classic body, modern running gear",
+      "tags": [
+        "custom",
+        "retro"
+      ]
+    },
+    {
+      "name": "grand-tourer",
+      "text": "a grand tourer, a long bonnet and short overhangs, a cabin set well back, restrained brightwork and a stance tuned for distance rather than lap times",
+      "text_short": "grand tourer, long bonnet and cabin set back",
+      "tags": [
+        "luxury",
+        "modern"
+      ]
+    },
+    {
+      "name": "roadster",
+      "text": "an open two-seat roadster, folded soft top behind the cabin, a low belt line, twin humps over the seats and a windscreen raked hard",
+      "text_short": "open two-seat roadster, top folded away",
+      "tags": [
+        "retro",
+        "modern"
+      ]
+    },
+    {
+      "name": "rally-car",
+      "text": "a rally car in service livery, mud packed into the arches, extra lamp pod across the nose, sump guard and gravel-spec suspension standing tall",
+      "text_short": "rally car in service livery, mud-packed arches",
+      "tags": [
+        "performance",
+        "worn",
+        "offroad"
+      ]
+    },
+    {
+      "name": "group-b-era",
+      "text": "a Group B-era competition car, boxed arches over enormous rubber, ducting cut wherever it was needed and aerodynamics that look bolted on because they were",
+      "text_short": "Group B-era car, boxed arches and bolted-on aero",
+      "tags": [
+        "performance",
+        "retro",
+        "offroad"
+      ]
+    },
+    {
+      "name": "off-roader",
+      "text": "a serious off-roader on a ladder frame, high ground clearance and knobbly tyres, snorkel up the A-pillar, roof rack and recovery gear strapped to the flanks",
+      "text_short": "ladder-frame off-roader with snorkel and rack",
+      "tags": [
+        "offroad",
+        "utility"
+      ]
+    },
+    {
+      "name": "pickup-truck",
+      "text": "a pickup truck with a long open bed, a tall square grille, chrome mirrors on stalks and honest work marks along the load lip",
+      "text_short": "long-bed pickup with a tall square grille",
+      "tags": [
+        "utility",
+        "usa"
+      ]
+    },
+    {
+      "name": "shooting-brake",
+      "text": "a shooting brake, a coupe nose carried into a long straight roofline, a frameless tailgate and a load bay finished like a cabin",
+      "text_short": "shooting brake: coupe nose, long straight roof",
+      "tags": [
+        "luxury",
+        "retro"
+      ]
+    },
+    {
+      "name": "sleeper-saloon",
+      "text": "a sleeper saloon, four doors and dull paint hiding a heavily built engine, standard trim, small wheels and an exhaust note that gives it away",
+      "text_short": "dull four-door sleeper hiding a built engine",
+      "tags": [
+        "performance",
+        "custom",
+        "everyday"
+      ]
+    },
+    {
+      "name": "hot-hatch",
+      "text": "a hot hatch, a short three-door body dropped over wide wheels, a tailgate spoiler, twin exits and a chassis obviously stiffer than the shell suggests",
+      "text_short": "hot hatch dropped over wide wheels",
+      "tags": [
+        "performance",
+        "everyday"
+      ]
+    },
+    {
+      "name": "pre-war-classic",
+      "text": "a pre-war classic, separate sweeping wings over spoked wheels, an upright chrome radiator, running boards and a folded fabric roof",
+      "text_short": "pre-war classic, sweeping wings and spoked wheels",
+      "tags": [
+        "retro",
+        "luxury"
+      ]
+    },
+    {
+      "name": "land-speed-streamliner",
+      "text": "a land-speed streamliner, a needle-nosed body faired over every wheel, a tail fin standing behind the cockpit and salt crusted along the underside",
+      "text_short": "needle-nosed land-speed streamliner",
+      "tags": [
+        "performance",
+        "retro",
+        "custom"
+      ]
+    },
+    {
+      "name": "electric-crossover",
+      "text": "a modern electric crossover, a closed smooth face without a grille, flush handles and aero wheel covers, a single light bar spanning the nose",
+      "text_short": "electric crossover, closed face and aero covers",
+      "tags": [
+        "modern",
+        "everyday"
+      ]
+    }
+  ]
+}

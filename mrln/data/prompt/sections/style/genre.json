@@ -7,43 +7,58 @@
       "name": "science-fiction",
       "text": "hard science-fiction aesthetic, functional technology, believable near-future materials",
       "text_short": "sci-fi aesthetic",
-      "tags": ["scifi"]
+      "tags": [
+        "scifi"
+      ]
     },
     {
       "name": "cyberpunk",
       "text": "cyberpunk aesthetic, high tech low life, neon on grime, chrome and rain",
       "text_short": "cyberpunk neon-grime",
-      "tags": ["scifi", "neon"]
+      "tags": [
+        "scifi",
+        "neon"
+      ]
     },
     {
       "name": "steampunk",
       "text": "steampunk aesthetic, brass gauges, riveted copper, steam and Victorian machinery",
       "text_short": "steampunk brass",
-      "tags": ["historical"]
+      "tags": [
+        "historical"
+      ]
     },
     {
       "name": "solarpunk",
       "text": "solarpunk aesthetic, verdant optimistic future, plants woven through bright clean architecture",
       "text_short": "solarpunk green future",
-      "tags": ["scifi"]
+      "tags": [
+        "scifi"
+      ]
     },
     {
       "name": "high-fantasy",
       "text": "high-fantasy aesthetic, mythic scale, enchanted materials and heraldic detail",
       "text_short": "high fantasy",
-      "tags": ["fantasy"]
+      "tags": [
+        "fantasy"
+      ]
     },
     {
       "name": "dark-fantasy",
       "text": "dark-fantasy aesthetic, gothic dread, corrupted beauty and candlelit shadow",
       "text_short": "dark fantasy gothic",
-      "tags": ["fantasy"]
+      "tags": [
+        "fantasy"
+      ]
     },
     {
       "name": "film-noir",
       "text": "film-noir aesthetic, venetian-blind shadows, cigarette haze and fatal glamour",
       "text_short": "film noir shadows",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "western",
@@ -54,7 +69,9 @@
       "name": "gothic-horror",
       "text": "gothic-horror atmosphere, decayed grandeur, fog and wrought iron under a cold moon",
       "text_short": "gothic horror mood",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "retro-futurism",
@@ -75,7 +92,9 @@
       "name": "fairy-tale",
       "text": "storybook fairy-tale aesthetic, gentle wonder, cottages and deep friendly woods",
       "text_short": "storybook fairy tale",
-      "tags": ["fantasy"]
+      "tags": [
+        "fantasy"
+      ]
     },
     {
       "name": "mythological",
@@ -86,19 +105,30 @@
       "name": "space-opera",
       "text": "space-opera aesthetic, vast fleets, glowing nebulae and operatic galactic scale",
       "text_short": "space opera scale",
-      "tags": ["scifi"]
+      "tags": [
+        "scifi"
+      ]
     },
     {
       "name": "dieselpunk",
       "text": "dieselpunk aesthetic, interwar machine age, riveted steel and oiled brass, roaring prop engines over smog-stained deco cities",
       "text_short": "dieselpunk riveted steel",
-      "tags": ["historical"]
+      "tags": [
+        "historical"
+      ]
     },
     {
       "name": "afrofuturism",
       "text": "afrofuturist aesthetic, gleaming chrome fused with kente geometry and beadwork, regal silhouettes against orbital skylines",
       "text_short": "afrofuturist chrome pattern",
-      "tags": ["scifi"]
+      "tags": [
+        "scifi"
+      ]
+    },
+    {
+      "name": "cold-war-thriller",
+      "text": "cold war thriller, grey institutional surfaces and long lenses, everything watched and nothing said, a palette drained to concrete and cigarette smoke",
+      "text_short": "cold war thriller, watched and drained to concrete"
     }
   ]
 }

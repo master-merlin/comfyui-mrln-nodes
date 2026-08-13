@@ -22,7 +22,9 @@
       "name": "anime",
       "text": "anime illustration, confident clean line art, flat cel shading split by crisp shadow terminators, large expressive eyes with layered specular highlights",
       "text_short": "anime illustration",
-      "tags": ["anime"]
+      "tags": [
+        "anime"
+      ]
     },
     {
       "name": "oil-painting",
@@ -41,8 +43,8 @@
     },
     {
       "name": "comic-ink",
-      "text": "bold comic ink illustration, brush-inked outlines swelling and tapering with pressure, dramatic feathered hatching, halftone dot shading",
-      "text_short": "comic ink illustration"
+      "text": "comic book ink and flat colour, bold contour lines, benday dot shading and panel-ready staging",
+      "text_short": "comic book ink, bold contours and benday dots"
     },
     {
       "name": "gouache",
@@ -118,13 +120,18 @@
       "name": "tintype",
       "text": "wet-plate collodion tintype, silver image on blackened metal, shallow chemical focus, swirled emulsion flaws at the edges, pale luminous skin against inky darkness",
       "text_short": "wet-plate tintype",
-      "tags": ["historical"]
+      "tags": [
+        "historical"
+      ]
     },
     {
       "name": "illuminated-manuscript",
       "text": "medieval illuminated manuscript page, mineral pigments and burnished gold leaf on vellum, ornamented initial letters, vine-scroll borders inhabited by tiny creatures",
       "text_short": "illuminated manuscript page",
-      "tags": ["historical", "fantasy"]
+      "tags": [
+        "historical",
+        "fantasy"
+      ]
     }
   ]
 }

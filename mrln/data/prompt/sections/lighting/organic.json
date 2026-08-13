@@ -25,8 +25,8 @@
     },
     {
       "name": "fireplace-glow",
-      "text": "the restless orange glow of a fireplace lighting the scene from low and to one side, warm highlights dancing on nearby surfaces",
-      "text_short": "fireplace glow"
+      "text": "firelight from an open hearth, warm flickering key from below, deep shadow behind and light that never sits still",
+      "text_short": "firelight from an open hearth, flickering warm key"
     },
     {
       "name": "string-lights",
@@ -42,25 +42,33 @@
       "name": "golden-hour-window",
       "text": "late golden-hour sun pouring horizontally through a window, long warm shadows thrown deep into the room and glowing edges on everything it touches",
       "text_short": "golden hour through window",
-      "tags": ["day"]
+      "tags": [
+        "day"
+      ]
     },
     {
       "name": "overcast-softbox",
       "text": "bright overcast sky acting as one huge softbox, shadowless even light with true colors",
       "text_short": "soft overcast light",
-      "tags": ["day"]
+      "tags": [
+        "day"
+      ]
     },
     {
       "name": "dappled-leaves",
       "text": "sunlight dappled through foliage, shifting spots of light and leaf-shadow patterns sliding over the subject",
       "text_short": "dappled leaf light",
-      "tags": ["day"]
+      "tags": [
+        "day"
+      ]
     },
     {
       "name": "campfire-circle",
       "text": "a campfire as the only source, orange light flickering up from below waist height, faces modeled warm against the surrounding dark and sparks lifting on the heat column",
       "text_short": "campfire underlight",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "screen-glow",

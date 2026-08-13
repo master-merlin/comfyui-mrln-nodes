@@ -2,20 +2,87 @@
   "version": 1,
   "label": "Streetwear",
   "description": "Street-fashion statements — layering, hardware and silhouette.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "techwear", "text": "matte-black techwear shell layers, taped seams, cross-chest straps, magnetic buckles and waterproof zips", "text_short": "black techwear" },
-    { "name": "puffer-oversized", "text": "a glossy oversized down puffer, high funnel collar, worn like armor over slim layers", "text_short": "oversized puffer" },
-    { "name": "cargo-crop", "text": "wide ripstop cargo pants slung low on the hips, fitted rib-knit crop top, chunky triple-sole sneakers", "text_short": "cargos and crop top" },
-    { "name": "varsity-vintage", "text": "a vintage wool varsity jacket, cracked leather sleeves, chenille letter patches, ribbed snap front", "text_short": "vintage varsity jacket" },
-    { "name": "skater-baggy", "text": "baggy skate jeans fraying over worn suede deck shoes, faded tee and a slouched beanie", "text_short": "skater baggy fit" },
-    { "name": "grunge-layers", "text": "ripped fishnets under cut-off shorts, a faded band tee, flannel knotted at the waist and steel-toe stomper boots", "text_short": "grunge layers" },
-    { "name": "track-retro", "text": "a retro nylon track suit, triple side stripes, popper buttons down the leg, zipped to the chin", "text_short": "retro track suit" },
-    { "name": "workwear-chore", "text": "a duck-canvas chore coat, triple-stitched seams, over double-knee work pants and plain-toe boots", "text_short": "workwear chore coat" },
-    { "name": "harajuku-mix", "text": "playful layered Harajuku styling, clashing prints stacked in deliberate harmony, platform shoes and charm-hung bags", "text_short": "Harajuku layering", "tags": ["anime"] },
-    { "name": "leather-biker", "text": "a scuffed asymmetric-zip leather biker jacket, silver hardware, thrown over a grey hoodie", "text_short": "leather biker jacket" },
-    { "name": "y2k-revival", "text": "a Y2K revival fit, low-rise flared jeans, rhinestone baby tee, narrow tinted sunglasses and a shoulder mini-bag", "text_short": "Y2K low-rise fit" },
-    { "name": "gorpcore", "text": "gorpcore trail layers, a technical shell over fleece, webbing belt, trail runners and carabiner-hung accessories", "text_short": "gorpcore trail layers" },
-    { "name": "bomber-ma1", "text": "a sage MA-1 nylon bomber, blaze-orange lining flashing at the zip, ribbed hem and cuffs, utility pocket on the sleeve", "text_short": "MA-1 bomber jacket" }
+    {
+      "name": "techwear",
+      "text": "matte-black techwear shell layers, taped seams, cross-chest straps, magnetic buckles and waterproof zips",
+      "text_short": "black techwear"
+    },
+    {
+      "name": "puffer-oversized",
+      "text": "a glossy oversized down puffer, high funnel collar, worn like armor over slim layers",
+      "text_short": "oversized puffer"
+    },
+    {
+      "name": "cargo-crop",
+      "text": "wide ripstop cargo pants slung low on the hips, fitted rib-knit crop top, chunky triple-sole sneakers",
+      "text_short": "cargos and crop top"
+    },
+    {
+      "name": "varsity-vintage",
+      "text": "a vintage wool varsity jacket, cracked leather sleeves, chenille letter patches, ribbed snap front",
+      "text_short": "vintage varsity jacket"
+    },
+    {
+      "name": "skater-baggy",
+      "text": "baggy skate jeans fraying over worn suede deck shoes, faded tee and a slouched beanie",
+      "text_short": "skater baggy fit"
+    },
+    {
+      "name": "grunge-layers",
+      "text": "ripped fishnets under cut-off shorts, a faded band tee, flannel knotted at the waist and steel-toe stomper boots",
+      "text_short": "grunge layers"
+    },
+    {
+      "name": "track-retro",
+      "text": "a retro nylon track suit, triple side stripes, popper buttons down the leg, zipped to the chin",
+      "text_short": "retro track suit"
+    },
+    {
+      "name": "workwear-chore",
+      "text": "a duck-canvas chore coat, triple-stitched seams, over double-knee work pants and plain-toe boots",
+      "text_short": "workwear chore coat"
+    },
+    {
+      "name": "harajuku-mix",
+      "text": "playful layered Harajuku styling, clashing prints stacked in deliberate harmony, platform shoes and charm-hung bags",
+      "text_short": "Harajuku layering",
+      "tags": [
+        "anime"
+      ]
+    },
+    {
+      "name": "leather-biker",
+      "text": "a scuffed asymmetric-zip leather biker jacket, silver hardware, thrown over a grey hoodie",
+      "text_short": "leather biker jacket"
+    },
+    {
+      "name": "y2k-revival",
+      "text": "a Y2K revival fit, low-rise flared jeans, rhinestone baby tee, narrow tinted sunglasses and a shoulder mini-bag",
+      "text_short": "Y2K low-rise fit"
+    },
+    {
+      "name": "gorpcore",
+      "text": "gorpcore trail layers, a technical shell over fleece, webbing belt, trail runners and carabiner-hung accessories",
+      "text_short": "gorpcore trail layers"
+    },
+    {
+      "name": "bomber-ma1",
+      "text": "a sage MA-1 nylon bomber, blaze-orange lining flashing at the zip, ribbed hem and cuffs, utility pocket on the sleeve",
+      "text_short": "MA-1 bomber jacket"
+    },
+    {
+      "name": "gothic-lolita",
+      "text": "a gothic lolita coordinate, a bell-shaped skirt over layered petticoats, lace headdress and ribboned platform shoes",
+      "text_short": "gothic lolita, bell skirt over petticoats"
+    },
+    {
+      "name": "cosplay-build",
+      "text": "a hand-built cosplay costume, worbla armour plates and hand-painted weathering, seams and fastenings deliberately concealed",
+      "text_short": "hand-built cosplay with worbla armour"
+    }
   ]
 }

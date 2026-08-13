@@ -2,26 +2,191 @@
   "version": 1,
   "label": "Archetype",
   "description": "Character-design archetypes — the who of a concept portrait.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "astronaut", "text": "a mission astronaut in a worn EVA suit, helmet under one arm", "text_short": "astronaut with helmet" },
-    { "name": "samurai", "text": "a wandering samurai, lacquered armor plates over travel-worn robes", "text_short": "wandering samurai", "tags": ["historical"] },
-    { "name": "detective", "text": "a rain-coat detective, loosened tie and tired sharp eyes", "text_short": "noir detective" },
-    { "name": "chef", "text": "a head chef in whites, sleeves rolled, flour-dusted forearms", "text_short": "head chef in whites" },
-    { "name": "aviator", "text": "a golden-age aviator, leather jacket, silk scarf and goggles pushed up", "text_short": "golden-age aviator", "tags": ["historical"] },
-    { "name": "explorer", "text": "an expedition explorer, weathered canvas gear and a battered map case", "text_short": "expedition explorer" },
-    { "name": "knight", "text": "a knight in field-worn plate armor, helm at the hip", "text_short": "plate-armor knight", "tags": ["fantasy", "historical"] },
-    { "name": "sorceress", "text": "a sorceress with rune-embroidered robes and slow-drifting motes of light", "text_short": "rune-robed sorceress", "tags": ["fantasy"] },
-    { "name": "cyber-runner", "text": "a cyberpunk courier, neon-piped jacket and mirrored optics", "text_short": "cyberpunk courier", "tags": ["scifi", "neon"] },
-    { "name": "mechanic", "text": "a garage mechanic in oil-marked coveralls, wrench in the back pocket", "text_short": "garage mechanic" },
-    { "name": "ballerina", "text": "a principal ballerina, rehearsal leotard and chalk-dusted pointe shoes", "text_short": "principal ballerina" },
-    { "name": "sea-captain", "text": "a weathered sea captain, wool coat, white beard and storm-narrowed eyes", "text_short": "weathered sea captain" },
-    { "name": "monk", "text": "a mountain monk in simple robes with prayer beads", "text_short": "mountain monk" },
-    { "name": "rockstar", "text": "a stage-worn rockstar, leather, rings and smeared eyeliner", "text_short": "stage-worn rockstar" },
-    { "name": "scientist", "text": "a field scientist, sample cases and annotated notebooks in hand", "text_short": "field scientist" },
-    { "name": "gunslinger", "text": "a frontier gunslinger, dust-caked duster and a low-brimmed hat", "text_short": "frontier gunslinger", "tags": ["historical"] },
-    { "name": "opera-diva", "text": "an opera diva in a velvet gown, elbow-length gloves and a jeweled collar", "text_short": "opera diva" },
-    { "name": "pirate-captain", "text": "a pirate captain, salt-crusted coat, brass-buckled baldric and a weathered tricorne", "text_short": "pirate captain", "tags": ["historical", "fantasy"] },
-    { "name": "vampire-noble", "text": "a vampire noble in a high-collared brocade coat, bloodless pale complexion", "text_short": "vampire noble", "tags": ["fantasy"] }
+    {
+      "name": "astronaut",
+      "text": "a mission astronaut in a worn EVA suit, helmet under one arm",
+      "text_short": "astronaut with helmet"
+    },
+    {
+      "name": "samurai",
+      "text": "a wandering samurai, lacquered armor plates over travel-worn robes",
+      "text_short": "wandering samurai",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "detective",
+      "text": "a rain-coat detective, loosened tie and tired sharp eyes",
+      "text_short": "noir detective"
+    },
+    {
+      "name": "chef",
+      "text": "a head chef in whites, sleeves rolled, flour-dusted forearms",
+      "text_short": "head chef in whites"
+    },
+    {
+      "name": "aviator",
+      "text": "a golden-age aviator, leather jacket, silk scarf and goggles pushed up",
+      "text_short": "golden-age aviator",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "explorer",
+      "text": "an expedition explorer, weathered canvas gear and a battered map case",
+      "text_short": "expedition explorer"
+    },
+    {
+      "name": "knight",
+      "text": "a knight in field-worn plate armor, helm at the hip",
+      "text_short": "plate-armor knight",
+      "tags": [
+        "fantasy",
+        "historical"
+      ]
+    },
+    {
+      "name": "sorceress",
+      "text": "a sorceress with rune-embroidered robes and slow-drifting motes of light",
+      "text_short": "rune-robed sorceress",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "name": "cyber-runner",
+      "text": "a cyberpunk courier, neon-piped jacket and mirrored optics",
+      "text_short": "cyberpunk courier",
+      "tags": [
+        "scifi",
+        "neon"
+      ]
+    },
+    {
+      "name": "mechanic",
+      "text": "a garage mechanic in oil-marked coveralls, wrench in the back pocket",
+      "text_short": "garage mechanic"
+    },
+    {
+      "name": "ballerina",
+      "text": "a principal ballerina, rehearsal leotard and chalk-dusted pointe shoes",
+      "text_short": "principal ballerina"
+    },
+    {
+      "name": "sea-captain",
+      "text": "a weathered sea captain, wool coat, white beard and storm-narrowed eyes",
+      "text_short": "weathered sea captain"
+    },
+    {
+      "name": "monk",
+      "text": "a mountain monk in simple robes with prayer beads",
+      "text_short": "mountain monk"
+    },
+    {
+      "name": "rockstar",
+      "text": "a stage-worn rockstar, leather, rings and smeared eyeliner",
+      "text_short": "stage-worn rockstar"
+    },
+    {
+      "name": "scientist",
+      "text": "a field scientist, sample cases and annotated notebooks in hand",
+      "text_short": "field scientist"
+    },
+    {
+      "name": "gunslinger",
+      "text": "a frontier gunslinger, dust-caked duster and a low-brimmed hat",
+      "text_short": "frontier gunslinger",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "opera-diva",
+      "text": "an opera diva in a velvet gown, elbow-length gloves and a jeweled collar",
+      "text_short": "opera diva"
+    },
+    {
+      "name": "pirate-captain",
+      "text": "a pirate captain, salt-crusted coat, brass-buckled baldric and a weathered tricorne",
+      "text_short": "pirate captain",
+      "tags": [
+        "historical",
+        "fantasy"
+      ]
+    },
+    {
+      "name": "vampire-noble",
+      "text": "a vampire noble in a high-collared brocade coat, bloodless pale complexion",
+      "text_short": "vampire noble",
+      "tags": [
+        "fantasy"
+      ]
+    },
+    {
+      "name": "barista",
+      "text": "a barista behind a café counter, apron tied twice, forearms marked by steam and a cloth permanently over one shoulder",
+      "text_short": "barista in a twice-tied apron"
+    },
+    {
+      "name": "musician",
+      "text": "a musician between sets, an instrument case at the ankle, a cable coiled over the shoulder and stage tape still on the wrist",
+      "text_short": "musician between sets, case at the ankle"
+    },
+    {
+      "name": "welder",
+      "text": "a welder with a flip-front helmet pushed up, a scorched leather apron and cuffs, sparks still settling around the boots",
+      "text_short": "welder, helmet up and apron scorched"
+    },
+    {
+      "name": "fisherman",
+      "text": "a fisherman in oilskins and a knitted cap, hands cracked from salt and rope, a crate of catch braced against the hip",
+      "text_short": "fisherman in oilskins with a crate of catch"
+    },
+    {
+      "name": "librarian",
+      "text": "a librarian among the stacks, glasses pushed up, a trolley of returns and a finger keeping a place in an open volume",
+      "text_short": "librarian among the stacks with a returns trolley"
+    },
+    {
+      "name": "ninja",
+      "text": "a ninja in layered dark cloth, only the eyes uncovered, a straight blade across the back and every fastening bound flat",
+      "text_short": "ninja in layered dark cloth, blade across the back"
+    },
+    {
+      "name": "cowboy",
+      "text": "a cowboy in a sweat-lined hat and worn chaps, a rope coiled at the saddle horn and dust worked into every seam",
+      "text_short": "cowboy in a sweat-lined hat and worn chaps"
+    },
+    {
+      "name": "assassin",
+      "text": "an assassin in unremarkable clothes chosen to be forgotten, a hidden blade at the forearm and hands that stay visible",
+      "text_short": "assassin dressed to be forgotten"
+    },
+    {
+      "name": "sorcerer",
+      "text": "a sorcerer in heavy layered robes, rings on every knuckle, a staff worn smooth at the grip and old burns across the palms",
+      "text_short": "sorcerer in layered robes with a worn staff"
+    },
+    {
+      "name": "demon-lord",
+      "text": "a demon lord, ash-toned skin over an oversized frame, curling horns and eyes lit from within, ornament fused into the hide",
+      "text_short": "horned demon lord with light behind the eyes"
+    },
+    {
+      "name": "paramedic",
+      "text": "a paramedic in high-visibility green, a response bag over one shoulder, radio clipped at the chest and gloves already on",
+      "text_short": "paramedic in high-vis with a response bag"
+    },
+    {
+      "name": "tattoo-artist",
+      "text": "a tattoo artist at the chair, machine in hand and ink caps laid out, own sleeves worked to the knuckles",
+      "text_short": "tattoo artist at the chair, sleeves to the knuckles"
+    }
   ]
 }

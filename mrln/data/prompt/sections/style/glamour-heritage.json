@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "label": "Glamour Heritage",
+  "description": "The pictorial lineages glamour actually descends from: mid-century pin-up illustration, the men's-magazine centerfold (centrefold), burlesque, the studio bombshell portrait. Says how the picture is HANDLED, not what is in it, so it composes with any wardrobe, pose and light. Characteristics only, never a named artist or magazine. Adults only; tasteful tier throughout.",
+  "items": [
+    {
+      "name": "pin-up-illustration",
+      "text": "handled in the language of mid-century pin-up illustration, airbrush-smooth skin with high-key modelling, cherry-red lip and improbably poised balance, the whole picture cheerful rather than sultry",
+      "text_short": "mid-century pin-up illustration, airbrushed and cheerful",
+      "tags": [
+        "glamour",
+        "retro",
+        "illustration"
+      ]
+    },
+    {
+      "name": "pin-up-photographic",
+      "text": "handled as a photographic pin-up, a single warm key with a bright bounce, saturated primaries, a mid-century set dressed just enough, the pose held a beat too long on purpose",
+      "text_short": "photographic pin-up, warm key and saturated primaries",
+      "tags": [
+        "glamour",
+        "retro"
+      ]
+    },
+    {
+      "name": "centerfold-editorial",
+      "text": "handled as a men's-magazine centerfold of the classic era, glossy full-page framing, an unhurried reclining composition, warm skin against a jewel-toned interior, printed-page polish",
+      "text_short": "classic centerfold, glossy full-page and unhurried",
+      "tags": [
+        "glamour",
+        "retro",
+        "boudoir"
+      ]
+    },
+    {
+      "name": "bombshell-portrait",
+      "text": "handled as a studio bombshell portrait, a hard key with a bright fill, platinum highlights in the hair, gloss lip and a lifted chin, every contour deliberately drawn",
+      "text_short": "studio bombshell portrait, hard key and gloss lip",
+      "tags": [
+        "glamour",
+        "retro",
+        "studio"
+      ]
+    },
+    {
+      "name": "burlesque-stage",
+      "text": "handled as burlesque stage photography, footlights from below and a hot spot from above, red velvet swallowing the background, feathers and rhinestones catching every beam",
+      "text_short": "burlesque stage, footlights and red velvet",
+      "tags": [
+        "glamour",
+        "stage",
+        "retro"
+      ]
+    },
+    {
+      "name": "showgirl-revue",
+      "text": "handled as a revue showgirl frame, a towering plumed headdress and mirrored costume, a proscenium of chase bulbs behind, theatrical rather than intimate",
+      "text_short": "revue showgirl, plumed headdress under chase bulbs",
+      "tags": [
+        "glamour",
+        "stage"
+      ]
+    },
+    {
+      "name": "cabaret-intimate",
+      "text": "handled as intimate cabaret, one low practical lamp and a great deal of shadow, smoke in the beam, the frame close enough to feel like the front table",
+      "text_short": "intimate cabaret, one low lamp and smoke",
+      "tags": [
+        "glamour",
+        "stage",
+        "moody"
+      ]
+    },
+    {
+      "name": "vintage-glamour-hollywood",
+      "text": "handled as vintage studio glamour, a single hard key raking across the cheekbone, a black scrim background, silver-gelatin tonality and sculpted finger waves",
+      "text_short": "vintage studio glamour, hard key on a black scrim",
+      "tags": [
+        "glamour",
+        "retro",
+        "monochrome"
+      ]
+    },
+    {
+      "name": "boudoir-nostalgic",
+      "text": "handled as nostalgic boudoir, window light diffused through net curtains, warm dust in the air, film-soft edges and a deliberately unmodern palette",
+      "text_short": "nostalgic boudoir, net-curtain light and film softness",
+      "tags": [
+        "glamour",
+        "boudoir",
+        "retro"
+      ]
+    },
+    {
+      "name": "calendar-garage",
+      "text": "handled as a workshop calendar plate, a bold flat key, a saturated print palette, wide framing that keeps the machinery in shot, unashamedly commercial",
+      "text_short": "workshop calendar plate, bold flat key",
+      "tags": [
+        "glamour",
+        "retro",
+        "automotive"
+      ]
+    },
+    {
+      "name": "poolside-technicolor",
+      "text": "handled as poolside technicolour glamour, hot midday sun and cyan water, sun-cream sheen on the skin, a palette pushed to postcard saturation",
+      "text_short": "poolside technicolour, hot sun and cyan water",
+      "tags": [
+        "glamour",
+        "retro",
+        "day"
+      ]
+    },
+    {
+      "name": "lingerie-catalogue",
+      "text": "handled as a premium lingerie catalogue page, even wraparound light with no hard shadow, fabric texture held above everything, composed and unprovocative",
+      "text_short": "premium lingerie catalogue, even wraparound light",
+      "tags": [
+        "glamour",
+        "boudoir",
+        "studio"
+      ]
+    },
+    {
+      "name": "art-deco-portrait",
+      "text": "handled as an art-deco glamour portrait, geometric shadow shapes thrown across a flat backdrop, marcelled hair, a long cigarette holder and severe symmetry",
+      "text_short": "art-deco glamour, geometric shadow on a flat backdrop",
+      "tags": [
+        "glamour",
+        "retro"
+      ]
+    },
+    {
+      "name": "screen-siren-noir",
+      "text": "handled as screen-siren noir, a hard key through venetian blinds, deep unlifted blacks, a wisp of smoke and one bright catchlight held in the eye",
+      "text_short": "screen-siren noir, blind shadows and deep blacks",
+      "tags": [
+        "glamour",
+        "moody",
+        "monochrome"
+      ]
+    }
+  ]
+}

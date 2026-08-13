@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "label": "World Regions",
+  "description": "A spread of places with a strong sense of somewhere. The library had a whole section for Japan and nothing for Morocco, Mexico, West Africa or the Andes — the same enumeration bias that left out nightlife, applied to the map. Described by what is actually in frame, never as a national stereotype.",
+  "items": [
+    {
+      "name": "marrakech-medina",
+      "text": "A medina lane in Marrakech, ochre walls close on both sides, a studded cedar door, woven baskets stacked outside and cats asleep in the shade.",
+      "text_short": "ochre Marrakech medina lane with a studded door",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "moroccan-riad-courtyard",
+      "text": "A riad courtyard open to the sky, zellij tilework to shoulder height, a still central pool and orange trees in glazed pots.",
+      "text_short": "riad courtyard in zellij tile with a still pool",
+      "tags": ["interior", "warm"]
+    },
+    {
+      "name": "mexico-colonial-street",
+      "text": "A colonial Mexican street of saturated painted facades, wrought-iron balconies with bougainvillea over them and cobbles running to a domed church.",
+      "text_short": "painted colonial Mexican street with bougainvillea",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "mexico-market-hall",
+      "text": "A Mexican market hall of stacked chiles and cut fruit, hand-lettered price cards, bunting overhead and light dropping through a corrugated roof.",
+      "text_short": "Mexican market hall of stacked chiles and cut fruit",
+      "tags": ["interior", "crowd"]
+    },
+    {
+      "name": "west-africa-market",
+      "text": "A West African market street of wax-print stalls in stacked colour, enamel bowls balanced high, awnings patched from a dozen fabrics.",
+      "text_short": "West African market street of wax-print stalls",
+      "tags": ["exterior", "crowd", "warm"]
+    },
+    {
+      "name": "sahel-adobe-town",
+      "text": "A Sahel town of adobe walls and projecting timber beams, a mud-brick mosque tapering above flat roofs and long shadows across swept ground.",
+      "text_short": "Sahel adobe town with a tapering mud-brick mosque",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "andes-highland-village",
+      "text": "An Andes highland village of stone and tin roofs above terraced fields, peaks standing white beyond and llamas grazing the near slope.",
+      "text_short": "Andes village above terraced fields",
+      "tags": ["exterior", "cold"]
+    },
+    {
+      "name": "andes-salt-flat",
+      "text": "An Andean salt flat to every horizon, a shallow film of water making a perfect mirror of the sky, hexagon crusts showing where it has dried.",
+      "text_short": "Andean salt flat mirroring the whole sky",
+      "tags": ["exterior"]
+    },
+    {
+      "name": "kerala-backwater",
+      "text": "A Kerala backwater under coconut palms, a houseboat with a woven roof, still green water and nets slung on bamboo poles.",
+      "text_short": "Kerala backwater with a woven-roof houseboat",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "rajasthan-stepwell",
+      "text": "A Rajasthan stepwell descending in symmetrical flights, sandstone landings crossing at every level, cool green water at the bottom.",
+      "text_short": "Rajasthan stepwell descending in symmetrical flights",
+      "tags": ["exterior", "grand"]
+    },
+    {
+      "name": "seoul-alley",
+      "text": "A Seoul back alley of stacked hangul signage, extraction fans and plastic stools outside a grill house, cables drooping between low roofs.",
+      "text_short": "Seoul back alley of stacked signage and plastic stools",
+      "tags": ["exterior", "urban"]
+    },
+    {
+      "name": "china-water-town",
+      "text": "A Chinese water town of whitewashed gables and black tile, an arched stone bridge, lanterns strung along a canal and a boat poled slowly under.",
+      "text_short": "Chinese water town, arched bridge and strung lanterns",
+      "tags": ["exterior"]
+    },
+    {
+      "name": "istanbul-bazaar",
+      "text": "A vaulted bazaar of hanging lamps in coloured glass, carpets stacked to the ceiling and shafts of light coming down through high openings.",
+      "text_short": "vaulted bazaar of coloured glass lamps and carpets",
+      "tags": ["interior", "crowd"]
+    },
+    {
+      "name": "nordic-fishing-village",
+      "text": "A Nordic fishing village of red timber houses on stilts over dark water, drying racks on the shore and bare rock rising behind.",
+      "text_short": "red timber Nordic fishing village on stilts",
+      "tags": ["exterior", "cold"]
+    },
+    {
+      "name": "iceland-black-beach",
+      "text": "An Icelandic black sand beach with basalt columns stepping out of the cliff, spray blowing sideways and sea stacks standing offshore.",
+      "text_short": "Icelandic black sand beach under basalt columns",
+      "tags": ["exterior", "cold"]
+    },
+    {
+      "name": "brazil-hillside-favela",
+      "text": "A Brazilian hillside neighbourhood of stacked painted houses, staircases threading between them, laundry strung across and the city spread below.",
+      "text_short": "stacked painted hillside houses above a Brazilian city",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "eastern-europe-panel-block",
+      "text": "An Eastern European panel block estate, repeating concrete facades with mismatched glazed balconies, birches between the buildings and a beaten path across the grass.",
+      "text_short": "panel block estate with mismatched glazed balconies",
+      "tags": ["exterior", "urban", "cold"]
+    },
+    {
+      "name": "mediterranean-hill-town",
+      "text": "A Mediterranean hill town of lime-washed walls and blue shutters, stepped lanes too narrow for cars and a church bell tower at the top.",
+      "text_short": "lime-washed Mediterranean hill town with stepped lanes",
+      "tags": ["exterior", "warm"]
+    },
+    {
+      "name": "southeast-asia-night-market",
+      "text": "A Southeast Asian street market strung with bare bulbs, woks going at every second stall, steam rolling out and plastic stools filling the road.",
+      "text_short": "bulb-strung Southeast Asian street market",
+      "tags": ["exterior", "crowd", "night"],
+      "requires": ["night"]
+    },
+    {
+      "name": "outback-roadhouse",
+      "text": "An Australian outback roadhouse on red dirt, a corrugated verandah, fuel pumps bleached by sun and a road running dead straight to the heat shimmer.",
+      "text_short": "outback roadhouse on red dirt, road running straight out",
+      "tags": ["exterior", "warm"]
+    }
+  ]
+}

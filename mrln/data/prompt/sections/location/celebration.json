@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "label": "Celebration & Occasion",
+  "description": "The days people dress up for. Occasions rather than venues — a wedding is not a room, it is a reason everyone is in that room.",
+  "items": [
+    {
+      "name": "wedding-reception",
+      "text": "A wedding reception in full swing, long tables under strung lights, a cake half-cut and confetti trodden into the floor.",
+      "text_short": "wedding reception under strung lights",
+      "tags": [
+        "crowd",
+        "formal"
+      ]
+    },
+    {
+      "name": "wedding-ceremony-aisle",
+      "text": "A ceremony aisle strewn with petals, ribboned chairs either side, an arch of flowers at the end and every head turned.",
+      "text_short": "petal-strewn ceremony aisle",
+      "tags": [
+        "crowd",
+        "formal"
+      ]
+    },
+    {
+      "name": "birthday-table",
+      "text": "A birthday table crowded with mismatched plates, a lopsided homemade cake alight with candles and paper hats abandoned mid-meal.",
+      "text_short": "birthday table, candles alight",
+      "tags": [
+        "party",
+        "everyday"
+      ]
+    },
+    {
+      "name": "new-year-countdown",
+      "text": "A New Year countdown at the turn of the year, sparklers and raised glasses, streamers coming down and everyone looking the same way.",
+      "text_short": "New Year countdown, sparklers raised",
+      "tags": [
+        "crowd",
+        "party",
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "masquerade-ball",
+      "text": "A masquerade ball in a mirrored hall, feathered and gilded masks, dancers turning under chandeliers and a quartet on a low dais.",
+      "text_short": "masquerade ball in a mirrored hall",
+      "tags": [
+        "crowd",
+        "formal",
+        "luxury"
+      ]
+    },
+    {
+      "name": "black-tie-gala",
+      "text": "A black-tie gala at a long-tabled banquet, place cards and polished glassware, a lectern waiting and waiters moving between chairs.",
+      "text_short": "black-tie gala banquet",
+      "tags": [
+        "formal",
+        "luxury"
+      ]
+    },
+    {
+      "name": "carnival-parade",
+      "text": "A carnival parade filling a street, feathered headdresses and drums, floats towering over a crowd pressed to the barriers.",
+      "text_short": "carnival parade filling a street",
+      "tags": [
+        "crowd",
+        "outdoor",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "graduation-lawn",
+      "text": "A graduation on a college lawn, gowns and thrown caps against a clear sky, folding chairs in rows and families with cameras up.",
+      "text_short": "graduation lawn, caps in the air",
+      "tags": [
+        "crowd",
+        "outdoor",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "halloween-street",
+      "text": "A Halloween street of carved pumpkins on porch steps, cobwebbed railings, costumed figures moving between pools of orange light.",
+      "text_short": "Halloween street of carved pumpkins",
+      "tags": [
+        "night",
+        "crowd"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "christmas-market",
+      "text": "A Christmas market of timber stalls and hot spiced steam, fairy lights strung overhead and a tree lit at the square's centre.",
+      "text_short": "Christmas market, fairy-lit timber stalls",
+      "tags": [
+        "crowd",
+        "winter"
+      ]
+    },
+    {
+      "name": "christmas-morning-room",
+      "text": "A living room on Christmas morning, torn paper across a rug, a tree still lit and a fire going down to embers.",
+      "text_short": "Christmas morning room, torn paper on the rug",
+      "tags": [
+        "everyday",
+        "winter",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "street-festival",
+      "text": "A street festival closed to traffic, bunting between balconies, food stalls smoking and a stage rigged at the far end.",
+      "text_short": "street festival under bunting",
+      "tags": [
+        "crowd",
+        "outdoor",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "harvest-fair",
+      "text": "A harvest fair on stubble fields, trestle tables of produce, hay bales as seating and a marquee guyed against the wind.",
+      "text_short": "harvest fair on stubble fields",
+      "tags": [
+        "outdoor",
+        "autumn",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "fireworks-waterfront",
+      "text": "A fireworks display over a waterfront, the crowd's faces lit in bursts, reflections breaking on the water and smoke drifting sideways.",
+      "text_short": "fireworks over a crowded waterfront",
+      "tags": [
+        "night",
+        "crowd"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "engagement-dinner",
+      "text": "An intimate engagement dinner, a small table dressed with candles and a single ring box, a bottle chilling and the room deliberately dim.",
+      "text_short": "intimate candlelit engagement dinner",
+      "tags": [
+        "formal"
+      ]
+    }
+  ]
+}

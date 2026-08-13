@@ -2,21 +2,119 @@
   "version": 1,
   "label": "Expression",
   "description": "Facial expressions for portraits and characters.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "soft-smile", "text": "a soft genuine smile reaching the eyes", "text_short": "soft genuine smile" },
-    { "name": "laughing", "text": "caught mid-laugh, unguarded and bright", "text_short": "mid-laugh" },
-    { "name": "serene-neutral", "text": "a serene neutral expression, composed and open", "text_short": "serene neutral" },
-    { "name": "fierce", "text": "a fierce, unwavering expression", "text_short": "fierce expression" },
-    { "name": "melancholy", "text": "a quiet melancholy softness around the eyes", "text_short": "quiet melancholy" },
-    { "name": "mischievous", "text": "a mischievous half-smile holding a secret", "text_short": "mischievous half-smile" },
-    { "name": "determined", "text": "jaw set with calm determination", "text_short": "calm determination" },
-    { "name": "surprised-delight", "text": "eyes wide with surprised delight", "text_short": "surprised delight" },
-    { "name": "contemplative", "text": "lost in thought, gaze turned inward", "text_short": "contemplative" },
-    { "name": "smoldering", "text": "a smoldering, confident intensity", "text_short": "smoldering intensity" },
-    { "name": "vulnerable-open", "text": "an open, vulnerable honesty in the face", "text_short": "open vulnerability" },
-    { "name": "weathered-wisdom", "text": "weathered lines carrying quiet wisdom", "text_short": "weathered wisdom" },
-    { "name": "defiant", "text": "chin lifted in cool defiance", "text_short": "cool defiance" },
-    { "name": "dreamy", "text": "a faraway dreamy softness", "text_short": "dreamy softness" }
+    {
+      "name": "soft-smile",
+      "text": "a soft genuine smile reaching the eyes",
+      "text_short": "soft genuine smile"
+    },
+    {
+      "name": "laughing",
+      "text": "caught mid-laugh, unguarded and bright",
+      "text_short": "mid-laugh"
+    },
+    {
+      "name": "serene-neutral",
+      "text": "a serene neutral expression, composed and open",
+      "text_short": "serene neutral"
+    },
+    {
+      "name": "fierce",
+      "text": "a fierce, unwavering expression",
+      "text_short": "fierce expression"
+    },
+    {
+      "name": "melancholy",
+      "text": "a quiet melancholy softness around the eyes",
+      "text_short": "quiet melancholy"
+    },
+    {
+      "name": "mischievous",
+      "text": "a mischievous half-smile holding a secret",
+      "text_short": "mischievous half-smile"
+    },
+    {
+      "name": "determined",
+      "text": "jaw set with calm determination",
+      "text_short": "calm determination"
+    },
+    {
+      "name": "surprised-delight",
+      "text": "eyes wide with surprised delight",
+      "text_short": "surprised delight"
+    },
+    {
+      "name": "contemplative",
+      "text": "lost in thought, gaze turned inward",
+      "text_short": "contemplative"
+    },
+    {
+      "name": "smoldering",
+      "text": "a smoldering, confident intensity",
+      "text_short": "smoldering intensity"
+    },
+    {
+      "name": "vulnerable-open",
+      "text": "an open, vulnerable honesty in the face",
+      "text_short": "open vulnerability"
+    },
+    {
+      "name": "weathered-wisdom",
+      "text": "weathered lines carrying quiet wisdom",
+      "text_short": "weathered wisdom"
+    },
+    {
+      "name": "defiant",
+      "text": "chin lifted in cool defiance",
+      "text_short": "cool defiance"
+    },
+    {
+      "name": "dreamy",
+      "text": "a faraway dreamy softness",
+      "text_short": "dreamy softness"
+    },
+    {
+      "name": "crying",
+      "text": "crying openly, eyes brimming and lashes clumped, colour high across the nose",
+      "text_short": "crying openly, lashes wet"
+    },
+    {
+      "name": "holding-back-tears",
+      "text": "holding back tears, jaw tight and gaze lifted away from the lens",
+      "text_short": "holding back tears, gaze lifted away"
+    },
+    {
+      "name": "angry",
+      "text": "angry, brows driven together and nostrils flared, the mouth held deliberately shut",
+      "text_short": "angry, brows driven together"
+    },
+    {
+      "name": "cold-fury",
+      "text": "cold fury, the face almost still, everything happening behind the eyes",
+      "text_short": "cold fury, almost still"
+    },
+    {
+      "name": "thoughtful",
+      "text": "thoughtful, attention turned somewhere behind the eyes, one small crease between the brows",
+      "text_short": "thoughtful, attention turned inward"
+    },
+    {
+      "name": "bored",
+      "text": "visibly bored, eyelids low and chin propped, patience running out politely",
+      "text_short": "visibly bored, chin propped"
+    },
+    {
+      "name": "worried",
+      "text": "worried, brows lifted at the inner ends and the lower lip caught",
+      "text_short": "worried, inner brows lifted"
+    },
+    {
+      "name": "relieved",
+      "text": "relieved, the whole face letting go at once, breath just released",
+      "text_short": "relieved, the face letting go"
+    }
   ]
 }

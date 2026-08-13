@@ -2,22 +2,128 @@
   "version": 1,
   "label": "Sky / Celestial",
   "description": "The sky as the hero subject (Civitai 'astronomy' category) — atmospheric optics and storm structure with the physics visible. Night-bound phenomena declare requires: night.",
-  "suits": ["nature"],
+  "suits": [
+    "nature"
+  ],
   "items": [
-    { "name": "aurora-curtains", "text": "aurora curtains rippling green and violet over silhouetted peaks, rays combed straight down the magnetic field lines, the lower edges drawn sharpest", "text_short": "rippling aurora", "tags": ["night"], "requires": ["night"], "negative": "daylight" },
-    { "name": "milky-way-core", "text": "the Milky Way core arching overhead in a moonless sky, dark dust lanes splitting the dense star fields, the galactic bulge glowing warm above the horizon", "text_short": "Milky Way core", "tags": ["night"], "requires": ["night"], "negative": "daylight" },
-    { "name": "supercell", "text": "a rotating supercell stacked like an inverted wedding cake, mesocyclone striations wound tight around the barrel, a green-lit rain core hanging off its flank", "text_short": "rotating supercell" },
-    { "name": "mammatus", "text": "mammatus pouches sagging beneath a storm anvil after the worst has passed, each lobe a pocket of sinking cooled air, the edges lit like hammered metal", "text_short": "mammatus pouches" },
-    { "name": "crepuscular-rays", "text": "crepuscular rays fanning from behind a broken cloud deck, parallel shafts that only seem to converge, haze making the light itself the subject", "text_short": "fanning god rays" },
-    { "name": "moonrise-full", "text": "a huge full moon rising through horizon haze, squashed and amber by the long slant of air, stealing scale from everything beneath it", "text_short": "huge rising moon", "tags": ["night"], "requires": ["night"] },
-    { "name": "comet", "text": "a naked-eye comet over quiet hills, its white dust tail curving along the orbit while the straight blue ion tail points dead away from the sun", "text_short": "long-tailed comet", "tags": ["night"], "requires": ["night"] },
-    { "name": "lenticular-stack", "text": "a stack of lens-smooth lenticular clouds parked over a summit, motionless in a gale — the standing mountain wave rebuilding each disc as fast as the wind tears it away", "text_short": "lenticular stack" },
-    { "name": "star-trails", "text": "concentric star trails circling the celestial pole through an hours-long exposure, each arc carrying the true color of its star", "text_short": "circling star trails", "tags": ["night"], "requires": ["night"], "negative": "daylight" },
-    { "name": "noctilucent", "text": "electric-blue noctilucent clouds rippling at the edge of space — ice on meteor dust eighty kilometers up, shining only in midsummer twilight after the ground has gone dark", "text_short": "noctilucent glow", "tags": ["night"], "requires": ["night"] },
-    { "name": "rainbow-full", "text": "a full double rainbow grounded in rain-washed light, the outer bow's colors reversed, the sky noticeably darker in the band between the two", "text_short": "double rainbow" },
-    { "name": "eclipse-corona", "text": "a total solar eclipse at mid-totality, the corona feathering out along magnetic field lines around the black disc, the horizon ringed in 360 degrees of twilight color", "text_short": "eclipse corona" },
-    { "name": "light-pillar", "text": "a light pillar standing vertical above the low sun, built from millions of falling plate-shaped ice crystals", "text_short": "vertical light pillar" },
-    { "name": "ice-halo", "text": "a full 22-degree halo ringing the sun through a cirrostratus veil, bright sundogs flanking it left and right", "text_short": "sun halo with sundogs" },
-    { "name": "fogbow", "text": "a white fogbow arched over a thinning fog bank, colorless because its droplets are too small to split the light, a faint glory haloing the viewer's shadow at its center", "text_short": "white fogbow arch" }
+    {
+      "name": "aurora-curtains",
+      "text": "aurora curtains rippling green and violet over silhouetted peaks, rays combed straight down the magnetic field lines, the lower edges drawn sharpest",
+      "text_short": "rippling aurora",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    },
+    {
+      "name": "milky-way-core",
+      "text": "the Milky Way core arching overhead in a moonless sky, dark dust lanes splitting the dense star fields, the galactic bulge glowing warm above the horizon",
+      "text_short": "Milky Way core",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    },
+    {
+      "name": "supercell",
+      "text": "a rotating supercell stacked like an inverted wedding cake, mesocyclone striations wound tight around the barrel, a green-lit rain core hanging off its flank",
+      "text_short": "rotating supercell"
+    },
+    {
+      "name": "mammatus",
+      "text": "mammatus pouches sagging beneath a storm anvil after the worst has passed, each lobe a pocket of sinking cooled air, the edges lit like hammered metal",
+      "text_short": "mammatus pouches"
+    },
+    {
+      "name": "crepuscular-rays",
+      "text": "crepuscular rays fanning from behind a broken cloud deck, parallel shafts that only seem to converge, haze making the light itself the subject",
+      "text_short": "fanning god rays"
+    },
+    {
+      "name": "moonrise-full",
+      "text": "a huge full moon rising through horizon haze, squashed and amber by the long slant of air, stealing scale from everything beneath it",
+      "text_short": "huge rising moon",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "comet",
+      "text": "a naked-eye comet over quiet hills, its white dust tail curving along the orbit while the straight blue ion tail points dead away from the sun",
+      "text_short": "long-tailed comet",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "lenticular-stack",
+      "text": "a stack of lens-smooth lenticular clouds parked over a summit, motionless in a gale — the standing mountain wave rebuilding each disc as fast as the wind tears it away",
+      "text_short": "lenticular stack"
+    },
+    {
+      "name": "star-trails",
+      "text": "concentric star trails circling the celestial pole through an hours-long exposure, each arc carrying the true color of its star",
+      "text_short": "circling star trails",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ],
+      "negative": "daylight"
+    },
+    {
+      "name": "noctilucent",
+      "text": "electric-blue noctilucent clouds rippling at the edge of space — ice on meteor dust eighty kilometers up, shining only in midsummer twilight after the ground has gone dark",
+      "text_short": "noctilucent glow",
+      "tags": [
+        "night"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "rainbow-full",
+      "text": "a full double rainbow grounded in rain-washed light, the outer bow's colors reversed, the sky noticeably darker in the band between the two",
+      "text_short": "double rainbow"
+    },
+    {
+      "name": "eclipse-corona",
+      "text": "a total solar eclipse at mid-totality, the corona feathering out along magnetic field lines around the black disc, the horizon ringed in 360 degrees of twilight color",
+      "text_short": "eclipse corona"
+    },
+    {
+      "name": "light-pillar",
+      "text": "a light pillar standing vertical above the low sun, built from millions of falling plate-shaped ice crystals",
+      "text_short": "vertical light pillar"
+    },
+    {
+      "name": "ice-halo",
+      "text": "a full 22-degree halo ringing the sun through a cirrostratus veil, bright sundogs flanking it left and right",
+      "text_short": "sun halo with sundogs"
+    },
+    {
+      "name": "fogbow",
+      "text": "a white fogbow arched over a thinning fog bank, colorless because its droplets are too small to split the light, a faint glory haloing the viewer's shadow at its center",
+      "text_short": "white fogbow arch"
+    },
+    {
+      "name": "dense-starfield",
+      "text": "a dense starfield filling the whole frame, thousands of points at every magnitude with no landmark to scale them",
+      "text_short": "dense starfield, no landmark to scale it"
+    }
   ]
 }

@@ -2,20 +2,79 @@
   "version": 1,
   "label": "Casual Wardrobe",
   "description": "Everyday relaxed looks with real fabric and fit detail.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "oversized-tee-jeans", "text": "an oversized washed-cotton graphic tee, dropped shoulder seams, untucked over rigid straight-leg jeans with rolled hems", "text_short": "oversized tee, jeans" },
-    { "name": "linen-summer", "text": "a loose open-weave linen shirt, sleeves rolled, over soft drawstring shorts, barefoot ease", "text_short": "loose linen summer look" },
-    { "name": "knit-and-mug", "text": "a chunky cable-knit sweater, ribbed cuffs pulled down over the hands, wide neckline slipping off one shoulder", "text_short": "chunky knit sweater" },
-    { "name": "denim-jacket", "text": "a broken-in denim trucker jacket, faded seams and brass buttons, over a plain white crew-neck tee", "text_short": "denim jacket, white tee" },
-    { "name": "hoodie-comfort", "text": "a soft faded fleece hoodie, drawstrings uneven, hands in the kangaroo pocket, weekend-comfortable slouch", "text_short": "soft faded hoodie" },
-    { "name": "sundress", "text": "a light cotton-voile sundress, smocked bodice, thin shoulder ties, hem catching the breeze", "text_short": "light floral sundress" },
-    { "name": "flannel-boots", "text": "an open brushed-flannel shirt over a worn band tee, cuffed jeans and scuffed leather boots", "text_short": "flannel and boots" },
-    { "name": "athleisure", "text": "a matching ribbed athleisure set, high-waist leggings and a cropped zip jacket, clean white sneakers", "text_short": "athleisure set" },
-    { "name": "trench-classic", "text": "a classic double-breasted gabardine trench, collar up, belt knotted not buckled, over simple monochrome layers", "text_short": "classic beige trench" },
-    { "name": "faux-fur-street", "text": "a white faux-fur coat thrown over an oversized tee and jeans, plush pile against washed denim", "text_short": "faux-fur over tee" },
-    { "name": "wrap-dress", "text": "a jersey wrap dress, self-tie at the waist, V-neckline, skirt falling in soft flares to the knee", "text_short": "jersey wrap dress" },
-    { "name": "denim-overalls", "text": "soft faded denim overalls, one shoulder strap left unclipped, over a striped boat-neck tee", "text_short": "faded denim overalls" },
-    { "name": "satin-midi-tee", "text": "a bias-cut satin midi skirt swinging at the calf, washed cotton tee tucked in, flat leather sandals", "text_short": "satin midi skirt, tee" }
+    {
+      "name": "oversized-tee-jeans",
+      "text": "an oversized washed-cotton graphic tee, dropped shoulder seams, untucked over rigid straight-leg jeans with rolled hems",
+      "text_short": "oversized tee, jeans"
+    },
+    {
+      "name": "linen-summer",
+      "text": "a loose open-weave linen shirt, sleeves rolled, over soft drawstring shorts, barefoot ease",
+      "text_short": "loose linen summer look"
+    },
+    {
+      "name": "knit-and-mug",
+      "text": "a chunky cable-knit sweater, ribbed cuffs pulled down over the hands, wide neckline slipping off one shoulder",
+      "text_short": "chunky knit sweater"
+    },
+    {
+      "name": "denim-jacket",
+      "text": "a broken-in denim trucker jacket, faded seams and brass buttons, over a plain white crew-neck tee",
+      "text_short": "denim jacket, white tee"
+    },
+    {
+      "name": "hoodie-comfort",
+      "text": "a soft faded fleece hoodie, drawstrings uneven, hands in the kangaroo pocket, weekend-comfortable slouch",
+      "text_short": "soft faded hoodie"
+    },
+    {
+      "name": "sundress",
+      "text": "a light cotton-voile sundress, smocked bodice, thin shoulder ties, hem catching the breeze",
+      "text_short": "light floral sundress"
+    },
+    {
+      "name": "flannel-boots",
+      "text": "an open brushed-flannel shirt over a worn band tee, cuffed jeans and scuffed leather boots",
+      "text_short": "flannel and boots"
+    },
+    {
+      "name": "athleisure",
+      "text": "a matching ribbed athleisure set, high-waist leggings and a cropped zip jacket, clean white sneakers",
+      "text_short": "athleisure set"
+    },
+    {
+      "name": "trench-classic",
+      "text": "a classic double-breasted gabardine trench, collar up, belt knotted not buckled, over simple monochrome layers",
+      "text_short": "classic beige trench"
+    },
+    {
+      "name": "faux-fur-street",
+      "text": "a white faux-fur coat thrown over an oversized tee and jeans, plush pile against washed denim",
+      "text_short": "faux-fur over tee"
+    },
+    {
+      "name": "wrap-dress",
+      "text": "a jersey wrap dress, self-tie at the waist, V-neckline, skirt falling in soft flares to the knee",
+      "text_short": "jersey wrap dress"
+    },
+    {
+      "name": "denim-overalls",
+      "text": "soft faded denim overalls, one shoulder strap left unclipped, over a striped boat-neck tee",
+      "text_short": "faded denim overalls"
+    },
+    {
+      "name": "satin-midi-tee",
+      "text": "a bias-cut satin midi skirt swinging at the calf, washed cotton tee tucked in, flat leather sandals",
+      "text_short": "satin midi skirt, tee"
+    },
+    {
+      "name": "dungarees",
+      "text": "denim dungarees over a plain tee, one strap unclipped, turn-ups at the ankle and paint marks that were never coming out",
+      "text_short": "denim dungarees, one strap unclipped"
+    }
   ]
 }

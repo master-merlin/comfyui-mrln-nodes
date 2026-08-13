@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "label": "Domestic Interior",
+  "description": "The ordinary rooms of a home. architecture/interior collects designed and grand spaces; this is where people actually live — the bathroom, the hallway, the box room used as an office.",
+  "items": [
+    {
+      "name": "bathroom-tiled",
+      "text": "A small tiled bathroom, a mirror fogged at the edges, bottles crowding one corner of the tub and a towel over the radiator.",
+      "text_short": "small tiled bathroom, mirror fogged at the edges",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "bathroom-clawfoot",
+      "text": "A bathroom built around a clawfoot tub, black-and-white floor tiles, a brass mixer and a folding screen half-drawn.",
+      "text_short": "clawfoot tub on black-and-white tiles",
+      "tags": ["interior", "retro"]
+    },
+    {
+      "name": "bedroom-unmade",
+      "text": "A bedroom with the bed left unmade, curtains still half-drawn, clothes over a chair back and a book face-down on the covers.",
+      "text_short": "unmade bedroom, curtains half-drawn",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "walk-in-wardrobe",
+      "text": "A walk-in wardrobe of open rails and lit shelving, shoes ranked by heel height, a mirror at the end and a stool in the middle.",
+      "text_short": "walk-in wardrobe of lit rails and ranked shoes",
+      "tags": ["interior", "luxury"]
+    },
+    {
+      "name": "hallway-narrow",
+      "text": "A narrow hallway with coats layered on hooks, shoes kicked against the skirting, post on the mat and a stripe of light under a door.",
+      "text_short": "narrow hallway, coats layered on hooks",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "home-office-spare-room",
+      "text": "A home office wedged into a spare room, a desk against the window, cables gathered badly and a shelf of things that live nowhere else.",
+      "text_short": "home office wedged into a spare room",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "attic-room",
+      "text": "An attic room under sloping rafters, a skylight throwing one bright rectangle onto bare boards, boxes stacked along the low wall.",
+      "text_short": "attic under sloping rafters, one bright skylight",
+      "tags": ["interior", "worn"]
+    },
+    {
+      "name": "basement-utility",
+      "text": "A basement utility room, a boiler ticking, a washing machine mid-cycle and a strip light buzzing over a chest freezer.",
+      "text_short": "basement utility room, boiler ticking",
+      "tags": ["interior", "worn"]
+    },
+    {
+      "name": "living-room-lived-in",
+      "text": "A lived-in living room, a deep sagging sofa, a rug that has moved a hundred times and shelves that stopped being ordered years ago.",
+      "text_short": "lived-in living room with a sagging sofa",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "home-workshop",
+      "text": "A home workshop in a garage bay, a pegboard of outlined tools, a vice on the bench and sawdust in the corners of everything.",
+      "text_short": "garage workshop with a pegboard of tools",
+      "tags": ["interior", "worn"]
+    },
+    {
+      "name": "conservatory",
+      "text": "A conservatory of white-framed glass, cane chairs and too many plants, condensation gathering low and heat building under the roof.",
+      "text_short": "white-framed conservatory crowded with plants",
+      "tags": ["interior"]
+    },
+    {
+      "name": "stairwell-landing",
+      "text": "A stairwell landing with a worn runner and a turned newel post, framed pictures climbing the wall and a window on the half-landing.",
+      "text_short": "stairwell landing with a worn runner",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "studio-flat",
+      "text": "A studio flat where every function overlaps, a bed against the kitchen counter, one good lamp and everything else chosen to fold away.",
+      "text_short": "studio flat where every function overlaps",
+      "tags": ["interior", "everyday"]
+    },
+    {
+      "name": "nursery-quiet",
+      "text": "A quiet nursery in soft neutral tones, a cot under a mobile, a low chair in the corner and a nightlight left switched on.",
+      "text_short": "quiet neutral nursery with a mobile over the cot",
+      "tags": ["interior", "everyday"]
+    }
+  ]
+}

@@ -2,23 +2,97 @@
   "version": 1,
   "label": "Glamour Wardrobe",
   "description": "Evening and event wear — cut, fabric and drape for elegant portraits.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
-    { "name": "silk-column-gown", "text": "a bias-cut silk charmeuse column gown, cowl neckline, low draped back, hem pooling at the floor", "text_short": "silk column gown" },
-    { "name": "sequin-cocktail", "text": "a fitted cocktail dress in graduated paillette sequins, scooped back, every facet throwing light", "text_short": "sequin cocktail dress" },
-    { "name": "velvet-off-shoulder", "text": "an off-shoulder crushed-velvet evening gown, boned bodice, deep wine tones swallowing light into the pile", "text_short": "velvet off-shoulder gown" },
-    { "name": "tulle-ballgown", "text": "a layered tulle ballgown, structured sweetheart bodice, horsehair-braid hems holding the skirt's cloud shape", "text_short": "layered tulle ballgown" },
-    { "name": "backless-satin", "text": "a backless duchess-satin gown, draped cowl back plunging to the waist, skirt cut on the bias to skim the hips", "text_short": "backless satin gown" },
-    { "name": "tailored-tuxedo-f", "text": "a sharply tailored black tuxedo worn over bare skin, satin peak lapels, cropped trousers and stiletto heels", "text_short": "tailored tuxedo look" },
-    { "name": "beaded-flapper", "text": "a drop-waist flapper dress of beaded fringe rows, glass beads swinging with every step", "text_short": "beaded flapper dress", "tags": ["historical"] },
-    { "name": "high-slit-crepe", "text": "a high-slit crepe evening dress, one sculpted padded shoulder, the leg line revealed to the hip with each stride", "text_short": "high-slit evening dress" },
-    { "name": "corseted-opera", "text": "a corseted opera gown, steel-boned bodice over structured hip panels, opera-length satin gloves", "text_short": "corseted opera gown" },
-    { "name": "metallic-lame", "text": "a liquid metallic lamé slip dress, halter neck, fabric flowing like poured mercury over every curve", "text_short": "liquid lamé dress" },
-    { "name": "mermaid-gown", "text": "a mermaid-cut gown fitted through hip and thigh, flaring into a trumpet train of stacked organza ruffles", "text_short": "mermaid trumpet gown" },
-    { "name": "crystal-illusion", "text": "a sheer illusion gown of crystal-embellished tulle over a nude liner, embroidery placed to trace the figure", "text_short": "crystal illusion gown" },
-    { "name": "little-black-dress", "text": "a sleeveless little black dress in matte crepe, bateau neckline, princess seams shaping the waist, hem just above the knee, elbow-length gloves", "text_short": "little black dress" },
-    { "name": "grecian-goddess", "text": "a one-shoulder Grecian goddess gown, finely pleated chiffon falling from a jeweled shoulder brooch, gold cord crossed under the bust", "text_short": "Grecian goddess gown" },
-    { "name": "feather-hem-gown", "text": "a slim bias-cut satin gown finished in an ostrich-feather hem, plumes stirring around the ankles with every step", "text_short": "feather-hem satin gown" },
-    { "name": "cape-gown", "text": "a fitted column gown with a sheer chiffon cape falling from the shoulder seams, the cape lifting and trailing in motion", "text_short": "cape column gown" }
+    {
+      "name": "silk-column-gown",
+      "text": "a bias-cut silk charmeuse column gown, cowl neckline, low draped back, hem pooling at the floor",
+      "text_short": "silk column gown"
+    },
+    {
+      "name": "sequin-cocktail",
+      "text": "a fitted cocktail dress in graduated paillette sequins, scooped back, every facet throwing light",
+      "text_short": "sequin cocktail dress"
+    },
+    {
+      "name": "velvet-off-shoulder",
+      "text": "an off-shoulder crushed-velvet evening gown, boned bodice, deep wine tones swallowing light into the pile",
+      "text_short": "velvet off-shoulder gown"
+    },
+    {
+      "name": "tulle-ballgown",
+      "text": "a layered tulle ballgown, structured sweetheart bodice, horsehair-braid hems holding the skirt's cloud shape",
+      "text_short": "layered tulle ballgown"
+    },
+    {
+      "name": "backless-satin",
+      "text": "a backless duchess-satin gown, draped cowl back plunging to the waist, skirt cut on the bias to skim the hips",
+      "text_short": "backless satin gown"
+    },
+    {
+      "name": "tailored-tuxedo-f",
+      "text": "a sharply tailored black tuxedo worn over bare skin, satin peak lapels, cropped trousers and stiletto heels",
+      "text_short": "tailored tuxedo look"
+    },
+    {
+      "name": "beaded-flapper",
+      "text": "a drop-waist flapper dress of beaded fringe rows, glass beads swinging with every step",
+      "text_short": "beaded flapper dress",
+      "tags": [
+        "historical"
+      ]
+    },
+    {
+      "name": "high-slit-crepe",
+      "text": "a high-slit crepe evening dress, one sculpted padded shoulder, the leg line revealed to the hip with each stride",
+      "text_short": "high-slit evening dress"
+    },
+    {
+      "name": "corseted-opera",
+      "text": "a corseted opera gown, steel-boned bodice over structured hip panels, opera-length satin gloves",
+      "text_short": "corseted opera gown"
+    },
+    {
+      "name": "metallic-lame",
+      "text": "a liquid metallic lamé slip dress, halter neck, fabric flowing like poured mercury over every curve",
+      "text_short": "liquid lamé dress"
+    },
+    {
+      "name": "mermaid-gown",
+      "text": "a mermaid-cut gown fitted through hip and thigh, flaring into a trumpet train of stacked organza ruffles",
+      "text_short": "mermaid trumpet gown"
+    },
+    {
+      "name": "crystal-illusion",
+      "text": "a sheer illusion gown of crystal-embellished tulle over a nude liner, embroidery placed to trace the figure",
+      "text_short": "crystal illusion gown"
+    },
+    {
+      "name": "little-black-dress",
+      "text": "a sleeveless little black dress in matte crepe, bateau neckline, princess seams shaping the waist, hem just above the knee, elbow-length gloves",
+      "text_short": "little black dress"
+    },
+    {
+      "name": "grecian-goddess",
+      "text": "a one-shoulder Grecian goddess gown, finely pleated chiffon falling from a jeweled shoulder brooch, gold cord crossed under the bust",
+      "text_short": "Grecian goddess gown"
+    },
+    {
+      "name": "feather-hem-gown",
+      "text": "a slim bias-cut satin gown finished in an ostrich-feather hem, plumes stirring around the ankles with every step",
+      "text_short": "feather-hem satin gown"
+    },
+    {
+      "name": "cape-gown",
+      "text": "a fitted column gown with a sheer chiffon cape falling from the shoulder seams, the cape lifting and trailing in motion",
+      "text_short": "cape column gown"
+    },
+    {
+      "name": "ball-gown-classic",
+      "text": "a full ball gown with a fitted bodice and an enormous pleated skirt, a sweeping train and long gloves to the elbow",
+      "text_short": "full ball gown with a sweeping train"
+    }
   ]
 }

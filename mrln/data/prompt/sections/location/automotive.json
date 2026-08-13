@@ -311,6 +311,16 @@
       "name": "start-finish-grid",
       "text": "The start-finish grid of a grand prix circuit, painted grid slots, rubbered-in tire marks and the lights gantry overhead.",
       "text_short": "start-finish grid"
+    },
+    {
+      "name": "junkyard",
+      "text": "A junkyard of stacked shells and salvaged panels, weeds through wheel arches, a crane claw idle over the far row.",
+      "text_short": "junkyard of stacked shells and salvage"
+    },
+    {
+      "name": "scrapyard-crusher",
+      "text": "A scrapyard crusher bay, flattened cubes racked to one side, oil-dark ground and a loader waiting with its bucket down.",
+      "text_short": "scrapyard crusher bay, cubes racked"
     }
   ]
 }

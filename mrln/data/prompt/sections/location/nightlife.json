@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "label": "Nightlife Venue",
+  "description": "Where people go out: clubs, bars, stages and the rooms behind them. The library had twenty location sections a crew shoots at and none where more than one person is having a good time.",
+  "items": [
+    {
+      "name": "nightclub-floor",
+      "text": "A packed nightclub floor under a low ceiling, a mirrorball throwing moving coins of light across raised arms, haze catching every beam.",
+      "text_short": "packed nightclub floor under a mirrorball",
+      "tags": [
+        "night",
+        "crowd",
+        "club"
+      ]
+    },
+    {
+      "name": "disco-parquet",
+      "text": "A gleaming lit-from-below disco parquet in coloured squares, chrome railings, a mirrorball turning slowly over an emptying floor.",
+      "text_short": "lit disco parquet in coloured squares",
+      "tags": [
+        "night",
+        "club",
+        "retro"
+      ]
+    },
+    {
+      "name": "dj-booth",
+      "text": "A cramped DJ booth above the dance floor, decks and mixer glowing, a wall of monitors behind and reaching hands below the rail.",
+      "text_short": "raised DJ booth over the dance floor",
+      "tags": [
+        "night",
+        "club",
+        "crowd"
+      ]
+    },
+    {
+      "name": "neon-cocktail-bar",
+      "text": "A narrow cocktail bar in neon and dark lacquer, bottles backlit in rows, a bartender mid-pour and condensation on the counter.",
+      "text_short": "neon cocktail bar, bottles backlit",
+      "tags": [
+        "night",
+        "bar"
+      ]
+    },
+    {
+      "name": "dive-bar",
+      "text": "A scuffed dive bar with a sticky counter, taped vinyl stools, a jukebox in the corner and beer signs buzzing on the wall.",
+      "text_short": "scuffed dive bar with a jukebox",
+      "tags": [
+        "bar",
+        "worn"
+      ]
+    },
+    {
+      "name": "hotel-lounge-piano",
+      "text": "A hushed hotel lounge in deep carpet and low lamps, a grand piano at the centre, cocktail glasses catching amber light.",
+      "text_short": "hushed hotel piano lounge",
+      "tags": [
+        "bar",
+        "luxury"
+      ]
+    },
+    {
+      "name": "speakeasy-backroom",
+      "text": "A hidden speakeasy backroom behind an unmarked door, tin ceiling, candle jars on small tables and cigarette haze at head height.",
+      "text_short": "hidden speakeasy backroom, candlelit",
+      "tags": [
+        "bar",
+        "retro"
+      ]
+    },
+    {
+      "name": "rooftop-party",
+      "text": "A rooftop party strung with festoon bulbs, the city glittering beyond a low parapet, drinks on a ledge and a speaker stack humming.",
+      "text_short": "rooftop party strung with festoon bulbs",
+      "tags": [
+        "night",
+        "crowd",
+        "party"
+      ]
+    },
+    {
+      "name": "house-party-kitchen",
+      "text": "A house party spilling into the kitchen, bottles crowding the counter, someone sitting on the worktop and a speaker propped in the doorway.",
+      "text_short": "house party spilling into the kitchen",
+      "tags": [
+        "party",
+        "crowd",
+        "everyday"
+      ]
+    },
+    {
+      "name": "concert-hall-stage",
+      "text": "A concert hall from the pit, stage lights raking through haze, silhouetted heads in the foreground and a wall of amplifiers behind the band.",
+      "text_short": "concert stage seen from the pit",
+      "tags": [
+        "crowd",
+        "stage"
+      ]
+    },
+    {
+      "name": "festival-main-stage",
+      "text": "A festival main stage across a field of raised hands, scaffolding towers, banners snapping and dust hanging in the beams.",
+      "text_short": "festival main stage over a field of hands",
+      "tags": [
+        "crowd",
+        "stage",
+        "outdoor"
+      ]
+    },
+    {
+      "name": "backstage-corridor",
+      "text": "A backstage corridor of flight cases and taped cable runs, a bare bulb over a mirror, set lists and passes stuck to a scuffed door.",
+      "text_short": "backstage corridor of flight cases",
+      "tags": [
+        "stage",
+        "worn"
+      ]
+    },
+    {
+      "name": "karaoke-booth",
+      "text": "A tiny private karaoke booth in padded vinyl, a screen glowing lyric blue, two microphones and a tray of half-finished drinks.",
+      "text_short": "tiny padded karaoke booth, screen glowing",
+      "tags": [
+        "night",
+        "party"
+      ]
+    },
+    {
+      "name": "casino-floor",
+      "text": "A casino floor of green baize and brass, chips stacked in careful towers, low warm downlights and no clock anywhere on the wall.",
+      "text_short": "casino floor in green baize and brass",
+      "tags": [
+        "luxury",
+        "crowd"
+      ]
+    },
+    {
+      "name": "arcade-bar",
+      "text": "An arcade bar washed in cabinet glow, rows of screens attracting in the dark, a pinball table flashing and a bar squeezed along one wall.",
+      "text_short": "arcade bar washed in cabinet glow",
+      "tags": [
+        "night",
+        "retro"
+      ]
+    },
+    {
+      "name": "pool-party",
+      "text": "A pool party at the golden end of the day, water throwing caustics onto tiled edges, loungers scattered and a bar cart in the shade.",
+      "text_short": "pool party, water throwing caustics",
+      "tags": [
+        "party",
+        "outdoor",
+        "day"
+      ],
+      "requires": [
+        "day"
+      ]
+    },
+    {
+      "name": "after-hours-diner",
+      "text": "An all-night diner in the small hours, fluorescent glare on chrome and formica, one booth occupied and coffee going cold.",
+      "text_short": "all-night diner in the small hours",
+      "tags": [
+        "night",
+        "everyday"
+      ],
+      "requires": [
+        "night"
+      ]
+    },
+    {
+      "name": "club-smoking-terrace",
+      "text": "A club's smoking terrace behind a fire door, breath and smoke in the cold, bass thudding through the wall and a queue along the rail.",
+      "text_short": "club smoking terrace behind a fire door",
+      "tags": [
+        "night",
+        "club"
+      ]
+    },
+    {
+      "name": "burlesque-cabaret-room",
+      "text": "A small cabaret room of round tables and red velvet, a shallow stage lit by footlights, tassels of a curtain still swinging.",
+      "text_short": "red velvet cabaret room with footlights",
+      "tags": [
+        "stage",
+        "retro",
+        "glamour"
+      ]
+    },
+    {
+      "name": "warehouse-rave",
+      "text": "A raw warehouse rave, strobes cutting through fog, steel columns and a stacked sound system, condensation running down bare brick.",
+      "text_short": "raw warehouse rave, strobes through fog",
+      "tags": [
+        "night",
+        "crowd",
+        "club"
+      ]
+    }
+  ]
+}

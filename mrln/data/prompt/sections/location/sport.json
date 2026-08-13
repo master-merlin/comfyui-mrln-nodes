@@ -2,7 +2,9 @@
   "version": 1,
   "label": "Sport Venue",
   "description": "Training floors, courts, pools and arenas — athletic settings for portrait, lifestyle and action work.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
     {
       "name": "boxing-gym",
@@ -18,7 +20,9 @@
       "name": "floodlit-pitch",
       "text": "A rain-freshened training pitch under stadium floodlights, chalk-white touchlines glowing against dark turf, empty dugouts and low haze around the lamp banks.",
       "text_short": "floodlit training pitch",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "climbing-gym",
@@ -44,6 +48,40 @@
       "name": "competition-pool",
       "text": "A competition natatorium, lane ropes in team colors stretched across deep-blue water, backstroke flags and a digital timing board glowing above the starting blocks.",
       "text_short": "competition swimming pool"
+    },
+    {
+      "name": "skate-bowl",
+      "text": "A concrete skateboarding bowl scarred with wax and grind marks, coping worn silver, boards stacked against the lip.",
+      "text_short": "concrete skateboarding bowl, coping worn silver",
+      "tags": [
+        "outdoor"
+      ]
+    },
+    {
+      "name": "ski-piste",
+      "text": "A groomed skiing piste under a hard mountain sun, corduroy tracks running out of sight, lift pylons stepping up the slope.",
+      "text_short": "groomed skiing piste, corduroy tracks",
+      "tags": [
+        "outdoor",
+        "winter",
+        "day"
+      ]
+    },
+    {
+      "name": "racecourse-straight",
+      "text": "A horse racing straight of cropped turf, white rails running to the stands, hoof-torn ground along the inside line.",
+      "text_short": "horse racing straight of cropped turf",
+      "tags": [
+        "outdoor"
+      ]
+    },
+    {
+      "name": "cricket-ground",
+      "text": "A cricket ground with a mown wicket at the centre, a sightscreen behind the bowler's arm and a pavilion under old trees.",
+      "text_short": "cricket ground, mown wicket and pavilion",
+      "tags": [
+        "outdoor"
+      ]
     }
   ]
 }

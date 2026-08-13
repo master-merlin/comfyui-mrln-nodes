@@ -2,7 +2,9 @@
   "version": 1,
   "label": "Skin",
   "description": "Skin texture and finish — the top-portrait detail staple.",
-  "suits": ["human"],
+  "suits": [
+    "human"
+  ],
   "items": [
     {
       "name": "detailed-natural",
@@ -53,6 +55,21 @@
       "name": "rosy-flush",
       "text": "a soft rosy flush warming the cheeks and upper chest",
       "text_short": "soft rosy flush"
+    },
+    {
+      "name": "vitiligo-patterned",
+      "text": "skin patterned with vitiligo, pale islands mapped across a deeper tone, edges soft where the two meet",
+      "text_short": "vitiligo, pale islands on a deeper tone"
+    },
+    {
+      "name": "mature-lined",
+      "text": "mature skin with real lines at the eyes and mouth, texture kept honest, wrinkles reading as a record rather than a flaw",
+      "text_short": "mature skin, honest lines and wrinkles"
+    },
+    {
+      "name": "weathered-outdoor",
+      "text": "weathered outdoor skin, wind-reddened across the cheekbones with fine sun lines fanning from the eyes",
+      "text_short": "weathered outdoor skin, wind-reddened"
     }
   ]
 }

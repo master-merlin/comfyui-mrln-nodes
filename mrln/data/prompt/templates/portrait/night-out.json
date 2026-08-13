@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "label": "Night Out",
+  "type": ["human"],
+  "description": "A portrait taken where people actually go out — club floor, cocktail bar, rooftop, backstage. Venue light does the work: practicals, haze and colour rather than a key, so the frame reads as somewhere real rather than a set.",
+  "variables": [
+    {
+      "name": "trigger",
+      "label": "Optional LoRA trigger",
+      "default": ""
+    }
+  ],
+  "prefix": "A candid nightlife portrait of {subject}, {expression}, caught in the middle of a night out. {trigger}",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/profile",
+      "label": "Subject",
+      "default": "female-glamour",
+      "emphasis": 1.15
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "laughing"
+    },
+    {
+      "id": "venue",
+      "ref": "location/nightlife",
+      "label": "Venue",
+      "emphasis": 1.25
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/glamour",
+      "label": "Outfit"
+    },
+    {
+      "id": "hair",
+      "ref": "human/hair-style",
+      "label": "Hair"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/night",
+      "label": "Venue Light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "lens",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "layered-depth"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "Nightlife Rendering: (venue light only — practicals, LED wash and haze doing every bit of the modelling:1.25), colour allowed to go where the room puts it, (skin kept honest under coloured light:1.15), motion permitted at the frame edges, high ISO grain accepted rather than cleaned away, (sharp focal subject in a busy room:1.15).",
+  "negative": "studio lighting, seamless backdrop, flat even light, watermark, text, logo, deformed, extra limbs, extra fingers, child, underage",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}
