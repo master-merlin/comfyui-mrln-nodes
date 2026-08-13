@@ -1,8 +1,11 @@
 {
   "version": 1,
   "label": "Pin-Up & Glamour Heritage",
-  "type": ["human", "boudoir"],
-  "description": "The heritage glamour picture: mid-century pin-up, the classic centerfold, burlesque, the studio bombshell portrait. The treatment slot is what makes the frame period-correct, so the same wardrobe and pose read as illustration, printed page or stage depending on the lineage picked. Tasteful tier; all subjects adult.",
+  "type": [
+    "human",
+    "boudoir"
+  ],
+  "description": "The heritage glamour picture: mid-century pin-up, the classic centerfold, burlesque, the studio bombshell portrait. The treatment slot is what makes the frame period-correct, so the same wardrobe and pose read as illustration, printed page or stage depending on the lineage picked. The subject is built from atomic parts rather than human/profile, because that section carries its own wardrobe/glamour draw and a pin-up has to own its wardrobe. Tasteful tier; all subjects adult.",
   "variables": [
     {
       "name": "trigger",
@@ -10,14 +13,39 @@
       "default": ""
     }
   ],
-  "prefix": "A heritage glamour photograph of exceptional quality, elegant and knowingly composed — {subject}, {expression}. {trigger}",
+  "prefix": "A heritage glamour photograph of exceptional quality, elegant and knowingly composed. The subject is {nationality}, {age}, ({physique}:1.15), with ({hair-color} hair in {hair}:1.2), {expression}. {trigger}",
   "slots": [
     {
-      "id": "subject",
-      "ref": "human/profile",
-      "label": "Subject",
-      "default": "female-glamour",
-      "emphasis": 1.15
+      "id": "nationality",
+      "ref": "human/ethnicity",
+      "label": "Heritage"
+    },
+    {
+      "id": "age",
+      "ref": "human/age",
+      "label": "Age"
+    },
+    {
+      "id": "physique",
+      "ref": "human/physique-female",
+      "label": "Physique"
+    },
+    {
+      "id": "hair-color",
+      "ref": "human/hair-color",
+      "label": "Hair Colour"
+    },
+    {
+      "id": "hair",
+      "ref": "human/hair-style",
+      "label": "Hair",
+      "default": "hollywood-waves"
+    },
+    {
+      "id": "expression",
+      "ref": "human/expression",
+      "label": "Expression",
+      "default": "mischievous"
     },
     {
       "id": "treatment",
@@ -27,21 +55,10 @@
       "emphasis": 1.3
     },
     {
-      "id": "expression",
-      "ref": "human/expression",
-      "label": "Expression",
-      "default": "mischievous"
-    },
-    {
       "id": "outfit",
       "ref": "wardrobe/lingerie-garment",
-      "label": "Wardrobe"
-    },
-    {
-      "id": "hair",
-      "ref": "human/hair-style",
-      "label": "Hair",
-      "default": "hollywood-waves"
+      "label": "Wardrobe",
+      "emphasis": 1.2
     },
     {
       "id": "makeup",
@@ -58,7 +75,8 @@
       "id": "setting",
       "ref": "location/boudoir-interior",
       "label": "Setting",
-      "emphasis": 1.15
+      "emphasis": 1.15,
+      "default": "art-deco-suite"
     },
     {
       "id": "light",

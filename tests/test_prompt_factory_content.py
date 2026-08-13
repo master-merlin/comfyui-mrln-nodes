@@ -504,3 +504,43 @@ def test_the_period_template_does_not_draw_a_modern_look(lib):
         "period-portrait draws human/profile, which supplies modern hair and clothing "
         "that fight the era slots"
     )
+
+
+def test_no_template_restates_an_axis_its_subject_already_draws(lib):
+    """A template must not add a slot for something its own subject already
+    draws one level down.
+
+    human/profile's items nest their own wardrobe, hair and makeup. A
+    template that ALSO declares an 'outfit' slot puts two wardrobes in one
+    prompt and the model picks one — which is exactly how boudoir/pin-up's
+    first thumbnail came out in a Grecian evening gown instead of lingerie.
+    The tile is what exposed it; this is the check that would have.
+    """
+    # Argued exception. human/profile's 'female-lingerie' weaves
+    # '{gaze} paired with {gesture}' into its text, so the gesture cannot be
+    # lifted out without rewriting an item that boudoir/session already
+    # renders well. One item of eight, and the two gestures compose rather
+    # than contradict — kept deliberately, not overlooked.
+    allowed = {("boudoir/vanity-portrait", "ritual", "human/gesture")}
+
+    def nested_refs(ref):
+        try:
+            pool = lib.scope_items(ref)
+        except Exception:  # a folder ref that resolves to nothing here
+            return set()
+        return {slot.ref for _q, _sec, item in pool for slot in getattr(item, "slots", ()) or ()}
+
+    collisions = []
+    for slug in lib.template_slugs():
+        tpl = lib.load_template(slug)
+        slots = list(tpl.slots) + [s for v in tpl.variants for s in v.slots]
+        by_ref = {s.ref: s.id for s in slots}
+        for slot in slots:
+            for child in nested_refs(slot.ref):
+                owner = by_ref.get(child)
+                if owner and owner != slot.id and (slug, owner, child) not in allowed:
+                    collisions.append(
+                        f"{slug}: slot '{owner}' draws {child}, which '{slot.id}' "
+                        f"({slot.ref}) already draws for itself"
+                    )
+    assert not collisions, "\n".join(collisions)

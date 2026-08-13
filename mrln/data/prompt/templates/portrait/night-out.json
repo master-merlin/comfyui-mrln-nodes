@@ -1,8 +1,10 @@
 {
   "version": 1,
   "label": "Night Out",
-  "type": ["human"],
-  "description": "A portrait taken where people actually go out — club floor, cocktail bar, rooftop, backstage. Venue light does the work: practicals, haze and colour rather than a key, so the frame reads as somewhere real rather than a set.",
+  "type": [
+    "human"
+  ],
+  "description": "A portrait taken where people actually go out — club floor, cocktail bar, rooftop, backstage. Venue light does the work: practicals, haze and colour rather than a key, so the frame reads as somewhere real rather than a set. The subject comes from human/profile, which already draws its own wardrobe and hair — this template deliberately adds neither, so the prompt never states two outfits.",
   "variables": [
     {
       "name": "trigger",
@@ -30,16 +32,6 @@
       "ref": "location/nightlife",
       "label": "Venue",
       "emphasis": 1.25
-    },
-    {
-      "id": "outfit",
-      "ref": "wardrobe/glamour",
-      "label": "Outfit"
-    },
-    {
-      "id": "hair",
-      "ref": "human/hair-style",
-      "label": "Hair"
     },
     {
       "id": "light",
