@@ -13,6 +13,7 @@ import {
   parseKvLines,
   parseToken,
   uniqueName,
+  wordPrefixMatch,
 } from "./util.js";
 import {
   armDestructive,
@@ -155,16 +156,9 @@ export function orderWriteBack(renderOrder, orderIds) {
  * match is.
  */
 export function filterSectionOptions(options, query) {
-  const terms = String(query ?? "")
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean);
-  if (!terms.length) return [...(options ?? [])];
-  const patterns = terms.map(
-    (term) => new RegExp(`(?<![a-z0-9])${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i")
-  );
+  if (!String(query ?? "").trim()) return [...(options ?? [])];
   return (options ?? []).filter((option) =>
-    patterns.every((rx) => rx.test(String(option.label ?? option.value ?? "")))
+    wordPrefixMatch(String(option.label ?? option.value ?? ""), query)
   );
 }
 
@@ -1433,11 +1427,16 @@ export function createCompose(hub) {
   }
 
 
-  function sectionOptions() {
+  function sectionOptions(typeOf) {
     // The picker's DATA — one source for the plain select and the filtered
     // one. Type-matching sections lead; folders are always offered because a
     // folder pool self-filters at draw time.
-    const type = state.rawData?.type ?? [];
+    //
+    // `typeOf` says what "matches type" means for THIS picker. The compose tab
+    // ranks against the open template's type; the section editor passes its
+    // own section's `suits`, so a boudoir section ranks boudoir sections first
+    // instead of ranking against whatever template happens to be loaded.
+    const type = (typeof typeOf === "function" ? typeOf() : state.rawData?.type) ?? [];
     const matches = (suits) =>
       !type.length || !(suits ?? []).length || suits.some((s) => type.includes(s));
     const sections = (state.library?.sections ?? []).map((s) => ({
@@ -1494,9 +1493,24 @@ export function createCompose(hub) {
   //
   // Returns {node, select}: `select` is the same element sectionSelect()
   // always returned, so callers keep reading .value off it.
-  function sectionPicker() {
-    const { type, options } = sectionOptions();
-    const select = buildSectionSelect(el("select", {}), type, options);
+  //
+  // Options:
+  //   typeOf   — see sectionOptions(); which suits rank first.
+  //   initial  — a ref to start on. It is KEPT selectable through every filter
+  //              (pinned at the top when a query excludes it), because a
+  //              picker bound to an existing slot must never let a keystroke
+  //              silently drop the ref the slot already has.
+  //   compact  — one line instead of a column, for a picker sitting in a row
+  //              of a table.
+  function sectionPicker({ typeOf, initial = "", compact = false } = {}) {
+    const { type, options } = sectionOptions(typeOf);
+    const current = String(initial ?? "");
+    const withCurrent = (rows) =>
+      current && !rows.some((row) => (row.value ?? row.slug) === current)
+        ? [{ value: current, label: `${current}  (current)`, match: true }, ...rows]
+        : rows;
+    const select = buildSectionSelect(el("select", {}), type, withCurrent(options));
+    if (current) select.value = current;
     const note = el("span", { class: "mrln-note" }, "");
     let deep = false;
     let timer = null;
@@ -1504,7 +1518,8 @@ export function createCompose(hub) {
 
     function applyLocal(query) {
       const kept = filterSectionOptions(options, query);
-      buildSectionSelect(select, type, kept);
+      buildSectionSelect(select, type, withCurrent(kept));
+      if (current && !select.value) select.value = current;
       note.textContent = kept.length
         ? `${kept.length} match${kept.length === 1 ? "" : "es"}`
         : "no section NAME matches — switch to Deep to search what is inside them";
@@ -1535,7 +1550,13 @@ export function createCompose(hub) {
       }
       if (mine !== generation) return; // a newer keystroke owns the list
       const results = body.results ?? [];
-      mount(select, ...results.map((row) => el("option", { value: row.slug }, deepLabel(row))));
+      mount(
+        select,
+        ...withCurrent(results).map((row) =>
+          el("option", { value: row.slug ?? row.value }, row.slug ? deepLabel(row) : row.label)
+        )
+      );
+      if (current && !select.value) select.value = current;
       note.textContent = results.length
         ? `${results.length}${body.truncated ? "+" : ""} section(s)`
         : "nothing in the library mentions that";
@@ -1546,7 +1567,8 @@ export function createCompose(hub) {
       clearTimeout(timer);
       if (!query) {
         generation++; // cancel a deep search still in flight
-        buildSectionSelect(select, type, options);
+        buildSectionSelect(select, type, withCurrent(options));
+        if (current && !select.value) select.value = current;
         note.textContent = "";
         return;
       }
@@ -1579,13 +1601,15 @@ export function createCompose(hub) {
       },
       "Names"
     );
-    const node = el(
-      "div",
-      { class: "mrln-picker" },
-      el("div", { class: "mrln-inline" }, filter, modeButton),
-      select,
-      note
-    );
+    const node = compact
+      ? el("div", { class: "mrln-picker mrln-picker-compact" }, select, filter, modeButton, note)
+      : el(
+          "div",
+          { class: "mrln-picker" },
+          el("div", { class: "mrln-inline" }, filter, modeButton),
+          select,
+          note
+        );
     return { node, select };
   }
 
@@ -2145,6 +2169,7 @@ export function createCompose(hub) {
     renderNested,
     renderOptimize,
     renderPreview,
+    sectionPicker,
     sectionSelect,
   };
 }

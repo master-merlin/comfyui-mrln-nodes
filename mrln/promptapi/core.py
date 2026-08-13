@@ -99,6 +99,13 @@ def _pool(lib, ref):
             "section_slug": section.slug,
             "tier": item.origin or lib.tier_of("sections", section.slug),
         }
+        if item.tags:
+            # A slot's tags_any/tags_none filter can only offer the tags its
+            # pool actually carries; without them the composer's slot editor
+            # has nothing to draw, and the filter stays invisible and
+            # hand-edited. Omitted when empty — most pools have none, and a
+            # [] on every row of a few hundred is payload saying nothing.
+            entry["tags"] = list(item.tags)
         if item.data and item.data.get("lora"):
             entry["lora"] = str(item.data["lora"])
             base = pl.lora_base_family(item.data)

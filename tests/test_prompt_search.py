@@ -74,12 +74,26 @@ def test_every_term_must_hit_so_two_words_narrow(lib, tmp_path):
 def test_where_says_whether_the_name_or_the_content_matched(lib):
     """The useful half of the answer: a name hit is what you were looking for,
     an item hit is where it turned out to live."""
-    lib.save_user("sections", "nightlife/club", {"version": 1, "items": [
-        {"name": "mirrorball", "text": "a mirrorball over a full floor"},
-    ]})
-    lib.save_user("sections", "wardrobe/party", {"version": 1, "items": [
-        {"name": "club-dress", "text": "a nightlife dress cut for movement"},
-    ]})
+    lib.save_user(
+        "sections",
+        "nightlife/club",
+        {
+            "version": 1,
+            "items": [
+                {"name": "mirrorball", "text": "a mirrorball over a full floor"},
+            ],
+        },
+    )
+    lib.save_user(
+        "sections",
+        "wardrobe/party",
+        {
+            "version": 1,
+            "items": [
+                {"name": "club-dress", "text": "a nightlife dress cut for movement"},
+            ],
+        },
+    )
     lib.invalidate()
     by_slug = {hit["slug"]: hit for hit in library.search_sections(lib, "nightlife")}
     assert by_slug["nightlife/club"]["where"] == ["name"]
@@ -87,23 +101,51 @@ def test_where_says_whether_the_name_or_the_content_matched(lib):
 
 
 def test_name_hits_sort_before_item_hits(lib):
-    lib.save_user("sections", "nightlife/club", {"version": 1, "items": [
-        {"name": "floor", "text": "a full floor"},
-    ]})
-    lib.save_user("sections", "wardrobe/party", {"version": 1, "items": [
-        {"name": "dress", "text": "a nightlife dress"},
-    ]})
+    lib.save_user(
+        "sections",
+        "nightlife/club",
+        {
+            "version": 1,
+            "items": [
+                {"name": "floor", "text": "a full floor"},
+            ],
+        },
+    )
+    lib.save_user(
+        "sections",
+        "wardrobe/party",
+        {
+            "version": 1,
+            "items": [
+                {"name": "dress", "text": "a nightlife dress"},
+            ],
+        },
+    )
     lib.invalidate()
     assert slugs(library.search_sections(lib, "nightlife"))[0] == "nightlife/club"
 
 
 def test_scope_narrows_to_names_or_to_content(lib):
-    lib.save_user("sections", "nightlife/club", {"version": 1, "items": [
-        {"name": "floor", "text": "a full floor"},
-    ]})
-    lib.save_user("sections", "wardrobe/party", {"version": 1, "items": [
-        {"name": "dress", "text": "a nightlife dress"},
-    ]})
+    lib.save_user(
+        "sections",
+        "nightlife/club",
+        {
+            "version": 1,
+            "items": [
+                {"name": "floor", "text": "a full floor"},
+            ],
+        },
+    )
+    lib.save_user(
+        "sections",
+        "wardrobe/party",
+        {
+            "version": 1,
+            "items": [
+                {"name": "dress", "text": "a nightlife dress"},
+            ],
+        },
+    )
     lib.invalidate()
     assert slugs(library.search_sections(lib, "nightlife", scope="name")) == ["nightlife/club"]
     assert slugs(library.search_sections(lib, "nightlife", scope="text")) == ["wardrobe/party"]
@@ -112,10 +154,17 @@ def test_scope_narrows_to_names_or_to_content(lib):
 def test_a_hidden_item_never_answers_a_search(lib):
     """A tombstone is not content — offering it as a reason to pick a section
     would send the user to something they cannot draw."""
-    lib.save_user("sections", "wardrobe/party", {"version": 1, "items": [
-        {"name": "retired", "text": "a nightlife dress", "hidden": True},
-        {"name": "kept", "text": "a plain coat"},
-    ]})
+    lib.save_user(
+        "sections",
+        "wardrobe/party",
+        {
+            "version": 1,
+            "items": [
+                {"name": "retired", "text": "a nightlife dress", "hidden": True},
+                {"name": "kept", "text": "a plain coat"},
+            ],
+        },
+    )
     lib.invalidate()
     assert slugs(library.search_sections(lib, "nightlife")) == []
 

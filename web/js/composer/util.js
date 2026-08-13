@@ -570,6 +570,94 @@ export function itemRowEdited(edited, item) {
   return false;
 }
 
+// ---- search matching -------------------------------------------------------
+
+// Every term matches at a WORD START somewhere in `haystack`.
+//
+// The one rule the whole panel searches by, so the three surfaces that filter
+// — the '{' assist, the section picker's Names mode and the server's /search
+// — agree about what a match is. Plain substring looked fine and was not:
+// 'rain' matched terrain, grain and training. Word-prefix keeps rainy and
+// rainfall and drops the noise. A word starts after anything that is not a
+// letter or a digit, so 'location/every' and 'model-a' both split.
+export function wordPrefixMatch(haystack, query) {
+  const terms = String(query ?? "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!terms.length) return true;
+  const text = String(haystack ?? "");
+  return terms.every((term) =>
+    new RegExp(`(?<![a-z0-9])${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i").test(text)
+  );
+}
+
+// ---- item child slots ------------------------------------------------------
+// An item's `{placeholder}` is backed by a slot {id, ref, default?, tags_any?,
+// tags_none?}. These three keep the text and the slot list in step, which is
+// what lets the section editor offer a row per placeholder instead of making
+// the author track both halves by hand.
+
+// The `{tokens}` a text actually uses, in order, without duplicates.
+// '{{name}}' is the literal escape and 'trigger' is the node's own widget —
+// neither is a child slot, so neither is reported.
+export function textTokens(text) {
+  const found = [];
+  for (const match of String(text ?? "").matchAll(/(\{?)\{([A-Za-z0-9_-]+)\}/g)) {
+    if (match[1] || match[2] === "trigger" || found.includes(match[2])) continue;
+    found.push(match[2]);
+  }
+  return found;
+}
+
+// Rewrite {from} to {to} everywhere it is a real reference. Renaming a slot
+// has to carry the sentence with it — otherwise every rename silently breaks
+// the item, which is exactly why nobody renamed the auto-derived ids.
+export function renameToken(text, from, to) {
+  return String(text ?? "").replace(
+    new RegExp(`(?<!\\{)\\{${escapeRegExp(from)}\\}`, "g"),
+    `{${to}}`
+  );
+}
+
+export function dropToken(text, id) {
+  return String(text ?? "").replace(new RegExp(`(?<!\\{)\\{${escapeRegExp(id)}\\}`, "g"), "");
+}
+
+// Every tag present on any item of a pool — the choices a slot's tag filter
+// can meaningfully offer. Anything else would filter the pool down to nothing.
+export function tagUnion(items) {
+  const tags = new Set();
+  for (const item of items ?? []) for (const tag of item?.tags ?? []) tags.add(tag);
+  return [...tags].sort();
+}
+
+// Cycle a tag through the three states a slot filter has: off → only this
+// (tags_any) → never this (tags_none) → off. Returns a NEW slot; empty
+// arrays are dropped so a cleared filter leaves no key behind in the file.
+export function cycleSlotTag(slot, tag) {
+  const any = (slot?.tags_any ?? []).includes(tag);
+  const none = (slot?.tags_none ?? []).includes(tag);
+  const next = { ...slot };
+  const without = (key) => (next[key] ?? []).filter((t) => t !== tag);
+  if (any) {
+    next.tags_any = without("tags_any");
+    next.tags_none = [...(next.tags_none ?? []), tag];
+  } else if (none) {
+    next.tags_none = without("tags_none");
+  } else {
+    next.tags_any = [...(next.tags_any ?? []), tag];
+  }
+  for (const key of ["tags_any", "tags_none"]) if (!next[key]?.length) delete next[key];
+  return next;
+}
+
+// Exported because this module's rule is "every top-level declaration is an
+// export" (tests/js/util.test.mjs) — there are no private helpers here.
+export function escapeRegExp(value) {
+  return String(value ?? "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // ---- misc ------------------------------------------------------------------
 
 export function uniqueName(base, taken) {

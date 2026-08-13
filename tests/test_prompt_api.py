@@ -89,6 +89,32 @@ def test_items_folder_scope(lib):
     assert "nature/alpine-pass" in names and "urban/shibuya" in names
 
 
+def test_items_carry_their_tags(lib):
+    """The composer's slot editor draws a tags_any/tags_none filter from the
+    tags a pool actually has. Without this the filter cannot be offered at
+    all, which is how tags_any stayed hand-edited JSON."""
+    lib.save_user(
+        "sections",
+        "cast",
+        {
+            "version": 1,
+            "items": [
+                {"name": "her", "text": "a woman", "tags": ["female", "lead"]},
+                {"name": "him", "text": "a man", "tags": ["male"]},
+                {"name": "nobody", "text": "an empty room"},
+            ],
+        },
+    )
+    lib.invalidate()
+    items = {
+        item["name"]: item for item in ok(promptapi.handle_items(lib, {"ref": "cast"}))["items"]
+    }
+    assert items["her"]["tags"] == ["female", "lead"]
+    assert items["him"]["tags"] == ["male"]
+    # omitted, not [] — most pools have none and a key per row says nothing
+    assert "tags" not in items["nobody"]
+
+
 def test_items_carry_lora_flag(lib):
     body = ok(promptapi.handle_items(lib, {"ref": "lora/kits"}))
     assert body["items"][0]["lora"] == "kits\\hycade.safetensors"

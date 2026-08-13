@@ -314,6 +314,60 @@ textarea.mrln-auto {
   padding-bottom: 4px;
 }
 .mrln-items-table tr.mrln-lora-row .mrln-inline input { min-width: 34px; }
+
+/* ---- child slot rows (one line per {placeholder} of an item) --------------
+   Sits under its item row and has to stay scannable at 17 of them, so every
+   control is one line high and the whole line wraps rather than scrolls.
+   NB: 'child-slot', not 'slot' — .mrln-slot is the Compose tab's row and
+   carries hover/drag/mute rules these lines must not inherit. */
+.mrln-items-table tr.mrln-slot-tr td { padding-top: 0; padding-bottom: 2px; }
+.mrln-child-slot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  min-width: 0;
+}
+.mrln-slot-brace { opacity: 0.55; font-family: monospace; }
+input.mrln-slot-id {
+  flex: 0 0 92px;
+  min-width: 0;
+  font-family: monospace;
+  padding: 1px 3px;
+}
+.mrln-slot-default,
+.mrln-slot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+select.mrln-slot-default-select { max-width: 150px; }
+.mrln-slot-unused { opacity: 0.75; }
+.mrln-slot-undeclared { border-left: 2px solid var(--mrln-error-dim); padding-left: 4px; }
+.mrln-slot-add { align-self: flex-start; margin-top: 2px; }
+button.mrln-tag-chip.mrln-tag-any {
+  border-color: var(--mrln-accent);
+  color: var(--mrln-accent-soft);
+}
+button.mrln-tag-chip.mrln-tag-none {
+  border-color: var(--mrln-error);
+  color: var(--mrln-error);
+  text-decoration: line-through;
+}
+/* the compact picker: select + filter + mode on ONE line, note after it */
+.mrln-picker.mrln-picker-compact {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px;
+  flex: 1 1 260px;
+}
+.mrln-picker.mrln-picker-compact > select { flex: 1 1 150px; min-width: 0; max-width: 260px; }
+.mrln-picker.mrln-picker-compact > input { flex: 0 1 100px; min-width: 0; }
+.mrln-picker.mrln-picker-compact > .mrln-note { flex: 1 0 100%; font-size: 10px; opacity: 0.7; }
 .mrln-composer input.mrln-input-error,
 .mrln-composer textarea.mrln-input-error {
   border-color: var(--mrln-error);

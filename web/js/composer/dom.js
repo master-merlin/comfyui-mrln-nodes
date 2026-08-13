@@ -12,6 +12,7 @@
 // INSIDE these functions, i.e. when the panel calls them.
 //
 // util.js is the pure-data sibling (no DOM at all); this is the DOM sibling.
+import { wordPrefixMatch } from "./util.js";
 
 // ---- element factory -------------------------------------------------------
 
@@ -130,8 +131,14 @@ export function braceAssist(field, getOptions, onPick) {
       hide();
       return;
     }
-    const lower = at.partial.toLowerCase();
-    const options = getOptions().filter((o) => o.name.toLowerCase().startsWith(lower));
+    // Match the SLUG as well as the id, at any word start. The id is derived
+    // from the slug's last segment, so a prefix-of-the-id-only filter meant
+    // '{urban' was the single way to reach location/urban — you had to know
+    // the slug already, which is what the whole picker exists to spare you.
+    // Now '{location' finds it too, and '{profile' still does.
+    const options = getOptions().filter((o) =>
+      wordPrefixMatch(`${o.name} ${o.hint ?? ""}`, at.partial)
+    );
     if (!options.length) {
       hide();
       return;

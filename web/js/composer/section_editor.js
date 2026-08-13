@@ -8,12 +8,17 @@
 import {
   cleanTriggerWords,
   combineItem,
+  cycleSlotTag,
+  dropToken,
   dropTriggerWord,
   isCombineItem,
   itemRowEdited,
   loraProgressText,
   muteTriggerWord,
+  renameToken,
   soloTriggerWord,
+  tagUnion,
+  textTokens,
   triggerSelection,
   triggerSoloed,
   uniqueName,
@@ -34,6 +39,7 @@ export function createSectionEditor(hub) {
   const pollLoraDownload = (...a) => hub.pollLoraDownload(...a);
   const refreshDetail = (...a) => hub.refreshDetail(...a);
   const refreshLoraBanner = (...a) => hub.refreshLoraBanner(...a);
+  const sectionPicker = (...a) => hub.sectionPicker(...a);
   const setEditor = (...a) => hub.setEditor(...a);
   const thumbControls = (...a) => hub.thumbControls(...a);
 
@@ -226,6 +232,12 @@ export function createSectionEditor(hub) {
       title: "Which template types this section serves; typed templates filter "
         + "their pickers and random draws by this. Explicit picks are never restricted.",
     });
+    /** This section's own suits — what a child picker ranks against. */
+    const suitsValue = () =>
+      suitsInput.value
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
     const itemRows = [];
     const table = el("table", { class: "mrln-items-table" });
     table.append(
@@ -239,6 +251,40 @@ export function createSectionEditor(hub) {
         el("td", { class: "mrln-w-act" })
       )
     );
+
+    // ---- child slots ---------------------------------------------------
+    // An item's `{placeholder}` is a SLOT: {id, ref, default?, tags_any?,
+    // tags_none?}. The engine has always read all four; only `ref` was ever
+    // reachable from this editor, and only by typing '{' — so a nested item
+    // like boudoir/configuration's female-duo (four slots, two of them the
+    // SAME section under different ids, each with its own default and tag
+    // filter) could be authored in a text editor and nowhere else. That is
+    // the whole reason the composer exists, so it is a row per placeholder
+    // now: pick the section, pick the default off its real item list, click
+    // the tags it actually has.
+
+    const pools = new Map(); // ref -> items, successes only
+    const poolReqs = new Map(); // ref -> in-flight request, so N slots on one
+    //                             section make ONE call (see the freeze that
+    //                             an un-deduped version of this caused)
+
+    function poolFor(ref) {
+      if (!ref) return Promise.resolve([]);
+      if (pools.has(ref)) return Promise.resolve(pools.get(ref));
+      const pending = poolReqs.get(ref);
+      if (pending) return pending;
+      const request = ctx
+        .apiJson(`/mrln/prompt/items?ref=${encodeURIComponent(ref)}`)
+        .then((body) => {
+          const items = body.items ?? [];
+          pools.set(ref, items); // never cache a failure: a folder that
+          return items; //         appears later must be readable then
+        })
+        .catch(() => [])
+        .finally(() => poolReqs.delete(ref));
+      poolReqs.set(ref, request);
+      return request;
+    }
 
     function addItemRow(item = { name: "", text: "" }) {
       const row = {
@@ -261,7 +307,11 @@ export function createSectionEditor(hub) {
         }
         options.push({ name: "trigger", hint: "node trigger widget" });
         for (const sec of state.library?.sections ?? []) {
-          if (row.slots.some((s) => s.ref === sec.slug)) continue;
+          // A section already used stays on offer. It used to be skipped, and
+          // that single `continue` is why a duo could not be built here:
+          // {model-a} and {model-b} both want human/profile, and the second
+          // pick did not exist. Only the ID has to be unique, so the id is
+          // what gets suffixed.
           const base = sec.slug.split("/").pop();
           let id = base;
           let n = 2;
@@ -275,9 +325,298 @@ export function createSectionEditor(hub) {
       row.text.dataset.mrlnBaseTitle = item.text ?? "";
       const textAssist = braceAssist(row.text, itemRefOptions, (option) => {
         if (option.create) row.slots.push({ ...option.create });
+        renderSlots();
       });
-      row.text.addEventListener("input", () => validateRefs(row.text, itemKnown));
+      row.text.addEventListener("input", () => {
+        validateRefs(row.text, itemKnown);
+        scheduleRenderSlots();
+      });
       validateRefs(row.text, itemKnown);
+
+      // ---- the slot rows -------------------------------------------------
+      const slotCell = el("td", { colspan: 4 });
+      const slotTr = el(
+        "tr",
+        { class: "mrln-slot-tr" },
+        el("td", { class: "mrln-w-origin" }),
+        slotCell
+      );
+      let slotSignature = null;
+      let slotLines = [];
+      let slotTimer = null;
+
+      function slotIds() {
+        return new Set(row.slots.map((s) => s.id));
+      }
+
+      function setText(value) {
+        row.text.value = value;
+        row.text.dispatchEvent(new Event("input", { bubbles: false }));
+      }
+
+      function insertToken(id) {
+        // at the caret when the field has one, appended otherwise
+        const caret = row.text.selectionStart;
+        if (typeof caret === "number" && document.activeElement === row.text) {
+          row.text.setRangeText(`{${id}}`, caret, row.text.selectionEnd ?? caret, "end");
+          setText(row.text.value);
+        } else {
+          setText(`${row.text.value}${row.text.value.trim() ? ", " : ""}{${id}}`);
+        }
+      }
+
+      function slotLine(slot) {
+        const idInput = el("input", {
+          type: "text",
+          class: "mrln-slot-id",
+          value: slot.id,
+          title: "The placeholder name. Renaming it rewrites {"
+            + slot.id
+            + "} in the text above in the same edit — that is how you get from "
+            + "{profile} to {model-a} without touching the sentence.",
+        });
+        idInput.addEventListener("change", () => {
+          // on change, not input: a rebuild mid-keystroke would steal focus
+          const next = idInput.value.trim().replace(/[^A-Za-z0-9_-]/g, "-");
+          const taken = slotIds();
+          taken.delete(slot.id);
+          if (!next || taken.has(next)) {
+            idInput.value = slot.id; // empty or a duplicate: refuse, say why
+            ctx.toast(
+              "error",
+              "Slot name unchanged",
+              !next ? "a slot needs a name" : `'${next}' is already a slot of this item`
+            );
+            return;
+          }
+          const from = slot.id;
+          slot.id = next;
+          setText(renameToken(row.text.value, from, next));
+        });
+
+        const picker = sectionPicker({
+          initial: slot.ref,
+          compact: true,
+          typeOf: () => suitsValue(),
+        });
+        const defaultBox = el("span", { class: "mrln-slot-default" });
+        const tagBox = el("span", { class: "mrln-slot-tags" });
+
+        async function paintPool() {
+          const ref = slot.ref;
+          mount(defaultBox, el("span", { class: "mrln-note" }, "…"));
+          const items = await poolFor(ref);
+          if (slot.ref !== ref) return; // the ref changed while we waited
+          const names = items.map((i) => i.name).filter(Boolean);
+          const select = el("select", { class: "mrln-slot-default-select" });
+          select.append(el("option", { value: "" }, "(random)"));
+          for (const name of names) select.append(el("option", { value: name }, name));
+          if (slot.default && !names.includes(slot.default)) {
+            // a default naming an item that no longer exists must stay
+            // visible — silently dropping it would edit the file on open
+            select.append(el("option", { value: slot.default }, `${slot.default}  (missing)`));
+          }
+          select.value = slot.default ?? "";
+          select.addEventListener("change", () => {
+            if (select.value) slot.default = select.value;
+            else delete slot.default;
+          });
+          mount(
+            defaultBox,
+            el("span", { class: "mrln-note" }, "default"),
+            names.length
+              ? select
+              : el("span", { class: "mrln-note" }, "— could not read this section's items")
+          );
+          paintTags(items);
+        }
+
+        function paintTags(items) {
+          const tags = tagUnion(items);
+          if (!tags.length) {
+            mount(tagBox, el("span", { class: "mrln-note" }, "no tags in this section"));
+            return;
+          }
+          mount(
+            tagBox,
+            el("span", { class: "mrln-note" }, "tags"),
+            ...tags.map((tag) => {
+              const any = (slot.tags_any ?? []).includes(tag);
+              const none = (slot.tags_none ?? []).includes(tag);
+              const button = el(
+                "button",
+                {
+                  class: `mrln-btn mrln-mini mrln-tag-chip${
+                    any ? " mrln-tag-any" : none ? " mrln-tag-none" : ""
+                  }`,
+                  title: any
+                    ? `Only items tagged '${tag}' can be drawn. Click for 'never'.`
+                    : none
+                      ? `Items tagged '${tag}' are never drawn. Click to clear.`
+                      : `Click once to draw ONLY '${tag}', twice to never draw it.`,
+                  onclick: () => {
+                    // cycleSlotTag returns a new slot; copy the two keys back
+                    // so `slot` stays the object row.slots holds
+                    const next = cycleSlotTag(slot, tag);
+                    for (const key of ["tags_any", "tags_none"]) {
+                      if (next[key]) slot[key] = next[key];
+                      else delete slot[key];
+                    }
+                    paintTags(items);
+                  },
+                },
+                tag
+              );
+              return button;
+            })
+          );
+        }
+
+        picker.select.addEventListener("change", () => {
+          const ref = picker.select.value;
+          if (!ref || ref === slot.ref) return;
+          slot.ref = ref;
+          delete slot.default; // an item name from the OLD section is a lie
+          delete slot.tags_any;
+          delete slot.tags_none;
+          paintPool();
+        });
+
+        const removeButton = el(
+          "button",
+          {
+            class: "mrln-btn mrln-mini",
+            title: `Remove this slot and its {${slot.id}} from the text. Click twice.`,
+            onclick: () =>
+              armDestructive(removeButton, "Drop?", () => {
+                row.slots.splice(row.slots.indexOf(slot), 1);
+                setText(dropToken(row.text.value, slot.id));
+              }),
+          },
+          "✕"
+        );
+        const insertButton = el(
+          "button",
+          {
+            class: "mrln-btn mrln-mini",
+            title: "This slot is declared but its placeholder appears nowhere in the "
+              + "text, so it never renders. Click to put it in.",
+            onclick: () => insertToken(slot.id),
+          },
+          "insert"
+        );
+        const node = el(
+          "div",
+          { class: "mrln-child-slot" },
+          el("span", { class: "mrln-slot-brace" }, "↳ {"),
+          idInput,
+          el("span", { class: "mrln-slot-brace" }, "}"),
+          picker.node,
+          defaultBox,
+          tagBox,
+          insertButton,
+          removeButton
+        );
+        // "Is my placeholder in the text?" changes on ordinary typing, so it
+        // is repainted in place. Rebuilding the line for it would mean a new
+        // 200-option picker per keystroke — the same shape of mistake as the
+        // nested-pool fan-out, and it would land right under the caret.
+        const syncUsed = () => {
+          const used = textTokens(row.text.value).includes(slot.id);
+          node.classList.toggle("mrln-slot-unused", !used);
+          insertButton.style.display = used ? "none" : "";
+        };
+        paintPool();
+        syncUsed();
+        return { node, syncUsed };
+      }
+
+      function undeclaredLine(name) {
+        // A token typed by hand that no slot backs. It renders as literal
+        // text today, which is the single most confusing way for this to
+        // fail — so it gets a row that says so and a one-click fix.
+        const picker = sectionPicker({ compact: true, typeOf: () => suitsValue() });
+        return el(
+          "div",
+          { class: "mrln-child-slot mrln-slot-undeclared" },
+          el("span", { class: "mrln-slot-brace" }, `↳ {${name}}`),
+          el("span", { class: "mrln-note" }, "no section behind it — pick one:"),
+          picker.node,
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
+              onclick: () => {
+                if (!picker.select.value) return;
+                row.slots.push({ id: name, ref: picker.select.value });
+                renderSlots();
+              },
+            },
+            "declare"
+          )
+        );
+      }
+
+      function renderSlots() {
+        const undeclared = textTokens(row.text.value).filter((t) => !slotIds().has(t));
+        // Rebuild ONLY when the structure changes. Every other visible state
+        // — which ref, which default, which tags, whether the placeholder is
+        // in the text — repaints in place, because a rebuild means one fresh
+        // 200-option picker per slot and this runs on the typing path.
+        const signature = JSON.stringify([row.slots.map((s) => s.id), undeclared]);
+        if (signature === slotSignature) {
+          for (const line of slotLines) line.syncUsed();
+          return;
+        }
+        slotSignature = signature;
+        slotLines = [];
+        if (!row.slots.length && !undeclared.length) {
+          slotTr.style.display = "none";
+          mount(slotCell);
+          return;
+        }
+        slotTr.style.display = "";
+        slotLines = row.slots.map(slotLine);
+        mount(
+          slotCell,
+          ...slotLines.map((line) => line.node),
+          ...undeclared.map(undeclaredLine),
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini mrln-slot-add",
+              title: "Add another child slot and drop its placeholder into the text",
+              onclick: () => addSlot(),
+            },
+            "+ slot"
+          )
+        );
+      }
+
+      function scheduleRenderSlots() {
+        // The typing path. A rebuild fires while a '{token}' is half-typed —
+        // every intermediate prefix is briefly an undeclared token — so it
+        // waits for the keystrokes to settle. Button paths call renderSlots()
+        // directly and repaint at once.
+        clearTimeout(slotTimer);
+        slotTimer = setTimeout(renderSlots, 220);
+        for (const line of slotLines) line.syncUsed();
+      }
+
+      function addSlot() {
+        const sections = state.library?.sections ?? [];
+        const ref = sections[0]?.slug;
+        if (!ref) {
+          ctx.toast("error", "No sections to reference", "the library is still loading");
+          return;
+        }
+        const id = uniqueName(ref.split("/").pop(), slotIds());
+        row.slots.push({ id, ref });
+        insertToken(id);
+        renderSlots();
+      }
+
+      row.renderSlots = renderSlots;
       const fromFactory = item.origin === "factory";
       const originChip = fromFactory
         ? el("span", { class: "mrln-chip mrln-factory", title: "Lives in the factory tier" }, "F")
@@ -299,10 +638,40 @@ export function createSectionEditor(hub) {
             } else {
               itemRows.splice(itemRows.indexOf(row), 1);
               tr.remove();
+              slotTr.remove();
             }
           },
         },
         fromFactory ? (row.hidden ? "↩" : "🚫") : "✕"
+      );
+      // Duplicate: the cheap path to a second configuration. A duo is a solo
+      // with one more model slot; building it from an empty row means
+      // retyping the sentence and every slot, which is what made a 17-slot
+      // item a job for a text editor.
+      const cloneButton = el(
+        "button",
+        {
+          class: "mrln-btn mrln-mini",
+          title: "Duplicate this item — same text, same slots, a free name. "
+            + "The copy is independent from here on.",
+          onclick: () => {
+            const copy = {
+              ...cleanedItem(row),
+              name: uniqueName(
+                row.name.value.trim() || "item",
+                new Set(itemRows.map((r) => r.name.value.trim()))
+              ),
+            };
+            delete copy.origin; // a copy of a factory item is MINE,
+            delete copy.hidden; // and it is not a tombstone
+            addItemRow(copy);
+            const made = itemRows[itemRows.length - 1];
+            slotTr.after(made.tr, made.slotTr); // next to its original, not at the end
+            made.name.focus();
+            made.name.select();
+          },
+        },
+        "⧉"
       );
       const tr = el(
         "tr",
@@ -311,10 +680,13 @@ export function createSectionEditor(hub) {
         el("td", { class: "mrln-w-name" }, row.name),
         el("td", {}, textAssist),
         el("td", { class: "mrln-w-weight" }, row.weight),
-        el("td", { class: "mrln-w-act" }, actionButton)
+        el("td", { class: "mrln-w-act" }, el("div", { class: "mrln-inline" }, cloneButton, actionButton))
       );
+      row.tr = tr;
+      row.slotTr = slotTr;
       itemRows.push(row);
-      table.append(tr);
+      table.append(tr, slotTr);
+      renderSlots();
       if (item.data?.lora !== undefined) {
         // LoRA block: an extra editor line for the loader metadata — the
         // text above stays the catchword that lands in the prompt.
