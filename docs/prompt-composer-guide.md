@@ -163,6 +163,17 @@ Two policies decide what happens when reality disagrees with the library:
 | `on_missing` | the file is not on this machine — **`error`** names it and stops (the safe default) · `skip` renders without it · `download` fetches it by AIR if it can |
 | `on_mismatch` | the LoRA was trained for a different base model than the connected checkpoint (a FLUX LoRA on an SDXL one) — it loads without erroring but quietly degrades the image, so **`warn`** says so · `skip` leaves it out · `error` stops · `ignore` if you know better |
 
+**What a LoRA looks like in the library.** `loralab/anime-style` is a shipped
+section whose every item carries one:
+
+<img src="images/15-lora-section.png" width="885" alt="The loralab/anime-style section open in the Library, each item carrying a LoRA block">
+
+Per item: the **LoRA** tag, the `.safetensors` it needs (⚠ when this machine does
+not have the file), its model and clip strengths, its trained words, its Civitai
+AIR and a preview tile. **Get from Civitai** fetches a missing file by that AIR —
+the same healing the node's `on_missing: download` performs at render time, and
+the reason a shared bundle can rebuild itself on someone else's machine.
+
 ---
 
 ## Compose

@@ -3518,3 +3518,9 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   display: flex;
   align-items: center;
 }
+
+/* The LoRA tag sits in a flex row of controls, so it must not be stretched
+   into one — .mrln-inline gives every child flex:1 by default. */
+.pc-panel .mrln-lora-row .mrln-inline > .mrln-lora-tag {
+  flex: 0 0 auto;
+}

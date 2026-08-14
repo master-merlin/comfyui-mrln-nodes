@@ -1168,16 +1168,27 @@ export function createSectionEditor(hub) {
         // The row's head cell — nothing reads its children, so a LoRA preview
         // tile mounts by prepending here (or by inserting a cell into
         // row.loraRow). Kept as a named handle for exactly that.
-        row.loraTileMount = el(
-          "td",
-          { class: "mrln-w-origin" },
-          el("span", { class: "mrln-chip mrln-user" }, "LoRA")
-        );
+        row.loraTileMount = el("td", { class: "mrln-w-origin" });
         row.loraRow = el(
           "tr",
           { class: "mrln-lora-row" },
           row.loraTileMount,
-          el("td", { colspan: 2 }, el("div", { class: "mrln-inline" }, row.loraFilter, row.loraControl)),
+          // The chip rides the WIDE cell, not the 26px origin column beside it.
+          // That column holds a one-letter tier mark (F/U); "LoRA" measures
+          // 37px in it and painted straight over the filter field to its
+          // right. The row's two continuation rows already leave the column
+          // empty, so this also makes the three agree.
+          el(
+            "td",
+            { colspan: 2 },
+            el(
+              "div",
+              { class: "mrln-inline" },
+              el("span", { class: "mrln-chip mrln-user mrln-lora-tag" }, "LoRA"),
+              row.loraFilter,
+              row.loraControl
+            )
+          ),
           el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
           el("td", { class: "mrln-w-act" })
         );
