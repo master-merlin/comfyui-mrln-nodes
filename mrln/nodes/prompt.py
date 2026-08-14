@@ -34,6 +34,45 @@ BATCH_MAX = 64
 COMBINATORIAL_CAP = 512
 
 
+# How the template widget names templates. The slug is the identifier; the
+# label is a convenience the Composer can write instead.
+TEMPLATE_NAME_MODES = ["slug", "label"]
+
+
+def resolve_template_name(lib, value):
+    """The template widget's value -> a slug.
+
+    A known slug always wins, so a workflow saved before the label mode
+    existed cannot change meaning. Otherwise the value is matched against
+    template LABELS, case-insensitively; an ambiguous label is refused by
+    name rather than guessed, because silently picking one of two templates
+    is the kind of wrong that only shows up in the render.
+    """
+    slugs = lib.template_slugs()
+    if value in slugs:
+        return value
+    wanted = str(value or "").strip().casefold()
+    if not wanted:
+        return value
+    matches = []
+    for slug in slugs:
+        try:
+            label = (lib.load_template(slug).label or "").strip()
+        except pl.PromptLibError:
+            continue  # one broken file must not hide every other template
+        if label.casefold() == wanted:
+            matches.append(slug)
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise pl.PromptLibError(
+            f"template label '{value}' matches {len(matches)} templates "
+            f"({', '.join(matches)}) — set the template widget to the slug you mean, "
+            "or rename one of them in the Composer's Library tab"
+        )
+    return value  # not a slug and not a label: load_template writes the error
+
+
 def _template_options():
     try:
         options = pl.open_library().template_slugs()
@@ -549,6 +588,22 @@ class PromptTemplate:
                         "shrink the space by fixing more slots in the selection box.",
                     },
                 ),
+                # LAST, and it has to stay last: widgets_values is positional,
+                # so a new widget may only ever go on the end or every saved
+                # workflow shifts by one.
+                "template_names": (
+                    TEMPLATE_NAME_MODES,
+                    {
+                        "default": TEMPLATE_NAME_MODES[0],
+                        "tooltip": "How the template widget above names templates. 'slug' is "
+                        "the file path — the stable identifier, and what a shared workflow "
+                        "should carry. 'label' lets the widget hold the human name instead "
+                        "(the Composer's Apply to node writes that form), which reads better "
+                        "but breaks if the label is edited or a second template takes it. "
+                        "Either way a value that IS a known slug is read as one, so nothing "
+                        "already saved changes meaning.",
+                    },
+                ),
             },
         }
 
@@ -562,7 +617,7 @@ class PromptTemplate:
             return True
         try:
             lib = pl.open_library()
-            tpl = lib.load_template(template)
+            tpl = lib.load_template(resolve_template_name(lib, template))
             selection_map = pl.parse_kv_lines(selection, what="selection")
         except pl.PromptLibError as exc:
             return str(exc)
@@ -606,11 +661,13 @@ class PromptTemplate:
         profile=pl.STANDARD,
         batch_count=1,
         batch_mode=BATCH_MODES[0],
+        template_names=TEMPLATE_NAME_MODES[0],
     ):
         if template == EMPTY_SENTINEL:
             raise pl.TemplateNotFoundError(template, [])
         lib = pl.open_library()
         lib.ensure_user_dirs()
+        template = resolve_template_name(lib, template)
         tpl = lib.load_template(template)
         selection_map = pl.parse_kv_lines(selection, what="selection")
         variable_map = pl.parse_kv_lines(variables, what="variables")

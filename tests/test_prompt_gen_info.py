@@ -391,4 +391,10 @@ def test_no_widget_changed_for_this_output(classes):
         "conflict_policy",
         "text_length",
     ]
-    assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
+    assert list(inputs["optional"]) == [
+        "variables",
+        "profile",
+        "batch_count",
+        "batch_mode",
+        "template_names",
+    ]

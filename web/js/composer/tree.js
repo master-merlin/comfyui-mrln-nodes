@@ -62,6 +62,11 @@ export function createTree(hub) {
       // at the bottom, its old home
       dockEditor();
     }
+    // Here, not at open time: the editor loads asynchronously, so when
+    // openEntry() painted, editorBox was still empty and paintFocus's own
+    // guard turned it into a no-op. Content landing is the moment the group
+    // should narrow — and closing is the moment it comes back.
+    paintFocus();
   }
 
   /** Park the editor at the foot of the tab when no row owns it. */
@@ -84,6 +89,10 @@ export function createTree(hub) {
       : null;
     if (row) row.after(editorHost);
     else dockEditor();
+    // The focus classes live on nodes this render just replaced, so they have
+    // to be re-applied HERE — painting them once at open time meant the first
+    // re-render (and opening an editor causes one) silently dropped them.
+    paintFocus();
   }
 
   // slugs are [a-z0-9/-] by the library's own rules, but a selector built from
@@ -123,15 +132,43 @@ export function createTree(hub) {
   }
 
   function openEntry(kind, slug, row) {
+    // Clicking the OPEN entry again closes it — the same gesture both ways,
+    // and confirmReplaceEditor still stands between a click and lost typing.
+    const sameEntry =
+      editorAnchor && editorAnchor.kind === kind && editorAnchor.slug === slug && editorBox.firstChild;
     if (!confirmReplaceEditor()) return;
+    if (sameEntry) {
+      setEditor(); // clears the host, the anchor and the focus classes
+      return;
+    }
     // Place the host BEFORE opening: the editor loads asynchronously and mounts
     // a loading note first, and that note has to appear where the finished
     // editor will be — not jump there when the fetch lands.
     editorAnchor = { kind, slug };
     if (row) row.after(editorHost);
     else dockEditor();
+    paintFocus();
     if (kind === "sections") openSectionEditor(slug);
     else openTemplateEditor(slug);
+  }
+
+  /**
+   * While an editor is open, its group shows only the entry being edited.
+   * A card grid three rows deep pushed the editor below the fold again, and
+   * the neighbours are noise while you are working on one entry — the same
+   * reason the editor moved out of the tab's foot in the first place.
+   */
+  function paintFocus() {
+    for (const node of libraryTab.querySelectorAll(".mrln-focused, .mrln-focus-open")) {
+      node.classList.remove("mrln-focused", "mrln-focus-open");
+    }
+    if (!editorBox.firstChild || !editorAnchor) return;
+    const open = libraryTab.querySelector(
+      `[data-kind="${editorAnchor.kind}"][data-slug="${cssEscape(editorAnchor.slug)}"]`
+    );
+    if (!open) return;
+    open.classList.add("mrln-focus-open");
+    open.parentElement?.classList.add("mrln-focused");
   }
 
   // Chips and the export button are identical in both views — built once here

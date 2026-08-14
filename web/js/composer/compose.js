@@ -1115,6 +1115,19 @@ export function createCompose(hub) {
           "div",
           { class: "mrln-inline" },
           templateSelect,
+          // The slug, inline and quieter than the name: it is what the NODE's
+          // template widget holds, and without it the panel showed a label the
+          // node never mentions.
+          el(
+            "span",
+            {
+              class: "pc-tpl-slug",
+              title: "The template's slug — the identifier the Prompt Template node's "
+                + "template widget holds (set that node's 'template_names' to 'label' "
+                + "if you would rather it held the name above).",
+            },
+            state.slug
+          ),
           tierChip(state.detail.tier),
           el(
             "button",
@@ -1520,17 +1533,22 @@ export function createCompose(hub) {
             title: "Selected: ↑ ↓ move the whole variant block",
           },
           el("span", { class: "pc-dot", title: "This block draws a variant" }),
-        el(
-          "span",
-          { class: "pc-cell-name" },
-          handle,
-          msButtons("@variant"),
-          el("span", { class: "pc-cell-label" }, "Variant block"),
-          el("span", { class: "pc-cell-chips" }, el("span", { class: "mrln-chip" }, "@variant"))
-        ),
-        el("span", { class: "pc-cell-value" }, variantSelect),
-        el("span", { class: "pc-cell-wt" }, ""),
-        el("span", { class: "pc-cell-seed" }, ""),
+          el(
+            "span",
+            { class: "pc-cell-name" },
+            handle,
+            msButtons("@variant"),
+            // "Variant", not "Variant block": the @variant chip beside it says
+            // the rest, and the two together were the widest name in the table
+            el("span", { class: "pc-cell-label" }, "Variant"),
+            el("span", { class: "pc-cell-chips" }, el("span", { class: "mrln-chip" }, "@variant"))
+          ),
+          // the same picker every other row uses: a variant list is a value
+          // list like any other, and two dropdown vocabularies in one table is
+          // one too many
+          valueCell(variantSelect, null, null),
+          el("span", { class: "pc-cell-wt" }, ""),
+          el("span", { class: "pc-cell-seed" }, ""),
           el(
             "span",
             { class: "pc-cell-actions" },
@@ -2639,7 +2657,12 @@ export function createCompose(hub) {
     if (needsPersist && !(await saveTemplate(state.slug))) {
       return; // save failed — its toast names the cause
     }
-    ctx.setWidget(node, "template", state.slug);
+    // The node decides which form it wants to hold. Slug is the default and
+    // the stable identifier; a node switched to 'label' gets the human name,
+    // and the server reads a known slug as a slug either way.
+    const byLabel = ctx.getWidget(node, "template_names") === "label";
+    const label = (state.detail?.template?.label ?? state.rawData?.label ?? "").trim();
+    ctx.setWidget(node, "template", byLabel && label ? label : state.slug);
     ctx.setWidget(node, "selection", selectionLines);
     ctx.setWidget(node, "selection_mode", state.mode);
     ctx.setWidget(node, "seed", state.seed);

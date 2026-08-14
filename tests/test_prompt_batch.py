@@ -179,7 +179,13 @@ def test_batch_widgets_append_after_profile(classes):
         "conflict_policy",
         "text_length",
     ]
-    assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
+    assert list(inputs["optional"]) == [
+        "variables",
+        "profile",
+        "batch_count",
+        "batch_mode",
+        "template_names",
+    ]
     assert list(classes["MRLN_PromptTemplate"].RETURN_NAMES) == [
         "prompt",
         "negative",
@@ -439,3 +445,35 @@ def test_every_output_stays_aligned_across_the_batch(node, user_tier):
     assert json.loads(loras[1])[0]["lora"] == "kits/wide.safetensors"
     assert json.loads(llms[1])["prompt"] == "WideBodyKit"
     assert json.loads(llms[1])["protect"] == ["WideBodyKit"]
+
+
+# ---------------------------------------------------------------------------
+# template_names: the widget may hold the slug (default) or the label
+# ---------------------------------------------------------------------------
+
+
+def test_the_template_widget_accepts_a_label_and_a_slug_always_wins(node, user_tier):
+    """A workflow saved before this existed holds a slug, so a slug must never
+    be reinterpreted. A label resolves case-insensitively; an ambiguous one is
+    refused BY NAME, because silently rendering one of two templates is the
+    kind of wrong that only shows up in the image."""
+    by_slug = run(node)
+    assert run(node, template="Tiny") == by_slug, "the label must render the same template"
+    assert run(node, template="tiny") == by_slug, "matching is case-insensitive"
+    # a second template claiming the same label makes the answer ambiguous
+    _write(
+        user_tier,
+        "templates/batch/tiny-two.json",
+        {
+            "label": "Tiny",
+            "prefix": "a bike",
+            "slots": [{"id": "color", "ref": "batch/color", "default": "random"}],
+            "render": {"format": "string", "joiner": ", "},
+        },
+    )
+    with pytest.raises(Exception) as err:
+        run(node, template="Tiny")
+    message = str(err.value)
+    assert "batch/tiny" in message and "batch/tiny-two" in message
+    # ... while the slug is still unambiguous and keeps working
+    assert run(node, template="batch/tiny") == by_slug

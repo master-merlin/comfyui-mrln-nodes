@@ -258,10 +258,15 @@ export function createSettings(hub) {
         // remote gate — the cached probe would keep showing the old verdict
         check(false, true);
       });
+      // The row has to SAY which backend it is. It used to rely on the URL's
+      // port and on a placeholder you only see while the field is empty —
+      // which, once there were two rows and a checkbox each, told you nothing
+      // about what the checkbox switches off.
       const row = el(
         "label",
         { class: "mrln-inline mrln-backend-row" },
         enabled,
+        el("span", { class: "mrln-backend-name" }, label),
         urlInput,
         validateBtn
       );

@@ -551,7 +551,13 @@ def test_the_node_added_no_widget_and_no_output(classes):
     widgets_values, and nothing about this feature belongs on the node face."""
     cls = classes["MRLN_PromptTemplate"]
     inputs = cls.INPUT_TYPES()
-    assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
+    assert list(inputs["optional"]) == [
+        "variables",
+        "profile",
+        "batch_count",
+        "batch_mode",
+        "template_names",
+    ]
     assert list(inputs["required"])[-1] == "text_length"
     assert cls.RETURN_NAMES == ("prompt", "negative", "choices", "loras", "llm", "gen_info")
     assert cls.OUTPUT_IS_LIST == (True,) * 6

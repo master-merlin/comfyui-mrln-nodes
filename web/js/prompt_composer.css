@@ -1688,8 +1688,18 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-align: right;
 }
 
-/* audition: a muted row IS the design's 'off' state, so it reads the same */
-.pc-panel .mrln-slot.mrln-muted > .pc-row {
+/* Audition: a muted row IS the design's 'off' state, so it reads the same.
+   The dimming lands on the row's CONTENT, never on the M that undoes it — a
+   child cannot undo an ancestor's opacity, so dimming the row itself greyed
+   out the one control you need to bring the row back. */
+.pc-panel .mrln-slot.mrln-muted > .pc-row > .pc-state,
+.pc-panel .mrln-slot.mrln-muted > .pc-row > .pc-cell-value,
+.pc-panel .mrln-slot.mrln-muted > .pc-row > .pc-cell-wt,
+.pc-panel .mrln-slot.mrln-muted > .pc-row > .pc-cell-seed,
+.pc-panel .mrln-slot.mrln-muted > .pc-row > .pc-cell-actions,
+.pc-panel .mrln-slot.mrln-muted > .pc-row .pc-cell-label,
+.pc-panel .mrln-slot.mrln-muted > .pc-row .pc-cell-chips,
+.pc-panel .mrln-slot.mrln-muted > .pc-row .mrln-drag {
   opacity: 0.45;
 }
 
@@ -1742,6 +1752,16 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-inline {
   gap: 6px;
+}
+/* the slug rides with the name, one shade quieter — it is what the NODE holds */
+.pc-panel .pc-tpl-slug {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 11px var(--pc-mono);
+  color: var(--pc-fg-4);
 }
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type select {
   flex: 1 1 auto;
@@ -2301,15 +2321,27 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    cannot use. */
 .pc-panel .pc-cell-label {
   flex: 1 1 auto;
-  min-width: 4.5em;
+  min-width: 5.5em;
 }
+/* Shrink factor 8, not 1: flex distributes shrinkage in proportion to each
+   item's base size, so an equal factor made a 70px chip strip and a 62px name
+   give up the same ~10px — and 'Conditions' clipped while 'OPTIONAL ×1' stayed
+   whole. The chips describe the section; the name IS the row. */
 .pc-panel .pc-cell-chips {
+  flex: 0 8 auto;
   min-width: 0;
 }
 @container pcpanel (max-width: 560px) {
   /* the drag handle costs 14px of a column with none to spare, and ↑ ↓ in
      ACTIONS reorder the same rows at any width */
   .pc-panel .pc-row .mrln-drag {
+    display: none;
+  }
+  /* A chip clipped to 'OP' reads as a bug, not as a truncation. The decorative
+     ones (optional, ×1, @variant, inline) step out entirely — every one of
+     them is restated in the row's tooltip or its editor — while the two that
+     WARN about the draw, LoRA and factory+user, stay. */
+  .pc-panel .pc-cell-chips > .mrln-chip:not(.mrln-user):not(.mrln-merged) {
     display: none;
   }
 }
@@ -2511,6 +2543,17 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-editor-dock:empty {
   display: none;
 }
+/* Focus: while an entry is open, its group shows only that entry. Without it a
+   card grid three rows deep pushed the editor back below the fold — the exact
+   problem the inline editor exists to solve. */
+.pc-panel .mrln-focused > .mrln-lib-card:not(.mrln-focus-open),
+.pc-panel .mrln-focused > li[data-slug]:not(.mrln-focus-open) {
+  display: none;
+}
+.pc-panel .mrln-focus-open {
+  outline: 1px solid var(--pc-live);
+  outline-offset: -1px;
+}
 .pc-panel .mrln-editor-dock {
   margin: 0;
   padding: 0;
@@ -2553,6 +2596,14 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-backend-row > input[type="checkbox"],
 .pc-panel .mrln-backend-row > button {
   flex: 0 0 auto;
+}
+.pc-panel .mrln-backend-row > .mrln-backend-name {
+  flex: 0 0 76px;
+  font: 12px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .mrln-backend-row.mrln-off > .mrln-backend-name {
+  color: var(--pc-fg-4);
 }
 .pc-panel .mrln-backend-row > input[type="text"] {
   flex: 1 1 auto;
@@ -2741,13 +2792,25 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     grid-template-columns: 26px 1.25fr 1fr 40px 72px 92px;
   }
 }
-/* Below 470 the seed goes: the six columns no longer leave the name a usable
-   share, and the seed is the one a composer reads least often. It used to go at
-   620, which meant a sidebar had to be enormous before the table was whole. */
+/* Below 520 the weight goes first. It is the only read-only column — its
+   number is in the row's tooltip and in the Library — and at 480px the two
+   columns that carry the work were down to 'Conditio…' and '🎲 ra…'. */
+@container pcpanel (max-width: 520px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-thead {
+    grid-template-columns: 26px 1.25fr 1fr 72px 92px;
+  }
+  .pc-panel .pc-cell-wt,
+  .pc-panel .pc-thead > :nth-child(4) {
+    display: none;
+  }
+}
+/* Below 470 the seed goes too. It used to go at 620, which meant a sidebar had
+   to be enormous before the table was whole. */
 @container pcpanel (max-width: 470px) {
   .pc-panel .pc-row,
   .pc-panel .pc-thead {
-    grid-template-columns: 26px 1.25fr 1fr 40px 92px;
+    grid-template-columns: 26px 1.25fr 1fr 92px;
   }
   .pc-panel .pc-cell-seed,
   .pc-panel .pc-thead > :nth-child(5) {
@@ -2764,10 +2827,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   }
   .pc-panel .pc-row,
   .pc-panel .pc-row[data-level="top"] {
-    grid-template-columns: 26px 1fr 40px 92px;
+    grid-template-columns: 26px 1fr 92px;
     grid-template-areas:
-      "state name wt actions"
-      "state value value value";
+      "state name actions"
+      "state value value";
     row-gap: 3px;
     padding-block: 5px;
     min-height: 0;
@@ -2781,9 +2844,6 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   }
   .pc-panel .pc-cell-value {
     grid-area: value;
-  }
-  .pc-panel .pc-cell-wt {
-    grid-area: wt;
   }
   .pc-panel .pc-cell-actions {
     grid-area: actions;
