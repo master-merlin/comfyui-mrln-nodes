@@ -9,7 +9,7 @@ A multi-domain collection of custom nodes for [ComfyUI](https://github.com/comfy
 ## Start here
 
 **Prompt domain** — compose prompts from a curated JSON library instead of
-retyping them: 100 templates, 237 sections, 3465 items, every one with a
+retyping them: 100 templates, 237 sections, 3502 items, every one with a
 thumbnail. Per-slot fixed-or-random draws on a deterministic seed, nested
 draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
 
@@ -55,7 +55,7 @@ prompt — because they were written into the item. And a shared workflow keeps
 working on a machine that has never opened the panel, since what the panel
 writes into the node is plain text.
 
-It ships with 100 templates and 3465 items so it is useful on the first render,
+It ships with 100 templates and 3502 items so it is useful on the first render,
 not after an evening of authoring. The content is opinionated on purpose:
 somebody has to decide what a good documentary wildlife brief contains.
 
@@ -125,7 +125,7 @@ templates replace the factory file entirely.
 
 ### What ships
 
-**100 templates / 237 sections / 3465 curated items**, every one of them
+**100 templates / 237 sections / 3502 curated items**, every one of them
 carrying a rendered thumbnail. The dimension folders every template
 shares (`location` incl. anime/sci-fi/fantasy/historical/underwater/coastal
 places, `lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
@@ -197,7 +197,7 @@ Sections are the pools templates draw from, and every shipped one carries a thum
 <tr><th align="left">The shipped set</th><th align="left">Folder</th><th align="left">Sections</th><th align="left">Items</th><th align="left">What it covers</th></tr>
 </thead>
 <tbody>
-<tr><td rowspan="26" valign="top"><img src="docs/images/library-sections.webp" width="360" alt="Contact sheet: the rendered thumbnails of the shipped sections"></td><td valign="top"><strong><code>animal/</code></strong><br><sub>10 sections</sub></td><td valign="top"><sub>behavior · bird · dragon · hearthside · insect-macro · +5 more</sub></td><td valign="top">189</td><td valign="top">Species and behaviour: mammals, birds, reptiles, insects at macro, marine life, dragons and mythical creatures, pets, and what the animal is doing</td></tr>
+<tr><td rowspan="26" valign="top"><img src="docs/images/library-sections.webp" width="360" alt="Contact sheet: the rendered thumbnails of the shipped sections"></td><td valign="top"><strong><code>animal/</code></strong><br><sub>10 sections</sub></td><td valign="top"><sub>behavior · bird · dragon · hearthside · insect-macro · +5 more</sub></td><td valign="top">226</td><td valign="top">Species and behaviour: mammals, birds, reptiles, insects at macro, marine life, dragons and mythical creatures, pets, and what the animal is doing</td></tr>
 <tr><td valign="top"><strong><code>architecture/</code></strong><br><sub>8 sections</sub></td><td valign="top"><sub>building · detail · ensemble · era · facade · +3 more</sub></td><td valign="top">129</td><td valign="top">Buildings and their parts — facade, detail, ensemble, interior, era and structure — plus the snug interiors that carry a mood rather than a form</td></tr>
 <tr><td valign="top"><strong><code>atmosphere/</code></strong><br><sub>7 sections</sub></td><td valign="top"><sub>battle-debris · mood · particles · reentry · season · +2 more</sub></td><td valign="top">84</td><td valign="top">The air in the shot: weather, season, time of day, particles, mood, and battle debris or re-entry for the dramatic end of the range</td></tr>
 <tr><td valign="top"><strong><code>battle/</code></strong><br><sub>5 sections</sub></td><td valign="top"><sub>focal · ground · host · moment · standard</sub></td><td valign="top">55</td><td valign="top">The elements of a battle scene — the host, the ground, the standard, the focal figure and the decisive moment</td></tr>

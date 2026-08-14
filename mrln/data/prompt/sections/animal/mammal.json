@@ -173,6 +173,89 @@
       "name": "squirrel",
       "text": "a squirrel upright on a branch with a nut turned in both forepaws, tail arched over the spine and ears tufted",
       "text_short": "squirrel upright, nut turned in both forepaws"
+    },
+    {
+      "name": "white-rhino",
+      "text": "a white rhinoceros grazing wide-lipped across short grass, front horn worn flat from years of rubbing, oxpeckers working the folds behind its ear",
+      "text_short": "grazing white rhino with oxpeckers"
+    },
+    {
+      "name": "zebra-dazzle",
+      "text": "a zebra herd packed shoulder to shoulder in dust, stripe fields running together until no single animal has an outline left",
+      "text_short": "zebra herd merging into dazzle"
+    },
+    {
+      "name": "giant-panda",
+      "text": "a giant panda sitting back against a trunk, stripping a bamboo culm with the false thumb on its wrist, shredded leaves collecting in its lap",
+      "text_short": "panda stripping bamboo"
+    },
+    {
+      "name": "red-panda",
+      "text": "a red panda balanced along a fir branch, ringed tail hanging as a counterweight, white face markings catching the last light through the canopy",
+      "text_short": "red panda balanced on a branch"
+    },
+    {
+      "name": "koala",
+      "text": "a koala wedged into the fork of a gum, curved claws hooked either side of the trunk, nose glossy against the grey bark",
+      "text_short": "koala wedged in a gum fork"
+    },
+    {
+      "name": "jaguar-river",
+      "text": "a jaguar shouldering into a river, rosettes carrying the small inner spots only a jaguar has, water pushing a bow wave off its chest",
+      "text_short": "jaguar entering the water"
+    },
+    {
+      "name": "lynx-snow",
+      "text": "a lynx stepping through deep snow, ear tufts up, oversized paws spreading at each footfall to keep it on the crust",
+      "text_short": "lynx crossing deep snow"
+    },
+    {
+      "name": "raccoon-night",
+      "text": "a raccoon working something over in shallow water at a storm drain, mask lit by a streetlight, forepaws reading the object it cannot see",
+      "text_short": "raccoon washing at a storm drain",
+      "tags": [
+        "night"
+      ]
+    },
+    {
+      "name": "dromedary-camel",
+      "text": "a dromedary crossing a dune face at low sun, double lash rows shut against blown sand, its shadow running the full length of the slope",
+      "text_short": "camel crossing a lit dune"
+    },
+    {
+      "name": "wildebeest-crossing",
+      "text": "wildebeest pouring off a cut bank into brown current, the column narrowing at the entry point, spray and dust in one wall of light",
+      "text_short": "wildebeest river crossing"
+    },
+    {
+      "name": "cape-buffalo",
+      "text": "a cape buffalo lifting its head from a wallow, the boss caked and cracking, an oxpecker riding the horn and eyes level with the lens",
+      "text_short": "cape buffalo raising a caked boss"
+    },
+    {
+      "name": "chimpanzee-tools",
+      "text": "a chimpanzee fishing a termite mound with a stripped stem, holding the tool in a precision grip and reading it with its lower lip",
+      "text_short": "chimpanzee termite fishing"
+    },
+    {
+      "name": "capybara-raft",
+      "text": "a capybara half submerged at a river edge, blunt muzzle just clear of the surface, two small birds standing on its back as if it were ground",
+      "text_short": "capybara resting in the shallows"
+    },
+    {
+      "name": "river-otter",
+      "text": "a river otter up on a rock with a fish held in both forepaws, guard hairs spiked into wet points, whiskers still streaming water",
+      "text_short": "river otter eating on a rock"
+    },
+    {
+      "name": "warthog-kneel",
+      "text": "a warthog grazing on its front knees, calloused wrist pads taking the weight, tail held straight up like a raised aerial",
+      "text_short": "warthog kneeling to graze"
+    },
+    {
+      "name": "impala-leap",
+      "text": "an impala at the top of its bound, all four feet clear of the grass, black flank stripes drawing the arc it is already halfway through",
+      "text_short": "impala mid-leap"
     }
   ]
 }

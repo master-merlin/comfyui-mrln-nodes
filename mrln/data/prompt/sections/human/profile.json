@@ -143,7 +143,10 @@
         },
         {
           "id": "skin",
-          "ref": "human/skin"
+          "ref": "human/skin",
+          "tags_any": [
+            "warm"
+          ]
         },
         {
           "id": "tattoos",
@@ -234,7 +237,10 @@
         },
         {
           "id": "skin",
-          "ref": "human/skin"
+          "ref": "human/skin",
+          "tags_any": [
+            "pale"
+          ]
         },
         {
           "id": "tattoos",

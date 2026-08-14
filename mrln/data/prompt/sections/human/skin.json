@@ -14,7 +14,10 @@
     {
       "name": "sun-kissed",
       "text": "sun-kissed glowing skin with a warm healthy radiance",
-      "text_short": "sun-kissed glow"
+      "text_short": "sun-kissed glow",
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "dewy-luminous",
@@ -24,22 +27,34 @@
     {
       "name": "porcelain-matte",
       "text": "flawless porcelain-matte complexion",
-      "text_short": "porcelain matte skin"
+      "text_short": "porcelain matte skin",
+      "tags": [
+        "pale"
+      ]
     },
     {
       "name": "freckled",
       "text": "natural freckles dusted across the nose and cheeks",
-      "text_short": "natural freckles"
+      "text_short": "natural freckles",
+      "tags": [
+        "pale"
+      ]
     },
     {
       "name": "deep-luminous",
       "text": "deep luminous skin with rich warm undertones",
-      "text_short": "deep luminous skin"
+      "text_short": "deep luminous skin",
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "olive-glow",
       "text": "warm olive skin with a soft even glow",
-      "text_short": "warm olive glow"
+      "text_short": "warm olive glow",
+      "tags": [
+        "warm"
+      ]
     },
     {
       "name": "shimmer-dusted",
@@ -54,7 +69,10 @@
     {
       "name": "rosy-flush",
       "text": "a soft rosy flush warming the cheeks and upper chest",
-      "text_short": "soft rosy flush"
+      "text_short": "soft rosy flush",
+      "tags": [
+        "pale"
+      ]
     },
     {
       "name": "vitiligo-patterned",
@@ -69,7 +87,10 @@
     {
       "name": "weathered-outdoor",
       "text": "weathered outdoor skin, wind-reddened across the cheekbones with fine sun lines fanning from the eyes",
-      "text_short": "weathered outdoor skin, wind-reddened"
+      "text_short": "weathered outdoor skin, wind-reddened",
+      "tags": [
+        "warm"
+      ]
     }
   ]
 }

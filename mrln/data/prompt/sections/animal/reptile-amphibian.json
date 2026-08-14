@@ -2,23 +2,119 @@
   "version": 1,
   "label": "Reptile / Amphibian",
   "description": "Cold-blooded subjects — scale texture, wet skin and thermoregulation moments.",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "tree-frog", "text": "a red-eyed tree frog splayed on a rain-beaded banana leaf, orange toe pads spread wide, scarlet eyes just unshuttering", "text_short": "red-eyed tree frog" },
-    { "name": "chameleon", "text": "a panther chameleon mid-color-shift in bands of teal and fire, turret eyes swiveling in two directions, tail coiled like a fern tip", "text_short": "shifting panther chameleon" },
-    { "name": "gecko", "text": "a gecko flattened on glass shot from below, toe pads spread into fanned ridges that grip by molecular force, pale belly scales tiled", "text_short": "gecko toe pads on glass" },
-    { "name": "sea-iguana", "text": "a marine iguana hauled out on black lava, sneezing a jet of brine from its salt glands, white crust crowning its spiked head", "text_short": "salt-sneezing marine iguana" },
-    { "name": "python-coil", "text": "a reticulated python stacked in symmetric coils, net-patterned skin flaring iridescent where the light rakes it, head at rest on the top loop", "text_short": "coiled iridescent python" },
-    { "name": "tortoise", "text": "a giant saddleback tortoise crossing cracked volcanic ground, shell flared high above its telescoping neck, one round leg planted at a time", "text_short": "giant tortoise crossing lava" },
-    { "name": "axolotl", "text": "a pink leucistic axolotl hanging in clear water, three pairs of feathery crimson gills fanned wide, mouth set in its permanent half-smile", "text_short": "smiling axolotl gills" },
-    { "name": "crocodile-eyes", "text": "a crocodile at ambush float, only eyes, brow ridges and nostril tips above the still water, armored scutes shadowed below the surface line", "text_short": "crocodile ambush float" },
-    { "name": "dart-frog", "text": "a cobalt poison dart frog no bigger than a thumbnail on wet moss, lacquer-bright skin advertising its alkaloids in unmissable blue", "text_short": "cobalt dart frog" },
-    { "name": "basilisk-sprint", "text": "a plumed basilisk sprinting upright across the water surface, fringed toes caging air at each strike, tail whipping for balance", "text_short": "basilisk running on water" },
-    { "name": "komodo-dragon", "text": "a komodo dragon striding down a dry riverbed, long forked yellow tongue tasting the air, chainmail hide swinging with the rolling gait", "text_short": "striding komodo dragon" },
-    { "name": "frilled-lizard", "text": "a frilled lizard in full threat display, pleated neck frill snapped open like an umbrella, yellow gape wide, up on its hind legs", "text_short": "frilled lizard display" },
-    { "name": "glass-frog", "text": "a glass frog clinging under a leaf, translucent belly skin revealing its tiny beating heart and coiled organs", "text_short": "translucent glass frog" },
-    { "name": "sidewinder", "text": "a sidewinder rattlesnake crossing loose dune sand at speed, body lifted in two traveling arcs, leaving a ladder of disconnected J-shaped prints behind it", "text_short": "sidewinding rattlesnake" },
-    { "name": "thorny-devil", "text": "a thorny devil standing still in a desert shower, capillary grooves between its spikes wicking water uphill across its skin to the corners of its mouth", "text_short": "thorny devil drinking rain" },
-    { "name": "fire-salamander", "text": "a fire salamander out on rain-soaked moss, lacquer-black skin blazed yellow in warning, the ridges behind its eyes dotted with toxin pores", "text_short": "fire salamander on wet moss" }
+    {
+      "name": "tree-frog",
+      "text": "a red-eyed tree frog splayed on a rain-beaded banana leaf, orange toe pads spread wide, scarlet eyes just unshuttering",
+      "text_short": "red-eyed tree frog"
+    },
+    {
+      "name": "chameleon",
+      "text": "a panther chameleon mid-color-shift in bands of teal and fire, turret eyes swiveling in two directions, tail coiled like a fern tip",
+      "text_short": "shifting panther chameleon"
+    },
+    {
+      "name": "gecko",
+      "text": "a gecko flattened on glass shot from below, toe pads spread into fanned ridges that grip by molecular force, pale belly scales tiled",
+      "text_short": "gecko toe pads on glass"
+    },
+    {
+      "name": "sea-iguana",
+      "text": "a marine iguana hauled out on black lava, sneezing a jet of brine from its salt glands, white crust crowning its spiked head",
+      "text_short": "salt-sneezing marine iguana"
+    },
+    {
+      "name": "python-coil",
+      "text": "a reticulated python stacked in symmetric coils, net-patterned skin flaring iridescent where the light rakes it, head at rest on the top loop",
+      "text_short": "coiled iridescent python"
+    },
+    {
+      "name": "tortoise",
+      "text": "a giant saddleback tortoise crossing cracked volcanic ground, shell flared high above its telescoping neck, one round leg planted at a time",
+      "text_short": "giant tortoise crossing lava"
+    },
+    {
+      "name": "axolotl",
+      "text": "a pink leucistic axolotl hanging in clear water, three pairs of feathery crimson gills fanned wide, mouth set in its permanent half-smile",
+      "text_short": "smiling axolotl gills"
+    },
+    {
+      "name": "crocodile-eyes",
+      "text": "a crocodile at ambush float, only eyes, brow ridges and nostril tips above the still water, armored scutes shadowed below the surface line",
+      "text_short": "crocodile ambush float"
+    },
+    {
+      "name": "dart-frog",
+      "text": "a cobalt poison dart frog no bigger than a thumbnail on wet moss, lacquer-bright skin advertising its alkaloids in unmissable blue",
+      "text_short": "cobalt dart frog"
+    },
+    {
+      "name": "basilisk-sprint",
+      "text": "a plumed basilisk sprinting upright across the water surface, fringed toes caging air at each strike, tail whipping for balance",
+      "text_short": "basilisk running on water"
+    },
+    {
+      "name": "komodo-dragon",
+      "text": "a komodo dragon striding down a dry riverbed, long forked yellow tongue tasting the air, chainmail hide swinging with the rolling gait",
+      "text_short": "striding komodo dragon"
+    },
+    {
+      "name": "frilled-lizard",
+      "text": "a frilled lizard in full threat display, pleated neck frill snapped open like an umbrella, yellow gape wide, up on its hind legs",
+      "text_short": "frilled lizard display"
+    },
+    {
+      "name": "glass-frog",
+      "text": "a glass frog clinging under a leaf, translucent belly skin revealing its tiny beating heart and coiled organs",
+      "text_short": "translucent glass frog"
+    },
+    {
+      "name": "sidewinder",
+      "text": "a sidewinder rattlesnake crossing loose dune sand at speed, body lifted in two traveling arcs, leaving a ladder of disconnected J-shaped prints behind it",
+      "text_short": "sidewinding rattlesnake"
+    },
+    {
+      "name": "thorny-devil",
+      "text": "a thorny devil standing still in a desert shower, capillary grooves between its spikes wicking water uphill across its skin to the corners of its mouth",
+      "text_short": "thorny devil drinking rain"
+    },
+    {
+      "name": "fire-salamander",
+      "text": "a fire salamander out on rain-soaked moss, lacquer-black skin blazed yellow in warning, the ridges behind its eyes dotted with toxin pores",
+      "text_short": "fire salamander on wet moss"
+    },
+    {
+      "name": "king-cobra",
+      "text": "a king cobra raised a third of its length with the hood spread, tongue out, olive scales still carrying the shed's fresh gloss",
+      "text_short": "king cobra reared with hood spread"
+    },
+    {
+      "name": "gharial",
+      "text": "a gharial hauled out on a sandbank, the needle snout lined with interlocking teeth built for fish and nothing else",
+      "text_short": "gharial basking on a sandbank"
+    },
+    {
+      "name": "monitor-lizard",
+      "text": "a monitor lizard crossing hot ground in a high walk, body clear of the sand, forked tongue out reading the air ahead",
+      "text_short": "monitor lizard in a high walk"
+    },
+    {
+      "name": "green-anaconda",
+      "text": "a green anaconda lying half submerged in tannin water, eyes and nostrils on the top of the head so the rest of it never has to surface",
+      "text_short": "anaconda submerged to the eyes"
+    },
+    {
+      "name": "adder-basking",
+      "text": "an adder coiled flat on a warm stone at first sun, the dark zigzag running the spine, body pressed wide to take as much heat as it can",
+      "text_short": "adder flattened on a warm stone"
+    },
+    {
+      "name": "newt-eft",
+      "text": "a newt at the eft stage on wet leaf litter, skin matt orange as a warning, tail still carrying the fin it will lose",
+      "text_short": "orange eft on leaf litter"
+    }
   ]
 }

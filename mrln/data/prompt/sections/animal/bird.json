@@ -2,29 +2,159 @@
   "version": 1,
   "label": "Bird",
   "description": "Bird subjects — flight mechanics and plumage behavior a field guide would confirm.",
-  "suits": ["animal"],
+  "suits": [
+    "animal"
+  ],
   "items": [
-    { "name": "golden-eagle", "text": "a golden eagle banking hard, splayed primary feathers spilling air like fingers, bronze nape catching the low light", "text_short": "banking golden eagle" },
-    { "name": "snowy-owl", "text": "a snowy owl gliding a wing-length above drifted snow, comb-fringed flight feathers erasing every sound, yellow eyes fixed ahead", "text_short": "silent gliding snowy owl" },
-    { "name": "hummingbird", "text": "a hummingbird pinned motionless at a trumpet bloom, wings a figure-eight blur ring, iridescent gorget igniting at one exact angle", "text_short": "hovering hummingbird" },
-    { "name": "kingfisher", "text": "a kingfisher spearing the surface in a crown of spray, wings swept into a teardrop, electric-blue back the last thing to submerge", "text_short": "diving kingfisher" },
-    { "name": "peacock", "text": "a peacock with its train fanned and shivering, eyespots rattling on their quills, iridescence rolling from green to bronze as it turns", "text_short": "shivering peacock display" },
-    { "name": "flamingo-flock", "text": "a flamingo flock mirrored in still shallows, some asleep on one leg, others feeding head-down with bills upside down and sweeping", "text_short": "mirrored flamingo flock" },
-    { "name": "raven", "text": "a raven on a weathered fencepost, throat hackles flared, head cocked to aim one eye at the lens, plumage running oil-slick purple", "text_short": "intent raven close-up" },
-    { "name": "puffin", "text": "a puffin with a dozen silver sand eels held crosswise in its parti-colored bill, wings still whirring from the landing", "text_short": "puffin with sand eels" },
-    { "name": "murmuration", "text": "a starling murmuration folding and shearing across the sky in one dark ribbon, density waves rippling through thousands of birds", "text_short": "starling murmuration" },
-    { "name": "heron", "text": "a grey heron statue-still among golden reeds, neck coiled into its shoulders in a loaded S, one eye angled at the water", "text_short": "coiled heron in reeds" },
-    { "name": "macaw-pair", "text": "a scarlet macaw pair perched close on a rainforest snag, heads bowed together, one gently preening the other's nape feathers", "text_short": "preening macaw pair" },
-    { "name": "swan-takeoff", "text": "a mute swan running across the water into takeoff, each slapping footstep leaving a ring, wingbeats throwing sheets of spray", "text_short": "swan takeoff run" },
-    { "name": "wandering-albatross", "text": "a wandering albatross locked in dynamic soaring, three-meter wings never once beating, wingtip millimeters off the face of a swell", "text_short": "soaring albatross over swell" },
-    { "name": "osprey-strike", "text": "an osprey hitting the water talons-first, wings thrown back, outer toes swiveled around to cage the fish beneath the splash", "text_short": "osprey striking water" },
-    { "name": "shoebill", "text": "a shoebill standing motionless in papyrus shallows, staring down its huge clog-shaped bill, waiting out a lungfish", "text_short": "motionless shoebill" },
-    { "name": "secretary-bird", "text": "a secretary bird mid-stomp on a snake, black crest quills erect, one long scaled leg delivering the hammer strike", "text_short": "secretary bird stomping snake" },
-    { "name": "great-grey-owl", "text": "a great grey owl punching feet-first through unbroken snow crust, wings raised high, guided by hearing alone to the vole beneath", "text_short": "owl snow-plunging" },
-    { "name": "quetzal", "text": "a resplendent quetzal launching from a mossy nest hole, meter-long emerald tail streamers drawing slow calligraphy behind it", "text_short": "quetzal with tail streamers" },
-    { "name": "peregrine-stoop", "text": "a peregrine falcon folded into a full stoop, wings tucked to an anchor shape, third eyelids drawn across its eyes against the wind of a three-hundred-kilometer dive", "text_short": "peregrine in full stoop" },
-    { "name": "crane-dance", "text": "red-crowned cranes dancing on packed snow, bows and vertical leaps mirrored between the pair, black secondaries flared against the white field", "text_short": "snow-dancing cranes" },
-    { "name": "bird-of-paradise", "text": "a superb bird-of-paradise snapped into display, black cape and iridescent blue breast shield spread into a bouncing oval around the unimpressed brown female", "text_short": "bird-of-paradise display" },
-    { "name": "emperor-huddle", "text": "emperor penguins packed into a huddle against the midwinter blizzard, the windward birds peeling off to rejoin at the sheltered side in one slow rotation, chicks balanced on their parents' feet", "text_short": "emperor penguin huddle" }
+    {
+      "name": "golden-eagle",
+      "text": "a golden eagle banking hard, splayed primary feathers spilling air like fingers, bronze nape catching the low light",
+      "text_short": "banking golden eagle"
+    },
+    {
+      "name": "snowy-owl",
+      "text": "a snowy owl gliding a wing-length above drifted snow, comb-fringed flight feathers erasing every sound, yellow eyes fixed ahead",
+      "text_short": "silent gliding snowy owl"
+    },
+    {
+      "name": "hummingbird",
+      "text": "a hummingbird pinned motionless at a trumpet bloom, wings a figure-eight blur ring, iridescent gorget igniting at one exact angle",
+      "text_short": "hovering hummingbird"
+    },
+    {
+      "name": "kingfisher",
+      "text": "a kingfisher spearing the surface in a crown of spray, wings swept into a teardrop, electric-blue back the last thing to submerge",
+      "text_short": "diving kingfisher"
+    },
+    {
+      "name": "peacock",
+      "text": "a peacock with its train fanned and shivering, eyespots rattling on their quills, iridescence rolling from green to bronze as it turns",
+      "text_short": "shivering peacock display"
+    },
+    {
+      "name": "flamingo-flock",
+      "text": "a flamingo flock mirrored in still shallows, some asleep on one leg, others feeding head-down with bills upside down and sweeping",
+      "text_short": "mirrored flamingo flock"
+    },
+    {
+      "name": "raven",
+      "text": "a raven on a weathered fencepost, throat hackles flared, head cocked to aim one eye at the lens, plumage running oil-slick purple",
+      "text_short": "intent raven close-up"
+    },
+    {
+      "name": "puffin",
+      "text": "a puffin with a dozen silver sand eels held crosswise in its parti-colored bill, wings still whirring from the landing",
+      "text_short": "puffin with sand eels"
+    },
+    {
+      "name": "murmuration",
+      "text": "a starling murmuration folding and shearing across the sky in one dark ribbon, density waves rippling through thousands of birds",
+      "text_short": "starling murmuration"
+    },
+    {
+      "name": "heron",
+      "text": "a grey heron statue-still among golden reeds, neck coiled into its shoulders in a loaded S, one eye angled at the water",
+      "text_short": "coiled heron in reeds"
+    },
+    {
+      "name": "macaw-pair",
+      "text": "a scarlet macaw pair perched close on a rainforest snag, heads bowed together, one gently preening the other's nape feathers",
+      "text_short": "preening macaw pair"
+    },
+    {
+      "name": "swan-takeoff",
+      "text": "a mute swan running across the water into takeoff, each slapping footstep leaving a ring, wingbeats throwing sheets of spray",
+      "text_short": "swan takeoff run"
+    },
+    {
+      "name": "wandering-albatross",
+      "text": "a wandering albatross locked in dynamic soaring, three-meter wings never once beating, wingtip millimeters off the face of a swell",
+      "text_short": "soaring albatross over swell"
+    },
+    {
+      "name": "osprey-strike",
+      "text": "an osprey hitting the water talons-first, wings thrown back, outer toes swiveled around to cage the fish beneath the splash",
+      "text_short": "osprey striking water"
+    },
+    {
+      "name": "shoebill",
+      "text": "a shoebill standing motionless in papyrus shallows, staring down its huge clog-shaped bill, waiting out a lungfish",
+      "text_short": "motionless shoebill"
+    },
+    {
+      "name": "secretary-bird",
+      "text": "a secretary bird mid-stomp on a snake, black crest quills erect, one long scaled leg delivering the hammer strike",
+      "text_short": "secretary bird stomping snake"
+    },
+    {
+      "name": "great-grey-owl",
+      "text": "a great grey owl punching feet-first through unbroken snow crust, wings raised high, guided by hearing alone to the vole beneath",
+      "text_short": "owl snow-plunging"
+    },
+    {
+      "name": "quetzal",
+      "text": "a resplendent quetzal launching from a mossy nest hole, meter-long emerald tail streamers drawing slow calligraphy behind it",
+      "text_short": "quetzal with tail streamers"
+    },
+    {
+      "name": "peregrine-stoop",
+      "text": "a peregrine falcon folded into a full stoop, wings tucked to an anchor shape, third eyelids drawn across its eyes against the wind of a three-hundred-kilometer dive",
+      "text_short": "peregrine in full stoop"
+    },
+    {
+      "name": "crane-dance",
+      "text": "red-crowned cranes dancing on packed snow, bows and vertical leaps mirrored between the pair, black secondaries flared against the white field",
+      "text_short": "snow-dancing cranes"
+    },
+    {
+      "name": "bird-of-paradise",
+      "text": "a superb bird-of-paradise snapped into display, black cape and iridescent blue breast shield spread into a bouncing oval around the unimpressed brown female",
+      "text_short": "bird-of-paradise display"
+    },
+    {
+      "name": "emperor-huddle",
+      "text": "emperor penguins packed into a huddle against the midwinter blizzard, the windward birds peeling off to rejoin at the sheltered side in one slow rotation, chicks balanced on their parents' feet",
+      "text_short": "emperor penguin huddle"
+    },
+    {
+      "name": "toucan",
+      "text": "a toco toucan turning its head so the bill catches the light, the huge beak's honeycomb interior glowing where the sun passes through it",
+      "text_short": "toucan with a backlit bill"
+    },
+    {
+      "name": "hornbill",
+      "text": "a great hornbill on a fig branch, the hollow casque riding above the bill, a fruit held at the tip before the toss and catch",
+      "text_short": "hornbill about to toss a fig"
+    },
+    {
+      "name": "pelican-plunge",
+      "text": "a brown pelican folded into a dive an instant before impact, wings swept back, throat pouch already loosening for the strike",
+      "text_short": "pelican in a plunge dive"
+    },
+    {
+      "name": "woodpecker-drum",
+      "text": "a great spotted woodpecker mid-drum on a dead limb, head a blur against the sharp body, wood dust hanging in the light beside it",
+      "text_short": "woodpecker drumming a dead limb"
+    },
+    {
+      "name": "lammergeier",
+      "text": "a bearded vulture riding a thermal along a ridge, a bone carried in its feet, rust-stained breast feathers bright against the rock below",
+      "text_short": "bearded vulture carrying a bone"
+    },
+    {
+      "name": "ostrich-run",
+      "text": "an ostrich at full stride across pan, two-toed feet barely touching, wings out as counterweights through the turn",
+      "text_short": "ostrich running with wings out"
+    },
+    {
+      "name": "bee-eater",
+      "text": "a European bee-eater back on its perch, a bee held crosswise in the bill, about to beat the sting out against the branch",
+      "text_short": "bee-eater with prey on a perch"
+    },
+    {
+      "name": "kestrel-hover",
+      "text": "a kestrel wind-hovering over verge grass, wings and tail working constantly while the head stays locked in one point of space",
+      "text_short": "kestrel hovering with a fixed head"
+    }
   ]
 }

@@ -178,6 +178,59 @@
       "name": "penguin",
       "text": "a penguin standing upright on ice, flippers held slightly out for balance, plumage a hard-edged black and white",
       "text_short": "upright penguin, flippers out for balance"
+    },
+    {
+      "name": "blue-whale",
+      "text": "a blue whale surfacing, mottled back running out of frame long after the blowhole has closed, the blow standing nine metres in still air",
+      "text_short": "blue whale surfacing with a tall blow"
+    },
+    {
+      "name": "narwhal",
+      "text": "narwhals at a lead in the ice, one tusk raised clear of the water, spiral grooves running its whole length",
+      "text_short": "narwhal raising its tusk at an ice lead",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "sea-lion-bubbles",
+      "text": "a sea lion rolling through its own bubble ring, whiskers swept flat, hind flippers steering it upside down past the camera",
+      "text_short": "sea lion rolling through bubbles",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "moray-eel",
+      "text": "a moray eel out of its hole to the gills, mouth working open and shut to breathe rather than to threaten",
+      "text_short": "moray eel pumping its gills",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "lionfish",
+      "text": "a lionfish holding station over the reef, venomous fin rays fanned into a full disc, striped and utterly unhurried",
+      "text_short": "lionfish with fins fanned",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "spider-crab",
+      "text": "a Japanese spider crab picking across the bottom, legs spanning wider than a man, carapace crusted with everything that has ever settled on it",
+      "text_short": "spider crab crossing the bottom",
+      "tags": [
+        "underwater"
+      ]
+    },
+    {
+      "name": "squid-shoal",
+      "text": "a shoal of squid in open blue, chromatophores firing in waves down the mantle so the whole group changes colour at once",
+      "text_short": "squid shoal pulsing colour",
+      "tags": [
+        "underwater"
+      ]
     }
   ]
 }
