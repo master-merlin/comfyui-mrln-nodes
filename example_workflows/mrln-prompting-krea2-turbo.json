@@ -706,7 +706,7 @@
         }
       },
       "widgets_values": [
-        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n## Required node packs\n\nThis graph's subgraph uses two nodes from outside core ComfyUI. Install both,\nor those nodes come up red and the graph will not run:\n\n- **KJNodes** (`comfyui-kjnodes`) — `Krea2PromptWeight`\n- **Impact Pack** (`ComfyUI-Impact-Pack`) — `ImpactConcatConditionings`\n\nEverything MRLN contributes needs nothing but this pack.\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_vae.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_vae.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
       ],
       "color": "#222",
       "bgcolor": "#000"
@@ -1566,7 +1566,6 @@
                 "slot_index": 0,
                 "links": [
                   13,
-                  79,
                   82
                 ]
               }
@@ -1743,7 +1742,6 @@
                 "name": "CLIP",
                 "type": "CLIP",
                 "links": [
-                  76,
                   97,
                   139
                 ]
@@ -1922,85 +1920,6 @@
             ]
           },
           {
-            "id": 53,
-            "type": "Krea2PromptWeight",
-            "pos": [
-              640,
-              101.10111753741869
-            ],
-            "size": [
-              320,
-              190
-            ],
-            "flags": {},
-            "order": 9,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "clip",
-                "name": "clip",
-                "type": "CLIP",
-                "link": 76
-              },
-              {
-                "localized_name": "model",
-                "name": "model",
-                "type": "MODEL",
-                "link": 77
-              },
-              {
-                "localized_name": "text",
-                "name": "text",
-                "type": "STRING",
-                "widget": {
-                  "name": "text"
-                },
-                "link": null
-              },
-              {
-                "localized_name": "strength",
-                "name": "strength",
-                "type": "FLOAT",
-                "widget": {
-                  "name": "strength"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "model",
-                "name": "model",
-                "type": "MODEL",
-                "links": [
-                  78
-                ]
-              },
-              {
-                "localized_name": "conditioning",
-                "name": "conditioning",
-                "type": "CONDITIONING",
-                "links": [
-                  80
-                ]
-              }
-            ],
-            "properties": {
-              "cnr_id": "comfyui-kjnodes",
-              "ver": "1.4.8",
-              "Node name for S&R": "Krea2PromptWeight",
-              "ue_properties": {
-                "widget_ue_connectable": {},
-                "input_ue_unconnectable": {},
-                "version": "7.8"
-              }
-            },
-            "widgets_values": [
-              "(vibrant colors:1.2)",
-              4
-            ]
-          },
-          {
             "id": 83,
             "type": "ComfySwitchNode",
             "pos": [
@@ -2061,58 +1980,6 @@
             "widgets_values": [
               false
             ]
-          },
-          {
-            "id": 54,
-            "type": "ImpactConcatConditionings",
-            "pos": [
-              640,
-              343.90718545098946
-            ],
-            "size": [
-              320,
-              70
-            ],
-            "flags": {},
-            "order": 10,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "conditioning1",
-                "name": "conditioning1",
-                "type": "CONDITIONING",
-                "link": 79
-              },
-              {
-                "name": "conditioning2",
-                "type": "CONDITIONING",
-                "link": 80
-              },
-              {
-                "name": "conditioning3",
-                "type": "CONDITIONING",
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "CONDITIONING",
-                "name": "CONDITIONING",
-                "type": "CONDITIONING",
-                "links": []
-              }
-            ],
-            "properties": {
-              "cnr_id": "comfyui-impact-pack",
-              "ver": "429d0159ad429e64d2b3916e6e7be9c22d025c3c",
-              "Node name for S&R": "ImpactConcatConditionings",
-              "ue_properties": {
-                "widget_ue_connectable": {},
-                "input_ue_unconnectable": {},
-                "version": "7.8"
-              }
-            },
-            "widgets_values": []
           },
           {
             "id": 3,
@@ -2335,7 +2202,7 @@
                 "name": "output",
                 "type": "MODEL",
                 "links": [
-                  77
+                  78
                 ]
               }
             ],
@@ -2495,44 +2362,12 @@
             "type": "INT"
           },
           {
-            "id": 76,
-            "origin_id": 11,
-            "origin_slot": 0,
-            "target_id": 53,
-            "target_slot": 0,
-            "type": "CLIP"
-          },
-          {
-            "id": 77,
-            "origin_id": 22,
-            "origin_slot": 0,
-            "target_id": 53,
-            "target_slot": 1,
-            "type": "MODEL"
-          },
-          {
             "id": 78,
-            "origin_id": 53,
+            "origin_id": 22,
             "origin_slot": 0,
             "target_id": 3,
             "target_slot": 0,
             "type": "MODEL"
-          },
-          {
-            "id": 79,
-            "origin_id": 6,
-            "origin_slot": 0,
-            "target_id": 54,
-            "target_slot": 0,
-            "type": "CONDITIONING"
-          },
-          {
-            "id": 80,
-            "origin_id": 53,
-            "origin_slot": 1,
-            "target_id": 54,
-            "target_slot": 1,
-            "type": "CONDITIONING"
           },
           {
             "id": 82,

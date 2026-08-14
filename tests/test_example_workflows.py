@@ -40,17 +40,14 @@ MODEL_DEPENDENT = {
     "mrln-prompting-krea2-turbo.json": ("Krea-2 Turbo", "loras"),
 }
 
-# Third-party nodes an example is ALLOWED to use, because the graph is a real
-# pipeline rather than a demo. Declaring one here is a decision, not a
-# formality: the same name has to appear in the workflow's own notes, so a user
-# who opens it and sees a red node is told which pack to install rather than
-# left guessing. The starter example declares nothing and must stay that way.
-DECLARED_THIRD_PARTY = {
-    "mrln-prompting-krea2-turbo.json": {
-        "Krea2PromptWeight",  # KJNodes
-        "ImpactConcatConditionings",  # Impact Pack
-    },
-}
+# Third-party nodes an example is ALLOWED to use. Empty, and worth keeping that
+# way: the Krea-2 example carried two (KJNodes' Krea2PromptWeight, Impact Pack's
+# ImpactConcatConditionings) inside its subgraph until they were removed, and
+# the concat node's output had never been wired to anything at all. Adding a key
+# here is a decision that also obliges the workflow's own notes to name the pack
+# — see test_a_declared_dependency_is_named_in_the_notes.
+# workflow file -> {node type: the pack name a user has to install}
+DECLARED_THIRD_PARTY = {}
 
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.name)
@@ -101,7 +98,7 @@ def test_example_is_self_contained(path):
             node_type.startswith(core_prefixes)
             or node_type in core_types
             or node_type in defined
-            or node_type in DECLARED_THIRD_PARTY.get(path.name, ())
+            or node_type in DECLARED_THIRD_PARTY.get(path.name, {})
         )
         assert ok, (
             f"{path.name}: node '{node_type}' is not MRLN, core ComfyUI or a "
@@ -137,10 +134,10 @@ def test_a_declared_dependency_is_named_in_the_notes(name):
         if node.get("type") in ("Note", "MarkdownNote")
         for value in (node.get("widgets_values") or [])
     ).lower()
-    for pack in ("kjnodes", "impact pack"):
-        assert pack in notes, (
-            f"{name}: uses a node from {pack} but never says so — a user who "
-            "opens this sees a red node and no idea which pack is missing"
+    for node_type, pack in DECLARED_THIRD_PARTY[name].items():
+        assert pack.lower() in notes, (
+            f"{name}: uses {node_type} from {pack} but never says so — a user "
+            "who opens this sees a red node and no idea which pack is missing"
         )
 
 

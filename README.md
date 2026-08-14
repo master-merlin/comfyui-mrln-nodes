@@ -412,9 +412,9 @@ seeds and selection lines before connecting anything to a sampler. It runs on
 a fresh install with no models at all.
 
 **mrln-prompting-krea2-turbo** is the same idea end to end — compose, optional
-LLM rewrite, 8-step render. It needs the Krea-2 Turbo models, and two nodes from
-other packs inside its subgraph; the notes in the graph name every file and
-every pack, with download links.
+LLM rewrite, 8-step render. It needs the Krea-2 Turbo models, named with
+download links in a note inside the graph. Like the starter, it uses nothing but
+this pack and core ComfyUI.
 
 ## Design principles
 
