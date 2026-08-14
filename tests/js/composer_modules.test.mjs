@@ -228,3 +228,40 @@ describe("no module shadows what it imports", () => {
     });
   }
 });
+
+// ---------------------------------------------------------------------------
+// Line endings.
+//
+// Every source scan in this suite splits on "\n" and matches anchored patterns
+// like /^\}$/ or "\n  }\n". A file rewritten by a tool that translates newlines
+// leaves a trailing "\r" on every line, and those patterns stop matching — the
+// guards then fail for a reason that has nothing to do with what they guard.
+// That happened twice while editing these files through Python, so the
+// invariant is pinned rather than remembered.
+// ---------------------------------------------------------------------------
+
+describe("web assets stay LF", () => {
+  const WEB = new URL("../../web/", import.meta.url);
+
+  function walk(dir) {
+    const out = [];
+    for (const entry of readdirSync(fileURLToPath(dir), { withFileTypes: true })) {
+      const child = new URL(entry.name + (entry.isDirectory() ? "/" : ""), dir);
+      if (entry.isDirectory()) out.push(...walk(child));
+      else if (/\.(js|css|mjs)$/.test(entry.name)) out.push(child);
+    }
+    return out;
+  }
+
+  for (const file of walk(WEB)) {
+    const name = decodeURIComponent(file.href.split("/web/")[1]);
+    test(`${name} has no CRLF`, () => {
+      const src = readFileSync(fileURLToPath(file), "latin1");
+      assert.ok(
+        !src.includes("\r\n"),
+        `${name} was written with CRLF — the source-scan guards anchor on "\n" and `
+          + "silently stop matching. Rewrite it with LF."
+      );
+    });
+  }
+});

@@ -905,7 +905,7 @@ export function createCompose(hub) {
     // not throw away the progress list it is writing into
     parts.push(loraBanner);
     if (state.rawData.description) {
-      parts.push(el("div", { class: "mrln-note" }, state.rawData.description));
+      parts.push(el("div", { class: "mrln-note pc-desc" }, state.rawData.description));
     }
 
     const policySelect = el("select", {
@@ -1134,11 +1134,28 @@ export function createCompose(hub) {
       area.addEventListener("input", () => validateRefs(area, wrapKnown));
       validateRefs(area, wrapKnown);
     }
-    const hasText = Boolean(state.rawData.prefix || state.rawData.suffix);
+    // The summary has to say what is inside, or a closed fold hides work
+    // silently. Counts the five fields the fold owns.
+    const textSet = [
+      state.rawData.label,
+      state.rawData.prefix,
+      state.rawData.suffix,
+      state.rawData.negative,
+      (state.rawData.type ?? []).length,
+    ].filter(Boolean).length;
     return el(
       "details",
-      { class: "mrln-fold", open: hasText ? "" : null },
-      el("summary", {}, "Template text & type (label / prefix / suffix / negative / classifiers)"),
+      { class: "mrln-fold" },
+      el(
+        "summary",
+        {},
+        "Template text",
+        el(
+          "span",
+          { class: "pc-summary-note" },
+          `label, prefix, suffix, negative, type · ${textSet} of 5 set`
+        )
+      ),
       field("Label (display name)", labelInput),
       field("Prefix", braceAssist(prefixArea, wrapRefOptions)),
       field("Suffix", braceAssist(suffixArea, wrapRefOptions)),
@@ -1203,34 +1220,46 @@ export function createCompose(hub) {
     variantSelect.value = state.variant;
     const handle = dragHandle();
     const blockDimmed = auditionActive() && !variantBlockAudible();
+    variantSelect.classList.add("pc-field");
     const card = el(
       "div",
       { class: `mrln-slot mrln-variant-head${blockDimmed ? " mrln-muted" : ""}` },
+      // Same grid as every other row — this is the design's group header, and
+      // a three-line card here was the last thing breaking the table's rhythm.
       el(
         "div",
-        { class: "mrln-slot-label" },
-        handle,
-        msButtons("@variant"),
-        el("span", {}, "Variant block"),
-        el("span", { class: "mrln-chip" }, "@variant"),
+        { class: "pc-row", "data-level": "top", "data-state": "random" },
+        el("span", { class: "pc-dot", title: "This block draws a variant" }),
         el(
           "span",
-          { class: "mrln-rowbtns" },
-          smallBtn(
-            "Move variant block up",
-            "↑",
-            () => moveOrder(orderIndex, -1),
-            orderIndex === 0
-          ),
-          smallBtn(
-            "Move variant block down",
-            "↓",
-            () => moveOrder(orderIndex, 1),
-            orderIndex === state.orderIds.length - 1
+          { class: "pc-cell-name" },
+          handle,
+          msButtons("@variant"),
+          el("span", { class: "pc-cell-label" }, "Variant block"),
+          el("span", { class: "pc-cell-chips" }, el("span", { class: "mrln-chip" }, "@variant"))
+        ),
+        el("span", { class: "pc-cell-value" }, variantSelect),
+        el("span", { class: "pc-cell-wt" }, ""),
+        el("span", { class: "pc-cell-seed" }, ""),
+        menuCell(
+          el(
+            "span",
+            { class: "mrln-rowbtns" },
+            smallBtn(
+              "Move variant block up",
+              "↑",
+              () => moveOrder(orderIndex, -1),
+              orderIndex === 0
+            ),
+            smallBtn(
+              "Move variant block down",
+              "↓",
+              () => moveOrder(orderIndex, 1),
+              orderIndex === state.orderIds.length - 1
+            )
           )
         )
-      ),
-      variantSelect
+      )
     );
     attachDrag(card, handle, "order", orderIndex, (from, to) =>
       moveInArray(state.orderIds, from, to)

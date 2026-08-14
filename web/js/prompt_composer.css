@@ -1779,3 +1779,352 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     grid-area: menu;
   }
 }
+
+/* --- look-and-feel pass: the blocks above and below the table ------------
+   Closing the gap to the designer's mock WITHOUT touching behaviour. Almost
+   all of it is CSS over the markup that already exists: label(field-name) +
+   control becomes a two-column row, .mrln-grid2 draws its own gridlines, and
+   the tab body stops padding blocks it should run full-bleed. */
+
+/* Blocks run full-bleed and separate with a 1px line, like the mock. The tab
+   body used to pad every child by 14px, which is why nothing lined up with
+   the table's own 12px gutter. */
+.pc-panel .mrln-tab-body {
+  padding: 0;
+  gap: 0;
+}
+.pc-panel .mrln-tab-body > * {
+  padding-inline: var(--pc-pad);
+}
+/* the table and its header own their gutter, so exempt them */
+.pc-panel .mrln-tab-body > .pc-thead,
+.pc-panel .mrln-tab-body > .mrln-slot-list,
+.pc-panel .mrln-tab-body > .mrln-grid2 {
+  padding-inline: 0;
+}
+
+/* b. Template bar — one raised row: name, badge, then right-aligned controls */
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px var(--pc-pad);
+  background: var(--pc-bg-raised);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name {
+  flex: 0 0 auto;
+  margin: 0;
+  font: 600 10px var(--pc-mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type select {
+  flex: 1 1 auto;
+  height: 28px;
+  font: 600 14px var(--pc-ui);
+  color: var(--pc-fg);
+  border-color: transparent;
+}
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type select:hover {
+  border-color: var(--pc-line-strong);
+}
+
+/* c/d. Setup grid — 1px gutters ON a line-coloured ground, so the gap IS the
+   grid. Label left and dim, value right and bold, exactly as spec'd. */
+.pc-panel .mrln-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--pc-line);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .mrln-grid2 > label.mrln-field,
+.pc-panel .mrln-grid2 > .mrln-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pc-gap);
+  min-height: 31px;
+  padding: 0 var(--pc-pad);
+  background: var(--pc-bg-panel);
+}
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-field-name {
+  flex: 0 1 auto;
+  margin: 0;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+  white-space: nowrap;
+}
+.pc-panel .mrln-grid2 > .mrln-field > select,
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 62%;
+  min-width: 0;
+  justify-content: flex-end;
+}
+.pc-panel .mrln-grid2 > .mrln-field > select {
+  height: 26px;
+  padding-right: 18px;
+  font: 600 11.5px var(--pc-ui);
+  color: var(--pc-fg);
+  text-align: right;
+  text-align-last: right;
+}
+.pc-panel .mrln-grid2 > .mrln-field > select:hover {
+  background-color: var(--pc-bg-raised);
+}
+/* the master-seed cell keeps its reroll button but stops stretching */
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > input {
+  flex: 0 1 90px;
+  text-align: right;
+  font: 600 11.5px var(--pc-mono);
+}
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > button {
+  flex: 0 0 auto;
+}
+
+/* e. The template-text disclosure: a quiet uppercase strip when closed. */
+.pc-panel details.mrln-fold {
+  border-bottom: 1px solid var(--pc-line);
+  padding-block: 0;
+}
+.pc-panel details.mrln-fold > summary {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  font: 600 10px var(--pc-mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--pc-fg-3);
+  cursor: pointer;
+  list-style: none;
+}
+.pc-panel details.mrln-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.pc-panel details.mrln-fold > summary::before {
+  content: "▸";
+  color: var(--pc-fg-4);
+  font-size: 9px;
+}
+.pc-panel details.mrln-fold[open] > summary::before {
+  content: "▾";
+}
+.pc-panel details.mrln-fold[open] {
+  padding-bottom: 10px;
+}
+/* stacked label/value pairs inside the fold: 70px label column, boxed value */
+.pc-panel details.mrln-fold .mrln-field {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: start;
+  gap: var(--pc-gap);
+  margin-top: 6px;
+}
+.pc-panel details.mrln-fold .mrln-field > .mrln-field-name {
+  margin: 0;
+  padding-top: 5px;
+  text-align: right;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+
+/* f. Description line — its own quiet strip, two lines then clamp. */
+.pc-panel .mrln-tab-body > .mrln-note.pc-desc {
+  padding: 8px var(--pc-pad);
+  background: var(--pc-bg-input);
+  border-bottom: 1px solid var(--pc-line);
+  font: 11.5px/1.55 var(--pc-ui);
+  color: #83838d;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* g. The variant block reads as the design's group header. */
+.pc-panel .mrln-slot.mrln-variant-head {
+  min-height: var(--pc-row-lg);
+  background: var(--pc-bg-raised);
+  border-bottom: 1px solid var(--pc-line);
+  border-style: solid;
+}
+.pc-panel .mrln-slot.mrln-variant-head > .pc-row {
+  background: none;
+  border-bottom: 0;
+}
+.pc-panel .mrln-slot.mrln-variant-head .pc-cell-label,
+.pc-panel .mrln-slot.mrln-variant-head .mrln-slot-label > span:not(.mrln-chip) {
+  font: 600 12.5px var(--pc-ui);
+  color: var(--pc-fg);
+}
+
+/* h. Action bar — one primary that takes the room, the rest quiet ghosts. */
+.pc-panel .mrln-tab-body > .mrln-actions {
+  gap: var(--pc-gap);
+  padding: 11px var(--pc-pad);
+  background: var(--pc-bg-app);
+  border-top: 1px solid var(--pc-line);
+  align-items: center;
+}
+.pc-panel .mrln-tab-body > .mrln-actions > .mrln-btn {
+  min-height: 32px;
+  padding: 0 12px;
+}
+.pc-panel .mrln-tab-body > .mrln-actions > .mrln-btn.mrln-primary {
+  flex: 1 1 auto;
+  font-size: 12.5px;
+}
+
+/* i. Live preview — header row with the meta on the right, boxed body. */
+.pc-panel .mrln-preview-head {
+  align-items: center;
+  min-height: 26px;
+  margin-top: 10px;
+}
+.pc-panel .mrln-preview-head > .mrln-field-name {
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-panel .mrln-preview-head .mrln-btn.mrln-mini {
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-3);
+}
+.pc-panel .mrln-tab-body > .mrln-pre {
+  margin-bottom: 12px;
+}
+
+/* j. The value field's resting box, quieter than the first cut. A visible
+   affordance was the point (user's call over the spec) — but bg-input plus a
+   full --pc-line border made twelve rows read as twelve inputs again, which
+   is the exact thing rule 3 exists to prevent. Transparent ground, hairline
+   box; the full treatment still arrives on hover and focus. */
+.pc-panel select.pc-field {
+  background-color: transparent;
+  border-color: var(--pc-line-row);
+}
+.pc-panel .pc-row:hover select.pc-field {
+  border-color: var(--pc-line-strong);
+}
+
+/* k. Chips inside a row stay 9.5px and never push the name out. */
+.pc-panel .pc-cell-chips .mrln-chip {
+  margin-left: 0;
+}
+
+/* --- look-and-feel refinement 2 ------------------------------------------ */
+
+/* The fold summary ran together with its own label because .pc-summary-note
+   inherited the uppercase mono strip. It is a normal-case aside. */
+.pc-panel details.mrln-fold > summary > .pc-summary-note {
+  font: 11px var(--pc-ui);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pc-fg-4);
+}
+
+/* The action bar's primary was not taking the room: the actions div is not a
+   direct child of the tab body in every branch, so the selector missed. Match
+   the bar wherever it sits, and give the rest a clear second rank. */
+.pc-panel .mrln-actions {
+  gap: var(--pc-gap);
+  align-items: center;
+}
+.pc-panel .mrln-actions > .mrln-btn.mrln-primary {
+  flex: 1 1 140px;
+  min-height: 32px;
+  font-size: 12.5px;
+}
+.pc-panel .mrln-actions > .mrln-btn:not(.mrln-primary) {
+  flex: 0 0 auto;
+  min-height: 32px;
+  color: var(--pc-fg-2);
+}
+.pc-panel .mrln-actions > .mrln-btn:not(.mrln-primary):hover {
+  color: var(--pc-fg);
+}
+
+/* The master-seed cell's reroll button escaped the grid cell. */
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline {
+  flex: 0 1 auto;
+  max-width: 60%;
+  overflow: hidden;
+}
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > button {
+  width: 26px;
+  min-width: 26px;
+  padding: 0;
+}
+
+/* The variant block is the design's group header: one line, not three. Its
+   own value control and note move onto that line's right-hand side. */
+.pc-panel .mrln-slot.mrln-variant-head > .pc-row {
+  min-height: var(--pc-row-lg);
+}
+.pc-panel .mrln-slot.mrln-variant-head + .mrln-note,
+.pc-panel .mrln-slot.mrln-variant-head .mrln-note {
+  font-size: 10px;
+  color: var(--pc-fg-4);
+}
+
+/* Preview clamps like the mock instead of printing the whole prompt. */
+.pc-panel .mrln-tab-body .mrln-pre {
+  max-height: 104px;
+  overflow: auto;
+}
+
+/* The trailing blocks (trigger word, variables, optimize) were vertical
+   filler between the table and the actions. Same rhythm as everything else. */
+.pc-panel .mrln-tab-body > label.mrln-field:not(:first-of-type) {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: center;
+  gap: var(--pc-gap);
+  min-height: 31px;
+  border-bottom: 1px solid var(--pc-line-row);
+}
+.pc-panel .mrln-tab-body > label.mrln-field:not(:first-of-type) > .mrln-field-name {
+  margin: 0;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .mrln-tab-body > label.mrln-field:not(:first-of-type) > textarea {
+  min-height: 26px;
+}
+/* the long explanatory line under Optimize-for is help text, not body copy */
+.pc-panel .mrln-tab-body > .mrln-note:not(.pc-desc) {
+  padding-block: 6px;
+  font-size: 10.5px;
+  color: var(--pc-fg-4);
+}
+
+/* The add-section strip stops looking like a dropzone. */
+.pc-panel .mrln-addrow {
+  gap: var(--pc-gap);
+  padding-block: 8px;
+  border: 0;
+  border-bottom: 1px solid var(--pc-line);
+  border-radius: 0;
+  background: none;
+}
+
+/* the group dot in column 1 of a group header */
+.pc-panel .pc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--pc-live);
+  justify-self: center;
+}
+/* a group header states no weight or seed of its own */
+.pc-panel .mrln-slot.mrln-variant-head .pc-cell-wt,
+.pc-panel .mrln-slot.mrln-variant-head .pc-cell-seed {
+  cursor: default;
+}
