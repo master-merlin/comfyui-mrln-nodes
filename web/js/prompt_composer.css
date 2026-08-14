@@ -1457,3 +1457,325 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     animation-duration: 0.01ms !important;
   }
 }
+
+/* --- phase 2: the row grid ---------------------------------------------- */
+/* Rule 1: no two-line label+control blocks. One row, fixed height, aligned
+   columns — state · name · value · weight · seed · menu. The wrapper keeps
+   the .mrln-slot hooks (drag, audition dimming, nested mount); .pc-row is the
+   grid line itself. */
+.pc-panel .mrln-slot {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  gap: 0;
+}
+.pc-panel .pc-row {
+  display: grid;
+  grid-template-columns: 26px 1fr 1.15fr 34px 62px 28px;
+  align-items: center;
+  gap: var(--pc-gap);
+  padding: 0 12px;
+  min-height: var(--pc-row);
+  border-bottom: 1px solid var(--pc-line-row);
+}
+.pc-panel .pc-row[data-level="top"] {
+  min-height: var(--pc-row-lg);
+  background: var(--pc-bg-panel);
+}
+.pc-panel .mrln-slot:nth-of-type(odd) > .pc-row[data-level="nested"] {
+  background: var(--pc-bg-row);
+}
+.pc-panel .mrln-slot:nth-of-type(even) > .pc-row[data-level="nested"] {
+  background: var(--pc-bg-row-alt);
+}
+.pc-panel .pc-row:hover {
+  background: var(--pc-bg-raised);
+}
+
+/* column 1 — the state glyph, and the only place random/held is stated */
+.pc-panel .pc-state {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--pc-live);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--pc-r-sm);
+  cursor: pointer;
+}
+.pc-panel .pc-state[data-mode="held"],
+.pc-panel .pc-state[data-mode="fixed"] {
+  color: var(--pc-held);
+}
+.pc-panel .pc-state:hover {
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+
+/* column 2 — name, with the audition pair and any chips riding along */
+.pc-panel .pc-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font: 11.5px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .pc-cell-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Chips describe the SECTION, not the draw, so they sit with the name and
+   stay quiet — 9.5px, no wrap, and they give up space before the name does. */
+.pc-panel .pc-cell-chips {
+  display: flex;
+  gap: 3px;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+.pc-panel .pc-cell-name .mrln-ms {
+  margin: 0;
+  gap: 1px;
+}
+.pc-panel .pc-cell-name .mrln-ms .mrln-mini {
+  min-width: 18px;
+  min-height: 20px;
+  padding: 0 3px;
+  font-size: 9.5px;
+}
+.pc-panel .pc-cell-name .mrln-drag {
+  margin: 0;
+}
+
+/* column 3 — the value. Rule 2: values are the loudest thing on screen. */
+.pc-panel .pc-cell-value {
+  min-width: 0;
+}
+.pc-panel select.pc-field {
+  width: 100%;
+  height: 26px;
+  min-height: 26px;
+  padding: 0 20px 0 8px;
+  font: 600 12.5px var(--pc-mono);
+  color: var(--pc-fg-value);
+  border-radius: var(--pc-r-sm);
+  /* DEVIATION, on the user's call: the handoff leaves the field transparent
+     at rest and only reveals a border on hover. That reads clean and hides
+     the single most important affordance in the panel — nothing says "you can
+     change this". A 1px resting box costs a little calm and buys
+     discoverability, which is the trade worth making here. */
+  background: var(--pc-bg-input);
+  border: 1px solid var(--pc-line);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--pc-fg-3) 50%),
+    linear-gradient(135deg, var(--pc-fg-3) 50%, transparent 50%);
+  background-position:
+    calc(100% - 11px) calc(50% + 1px),
+    calc(100% - 7px) calc(50% + 1px);
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
+.pc-panel select.pc-field:hover {
+  background-color: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+.pc-panel .pc-row[data-state="held"] select.pc-field,
+.pc-panel .pc-row[data-state="fixed"] select.pc-field {
+  color: #e8c493;
+  border-color: var(--pc-held-line);
+  background-color: var(--pc-held-soft);
+}
+
+/* column 4 — draw weight of the drawn item */
+.pc-panel .pc-cell-wt {
+  text-align: center;
+  font: 600 11px var(--pc-mono);
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-cell-wt[data-weighted="true"] {
+  color: var(--pc-held);
+  border: 1px solid var(--pc-held-line);
+  border-radius: 4px;
+  line-height: 18px;
+}
+
+/* column 5 — seed: click pins, double-click types */
+.pc-panel .pc-cell-seed {
+  text-align: right;
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-4);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 4px;
+}
+.pc-panel .pc-cell-seed[data-mode="held"] {
+  color: var(--pc-held);
+}
+.pc-panel .pc-cell-seed[data-mode="fixed"] {
+  cursor: default;
+}
+.pc-panel .pc-cell-seed:not([data-mode="fixed"]):hover {
+  color: var(--pc-fg-2);
+  background: var(--pc-bg-raised);
+}
+.pc-panel input.pc-seed-input {
+  width: 100%;
+  height: 22px;
+  min-height: 22px;
+  padding: 0 4px;
+  font: 10.5px var(--pc-mono);
+  text-align: right;
+  background: var(--pc-bg-input);
+  border-color: var(--pc-line-strong);
+}
+
+/* column 6 — reserved at every width so hover shifts nothing (rule 8) */
+.pc-panel .pc-cell-menu {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+.pc-panel .pc-menu-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--pc-fg-4);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--pc-r-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.pc-panel .pc-row:hover .pc-menu-btn,
+.pc-panel .pc-row:focus-within .pc-menu-btn,
+.pc-panel .pc-menu-btn[aria-expanded="true"] {
+  opacity: 1;
+}
+.pc-panel .pc-menu-btn:hover {
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+.pc-panel .pc-menu-btn:disabled {
+  cursor: default;
+}
+.pc-panel .pc-rowmenu {
+  position: absolute;
+  top: 26px;
+  right: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 168px;
+  padding: 8px;
+  background: #1a1a1d;
+  border: 1px solid var(--pc-line-strong);
+  border-radius: var(--pc-r-lg);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.62);
+}
+.pc-panel .pc-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+  white-space: nowrap;
+}
+.pc-panel .pc-menu-row > input {
+  flex: 1;
+  min-width: 0;
+  background: var(--pc-bg-input);
+  border-color: var(--pc-line);
+}
+/* the old inline ✎ ↑ ↓ cluster now lives inside the menu, always visible */
+.pc-panel .pc-rowmenu .mrln-rowbtns {
+  margin: 0;
+  opacity: 1;
+  gap: 4px;
+}
+.pc-panel .pc-rowmenu .mrln-rowbtns .mrln-mini {
+  min-width: 26px;
+  min-height: 26px;
+  border-color: var(--pc-line-strong);
+}
+
+/* the table header the grid is aligned to */
+.pc-panel .pc-thead {
+  display: grid;
+  grid-template-columns: 26px 1fr 1.15fr 34px 62px 28px;
+  gap: var(--pc-gap);
+  align-items: center;
+  padding: 0 12px;
+  height: 28px;
+  background: var(--pc-bg-app);
+  border-bottom: 1px solid var(--pc-line);
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-thead > :nth-child(4) {
+  text-align: center;
+}
+.pc-panel .pc-thead > :nth-child(5) {
+  text-align: right;
+}
+
+/* audition: a muted row IS the design's 'off' state, so it reads the same */
+.pc-panel .mrln-slot.mrln-muted > .pc-row {
+  opacity: 0.45;
+}
+
+/* --- 4c: under 460px the grid stacks, value over label ------------------- */
+@container pcpanel (max-width: 620px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-thead {
+    grid-template-columns: 26px 1fr 1.15fr 34px 28px;
+  }
+  .pc-panel .pc-cell-seed,
+  .pc-panel .pc-thead > :nth-child(5) {
+    display: none;
+  }
+}
+@container pcpanel (max-width: 460px) {
+  .pc-panel .pc-thead {
+    display: none;
+  }
+  .pc-panel .pc-row,
+  .pc-panel .pc-row[data-level="top"] {
+    grid-template-columns: 26px 1fr 34px 28px;
+    grid-template-areas:
+      "state name wt menu"
+      "state value value value";
+    row-gap: 3px;
+    padding-block: 5px;
+    min-height: 0;
+  }
+  .pc-panel .pc-row > .pc-state {
+    grid-area: state;
+    align-self: start;
+  }
+  .pc-panel .pc-cell-name {
+    grid-area: name;
+  }
+  .pc-panel .pc-cell-value {
+    grid-area: value;
+  }
+  .pc-panel .pc-cell-wt {
+    grid-area: wt;
+  }
+  .pc-panel .pc-cell-menu {
+    grid-area: menu;
+  }
+}

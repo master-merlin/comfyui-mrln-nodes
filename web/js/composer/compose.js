@@ -373,6 +373,165 @@ export function createCompose(hub) {
     });
   }
 
+  // ---- the design-pass row grid -------------------------------------------
+  // One line per draw: state · name · value · weight · seed · menu, shared by
+  // top-level slots and nested child draws so the two read as one table.
+  //
+  // WT is the DRAWN ITEM's draw weight — per-item, exactly as the library
+  // stores it — not the slot's prompt emphasis. The handoff conflates them;
+  // they are different numbers with different consequences, and emphasis keeps
+  // its own control in the row's editor disclosure. Read-only here: editing it
+  // would write to a section file from the Compose tab, which is a library
+  // mutation this pass is not allowed to introduce.
+
+  /** random (unpinned) · held (random but seeded) · fixed (explicit item). */
+  function rowMode(row) {
+    if (!row.random) return "fixed";
+    return row.seed ? "held" : "random";
+  }
+
+  function stateCell(row, resolved, onChange) {
+    const mode = rowMode(row);
+    const button = el(
+      "button",
+      {
+        class: "pc-state",
+        "data-mode": mode,
+        title:
+          mode === "random"
+            ? "Random — click to hold this draw (freezes it on the seed it just used)"
+            : mode === "held"
+              ? "Held on a pinned seed — click to let it draw again"
+              : "Fixed to one item — pick 'random' in the value list to unfix",
+        onclick: () => {
+          if (mode === "held") row.seed = "";
+          else if (mode === "random") {
+            const used = resolved?.seed_used;
+            if (used === undefined || used === null) {
+              ctx.toast(
+                "warn",
+                "Nothing drawn yet",
+                "Holding freezes the seed the live preview last used — wait for it."
+              );
+              return;
+            }
+            row.seed = String(used);
+          } else return; // fixed: the value list owns that state
+          row.touched = true;
+          onChange();
+        },
+      },
+      mode === "random" ? "◆" : "🔒"
+    );
+    return button;
+  }
+
+  function weightCell(pool, row, resolved) {
+    const name = row.random ? resolved?.item : row.item;
+    const item = (pool ?? []).find((p) => p.name === name);
+    const weight = Number(item?.weight ?? 1);
+    const shown = Number.isFinite(weight) ? weight : 1;
+    return el(
+      "span",
+      {
+        class: "pc-cell-wt",
+        "data-weighted": shown !== 1 ? "true" : "false",
+        title:
+          `Draw weight of '${name ?? "—"}' — how often this item comes up `
+          + "relative to its siblings. Lives on the item in the section file; "
+          + "edit it in the Library.",
+      },
+      String(shown)
+    );
+  }
+
+  function seedCell(row, resolved, onChange) {
+    const mode = rowMode(row);
+    const text = mode === "fixed" ? "fixed" : mode === "held" ? row.seed : "auto";
+    const cell = el(
+      "span",
+      {
+        class: "pc-cell-seed",
+        "data-mode": mode,
+        tabindex: mode === "fixed" ? null : "0",
+        title:
+          mode === "fixed"
+            ? "This slot is fixed to an item, so no seed is involved"
+            : "Click to pin this draw's seed · double-click to type one",
+      },
+      String(text)
+    );
+    if (mode === "fixed") return cell;
+    // Click pins, double-click types. A click always precedes a double-click,
+    // so the single-click action waits one interval and cancels if the second
+    // click arrives — otherwise every attempt to type would first pin.
+    let timer = null;
+    cell.addEventListener("click", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (mode === "held") row.seed = "";
+        else {
+          const used = resolved?.seed_used;
+          if (used === undefined || used === null) return;
+          row.seed = String(used);
+        }
+        row.touched = true;
+        onChange();
+      }, 220);
+    });
+    cell.addEventListener("dblclick", () => {
+      clearTimeout(timer);
+      const input = el("input", {
+        class: "pc-seed-input",
+        type: "text",
+        inputmode: "numeric",
+        value: row.seed ?? "",
+        title: "Seed for this slot — empty means it follows the master seed",
+      });
+      const commit = () => {
+        row.seed = input.value.replace(/\D/g, "");
+        row.touched = true;
+        onChange();
+      };
+      input.addEventListener("blur", commit);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") commit();
+        if (e.key === "Escape") onChange();
+      });
+      cell.replaceChildren(input);
+      input.focus();
+      input.select();
+    });
+    return cell;
+  }
+
+  /** The reserved ⋯ column. Reserved at every width so hover shifts nothing. */
+  function menuCell(...actions) {
+    const items = actions.filter(Boolean);
+    const menu = el("div", { class: "pc-rowmenu", style: "display:none" }, ...items);
+    const button = el(
+      "button",
+      {
+        class: "pc-menu-btn",
+        "aria-haspopup": "menu",
+        "aria-expanded": "false",
+        title: "Row actions",
+        onclick: (e) => {
+          e.stopPropagation();
+          const open = menu.style.display === "none";
+          for (const other of composeTab.querySelectorAll(".pc-rowmenu")) {
+            other.style.display = "none";
+          }
+          menu.style.display = open ? "" : "none";
+          button.setAttribute("aria-expanded", open ? "true" : "false");
+        },
+      },
+      "⋯"
+    );
+    if (!items.length) button.disabled = true;
+    return el("span", { class: "pc-cell-menu" }, button, menu);
+  }
+
   function msButtons(id) {
     return el(
       "span",
@@ -583,16 +742,32 @@ export function createCompose(hub) {
       },
     });
 
+    // The seed input is no longer a permanent column — the seed CELL owns
+    // pinning now (click) and typing (double-click). Kept in the DOM so the
+    // existing oninput path and its `row.touched` bookkeeping are untouched;
+    // it just lives in the row menu.
+    seedInput.style.display = "";
+    seedInput.title = "Seed for this child — empty follows the master seed";
+    const redraw = () => renderNested();
+    itemSelect.classList.add("pc-field");
     return el(
       "div",
-      { class: "mrln-slot mrln-nest-row" },
+      {
+        class: "mrln-slot mrln-nest-row pc-row",
+        "data-level": "nested",
+        "data-state": rowMode(row),
+      },
+      stateCell(row, child, redraw),
       el(
-        "div",
-        { class: "mrln-slot-label", title: `${child.id} → ${child.ref}` },
-        el("span", {}, child.id.split(".").pop()),
-        el("span", { class: "mrln-chip" }, child.omitted ? "muted/empty" : child.item)
+        "span",
+        { class: "pc-cell-name", title: `${child.id} → ${child.ref}` },
+        child.id.split(".").pop(),
+        child.omitted ? el("span", { class: "mrln-chip" }, "muted/empty") : null
       ),
-      el("div", { class: "mrln-inline" }, itemSelect, seedInput)
+      el("span", { class: "pc-cell-value" }, itemSelect),
+      weightCell(pool, row, child),
+      seedCell(row, child, redraw),
+      menuCell(el("label", { class: "pc-menu-row" }, "Seed", seedInput))
     );
   }
 
@@ -823,6 +998,19 @@ export function createCompose(hub) {
         field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
       ),
       metaPromptBlock(),
+      // The header the row grid aligns to. Same six-column template, so a
+      // column that moves moves in both — and it is what turns a stack of
+      // rows into a table you can read down.
+      el(
+        "div",
+        { class: "pc-thead", role: "presentation" },
+        el("span", {}, ""),
+        el("span", {}, "Section"),
+        el("span", {}, "Drawn value"),
+        el("span", { title: "Draw weight of the drawn item" }, "Wt"),
+        el("span", {}, "Seed"),
+        el("span", {}, "")
+      ),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
       addSectionRow()
     );
@@ -1324,17 +1512,42 @@ export function createCompose(hub) {
     const labelText = slot.label && slot.label.length <= 60 ? slot.label : slot.id;
     const handle = dragHandle();
     const dimmed = auditionActive() && !slotAudible(slot.id, isVariantSlot);
+    const resolved = (state.lastPreview?.slots ?? []).find((s) => s.id === slot.id);
+    const redraw = () => {
+      renderComposeTab();
+      schedulePreview();
+    };
+    // The seed input moves off the row and into the row menu: the seed CELL is
+    // the affordance now (click pins, double-click types). Keeping the input
+    // itself alive preserves its oninput path verbatim.
+    seedInput.style.display = "";
+    itemSelect.classList.add("pc-field");
     const parts = [
       el(
         "div",
-        { class: "mrln-slot-label", title: `${slot.id} → ${slot.ref}` },
-        handle,
-        msButtons(slot.id),
-        el("span", {}, labelText),
-        chips,
-        buttons
+        {
+          class: "pc-row",
+          "data-level": isVariantSlot ? "nested" : "top",
+          "data-state": rowMode(row),
+        },
+        stateCell(row, resolved, redraw),
+        el(
+          "span",
+          { class: "pc-cell-name", title: `${slot.id} → ${slot.ref}` },
+          handle,
+          // M/S stay ON the row, not in the menu: this is a DAW-style audition
+          // and muting has to be one click from the thing being muted. M IS
+          // the design's 'off' state — same meaning, so there is no third
+          // vocabulary, and the row dims exactly as 'off' would.
+          msButtons(slot.id),
+          el("span", { class: "pc-cell-label" }, labelText),
+          el("span", { class: "pc-cell-chips" }, chips)
+        ),
+        el("span", { class: "pc-cell-value" }, itemSelect),
+        weightCell(pool, row, resolved),
+        seedCell(row, resolved, redraw),
+        menuCell(el("label", { class: "pc-menu-row" }, "Seed", seedInput), buttons)
       ),
-      el("div", { class: "mrln-inline" }, itemSelect, seedInput),
     ];
     if (state.labelEdit.has(slot.id)) {
       parts.push(
