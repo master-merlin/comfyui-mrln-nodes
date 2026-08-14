@@ -1980,7 +1980,13 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-preview-head {
   align-items: center;
   min-height: 26px;
-  margin-top: 10px;
+  /* Every block in this tab is separated by a 1px rule — the folds carry
+     theirs as a border-bottom, so LIVE PREVIEW was the one block that started
+     with nothing above it. Margin becomes padding so the rule sits ON the
+     block's edge rather than floating above it. */
+  margin-top: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--pc-line);
 }
 .pc-panel .mrln-preview-head > .mrln-field-name {
   font: 600 9.5px var(--pc-mono);
