@@ -2284,6 +2284,38 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel select:hover {
   border-color: var(--pc-line-strong);
 }
+/* The search-scope toggle: a segmented control, so it reads as a control and
+   the state you would switch TO is on screen rather than implied. */
+.pc-panel .pc-segmented {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-sm);
+  overflow: hidden;
+}
+.pc-panel .pc-segmented > .pc-seg {
+  min-height: 24px;
+  padding: 0 9px;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-3);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+.pc-panel .pc-segmented > .pc-seg + .pc-seg {
+  border-left: 1px solid var(--pc-line);
+}
+.pc-panel .pc-segmented > .pc-seg:hover {
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+}
+.pc-panel .pc-segmented > .pc-seg[aria-pressed="true"] {
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+  box-shadow: inset 0 -2px 0 var(--pc-live);
+}
+
 /* the row value field: the same box, over its own caret geometry from phase 2 */
 .pc-panel select.pc-field {
   border-color: var(--pc-line);

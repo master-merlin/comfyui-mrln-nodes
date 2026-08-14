@@ -1,7 +1,11 @@
 # Normalize line endings: LF in the repo, native in working copies.
 * text=auto
 *.py text eol=lf
+# every extension tests/js/composer_modules.test.mjs walks: that suite asserts
+# the WORKING COPY has no CRLF, so a checkout that converts them fails it
 *.js text eol=lf
+*.mjs text eol=lf
+*.css text eol=lf
 *.md text
 *.toml text
 *.yml text

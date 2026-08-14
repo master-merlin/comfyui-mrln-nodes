@@ -1953,20 +1953,45 @@ export function createCompose(hub) {
         + "what is INSIDE each section and tells you which item matched.",
       oninput: run,
     });
-    const modeButton = el(
-      "button",
-      {
-        class: "mrln-btn mrln-mini",
-        title: "Switch between matching section names and searching their contents",
-        onclick: () => {
-          deep = !deep;
-          modeButton.textContent = deep ? "Deep" : "Names";
-          modeButton.classList.toggle("mrln-toggled", deep);
-          run();
+    // A single button that just said "Names" read as a label, not a control —
+    // nothing about it said it toggled, and the state it would toggle TO was
+    // invisible. Both scopes are on screen now, the active one filled.
+    const segments = [];
+    const paintSegments = () => {
+      for (const seg of segments) {
+        seg.setAttribute("aria-pressed", String(seg.dataset.deep === String(deep)));
+      }
+    };
+    const segment = (label, value, tip) => {
+      const button = el(
+        "button",
+        {
+          class: "mrln-btn pc-seg",
+          "data-deep": String(value),
+          title: tip,
+          onclick: () => {
+            if (deep === value) return;
+            deep = value;
+            paintSegments();
+            run();
+          },
         },
+        label
+      );
+      segments.push(button);
+      return button;
+    };
+    const modeButton = el(
+      "span",
+      {
+        class: "pc-segmented",
+        role: "group",
+        "aria-label": "Search scope",
       },
-      "Names"
+      segment("Names", false, "Match the section slug and label — instant, no request"),
+      segment("Deep", true, "Also search what is INSIDE each section, and say which item matched")
     );
+    paintSegments();
     const node = compact
       ? el("div", { class: "mrln-picker mrln-picker-compact" }, select, filter, modeButton, note)
       : el(
