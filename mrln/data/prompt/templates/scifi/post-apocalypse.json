@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "label": "Post-Apocalypse",
+  "description": "After the collapse, told through what the place is doing now: nature taking the structure back, and one survivor for scale.",
+  "prefix": "A post-apocalyptic scene, decades after the collapse, nature taking the place back",
+  "slots": [
+    {
+      "id": "place",
+      "ref": "location/industrial",
+      "label": "Place",
+      "emphasis": 1.25
+    },
+    {
+      "id": "overgrowth",
+      "ref": "nature/flora",
+      "label": "Overgrowth",
+      "emphasis": 1.15
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/dramatic",
+      "label": "Light"
+    },
+    {
+      "id": "survivor",
+      "ref": "human/archetype",
+      "label": "Survivor",
+      "allow_empty": true
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "bleach-bypass"
+    }
+  ],
+  "suffix": "the ruin described honestly: rust bleeding down concrete, roots splitting slabs, glass long gone, one small human-scale element for size, no rubble that looks arranged",
+  "negative": "pristine buildings, tidy debris, video game HUD, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

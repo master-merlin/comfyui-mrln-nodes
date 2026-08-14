@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "label": "Collectibles & Figures",
+  "description": "Collectible formats as products in their own right — the scale figure, the blind-box vinyl, the boxed model kit. Each names the material, finish and presentation that make it read as a manufactured object rather than a render.",
+  "suits": [
+    "product",
+    "object"
+  ],
+  "items": [
+    {
+      "name": "scale-figure-1-7",
+      "text": "a 1/7 scale PVC collectible figure on a clear acrylic base, factory paint with clean separation lines, subtle gloss on the eyes and matte on the fabric, sculpted folds holding real weight",
+      "text_short": "1/7 scale PVC figure on acrylic base"
+    },
+    {
+      "name": "chibi-deformed-figure",
+      "text": "a super-deformed chibi figure, two heads tall, thick simplified forms, glossy factory finish, sat on a small themed base",
+      "text_short": "chibi SD figure, two heads tall, glossy"
+    },
+    {
+      "name": "blind-box-vinyl",
+      "text": "a blind-box vinyl toy: soft rounded forms, flat matte colour blocking, a single glossy accent, the deliberate blankness of designer vinyl",
+      "text_short": "blind-box vinyl, matte blocking"
+    },
+    {
+      "name": "action-figure-blister",
+      "text": "an action figure sealed in a blister pack: articulated joints visible through the bubble, printed cardback behind, small accessories in their own moulded wells",
+      "text_short": "blistered action figure with cardback"
+    },
+    {
+      "name": "model-kit-sprue",
+      "text": "an unbuilt model kit on its sprue: parts laid out in a grid on the runner with numbered gates, injection-moulded plastic sheen",
+      "text_short": "model kit parts on numbered sprue"
+    },
+    {
+      "name": "diorama-base",
+      "text": "a figure mounted on a built diorama base — textured groundwork, weathering pigments, a scenic element sized to the figure",
+      "text_short": "figure on weathered diorama base"
+    },
+    {
+      "name": "plush-toy",
+      "text": "a soft plush toy: short pile fabric, embroidered features, visible seams and stuffed volume that flattens where it rests",
+      "text_short": "plush toy, embroidered features, seams"
+    },
+    {
+      "name": "brick-minifig",
+      "text": "a brick-built minifigure and micro-scene: moulded plastic parts with printed detail, studs visible, primary-colour palette",
+      "text_short": "brick minifig and micro-scene"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "label": "Isometric Room",
+  "description": "An isometric diorama room: one true projection, a single light direction, and the whole scene contained inside its tile.",
+  "prefix": "An isometric diorama room, a single cutaway space seen in true 2:1 projection",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "game/asset",
+      "label": "Asset format",
+      "default": "isometric-tile",
+      "emphasis": 1.3
+    },
+    {
+      "id": "room",
+      "ref": "location/domestic",
+      "label": "Room",
+      "emphasis": 1.25
+    },
+    {
+      "id": "treatment",
+      "ref": "style/rendering",
+      "label": "Rendering",
+      "default": "lowpoly-flat"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    }
+  ],
+  "suffix": "true isometric 2:1 projection with no perspective convergence, the whole room contained inside its footprint with nothing overhanging, one consistent light direction, soft ambient occlusion in the corners",
+  "negative": "perspective distortion, camera tilt, cropped walls, photographic, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

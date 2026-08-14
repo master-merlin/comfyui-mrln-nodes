@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "label": "Deck Back & Case",
+  "description": "The back of the deck and the pattern that carries it — symmetric to all four edges, one emblem, and the restraint a repeat demands.",
+  "prefix": "A card back design, symmetric ornamental pattern with a central emblem",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "design/card",
+      "label": "Card format",
+      "default": "collectible-back",
+      "emphasis": 1.3
+    },
+    {
+      "id": "motif",
+      "ref": "style/graphic",
+      "label": "Motif treatment",
+      "default": "flat-design"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "default": "duotone-graphic"
+    }
+  ],
+  "suffix": "rotationally symmetric to all four edges, a single central emblem, two flat colours plus a metallic, even density with no bare corners, crisp print registration",
+  "negative": "asymmetric composition, photographic, portrait subject, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

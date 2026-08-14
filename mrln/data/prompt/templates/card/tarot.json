@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "label": "Tarot Card",
+  "description": "A tarot card in the full idiom: ornamented border, roman numeral, title banner, and a symbolic figure that looks straight out at the reader.",
+  "prefix": "A tarot card, symbolic figure centred and staring out of the frame",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "design/card",
+      "label": "Card format",
+      "default": "tarot-major-arcana",
+      "emphasis": 1.3
+    },
+    {
+      "id": "figure",
+      "ref": "human/archetype",
+      "label": "Figure",
+      "emphasis": 1.2
+    },
+    {
+      "id": "treatment",
+      "ref": "style/movement",
+      "label": "Art movement",
+      "default": "art-nouveau"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    }
+  ],
+  "suffix": "ornamented border enclosing the scene, roman numeral above and a title banner below, flat symbolic composition with everything meaning something, gold-ink accents",
+  "negative": "photorealistic, casual pose, modern clothing, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

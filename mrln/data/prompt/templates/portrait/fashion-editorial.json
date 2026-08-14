@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "label": "Fashion Editorial",
+  "description": "An editorial fashion frame: the garment is the subject, the pose serves the cut, and the location is chosen to argue with the clothes.",
+  "prefix": "An editorial fashion photograph, the garment as the subject:",
+  "slots": [
+    {
+      "id": "look",
+      "ref": "wardrobe/glamour",
+      "label": "Look",
+      "emphasis": 1.3
+    },
+    {
+      "id": "pose",
+      "ref": "pose/standing",
+      "label": "Pose",
+      "emphasis": 1.15
+    },
+    {
+      "id": "place",
+      "ref": "location/urban",
+      "label": "Location"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Light"
+    },
+    {
+      "id": "optics",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "70-200-fashion"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portraiture",
+      "label": "Style line",
+      "default": "studio-editorial"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "shot for a magazine: the cut and drape of the garment described in full, a pose that serves the clothes rather than the face, generous negative space for the layout",
+  "negative": "casual snapshot, cluttered frame, ill-fitting clothes, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

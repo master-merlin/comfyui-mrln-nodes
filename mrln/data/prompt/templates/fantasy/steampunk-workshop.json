@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "label": "Steampunk Workshop",
+  "description": "Brass, pressure and craft: a working shop where every mechanism looks like it was built by someone who had to maintain it.",
+  "prefix": "A steampunk workshop interior, every mechanism built by someone who has to maintain it",
+  "slots": [
+    {
+      "id": "maker",
+      "ref": "human/trade",
+      "label": "Maker",
+      "emphasis": 1.2
+    },
+    {
+      "id": "shop",
+      "ref": "location/industrial",
+      "label": "Workshop",
+      "emphasis": 1.2
+    },
+    {
+      "id": "machine",
+      "ref": "vehicle/machine",
+      "label": "Machine"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Light",
+      "default": "fireplace-glow"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/movement",
+      "label": "Movement",
+      "default": "art-nouveau"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "golden-luxury"
+    }
+  ],
+  "suffix": "brass and blued steel with real wear at the touch points, riveted seams, pressure gauges and copper pipework routed the way a fitter would route it, oil and coal dust everywhere",
+  "negative": "clean showroom finish, plastic parts, modern electronics, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

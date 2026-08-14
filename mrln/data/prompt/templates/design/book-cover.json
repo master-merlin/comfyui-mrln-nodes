@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "Book Cover",
+  "description": "A cover that has to sell the book as a thumbnail: one arresting image, a genre a reader recognises in half a second, and room reserved for the type.",
+  "prefix": "A book cover design, one arresting image built to sell the story at thumbnail size",
+  "slots": [
+    {
+      "id": "genre",
+      "ref": "style/genre",
+      "label": "Genre",
+      "emphasis": 1.3
+    },
+    {
+      "id": "subject",
+      "ref": "location/fantasy",
+      "label": "Scene"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/medium",
+      "label": "Medium",
+      "default": "oil-painting"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "type",
+      "ref": "style/headline",
+      "label": "Title treatment",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "composed as a cover: a clear focal image with deliberate empty space reserved for the title and the author's name, strong value contrast, portrait format",
+  "negative": "spine, back cover, mockup on a table, hands holding the book, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

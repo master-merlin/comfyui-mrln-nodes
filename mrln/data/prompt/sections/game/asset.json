@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Game Asset Formats",
+  "description": "What a game actually needs delivered — a sprite sheet, a tileset, an icon grid, a turnaround. Each states the technical shape (grid, alignment, background) that makes the art usable rather than merely pretty.",
+  "items": [
+    {
+      "name": "pixel-sprite-sheet",
+      "text": "a pixel-art sprite sheet: one character in a row of animation frames on a transparent grid, strict limited palette, crisp unfiltered pixels and no anti-aliasing",
+      "text_short": "pixel sprite sheet, animation row, no AA"
+    },
+    {
+      "name": "isometric-tile",
+      "text": "an isometric tile: 2:1 diamond footprint aligned to the grid, art contained inside the tile with nothing overhanging, matte shading with a single light direction",
+      "text_short": "isometric 2:1 tile, grid-aligned"
+    },
+    {
+      "name": "ui-icon-set",
+      "text": "a UI icon set: a grid of matching icons at one weight and one corner radius, each centred in its own square with equal optical padding, flat single-colour",
+      "text_short": "UI icon grid, one weight, flat"
+    },
+    {
+      "name": "item-icon-grid",
+      "text": "an inventory item icon grid: each object rendered three-quarter on a plain dark cell with a soft contact shadow, consistent scale and light across the sheet",
+      "text_short": "inventory icon grid, three-quarter, dark cells"
+    },
+    {
+      "name": "character-turnaround",
+      "text": "a character turnaround sheet: the same figure front, three-quarter, side and back in one row, feet on a shared baseline, neutral pose and even flat lighting",
+      "text_short": "turnaround: front, 3/4, side, back"
+    },
+    {
+      "name": "tileset-terrain",
+      "text": "a terrain tileset: a seamless set of edge and corner pieces that mate on every side, consistent material and light, laid out as a labelled grid",
+      "text_short": "seamless terrain tileset, edge and corner"
+    },
+    {
+      "name": "parallax-layer",
+      "text": "a parallax background layer: one horizontal band of scenery that repeats left to right without a visible seam, depth carried by value not detail",
+      "text_short": "seamless parallax band"
+    },
+    {
+      "name": "portrait-bust-ui",
+      "text": "a dialogue portrait bust: head and shoulders framed for a small UI window, strong silhouette, expression readable at thumbnail size",
+      "text_short": "dialogue portrait bust, strong silhouette"
+    }
+  ]
+}

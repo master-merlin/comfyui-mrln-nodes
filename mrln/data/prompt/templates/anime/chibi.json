@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "label": "Chibi",
+  "description": "Super-deformed proportions done properly: two heads tall, simplified forms, and the expression doing all the work.",
+  "prefix": "A chibi illustration, super-deformed proportions with the head as large as the body",
+  "slots": [
+    {
+      "id": "character",
+      "ref": "human/archetype",
+      "label": "Character",
+      "emphasis": 1.2
+    },
+    {
+      "id": "mood",
+      "ref": "human/expression",
+      "label": "Expression",
+      "emphasis": 1.25
+    },
+    {
+      "id": "outfit",
+      "ref": "wardrobe/casual",
+      "label": "Outfit"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/anime",
+      "label": "Anime style"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    }
+  ],
+  "suffix": "two heads tall with stubby simplified limbs, oversized eyes, tiny simplified hands and feet, clean cel shading, plain or softly blurred background",
+  "negative": "realistic proportions, detailed anatomy, photorealistic, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

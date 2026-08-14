@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "label": "Seamless Pattern",
+  "description": "A tileable repeat for textile, wrapping or a background — the test is that the eye cannot find the seam or the grid.",
+  "prefix": "A seamless repeating pattern, tileable in every direction",
+  "slots": [
+    {
+      "id": "motif",
+      "ref": "nature/flora",
+      "label": "Motif",
+      "emphasis": 1.25
+    },
+    {
+      "id": "treatment",
+      "ref": "style/craft-medium",
+      "label": "Medium",
+      "default": "gouache-flat"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "era",
+      "ref": "style/movement",
+      "label": "Movement",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "a true seamless repeat: motifs continue across every edge and meet perfectly, even visual density with no obvious grid or rivers, flat even lighting across the whole tile",
+  "negative": "visible seam, cropped motif at the edge, vignette, perspective, drop shadow, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

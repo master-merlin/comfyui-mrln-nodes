@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "label": "Tattoo Idioms",
+  "description": "How a tattoo is actually drawn — the working traditions, each with its own line weight, palette and rules about what goes solid black. Flash sheets and designs, described the way tattooers describe them.",
+  "items": [
+    {
+      "name": "american-traditional",
+      "text": "American traditional: heavy black outline, flat limited palette of red, yellow and green, solid black shading in whip and pepper, motifs that read across a room",
+      "text_short": "american traditional, bold line, flat palette"
+    },
+    {
+      "name": "japanese-irezumi",
+      "text": "Japanese irezumi composition: bold subject over stylised wind bars and finger waves, black background smoke, a palette of indigo, vermilion and green",
+      "text_short": "irezumi, wind bars, background smoke"
+    },
+    {
+      "name": "blackwork-bold",
+      "text": "blackwork: large fields of solid black against untouched skin, negative space doing the drawing, geometric or organic edges cut clean",
+      "text_short": "blackwork, solid fields, negative space"
+    },
+    {
+      "name": "fine-line-micro",
+      "text": "fine-line single-needle work, hairline strokes barely thicker than a pen mark, delicate stipple shading, no outline heavier than the detail",
+      "text_short": "fine-line single-needle, hairline"
+    },
+    {
+      "name": "neo-traditional",
+      "text": "neo-traditional: traditional bones with a wider palette and real rendering — varied line weight, jewel tones, decorative framing",
+      "text_short": "neo-traditional, varied weight, jewel tones"
+    },
+    {
+      "name": "dotwork-stipple",
+      "text": "dotwork: every value built from stippled dots at varying density, no line shading at all, sacred-geometry framing",
+      "text_short": "dotwork stipple, no line shading"
+    },
+    {
+      "name": "script-lettering",
+      "text": "tattoo lettering: flowing script with confident thick-thin contrast, long connecting flourishes, drawn to sit along a limb",
+      "text_short": "flowing script lettering"
+    },
+    {
+      "name": "ornamental-geometry",
+      "text": "ornamental geometry: mandala and filigree bands built to wrap a limb, mirrored motifs, fine repeating detail",
+      "text_short": "ornamental geometric bands"
+    },
+    {
+      "name": "watercolor-splash",
+      "text": "watercolor tattoo: loose pigment washes and drips behind a light line drawing, colour deliberately escaping the outline",
+      "text_short": "watercolor washes behind light line"
+    },
+    {
+      "name": "chicano-fine-black",
+      "text": "chicano black-and-grey: soft smooth grey wash, photorealistic rendering, filigree and script accents, no colour at all",
+      "text_short": "chicano black-and-grey, smooth wash"
+    }
+  ]
+}

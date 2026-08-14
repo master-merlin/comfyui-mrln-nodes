@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "Property Listing",
+  "description": "The interior shot a listing needs: verticals true, the room made to look its size, and the light balanced between the window and the lamps.",
+  "prefix": "An estate agent's interior photograph of a room, shot to sell the space",
+  "slots": [
+    {
+      "id": "room",
+      "ref": "architecture/interior",
+      "label": "Room",
+      "emphasis": 1.25
+    },
+    {
+      "id": "light",
+      "ref": "lighting/day",
+      "label": "Light"
+    },
+    {
+      "id": "view",
+      "ref": "camera/architecture-view",
+      "label": "Camera",
+      "default": "one-point-axis"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/photography",
+      "label": "Discipline",
+      "default": "documentary"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "verticals perfectly true with no keystoning, window exposure balanced against the interior lamps, the room staged tidy and impersonal, wide enough to read the plan without distortion",
+  "negative": "fisheye distortion, tilted verticals, clutter, people in frame, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

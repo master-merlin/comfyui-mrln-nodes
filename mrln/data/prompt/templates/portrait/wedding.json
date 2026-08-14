@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "label": "Wedding",
+  "description": "Wedding photography as it is actually shot: available light, a real moment between two people, and the day's own setting rather than a studio.",
+  "prefix": "A wedding photograph, a real moment between two people on the day:",
+  "slots": [
+    {
+      "id": "couple",
+      "ref": "pose/couple-interaction",
+      "label": "Moment",
+      "emphasis": 1.25
+    },
+    {
+      "id": "place",
+      "ref": "location/celebration",
+      "label": "Setting"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/organic",
+      "label": "Light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "optics",
+      "ref": "camera/portrait-glass",
+      "label": "Optics",
+      "default": "35mm-reportage"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment",
+      "default": "film-romantic"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade"
+    }
+  ],
+  "suffix": "photographed rather than posed: available light with practical sources left in frame, the moment caught mid-gesture, honest skin and fabric texture, background of the real venue",
+  "negative": "studio backdrop, stiff posing, harsh direct flash, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

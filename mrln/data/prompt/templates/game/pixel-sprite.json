@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "label": "Pixel Sprite Sheet",
+  "description": "A sprite sheet with the pixel discipline that makes it usable: strict palette, crisp unfiltered pixels, frames on a shared baseline.",
+  "prefix": "A pixel-art sprite sheet, animation frames in a row on a transparent grid",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "game/asset",
+      "label": "Asset format",
+      "default": "pixel-sprite-sheet",
+      "emphasis": 1.35
+    },
+    {
+      "id": "character",
+      "ref": "human/archetype",
+      "label": "Character",
+      "emphasis": 1.2
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    }
+  ],
+  "suffix": "crisp unfiltered pixels with no anti-aliasing and no blur, strict limited palette, every frame on the same baseline at the same scale, transparent background",
+  "negative": "smooth vector shapes, anti-aliased edges, blur, photorealistic, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

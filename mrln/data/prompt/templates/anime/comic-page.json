@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "label": "Comic Page",
+  "description": "A laid-out comic page rather than a single image: panels, gutters, a reading order and one panel allowed to break the grid.",
+  "prefix": "A comic book page with a full panel layout, drawn and inked",
+  "slots": [
+    {
+      "id": "treatment",
+      "ref": "style/cartoon-comics",
+      "label": "Ink style",
+      "default": "comic-book-ink",
+      "emphasis": 1.25
+    },
+    {
+      "id": "beat",
+      "ref": "human/street-moment",
+      "label": "Story beat",
+      "emphasis": 1.2
+    },
+    {
+      "id": "setting",
+      "ref": "location/urban",
+      "label": "Setting"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    }
+  ],
+  "suffix": "a real page layout: several panels separated by clean white gutters, a clear left-to-right reading order, one panel breaking the grid for emphasis, speech balloons left empty",
+  "negative": "single illustration with no panels, lettered dialogue text, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "label": "Concept Environment",
+  "description": "A production concept painting: one location established with scale, mood and a story beat, painted loose where it can be and tight where it matters.",
+  "prefix": "A production concept painting of an environment, establishing scale and mood in one image",
+  "slots": [
+    {
+      "id": "place",
+      "ref": "location/scifi-horizon",
+      "label": "Location",
+      "emphasis": 1.25
+    },
+    {
+      "id": "light",
+      "ref": "lighting/epic",
+      "label": "Light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Atmosphere"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/rendering",
+      "label": "Rendering",
+      "default": "cinematic-engine"
+    },
+    {
+      "id": "framing",
+      "ref": "composition/vista",
+      "label": "Composition"
+    }
+  ],
+  "suffix": "painted as concept art: confident value structure read before colour, a small human-scale element establishing size, loose brushwork in the periphery and resolved detail at the focus",
+  "negative": "flat lighting, no focal point, snapshot framing, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

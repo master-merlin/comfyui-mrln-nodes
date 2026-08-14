@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Merch Formats",
+  "description": "The printed object the artwork is FOR — sticker sheet, tee front, tote, pin. Each states the print constraints that decide whether a design survives manufacture: bleed, colour count, cut line and where the thing is looked at.",
+  "items": [
+    {
+      "name": "sticker-diecut-sheet",
+      "text": "a die-cut sticker sheet: several related stickers laid out on one page, each with a thick white cut border and a subtle drop shadow, flat vinyl-ready colour",
+      "text_short": "die-cut sticker sheet, white cut borders"
+    },
+    {
+      "name": "tee-front-print",
+      "text": "a t-shirt front print: one centred graphic sized to the chest, limited screen-print palette, no gradients finer than the mesh can hold, transparent background",
+      "text_short": "tee front print, limited screen palette"
+    },
+    {
+      "name": "tote-canvas",
+      "text": "a canvas tote print: single-colour design on natural cotton, generous margins, artwork that reads from across a market",
+      "text_short": "single-colour tote print on canvas"
+    },
+    {
+      "name": "enamel-pin",
+      "text": "a hard enamel pin design: bold metal outlines separating every colour field, no gradients, compact silhouette that survives at 35mm",
+      "text_short": "hard enamel pin, metal outlines"
+    },
+    {
+      "name": "mug-wrap",
+      "text": "a mug wrap print: artwork laid out as a continuous band that meets itself at the handle, safe margins top and bottom",
+      "text_short": "continuous mug wrap band"
+    },
+    {
+      "name": "poster-a2",
+      "text": "an A2 poster: one dominant image with a clear focal hierarchy and space reserved for a title block, print-resolution detail",
+      "text_short": "A2 poster, dominant image, title space"
+    },
+    {
+      "name": "phone-case",
+      "text": "a phone case print: vertical composition with the camera cut-out kept clear, artwork that still reads at palm size",
+      "text_short": "phone case print, camera cut-out clear"
+    },
+    {
+      "name": "embroidered-patch",
+      "text": "an embroidered patch: shapes simplified to what a needle can hold, merrowed border, satin-stitch highlights, limited thread colours",
+      "text_short": "embroidered patch, merrowed border"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Card Formats",
+  "description": "Cards as printed artifacts — the frame, the furniture and the conventions each kind carries. What separates a tarot card from a trading card is not the picture but everything drawn around it.",
+  "items": [
+    {
+      "name": "tarot-major-arcana",
+      "text": "a tarot major-arcana card: portrait frame with an ornamented border, a roman numeral at the top and a title banner at the foot, symbolic figure centred and staring out",
+      "text_short": "tarot major arcana, ornate border, numeral"
+    },
+    {
+      "name": "tcg-creature",
+      "text": "a trading-card-game creature card: illustration window in the upper two thirds, name bar above it, a type line and a stat corner below, ornate rarity-coded frame",
+      "text_short": "TCG creature card, illustration window, stat corner"
+    },
+    {
+      "name": "sports-card",
+      "text": "a sports trading card: action photograph bleeding to the edges, name plate across the bottom, small team crest, glossy chromed finish",
+      "text_short": "sports card, bleed photo, name plate"
+    },
+    {
+      "name": "playing-card-face",
+      "text": "a playing-card court face: mirrored top-and-bottom composition, index pip in two opposite corners, flat heraldic colour",
+      "text_short": "playing card court face, mirrored, corner pips"
+    },
+    {
+      "name": "oracle-deck",
+      "text": "an oracle card: soft full-bleed illustration with a single keyword set in generous type at the foot, thin metallic rule inside the trim",
+      "text_short": "oracle card, full bleed, keyword foot"
+    },
+    {
+      "name": "holo-foil-parallel",
+      "text": "a holographic foil parallel: rainbow foil catching across the illustration in a directional sweep, the frame's flat areas left to shimmer",
+      "text_short": "holo foil parallel, rainbow sweep"
+    },
+    {
+      "name": "kickstarter-promo",
+      "text": "a promo card: dramatic edge-to-edge art, a small numbered stamp in one corner, minimal frame furniture",
+      "text_short": "promo card, edge-to-edge art, numbered"
+    },
+    {
+      "name": "collectible-back",
+      "text": "a card back: symmetric ornamental pattern repeating to all four edges, a central emblem, two flat colours and a metallic",
+      "text_short": "symmetric card back, central emblem"
+    }
+  ]
+}

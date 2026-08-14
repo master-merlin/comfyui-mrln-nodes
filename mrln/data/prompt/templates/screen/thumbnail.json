@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "label": "Video Thumbnail",
+  "description": "A thumbnail that wins the click at 210 pixels wide: one face or one object, extreme contrast, and space for three big words.",
+  "prefix": "A video thumbnail composition, built to be read at 210 pixels wide",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/expression",
+      "label": "Expression",
+      "emphasis": 1.3
+    },
+    {
+      "id": "scene",
+      "ref": "location/everyday",
+      "label": "Setting"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "default": "neon-electric"
+    },
+    {
+      "id": "type",
+      "ref": "style/headline",
+      "label": "Overlay copy",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "extreme figure-ground contrast, the subject cut out crisply against a simplified background, saturated punchy colour, one clear empty third reserved for large overlay text",
+  "negative": "subtle, low contrast, fine detail that vanishes when small, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

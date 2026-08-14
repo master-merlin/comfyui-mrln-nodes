@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "label": "Cyberpunk Street",
+  "description": "Street level in the rain-lit city: signage as the light source, crowd as texture, and the camera down where the puddles are. Defaults to the street itself — the section also holds hangars and plant halls, which are a different picture.",
+  "prefix": "A street-level cyberpunk scene, the city lit almost entirely by its own signage",
+  "slots": [
+    {
+      "id": "place",
+      "ref": "location/futuristic",
+      "label": "Street",
+      "emphasis": 1.25,
+      "default": "high-tech-street"
+    },
+    {
+      "id": "crowd",
+      "ref": "human/passerby",
+      "label": "Passerby"
+    },
+    {
+      "id": "weather",
+      "ref": "atmosphere/weather",
+      "label": "Weather",
+      "default": "light-rain",
+      "emphasis": 1.15
+    },
+    {
+      "id": "light",
+      "ref": "lighting/night",
+      "label": "Light",
+      "emphasis": 1.2
+    },
+    {
+      "id": "optics",
+      "ref": "camera/lens",
+      "label": "Optics",
+      "default": "35mm-environmental"
+    },
+    {
+      "id": "grade",
+      "ref": "style/grade",
+      "label": "Grade",
+      "default": "moody-cinematic"
+    }
+  ],
+  "suffix": "shot from street level: wet asphalt returning every sign as a coloured smear, layered depth of signage and steam, one figure anchoring the scale, practical light only",
+  "negative": "clean dry street, daylight, empty sterile plaza, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

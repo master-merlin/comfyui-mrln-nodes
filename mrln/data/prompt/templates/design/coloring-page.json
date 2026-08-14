@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "label": "Coloring Page",
+  "description": "A printable coloring page: bold even outlines, no shading anywhere, and shapes large enough to actually colour in. A whole print-on-demand economy runs on this one format.",
+  "prefix": "A printable coloring book page, pure black line art on white",
+  "slots": [
+    {
+      "id": "line",
+      "ref": "style/line-art",
+      "label": "Line treatment",
+      "default": "coloring-book-bold",
+      "emphasis": 1.35
+    },
+    {
+      "id": "subject",
+      "ref": "nature/flora",
+      "label": "Subject",
+      "emphasis": 1.2
+    },
+    {
+      "id": "framing",
+      "ref": "composition/framing",
+      "label": "Composition",
+      "default": "central-symmetry"
+    }
+  ],
+  "suffix": "clean uniform black outlines on pure white, absolutely no shading, no grey, no fills, every enclosed area large enough for a crayon, generous white margin",
+  "negative": "shading, grayscale, colour, photorealistic, texture, hatching so fine it fills, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

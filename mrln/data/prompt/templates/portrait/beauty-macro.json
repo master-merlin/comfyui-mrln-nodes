@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "label": "Beauty Macro",
+  "description": "The beauty close-up: skin, eye and lip at macro distance under a clamshell, where every texture decision is visible and retouching philosophy matters.",
+  "prefix": "A beauty macro photograph, the face at close range under controlled light:",
+  "slots": [
+    {
+      "id": "feature",
+      "ref": "human/makeup",
+      "label": "Makeup",
+      "emphasis": 1.3
+    },
+    {
+      "id": "skin",
+      "ref": "human/skin",
+      "label": "Skin"
+    },
+    {
+      "id": "eyes",
+      "ref": "human/eye-color",
+      "label": "Eyes"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Light",
+      "default": "clamshell",
+      "emphasis": 1.2
+    },
+    {
+      "id": "optics",
+      "ref": "camera/macro-rig",
+      "label": "Optics"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment",
+      "default": "editorial-polish"
+    }
+  ],
+  "suffix": "macro beauty distance: pores, fine hairs and lash detail all present, catchlights matched in both eyes, colour-accurate skin, product-grade cleanliness without plastic retouching",
+  "negative": "plastic skin, wax figure, heavy smoothing, blown highlights, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string_labeled",
+    "labeled_line": "{label}: {text}",
+    "block_joiner": "\n"
+  }
+}

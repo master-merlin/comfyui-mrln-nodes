@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "label": "T-Shirt Print",
+  "description": "A shirt graphic that survives a screen: one centred idea, a palette a print shop can actually pull, and no detail finer than the mesh will hold.",
+  "prefix": "A t-shirt front print design, one bold centred graphic",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "design/merch",
+      "label": "Format",
+      "default": "tee-front-print",
+      "emphasis": 1.3
+    },
+    {
+      "id": "subject",
+      "ref": "style/genre",
+      "label": "Genre",
+      "emphasis": 1.2
+    },
+    {
+      "id": "treatment",
+      "ref": "style/print",
+      "label": "Print process",
+      "default": "screenprint"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "type",
+      "ref": "style/headline",
+      "label": "Display copy",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "limited screen-print palette with clean colour separation, heavy confident shapes that read from across a room, transparent background, nothing finer than the mesh can hold",
+  "negative": "photographic, subtle gradients, tiny illegible detail, mockup, folded shirt, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

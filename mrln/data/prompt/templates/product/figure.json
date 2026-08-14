@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "label": "Collectible Figure",
+  "description": "The collectible figure shot: a character rendered as a manufactured object with factory paint, a real base and product lighting. One of the most requested things these models are asked for.",
+  "prefix": "A product photograph of a collectible figure, presented as a manufactured object",
+  "slots": [
+    {
+      "id": "format",
+      "ref": "product/collectible",
+      "label": "Figure format",
+      "default": "scale-figure-1-7",
+      "emphasis": 1.35
+    },
+    {
+      "id": "character",
+      "ref": "human/archetype",
+      "label": "Character",
+      "emphasis": 1.2
+    },
+    {
+      "id": "staging",
+      "ref": "product/staging",
+      "label": "Staging",
+      "default": "plinth-cluster"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/still-life",
+      "label": "Light"
+    },
+    {
+      "id": "optics",
+      "ref": "camera/still-life-optics",
+      "label": "Optics"
+    }
+  ],
+  "suffix": "read as a real object: factory paint with clean separation lines, subtle seam lines, matte and gloss varying by material, believable contact shadow on the base, shallow product depth of field",
+  "negative": "flat illustration, concept art, 2D drawing, floating with no base, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

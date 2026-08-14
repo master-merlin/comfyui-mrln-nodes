@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "label": "Avatar / PFP",
+  "description": "A profile picture: square, centred, and legible as a 32-pixel circle. The single most-generated artifact there is, and the one the crop rules decide.",
+  "prefix": "A profile picture, square format, subject centred and cropped close",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "human/archetype",
+      "label": "Subject",
+      "emphasis": 1.25
+    },
+    {
+      "id": "treatment",
+      "ref": "style/portrait-treatment",
+      "label": "Treatment"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "light",
+      "ref": "lighting/studio",
+      "label": "Light",
+      "default": "clamshell"
+    }
+  ],
+  "suffix": "framed for an avatar: head and shoulders centred with even margins, a strong simple silhouette against a plain contrasting ground, still readable cropped to a small circle",
+  "negative": "full body, busy background, off-centre crop, tiny detail, watermark, signature, text artifacts, deformed, extra limbs, extra fingers, child, underage, nsfw",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

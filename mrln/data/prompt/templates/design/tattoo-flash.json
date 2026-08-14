@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "label": "Tattoo Flash",
+  "description": "A tattoo design drawn the way tattooers draw them — a real working idiom with its own line weight and palette, laid out as flash on the page.",
+  "prefix": "A tattoo flash design on off-white paper",
+  "slots": [
+    {
+      "id": "idiom",
+      "ref": "style/tattoo",
+      "label": "Tradition",
+      "emphasis": 1.35
+    },
+    {
+      "id": "motif",
+      "ref": "animal/mythical",
+      "label": "Motif",
+      "emphasis": 1.2
+    },
+    {
+      "id": "ornament",
+      "ref": "style/line-art",
+      "label": "Ornament",
+      "default": "mandala-symmetry",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "drawn as flash: the design isolated on the sheet with clean negative space around it, line weight consistent with the tradition, colours flat and limited, ready to stencil",
+  "negative": "photographic skin, arm, body, mockup, watermark, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

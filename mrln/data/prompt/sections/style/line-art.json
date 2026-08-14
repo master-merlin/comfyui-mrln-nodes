@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "label": "Line Art",
+  "description": "Outline-only treatments — the drawing carried entirely by its lines, with the white of the page doing the rest. What coloring pages, tattoo flash and engraved plates are all made of.",
+  "items": [
+    {
+      "name": "coloring-book-bold",
+      "text": "clean bold black outlines of even weight on pure white, no shading and no grey, every enclosed shape large enough for a crayon",
+      "text_short": "bold coloring-book outlines, no shading"
+    },
+    {
+      "name": "fine-liner-detail",
+      "text": "fine technical-pen linework, dense hatching for form and nothing filled solid, the confidence of an architect's hand",
+      "text_short": "fine liner, hatched, unfilled"
+    },
+    {
+      "name": "mandala-symmetry",
+      "text": "radial symmetric ornament, concentric bands of repeating motif, every ring closing perfectly on itself",
+      "text_short": "radial mandala ornament"
+    },
+    {
+      "name": "botanical-plate",
+      "text": "botanical plate linework — stem, leaf and seed head drawn to scale with a naturalist's restraint, hairline stipple for shadow",
+      "text_short": "botanical plate linework"
+    },
+    {
+      "name": "kawaii-outline",
+      "text": "rounded friendly outlines, generous white space inside every shape, simple faces with two dots and a curve",
+      "text_short": "rounded kawaii outlines"
+    },
+    {
+      "name": "single-line-continuous",
+      "text": "one unbroken continuous line describing the whole subject, never lifting, crossing itself only where the form demands",
+      "text_short": "one continuous unbroken line"
+    },
+    {
+      "name": "engraved-plate",
+      "text": "old encyclopedia engraving: parallel burin lines swelling to describe volume, cross-hatched shadow, no solid black",
+      "text_short": "engraved burin linework"
+    },
+    {
+      "name": "marker-doodle",
+      "text": "loose felt-tip doodle, wobbling confident outline, small repeated marks standing in for texture",
+      "text_short": "loose felt-tip doodle outline"
+    }
+  ]
+}

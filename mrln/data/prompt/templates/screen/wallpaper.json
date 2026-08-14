@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "label": "Wallpaper",
+  "description": "A phone or desktop wallpaper: one subject, a lot of deliberate emptiness, and nothing important where the clock and the icons land.",
+  "prefix": "A wallpaper composition, one calm subject with generous empty space around it",
+  "slots": [
+    {
+      "id": "subject",
+      "ref": "nature/mountain",
+      "label": "Subject",
+      "emphasis": 1.2
+    },
+    {
+      "id": "light",
+      "ref": "lighting/epic",
+      "label": "Light"
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette"
+    },
+    {
+      "id": "treatment",
+      "ref": "style/medium",
+      "label": "Medium",
+      "default": "photorealistic"
+    }
+  ],
+  "suffix": "composed for a screen: the subject held low or to one side, a broad quiet field of negative space where icons and a clock would sit, no detail that fights small text, flawless clean edges",
+  "negative": "text, logo, watermark, busy foreground clutter, centred subject filling the frame, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}

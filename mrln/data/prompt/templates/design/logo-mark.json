@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "label": "Logo Mark",
+  "description": "A brand mark rather than an illustration: one idea, reduced until it still works at favicon size and in a single colour.",
+  "prefix": "A professional logo mark, one reduced idea rendered with absolute clarity",
+  "slots": [
+    {
+      "id": "treatment",
+      "ref": "style/graphic",
+      "label": "Treatment",
+      "default": "brand-board",
+      "emphasis": 1.3
+    },
+    {
+      "id": "subject",
+      "ref": "product/category",
+      "label": "Referent",
+      "allow_empty": true
+    },
+    {
+      "id": "palette",
+      "ref": "style/palette",
+      "label": "Palette",
+      "default": "duotone-graphic"
+    },
+    {
+      "id": "type",
+      "ref": "style/headline",
+      "label": "Wordmark",
+      "allow_empty": true
+    }
+  ],
+  "suffix": "vector-clean geometry, balanced optical weight, flat colour on a plain ground, legible reduced to 16 pixels and in one colour, generous clear space around the mark",
+  "negative": "photorealistic, texture, drop shadow, gradient mesh, clip art, watermark, signature, text artifacts, deformed, extra limbs, extra fingers",
+  "render": {
+    "format": "string",
+    "joiner": ", "
+  }
+}
