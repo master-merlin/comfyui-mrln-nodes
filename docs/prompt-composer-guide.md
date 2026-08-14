@@ -44,12 +44,12 @@ own — **nested draws** and **combine sections**.
   - [Random from a subset](#random-from-a-subset)
   - [Editing a row](#editing-a-row)
   - [Preview, choices, apply](#preview-choices-apply)
+- [De-compose](#de-compose)
 - [Library](#library)
   - [Editing a section](#editing-a-section)
   - [Nested draws: an item that draws its own slots](#nested-draws)
   - [Combine: one slot, several sections](#combine)
   - [Building a template from scratch](#building-a-template)
-- [De-compose](#de-compose)
 - [History](#history)
 - [Settings](#settings)
 - [Recipes](#recipes)
@@ -114,6 +114,8 @@ Outputs are grouped by what you wire them to: **`prompt`**, **`llm`**,
 
 ### Prompt Enhance (MRLN) — the rewrite
 
+<img src="images/13-enhance.png" width="420" alt="The Prompt Enhance node">
+
 An LLM pass that improves the wording **without losing the words that carry
 meaning**. That is the whole reason it takes the `llm` wire instead of a plain
 string: the wire carries the prompt, the template profile's system prompt, and
@@ -140,6 +142,8 @@ The second output, `report`, says what happened — which backend answered, what
 it cost, whether protected words survived, and why it passed through if it did.
 
 ### LoRA Apply (MRLN) — weights that travel with the prompt
+
+<img src="images/14-lora.png" width="420" alt="The LoRA Apply node">
 
 The idea: a LoRA belongs to the *item that needs it*, not to a loader you wire
 by hand. Add a LoRA block to an item in the section editor, and every template
@@ -265,9 +269,36 @@ and **⋯** holds *Load from node*, *Pin draw* and *Save as…*.
 
 ---
 
+## De-compose
+
+<img src="images/06-decompose.png" width="900" alt="The De-compose tab">
+
+The other direction: start from a prompt or an image and end with a template.
+
+**Image → template.** Drop a generated PNG/JPEG/WebP (or paste a civitai.com
+URL) and its metadata is read server-side — A1111/Forge/Civitai `parameters`,
+an embedded ComfyUI graph, or EXIF. Then *you* choose:
+
+- **Use as-is** — a template that reproduces that prompt byte for byte. No LLM
+  is involved, so it works with no backend configured
+- **Decompose** — hand the text to the matcher below
+
+**Prompt → template.** Paste a prompt and pick an engine:
+
+- `programmatic` — offline token matching against your library
+- `llm` — a configured backend splits and maps it, and every assignment is
+  validated against the real library
+- `hybrid` — the programmatic result rides along as suggestions to verify
+
+Matched fragments become slots pinned to their items; the residue becomes new
+items, new sections, or prefix/suffix prose — you decide per fragment. One
+click saves the whole mapping as a template.
+
+---
+
 ## Library
 
-<img src="images/06-library-cards.png" width="885" alt="The Library tab as a card grid">
+<img src="images/07-library-cards.png" width="885" alt="The Library tab as a card grid">
 
 Everything the pack ships and everything you have made: 237 sections, 100
 templates and the target-model profiles, each with a thumbnail. The view opens
@@ -288,7 +319,7 @@ to remove, **🗑**.
 
 ### Editing a section
 
-<img src="images/07-section-editor.png" width="885" alt="The section editor">
+<img src="images/08-section-editor.png" width="885" alt="The section editor">
 
 Clicking an entry opens its editor **directly under it**, with the rest of the
 group stepped aside so it cannot open somewhere off-screen. Click the same
@@ -353,7 +384,7 @@ Two rules worth knowing, both learned the hard way:
 text: pick several sections, give each a weight, and every entry points at its
 source.
 
-<img src="images/08-combine.png" width="885" alt="The combine builder">
+<img src="images/09-combine.png" width="885" alt="The combine builder">
 
 A slot pointing at that section then draws "urban **or** nature **or** studio",
 in the proportion you set. Re-opening a combine section returns to this
@@ -375,33 +406,6 @@ pick-and-weight view rather than a table of `{pick}` rows.
    shows an `inline` chip when this is happening.
 5. **Save** writes it to your user library. **⤓** exports it with every user
    section it depends on.
-
----
-
-## De-compose
-
-<img src="images/09-decompose.png" width="900" alt="The De-compose tab">
-
-The other direction: start from a prompt or an image and end with a template.
-
-**Image → template.** Drop a generated PNG/JPEG/WebP (or paste a civitai.com
-URL) and its metadata is read server-side — A1111/Forge/Civitai `parameters`,
-an embedded ComfyUI graph, or EXIF. Then *you* choose:
-
-- **Use as-is** — a template that reproduces that prompt byte for byte. No LLM
-  is involved, so it works with no backend configured
-- **Decompose** — hand the text to the matcher below
-
-**Prompt → template.** Paste a prompt and pick an engine:
-
-- `programmatic` — offline token matching against your library
-- `llm` — a configured backend splits and maps it, and every assignment is
-  validated against the real library
-- `hybrid` — the programmatic result rides along as suggestions to verify
-
-Matched fragments become slots pinned to their items; the residue becomes new
-items, new sections, or prefix/suffix prose — you decide per fragment. One
-click saves the whole mapping as a template.
 
 ---
 

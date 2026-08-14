@@ -1481,7 +1481,11 @@ NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = build_mappings(
     {
         "PromptTemplate": PromptTemplate,
         "PromptSection": PromptSection,
-        "LoraApply": LoraApply,
+        # The node ID stays MRLN_LoraApply (frozen); only the LABEL is spelled
+        # the way the acronym is spelled everywhere else in this pack — the
+        # tooltips, the guide and the example notes all say LoRA, and the Add
+        # Node menu was the one place that said "Lora".
+        "LoraApply": (LoraApply, "LoRA Apply"),
         "PromptEnhance": PromptEnhance,
     }
 )

@@ -55,6 +55,22 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 | `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template *and* reorder the rendered blocks into the reading order that model rewards; a `template_names` switch that makes the template widget list slugs (the stable identifier, and what a shared workflow should carry) or human labels; six outputs in wiring order — `prompt`, `llm`, `loras`, then the reports `negative`, `choices`, `gen_info`). `batch_count` renders a whole batch from one queue: `increment seed` draws item *i* at seed + *i*, so four images are four different draws instead of four copies of one; `combinatorial` instead enumerates every combination of the slots left on random, capped at 512. Every output is a list, and a length-1 list is indistinguishable from a single value downstream, so existing workflows are untouched. `gen_info` is an A1111 `parameters` string a metadata-capable save node can embed — carrying only what this node actually knows (the prompts, the seed it drew with, and the Civitai ids of the LoRAs it selected), never a guessed Steps/Sampler/CFG/Model; **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
+The three prompt nodes, in the order a full pipeline uses them — compose, then
+rewrite, then load the weights the draw selected:
+
+<p align="center">
+  <img src="docs/images/13-enhance.png" alt="The Prompt Enhance (MRLN) node" width="330">
+  &nbsp;&nbsp;
+  <img src="docs/images/14-lora.png" alt="The LoRA Apply (MRLN) node" width="330">
+</p>
+
+<p align="center"><em><strong>Prompt Enhance</strong> takes the single
+<code>llm</code> wire — prompt, system prompt and the words that must survive
+verbatim — and passes the original through untouched if the backend is down.
+<strong>LoRA Apply</strong> takes <code>loras</code> and loads what the draw
+selected, warning when a LoRA's base model does not match the
+checkpoint.</em></p>
+
 Prompt libraries are plain JSON files: a multiverse of factory content ships
 with the pack, your personal library lives in `<ComfyUI>/user/mrln/prompt/`
 and survives pack updates. Same-name SECTIONS compound: your file *extends*
@@ -146,6 +162,8 @@ preview (prompt / negative / choices) as you click, then *Apply to node* — it
 writes the plain selection lines into the selected Prompt Template node, so
 workflows stay fully shareable and headless-safe.
 
+#### Compose
+
 The compose table is one row per draw — state · section · drawn value ·
 weight · seed · actions — with the panel's own value picker in place of the
 browser dropdown: a filter over 200+ items, the two *modes* (`random`, `off`)
@@ -186,6 +204,17 @@ runs at server start (it logs what is missing), and **LoRA Apply** has an
 or download it by its AIR — so a shared workflow can heal itself without
 the Composer ever being opened.
 
+**Optimize for a model without duplicating the template.** Reading order
+changes results, and one template cannot store a copy per target — so order
+is a render-time function of the profile. The Compose tab's *Optimize for…*
+select renders the current and the target profile side by side, lists the
+reading order with the blocks that moved, and separates "the order changed"
+from the things that are not order (format, negative policy, a different
+draw). If you want the new order made permanent, one explicit button writes
+it into a copy — never automatically.
+
+#### De-compose
+
 LoRA blocks also declare the base model they were trained for (`data.base`,
 or the ecosystem segment of their AIR). LoRA Apply reads the architecture of
 the connected model and, via `on_mismatch`, warns / skips / stops when they
@@ -213,14 +242,7 @@ de-composer above. Inline `<lora:…>` tags are lifted out and resolved to
 local files or Civitai AIRs. When an embedded graph is genuinely ambiguous
 about which string is the positive, you get a picker rather than a guess.
 
-**Optimize for a model without duplicating the template.** Reading order
-changes results, and one template cannot store a copy per target — so order
-is a render-time function of the profile. The Compose tab's *Optimize for…*
-select renders the current and the target profile side by side, lists the
-reading order with the blocks that moved, and separates "the order changed"
-from the things that are not order (format, negative policy, a different
-draw). If you want the new order made permanent, one explicit button writes
-it into a copy — never automatically.
+#### Library
 
 **Trigger words get mute/solo.** A LoRA's full trained-word list is
 provenance and is never edited; the words that actually render are the
@@ -241,13 +263,6 @@ reappears. A LoRA downloaded from Civitai brings its own preview along
 for). Your thumbnails live in the user tier, so a pack update can neither
 overwrite nor delete them.
 
-**History.** Every render the Prompt Template node makes is recorded as one
-line — newest first, with restore (template, profile, seed, mode, selection,
-variables, format, length and conflict policy, all nine, so it reproduces
-rather than approximates) and copy-prompt. A batch collapses to one row.
-Recording and retention are settings, clearing is a two-step confirm, and a
-failed history write can never break a render that already succeeded.
-
 **Coming from A1111 or a wildcard collection?** **Migrate…** in the Library
 tab reads wildcards
 — a folder of `.txt`/`.yaml` files, or the `.zip` a published pack actually
@@ -264,15 +279,6 @@ creator's licence terms shown *before* anything is written. The API key is
 only needed for packs that require an account; it rides an Authorization
 header and never the URL.
 
-The Settings tab holds the local backend URLs (Ollama / LM Studio,
-auto-validated with installed-model lists), the cloud API keys — stored
-server-side in your user tier, never echoed back and never written into
-workflows — the history retention controls, and the switch that allows an
-LLM backend on another machine (off by default: ComfyUI itself makes that
-request, so a non-loopback URL turns the box into a probe for whatever
-address is in the field). On frontends without the API the panel simply
-doesn't appear — the nodes work identically without it.
-
 Templates and sections travel: every template/section row offers **⤓
 Export**, which bundles the template together with all your user-tier
 sections it draws from (factory content resolves on the other install)
@@ -281,6 +287,26 @@ bundle first — you see exactly what will be written, colliding files are
 kept unless you opt into overwrite — and opening the imported template
 offers to auto-download missing LoRA files. Share the bundle next to your
 workflow and the recipient rebuilds your renders end to end.
+
+#### History
+
+**History.** Every render the Prompt Template node makes is recorded as one
+line — newest first, with restore (template, profile, seed, mode, selection,
+variables, format, length and conflict policy, all nine, so it reproduces
+rather than approximates) and copy-prompt. A batch collapses to one row.
+Recording and retention are settings, clearing is a two-step confirm, and a
+failed history write can never break a render that already succeeded.
+
+#### Settings
+
+The Settings tab holds the local backend URLs (Ollama / LM Studio,
+auto-validated with installed-model lists), the cloud API keys — stored
+server-side in your user tier, never echoed back and never written into
+workflows — the history retention controls, and the switch that allows an
+LLM backend on another machine (off by default: ComfyUI itself makes that
+request, so a non-loopback URL turns the box into a probe for whatever
+address is in the field). On frontends without the API the panel simply
+doesn't appear — the nodes work identically without it.
 
 The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per
