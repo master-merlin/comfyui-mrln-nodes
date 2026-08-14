@@ -65,6 +65,12 @@ export function createState() {
     labelEdit: new Set(), // slot ids with the label editor open
     seedEdit: new Set(), // slot/child ids whose seed cell is being typed into
     selectedRow: null, // slot id (or "@variant") the keyboard acts on
+    // Which TIER's file the panel is showing, when that is not the winning
+    // one: "factory" while reading the factory version of a slug your own file
+    // shadows. Never persisted — it is a view, and the only thing it changes
+    // beyond the panel is that Apply writes 'factory:<slug>' so the node
+    // renders what you were looking at.
+    tierView: null,
     muted: new Set(), // audition only: slot ids (or "@variant") muted in preview
     soloed: new Set(), // audition only: solo set — non-empty means ONLY these render
     lastPreview: null,
@@ -147,6 +153,36 @@ export function createStore(hub) {
     );
   }
 
+  /**
+   * `&tier=…` when the panel is looking at a tier that is NOT the winner.
+   *
+   * A user file shadows the factory file of the same slug everywhere — this
+   * only changes what the PANEL shows, so you can read what the factory
+   * shipped before deciding your version is the better one.
+   */
+  function tierQuery() {
+    return state.tierView ? `&tier=${encodeURIComponent(state.tierView)}` : "";
+  }
+
+  /**
+   * Switch the panel between the tiers that HAVE a file for this slug.
+   *
+   * Unsaved edits belong to the version they were made on, so switching away
+   * from them asks first — the same two-step every other discard uses.
+   */
+  async function viewTier(tier) {
+    if (!state.slug || (state.tierView ?? state.detail?.tier) === tier) return;
+    if (!confirmDiscardEdits("switch-tier")) return;
+    const previous = state.tierView;
+    state.tierView = tier === state.detail?.tier ? null : tier;
+    const slug = state.slug;
+    state.slug = null; // force a full reload rather than a no-op re-select
+    if (!(await selectTemplate(slug))) {
+      state.tierView = previous; // the load failed: stay where we were
+      state.slug = slug;
+    }
+  }
+
   // ---- data loading --------------------------------------------------------
 
   function libraryErrorNote(message) {
@@ -203,7 +239,7 @@ export function createStore(hub) {
     const no = state.templateNo;
     try {
       const detail = await ctx.apiJson(
-        `/mrln/prompt/template?slug=${encodeURIComponent(slug)}`
+        `/mrln/prompt/template?slug=${encodeURIComponent(slug)}${tierQuery()}`
       );
       if (no !== state.templateNo || slug !== state.slug) return; // newer pick owns the tab
       state.detail = detail;
@@ -328,7 +364,7 @@ export function createStore(hub) {
     let detail;
     try {
       detail = await ctx.apiJson(
-        `/mrln/prompt/template?slug=${encodeURIComponent(slug)}`
+        `/mrln/prompt/template?slug=${encodeURIComponent(slug)}${tierQuery()}`
       );
     } catch (err) {
       if (no !== state.templateNo) return false; // a newer pick owns the tab
@@ -706,6 +742,7 @@ export function createStore(hub) {
     selectTemplate,
     setTargetProfile,
     slotAudible,
+    viewTier,
     syncOrderIds,
     variantBlockAudible,
   };

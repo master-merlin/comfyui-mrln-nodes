@@ -57,6 +57,7 @@ from .core import (
     _require_str,
     _resolved_slot_json,
     _slot_detail,
+    _tier_raw,
     _write_json_atomic,
 )
 from .decompose import (

@@ -195,10 +195,44 @@ export function createSectionEditor(hub) {
     });
   }
 
-  async function openSectionEditor(slug) {
+  /**
+   * The editor's tier pill, and a switch when the slug has a file in both.
+   *
+   * A section normally shows the COMBINED view (factory extended by your
+   * file), which is the right default and the reason the factory's own
+   * wording is otherwise impossible to read: merging hides it.
+   */
+  function tierSwitch(slug, body) {
+    const tiers = body.tiers ?? [];
+    const showing = body.viewing ?? body.tier;
+    if (tiers.length < 2) {
+      return body.merged
+        ? el("span", { class: "mrln-chip mrln-merged" }, "factory+user")
+        : tierChip(body.tier);
+    }
+    const viewingOne = Boolean(body.viewing && body.viewing !== body.tier) || !body.merged;
+    const next = showing === "factory" ? "" : "factory";
+    return el(
+      "button",
+      {
+        class: `mrln-chip mrln-chip-btn mrln-${showing === "factory" ? "factory" : "merged"}`,
+        title: next
+          ? "Showing your combined view — click to read the factory file this extends"
+          : "Showing the factory file — click to go back to your combined view",
+        onclick: (e) => busy(e.currentTarget, () => openSectionEditor(slug, next)),
+      },
+      showing === "factory" ? "factory (source)" : viewingOne ? body.tier : "factory+user"
+    );
+  }
+
+  async function openSectionEditor(slug, tier = "") {
     let body;
     try {
-      body = await ctx.apiJson(`/mrln/prompt/section?slug=${encodeURIComponent(slug)}`);
+      // `tier` reads ONE tier's own file — the factory version under a user
+      // file that extends or replaces it. Editing still writes the user tier;
+      // this only changes what you are shown.
+      const query = tier ? `&tier=${encodeURIComponent(tier)}` : "";
+      body = await ctx.apiJson(`/mrln/prompt/section?slug=${encodeURIComponent(slug)}${query}`);
     } catch (err) {
       setEditor(el("div", { class: "mrln-error" }, err.message));
       return;
@@ -1345,9 +1379,7 @@ export function createSectionEditor(hub) {
         "div",
         { class: "mrln-tree-head" },
         slug ? `Section: ${slug}` : "New section",
-        body.merged
-          ? el("span", { class: "mrln-chip mrln-merged" }, "factory+user")
-          : tierChip(body.tier),
+        tierSwitch(slug, body),
         editorCloseBtn()
       ),
       body.merged

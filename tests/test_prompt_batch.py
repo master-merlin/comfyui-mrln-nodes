@@ -527,3 +527,33 @@ def test_an_include_naming_nothing_that_exists_falls_back_to_the_whole_section(n
     )
     drawn = {run(node, seed=s)[2][0].split("color: ")[1].split(" ")[0] for s in range(20)}
     assert drawn == {"red", "green", "blue"}
+
+
+def test_a_user_file_wins_everywhere_except_an_explicit_factory_prefix(node, user_tier):
+    """Shadowing is the whole point of the two tiers: a user file beats the
+    factory file of the same slug in every path there is. The ONE exception is
+    asked for by name — 'factory:<slug>' — which is what the Composer writes
+    when you applied the factory view of a shadowed template. Anything less
+    explicit would make a user's own edits randomly not apply.
+
+    Shadows a REAL shipped template, because that is the situation: the
+    factory root is the pack's own data directory and cannot be faked."""
+    shadowed = "animal/documentary"
+    _write(
+        user_tier,
+        f"templates/{shadowed}.json",
+        {
+            "label": "Wildlife Documentary",
+            "prefix": "USER VERSION",
+            "slots": [{"id": "weather", "ref": "atmosphere/weather", "default": "clear-sky"}],
+            "render": {"format": "string", "joiner": ", "},
+        },
+    )
+    assert run(node, template=shadowed)[0][0].startswith("USER VERSION")
+    factory = run(node, template=f"factory:{shadowed}")[0][0]
+    assert not factory.startswith("USER VERSION"), (
+        "the factory prefix did not reach the factory file"
+    )
+    assert "award-caliber" in factory, "that is not the shipped documentary template"
+    # the prefix is not a wildcard: 'user:' asks for the user file by name too
+    assert run(node, template=f"user:{shadowed}")[0][0].startswith("USER VERSION")

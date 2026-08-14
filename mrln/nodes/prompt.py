@@ -38,6 +38,23 @@ COMBINATORIAL_CAP = 512
 # label is a convenience the Composer can write instead.
 TEMPLATE_NAME_MODES = ["slug", "label"]
 
+# A user file normally SHADOWS the factory file of the same slug — everywhere,
+# always. The one exception is explicit: a value prefixed 'factory:' renders
+# the factory version, which is what the Composer writes when you applied the
+# factory view of a shadowed template. It rides in the value rather than on a
+# widget of its own so it round-trips in a saved workflow and needs no new
+# positional slot.
+TEMPLATE_TIER_PREFIXES = ("factory:", "user:")
+
+
+def split_template_tier(value):
+    """('factory'|'user'|'', rest) — the tier a template value asks for."""
+    text = str(value or "")
+    for prefix in TEMPLATE_TIER_PREFIXES:
+        if text.lower().startswith(prefix):
+            return prefix[:-1], text[len(prefix) :].strip()
+    return "", text
+
 
 def resolve_template_name(lib, value):
     """The template widget's value -> a slug.
@@ -617,7 +634,8 @@ class PromptTemplate:
             return True
         try:
             lib = pl.open_library()
-            tpl = lib.load_template(resolve_template_name(lib, template))
+            tier, wanted = split_template_tier(template)
+            tpl = lib.load_template(resolve_template_name(lib, wanted), tier=tier or None)
             selection_map = pl.parse_kv_lines(selection, what="selection")
         except pl.PromptLibError as exc:
             return str(exc)
@@ -667,8 +685,9 @@ class PromptTemplate:
             raise pl.TemplateNotFoundError(template, [])
         lib = pl.open_library()
         lib.ensure_user_dirs()
+        tier, template = split_template_tier(template)
         template = resolve_template_name(lib, template)
-        tpl = lib.load_template(template)
+        tpl = lib.load_template(template, tier=tier or None)
         selection_map = pl.parse_kv_lines(selection, what="selection")
         variable_map = pl.parse_kv_lines(variables, what="variables")
         if trigger:

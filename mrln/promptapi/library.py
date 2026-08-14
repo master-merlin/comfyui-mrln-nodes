@@ -24,10 +24,10 @@ from .core import (
     _guarded,
     _kv_map,
     _pool,
-    _raw_file,
     _require_str,
     _resolved_slot_json,
     _slot_detail,
+    _tier_raw,
     _write_json_atomic,
 )
 from .settings import _profiles_file
@@ -116,7 +116,13 @@ def handle_template(lib, payload):
     # taking it first shares those walks with the load below instead of
     # doubling them (measured: 4 tree walks -> 2 on this path).
     fingerprint = lib.fingerprint()
-    tpl = lib.load_template(slug)
+    # `tier` shows ONE tier's file for a slug that exists in both — the factory
+    # version under a user file that shadows it. A comparison, not a mode:
+    # nothing here changes which file a render uses.
+    tier_view = str(payload.get("tier") or "").strip()
+    if tier_view and tier_view not in ("factory", "user"):
+        raise ApiError("'tier' must be 'factory' or 'user'")
+    tpl = lib.load_template(slug, tier=tier_view or None)
     # aliases.json redirects a retired slug: everything below must speak the
     # LIVE slug, or tier_of() misses (reporting tier "") and a save-back
     # writes a user file under the dead name, shadowing the alias forever.
@@ -166,13 +172,18 @@ def handle_template(lib, payload):
             "profile": tpl.render.profile,
         },
     }
+    tiers = lib.tiers_of("templates", resolved)
     return 200, {
         "slug": resolved,
         "requested": slug,  # so a client that asked under a retired name can correlate
         "tier": lib.tier_of("templates", resolved),
+        # which tiers HAVE a file (the winner alone cannot say a factory
+        # version exists), and which one this payload is showing
+        "tiers": list(tiers),
+        "viewing": tier_view or lib.tier_of("templates", resolved),
         "has_thumb": thumbs.has_thumb(lib, "templates", resolved),
         "template": detail,
-        "raw": _raw_file(lib, "templates", resolved),
+        "raw": _tier_raw(lib, "templates", resolved, tier_view),
         "pools": pools,
         "missing_refs": missing_refs,
         "fingerprint": fingerprint,
@@ -183,13 +194,21 @@ def handle_template(lib, payload):
 def handle_section(lib, payload):
     slug = _require_str(payload, "slug")
     fingerprint = lib.fingerprint()  # first: see handle_template
-    section = lib.load_section(slug)
+    # see handle_template: one tier's own file, for comparison. For a SECTION
+    # that also means unmerged — the only way to see what the factory shipped
+    # under a slug your file extends.
+    tier_view = str(payload.get("tier") or "").strip()
+    if tier_view and tier_view not in ("factory", "user"):
+        raise ApiError("'tier' must be 'factory' or 'user'")
+    section = lib.load_section(slug, tier=tier_view or None)
     resolved = section.slug  # alias-resolved; see handle_template
     tier = lib.tier_of("sections", resolved)
     return 200, {
         "slug": resolved,
         "requested": slug,
         "tier": tier,
+        "tiers": list(lib.tiers_of("sections", resolved)),
+        "viewing": tier_view or tier,
         "has_thumb": thumbs.has_thumb(lib, "sections", resolved),
         "merged": section.merged,
         "replaces": section.replaces,
@@ -220,7 +239,7 @@ def handle_section(lib, payload):
                 for item in section.items
             ],
         ),
-        "raw": _raw_file(lib, "sections", resolved),
+        "raw": _tier_raw(lib, "sections", resolved, tier_view),
         "factory_raw": _factory_raw(lib, "sections", resolved),
         "fingerprint": fingerprint,
     }

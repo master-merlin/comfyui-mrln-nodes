@@ -296,3 +296,49 @@ def test_preview_inline_template_data_invalid(lib):
     assert status == 400 and "ref" in body["error"]
     status, _ = promptapi.handle_preview(lib, {"template_data": "not a dict"})
     assert status == 400
+
+
+# -- reading the tier under a shadow -----------------------------------------
+
+
+def test_a_shadowed_slug_reports_both_tiers_and_can_serve_either(lib):
+    """The scan keeps only the winner, so nothing could say 'a factory version
+    also exists' — which is exactly what a user needs before deciding their
+    file is an improvement. Serving one tier on request is a comparison, not a
+    mode: the winner is unchanged for every render."""
+    factory = lib.factory_root / "templates" / "basic.json"
+    original = json.loads(factory.read_text(encoding="utf-8"))
+    shadow = dict(original, prefix="USER VERSION")
+    user = lib.user_root / "templates" / "basic.json"
+    user.parent.mkdir(parents=True, exist_ok=True)
+    user.write_text(json.dumps(shadow), encoding="utf-8")
+    lib.invalidate()
+
+    body = ok(promptapi.handle_template(lib, {"slug": "basic"}))
+    assert body["tier"] == "user", "the user file must win by default"
+    assert body["tiers"] == ["factory", "user"]
+    assert body["viewing"] == "user"
+    assert body["template"]["prefix"] == "USER VERSION"
+
+    seen = ok(promptapi.handle_template(lib, {"slug": "basic", "tier": "factory"}))
+    assert seen["viewing"] == "factory"
+    assert seen["tier"] == "user", "which tier WINS does not change by looking at the other"
+    assert seen["template"]["prefix"] == original.get("prefix", "")
+    # the raw file follows the view: an editor edits what it was shown
+    assert seen["raw"]["prefix"] == original.get("prefix", "")
+
+    status, err = promptapi.handle_template(lib, {"slug": "basic", "tier": "nonsense"})
+    assert status == 400 and "factory" in err["error"]
+
+
+def test_a_section_can_be_read_unmerged(lib):
+    """A section normally shows the COMBINED view, which is right and is also
+    why the factory's own wording is otherwise impossible to read — merging
+    hides it."""
+    merged = ok(promptapi.handle_section(lib, {"slug": "color"}))
+    assert merged["tiers"] == ["factory", "user"]
+    assert merged["viewing"] == merged["tier"]
+    factory = ok(promptapi.handle_section(lib, {"slug": "color", "tier": "factory"}))
+    assert factory["viewing"] == "factory"
+    assert factory["merged"] is False, "a single tier's file is not a merged view"
+    assert len(factory["items"]) <= len(merged["items"])

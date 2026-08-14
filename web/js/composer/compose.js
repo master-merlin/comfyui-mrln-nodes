@@ -200,6 +200,7 @@ export function createCompose(hub) {
   const schedulePreview = (...a) => hub.schedulePreview(...a);
   const selectTemplate = (...a) => hub.selectTemplate(...a);
   const setTargetProfile = (...a) => hub.setTargetProfile(...a);
+  const viewTier = (...a) => hub.viewTier(...a);
   const slotAudible = (...a) => hub.slotAudible(...a);
   const switchTab = (...a) => hub.switchTab(...a);
   const variantBlockAudible = (...a) => hub.variantBlockAudible(...a);
@@ -1188,7 +1189,7 @@ export function createCompose(hub) {
             el(
               "span",
               { class: "pc-tpl-actions" },
-              tierChip(state.detail.tier),
+              tierToggle(),
               el(
                 "button",
                 {
@@ -1206,6 +1207,19 @@ export function createCompose(hub) {
     ];
     modifiedNote.style.display = state.modified ? "" : "none";
     parts.push(modifiedNote);
+    if (state.tierView === "factory") {
+      // Two things behave differently here and both are surprising if unsaid.
+      parts.push(
+        el(
+          "div",
+          { class: "mrln-note pc-tier-note" },
+          el("span", { class: "pc-flag" }, "● reading the factory version"),
+          " — your file still wins every render. Apply to node writes "
+            + `'factory:${state.slug}' so the node renders THIS one; Save would `
+            + "overwrite your version with it."
+        )
+      );
+    }
     const missingRefs = (state.detail.missing_refs ?? []).filter((ref) =>
       allSlots().some((slot) => slot.ref === ref)
     );
@@ -1640,6 +1654,32 @@ export function createCompose(hub) {
       moveInArray(state.orderIds, from, to)
     );
     return card;
+  }
+
+  /**
+   * The tier pill. When the slug exists in BOTH tiers it is a button that
+   * switches which one the panel is showing — a user file shadows the factory
+   * file everywhere, and this is the only way to read what you are shadowing
+   * before deciding your version is the better one.
+   */
+  function tierToggle() {
+    const tiers = state.detail?.tiers ?? [];
+    const showing = state.detail?.viewing ?? state.detail?.tier;
+    if (tiers.length < 2) return tierChip(state.detail?.tier);
+    const other = showing === "factory" ? "user" : "factory";
+    const chip = el(
+      "button",
+      {
+        class: `mrln-chip mrln-chip-btn mrln-${showing}`,
+        title:
+          `Showing the ${showing} version — click to read the ${other} one. `
+          + "Your file wins every render; the factory version renders only if you "
+          + "Apply while looking at it.",
+        onclick: (e) => busy(e.currentTarget, () => viewTier(other)),
+      },
+      showing
+    );
+    return chip;
   }
 
   /** Every slot id in the template — a placeholder has to be unique. */
@@ -2931,7 +2971,12 @@ export function createCompose(hub) {
     // and the server reads a known slug as a slug either way.
     const byLabel = ctx.getWidget(node, "template_names") === "label";
     const label = (state.detail?.template?.label ?? state.rawData?.label ?? "").trim();
-    ctx.setWidget(node, "template", byLabel && label ? label : state.slug);
+    // Applying the FACTORY view has to render the factory version — otherwise
+    // the panel would show one thing and the node would render another. The
+    // prefix is the one and only way a factory file wins over a user file of
+    // the same slug, and it is written only because you asked for it here.
+    const prefix = state.tierView === "factory" ? "factory:" : "";
+    ctx.setWidget(node, "template", prefix + (byLabel && label ? label : state.slug));
     ctx.setWidget(node, "selection", selectionLines);
     ctx.setWidget(node, "selection_mode", state.mode);
     ctx.setWidget(node, "seed", state.seed);

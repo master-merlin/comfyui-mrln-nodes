@@ -61,6 +61,20 @@ def _raw_file(lib, kind, slug):
         return json.load(fh)
 
 
+def _tier_raw(lib, kind, slug, tier=""):
+    """The raw file of ONE tier, or the winning one when tier is empty. The
+    editor edits what it is SHOWN, so a factory view has to hand over the
+    factory file — the winner's raw would put a user file under a factory
+    label."""
+    if tier:
+        root = lib.factory_root if tier == "factory" else lib.user_root
+        path = (root / kind / f"{slug}.json") if root else None
+        if path and path.is_file():
+            with open(path, encoding="utf-8") as fh:
+                return json.load(fh)
+    return _raw_file(lib, kind, slug)
+
+
 def _factory_raw(lib, kind, slug):
     """The factory file raw when a user file shadows/extends it, else None —
     the composer diffs edits against this baseline for extend-mode saves."""

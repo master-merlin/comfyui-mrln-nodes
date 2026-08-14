@@ -206,6 +206,20 @@ class Library:
         entry = self._scan(kind).get(slug)
         return entry.tier if entry else ""
 
+    def tiers_of(self, kind, slug):
+        """Every tier that has a FILE for this slug, factory first.
+
+        _scan keeps only the winner, so it cannot answer "a factory version
+        also exists" — and that is exactly what a user needs to know before
+        deciding whether their file is an improvement or a mistake. Asked of
+        the filesystem directly: two stats, no cache to invalidate.
+        """
+        found = []
+        for tier, root in (("factory", self.factory_root), ("user", self.user_root)):
+            if root and (Path(root) / kind / f"{slug}.json").is_file():
+                found.append(tier)
+        return tuple(found)
+
     # -- aliases -----------------------------------------------------------
 
     def _aliases(self, kind):
@@ -274,12 +288,20 @@ class Library:
             raise not_found(slug, list(entries))
         return self._parse_file(entry.path, slug, parser)
 
-    def load_section(self, slug):
+    def load_section(self, slug, tier=None):
         """Sections COMPOUND across tiers: a user file over a factory slug
         extends it by default (items merge by name, user wins; 'hidden'
         tombstones a name; section fields inherit when empty). A user file
         with '"replaces": true' shadows the factory file entirely —
-        templates always replace, only sections merge."""
+        templates always replace, only sections merge.
+
+        `tier` returns ONE tier's file unmerged, which is the only way to see
+        what the factory shipped under a slug your file extends."""
+        if tier:
+            path = self._tier_path("sections", slug, tier)
+            if path is None:
+                raise SectionNotFoundError(slug, list(self._scan("sections")))
+            return self._parse_file(path, slug, parse_section)
         entries = self._scan("sections")
         entry = entries.get(slug)
         if entry is None:
@@ -307,8 +329,26 @@ class Library:
         factory = self._parse_file(factory_path, factory_slug, parse_section)
         return merge_sections(factory, section)
 
-    def load_template(self, slug):
+    def load_template(self, slug, tier=None):
+        """The winning template, or one specific tier's file.
+
+        `tier` is how a UI shows the factory version of a slug a user file has
+        shadowed — a comparison, not a mode: nothing about loading it changes
+        which file wins for a render.
+        """
+        if tier:
+            path = self._tier_path("templates", slug, tier)
+            if path is None:
+                raise TemplateNotFoundError(slug, list(self._scan("templates")))
+            return self._parse_file(path, slug, parse_template)
         return self._load("templates", slug, parse_template, TemplateNotFoundError)
+
+    def _tier_path(self, kind, slug, tier):
+        root = self.factory_root if tier == "factory" else self.user_root
+        if not root:
+            return None
+        path = Path(root) / kind / f"{slug}.json"
+        return path if path.is_file() else None
 
     def scope_items(self, ref):
         """Items in scope of `ref` (leaf slug or folder), as

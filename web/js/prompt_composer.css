@@ -2361,6 +2361,26 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font-weight: 600;
 }
 
+/* Reading a tier that is not the winning one: same register as the unsaved
+   warning, because the same thing is true of both — what is on screen is not
+   what the next render will use unless you act. */
+.pc-panel .mrln-tab-body > .mrln-note.pc-tier-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  padding: 7px var(--pc-pad);
+  font-size: 11px;
+  color: var(--pc-fg-2);
+  background: var(--pc-live-soft);
+  border-left: 2px solid var(--pc-live);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .pc-tier-note .pc-flag {
+  color: var(--pc-live);
+  font-weight: 600;
+}
+
 /* The name cell has to give the NAME the room. Everything else riding in it —
    handle, M/S, chips — is secondary, but they were all flex:0 1 auto against a
    label that was too, so a narrow panel squeezed the label to 'C…' while
