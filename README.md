@@ -262,8 +262,10 @@ loud ⚠ in the choices output, and the Composer offers a one-click remap.
 On frontends with the sidebar-extension API, the pack adds a **Prompt
 Composer** sidebar tab: browse the library, pick items per slot, watch a live
 preview (prompt / negative / choices) as you click, then *Apply to node* — it
-writes the plain selection lines into the selected Prompt Template node, so
-workflows stay fully shareable and headless-safe.
+writes the plain selection lines into a Prompt Template node, so workflows stay
+fully shareable and headless-safe. With one such node in the graph it is
+targeted automatically; with several, select the one you mean first — the panel
+refuses rather than guessing.
 
 ### Compose
 

@@ -297,9 +297,10 @@ export function createCompose(hub) {
         "button",
         {
           class: "mrln-btn mrln-primary",
-          title: "Write template + settings to the node. Unsaved template edits "
-            + "are saved to your user library first — the node always renders "
-            + "the saved file.",
+          title: "Write template + settings to the node. One Prompt Template node "
+            + "in the graph is targeted automatically; with several, select the "
+            + "one you mean first. Unsaved template edits are saved to your user "
+            + "library first — the node always renders the saved file.",
           onclick: (e) => busy(e.currentTarget, applyToNode),
         },
         "Apply to node"

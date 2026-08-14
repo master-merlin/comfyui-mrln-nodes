@@ -303,9 +303,17 @@ is the same thing as a table — every slot, what it drew, and whether that was
 (`configuration.model.hair-color`), so a draw three levels down still says
 which slot it came from.
 
-**Apply to node** writes the selection lines into the selected Prompt Template
-node. **Randomize** rerolls, **Save** stores the template in your user library,
-and **⋯** holds *Load from node*, *Pin draw* and *Save as…*.
+**Apply to node** writes the selection lines into a Prompt Template node.
+**Randomize** rerolls, **Save** stores the template in your user library, and
+**⋯** holds *Load from node*, *Pin draw* and *Save as…*.
+
+**Which node it writes to.** With exactly one Prompt Template (MRLN) node in the
+graph there is nothing to choose, so Apply targets it automatically — you do not
+have to click it first. With **two or more**, select the one you mean on the
+canvas; without a selection the panel refuses rather than guessing, and says so:
+*"Add a Prompt Template (MRLN) node — with several in the graph, select the
+target first."* The same rule governs *Load from node* and *Pin draw*, which
+read from the same node Apply would write to.
 
 ### Variants
 
