@@ -472,43 +472,78 @@ export function createHistory(hub) {
     ];
   }
 
+  // Opt-OUT, so an install that has never opened Settings still gets the
+  // tiles; only an explicit false turns them off.
+  const thumbsEnabled = () => state.history.settings?.history_thumbs !== false;
+
+  /** The mini render thumbnail, or null.
+   *
+   * `loading="lazy"` rather than an IntersectionObserver on purpose: with
+   * thousands of rows the browser's own viewport culling is both cheaper and
+   * better tested than anything written here, and it costs one attribute.
+   * The server answers 404 for a render whose image is not on disk (or was
+   * never saved), which is a NORMAL answer — onerror removes the tile so the
+   * row closes up instead of showing a broken-image glyph. */
+  function rowThumb(row) {
+    if (!thumbsEnabled()) return null;
+    const src =
+      "/mrln/prompt/history-thumb?template="
+      + encodeURIComponent(row.template)
+      + "&seed="
+      + encodeURIComponent(String(row.seed));
+    return el("img", {
+      class: "mrln-history-thumb",
+      src,
+      loading: "lazy",
+      decoding: "async",
+      alt: "",
+      title: "The render this prompt produced",
+      onerror: (e) => e.currentTarget.remove(),
+    });
+  }
+
   function rowCard(row) {
     return el(
       "div",
       { class: "mrln-slot mrln-history-row" },
+      rowThumb(row),
       el(
         "div",
-        { class: "mrln-history-line" },
-        el("span", { class: "mrln-history-time", title: row.ts }, row.time || "—"),
-        el("span", { class: "mrln-history-template", title: row.template }, row.template),
-        ...chips(row)
-      ),
-      el(
-        "div",
-        { class: "mrln-history-excerpt", title: fullText(row) },
-        row.excerpt || "(empty prompt)"
-      ),
-      el(
-        "div",
-        { class: "mrln-actions" },
+        { class: "mrln-history-body" },
         el(
-          "button",
-          {
-            class: "mrln-btn mrln-mini",
-            title: "Load this render back into Compose — template, profile, seed, mode, "
-              + "picks, variables, format, length and conflict policy",
-            onclick: (e) => busy(e.currentTarget, () => restore(row.record)),
-          },
-          "↩ restore"
+          "div",
+          { class: "mrln-history-line" },
+          el("span", { class: "mrln-history-time", title: row.ts }, row.time || "—"),
+          el("span", { class: "mrln-history-template", title: row.template }, row.template),
+          ...chips(row)
         ),
         el(
-          "button",
-          {
-            class: "mrln-btn mrln-mini",
-            title: "Copy the positive prompt to the clipboard",
-            onclick: (e) => busy(e.currentTarget, () => copyPrompt(row)),
-          },
-          "⧉ copy prompt"
+          "div",
+          { class: "mrln-history-excerpt", title: fullText(row) },
+          row.excerpt || "(empty prompt)"
+        ),
+        el(
+          "div",
+          { class: "mrln-actions" },
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
+              title: "Load this render back into Compose — template, profile, seed, mode, "
+                + "picks, variables, format, length and conflict policy",
+              onclick: (e) => busy(e.currentTarget, () => restore(row.record)),
+            },
+            "↩ restore"
+          ),
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
+              title: "Copy the positive prompt to the clipboard",
+              onclick: (e) => busy(e.currentTarget, () => copyPrompt(row)),
+            },
+            "⧉ copy prompt"
+          )
         )
       )
     );

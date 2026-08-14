@@ -585,6 +585,34 @@ so it reproduces the render rather than approximating it. A batch collapses to
 one row. Recording and retention are in Settings; clearing is a two-step
 confirm.
 
+### The thumbnail on each row
+
+After a few thousand prompts you rarely remember the date — you remember the
+picture. So each row carries a mini thumbnail of the render it produced.
+
+**Nothing needs wiring for this.** ComfyUI writes the whole executed graph into
+every PNG it saves, and that graph contains the Prompt Template node with its
+`template` and `seed` — the same pair the history line already records. The
+image therefore identifies itself, and the panel simply looks for the one whose
+template and seed match the row. A useful side effect: it works on renders that
+are already on your disk, including ones made long before this feature existed.
+
+What it costs is deliberately close to nothing: the tiles load only as rows
+scroll into view, the match index is built a little at a time and stored, and
+each tile is a ~1 KB webp cached after the first look.
+
+Two cases show no thumbnail, on purpose — a wrong picture next to a prompt is
+worse than none:
+
+- **Batches that vary the seed.** Each item is its own history line, but the
+  saved graph records only the node's base seed, so the first item matches and
+  the rest do not.
+- **A seed fed from another node.** The graph then stores a wire rather than a
+  number, and there is nothing to match on.
+
+A row whose image was deleted, moved, or never saved simply shows no tile.
+Turn the whole thing off with **Show thumbnails** in Settings.
+
 ---
 
 ## Settings
@@ -615,8 +643,8 @@ confirm.
   a probe for whatever address is in the field
 - **Cloud LLM API keys** — Anthropic, OpenAI, Gemini, OpenRouter. Server-side,
   never echoed back, never written into a workflow
-- **Render history** — whether renders are recorded, and how many month files
-  to keep
+- **Render history** — whether renders are recorded, how many month files to
+  keep, and whether each row shows a thumbnail of the render it made
 
 ---
 

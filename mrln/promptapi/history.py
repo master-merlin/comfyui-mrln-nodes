@@ -109,12 +109,24 @@ def history_months(settings):
         return DEFAULT_HISTORY_MONTHS
 
 
+def history_thumbs(settings):
+    """Is the mini thumbnail on a history row on? Default TRUE, opt-OUT: it
+    costs nothing until a row is actually scrolled into view, and finding a
+    prompt by the picture you remember is the whole reason it exists. Same
+    string tolerance as history_enabled, for the same hand-edited file."""
+    value = settings.get("history_thumbs", True)
+    if isinstance(value, str):
+        return value.strip().lower() not in ("", "false", "0", "no", "off")
+    return bool(value)
+
+
 def history_settings(settings):
-    """The two knobs, under their settings.json names — one shape for the
+    """The knobs, under their settings.json names — one shape for the
     settings endpoint, the history endpoint and the panel."""
     return {
         "history_enabled": history_enabled(settings),
         "history_months": history_months(settings),
+        "history_thumbs": history_thumbs(settings),
     }
 
 

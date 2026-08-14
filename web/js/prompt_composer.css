@@ -894,7 +894,34 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-bottom: 1px solid var(--border-color, #333);
 }
 
-.mrln-history-row { gap: 3px; }
+/* .mrln-slot stacks its children; a history row is thumb BESIDE body, so it
+   overrides the direction for itself. align-items:flex-start keeps the tile
+   at the top rather than centred against a three-line card. */
+.mrln-history-row {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+/* The render's own picture, at the size of two lines of text. Deliberately
+   tiny: thousands of rows live here, and this is a memory jog for "the one
+   with the whale", not a gallery. The row becomes thumb | everything-else;
+   with no thumb (404, or the setting off) the body simply takes the width. */
+.mrln-history-thumb {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  object-fit: cover;
+  border-radius: 3px;
+  background: var(--comfy-input-bg, #222);
+}
+.mrln-history-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0; /* or a long prompt refuses to ellipse and widens the row */
+  flex: 1 1 auto;
+}
 
 .mrln-history-line {
   display: flex;

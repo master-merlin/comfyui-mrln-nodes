@@ -85,12 +85,16 @@ export function parseHistoryMonths(raw) {
  * isn't one. `enabled` is the checkbox's `.checked`, `months` the number
  * input's `.value`.
  */
-export function historySavePayload({ settingsLoaded, enabled, months } = {}) {
+export function historySavePayload({ settingsLoaded, enabled, months, thumbs } = {}) {
   if (!settingsLoaded) return { ok: false, error: SETTINGS_NOT_LOADED };
   if (typeof enabled !== "boolean") return { ok: false, error: HISTORY_ENABLED_ERROR };
   const parsed = parseHistoryMonths(months);
   if (!parsed.ok) return parsed;
-  return { ok: true, body: { history_enabled: enabled, history_months: parsed.value } };
+  const body = { history_enabled: enabled, history_months: parsed.value };
+  // Omitted rather than defaulted when the caller does not track it: sending
+  // a guessed `true` would turn the tiles back on for someone who opted out.
+  if (typeof thumbs === "boolean") body.history_thumbs = thumbs;
+  return { ok: true, body };
 }
 
 /**
@@ -349,12 +353,21 @@ export function createSettings(hub) {
       class: "mrln-months",
       title: "how many month files to keep; 0 keeps everything. Applied when ComfyUI starts.",
     });
+    const historyThumbs = el("input", {
+      type: "checkbox",
+      title:
+        "show each row's render as a mini thumbnail. The image is found "
+        + "automatically — ComfyUI writes the template and seed into every PNG "
+        + "it saves, which is the same pair the history line records, so "
+        + "nothing needs wiring. Rows whose image is gone simply show none.",
+    });
     const historyStatus = el("span", { class: "mrln-note" }, "checking…");
     const historySave = el("button", { class: "mrln-btn", disabled: "" }, "Save");
     const applyHistory = (body) => {
       // the server echoes both values back on GET and on save — render what it
       // stored, never what we hoped it stored
       historyEnabled.checked = body.history_enabled !== false;
+      historyThumbs.checked = body.history_thumbs !== false;
       monthsInput.value = String(body.history_months ?? "");
       historyStatus.style.color = "";
       historyStatus.textContent = describeHistory(
@@ -367,6 +380,7 @@ export function createSettings(hub) {
         settingsLoaded,
         enabled: historyEnabled.checked,
         months: monthsInput.value,
+        thumbs: historyThumbs.checked,
       });
       if (!payload.ok) {
         bad(historyStatus, `✗ ${payload.error}`);
@@ -601,6 +615,7 @@ export function createSettings(hub) {
           monthsInput,
           el("span", {}, "months")
         ),
+        el("label", { class: "mrln-check" }, historyThumbs, el("span", {}, "Show thumbnails")),
         historySave,
         historyStatus
       ),

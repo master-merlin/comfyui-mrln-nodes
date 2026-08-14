@@ -200,6 +200,11 @@ def handle_save_settings(lib, payload):
                     "'history_months' must be a whole number of months >= 0 (0 keeps everything)"
                 )
             settings["history_months"] = raw
+        if "history_thumbs" in payload:
+            raw = payload.get("history_thumbs")
+            if not isinstance(raw, bool):
+                raise ApiError("'history_thumbs' must be a JSON boolean (true or false)")
+            settings["history_thumbs"] = raw
         if "llm" in payload:
             raw_llm = payload.get("llm")
             if not isinstance(raw_llm, dict):

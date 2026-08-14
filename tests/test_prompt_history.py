@@ -200,8 +200,22 @@ def test_the_spec_field_list_alone_cannot_restore_a_render(lib):
 
 
 def test_history_settings_defaults(lib):
-    assert history.history_settings({}) == {"history_enabled": True, "history_months": 12}
+    assert history.history_settings({}) == {
+        "history_enabled": True,
+        "history_months": 12,
+        # opt-OUT: a row's mini thumbnail costs nothing until the row is
+        # scrolled into view, and it is the fastest way to find a prompt again
+        "history_thumbs": True,
+    }
     assert history.history_months({}) == history.DEFAULT_HISTORY_MONTHS
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [(False, False), (True, True), ("false", False), ("off", False), (0, False), ("yes", True)],
+)
+def test_history_thumbs_is_tolerant_of_a_hand_edited_file(value, expected):
+    assert history.history_thumbs({"history_thumbs": value}) is expected
 
 
 @pytest.mark.parametrize(

@@ -13,6 +13,7 @@ from .civitai import handle_import_civitai_wildcards
 from .core import MAX_BODY_BYTES
 from .decompose import handle_decompose
 from .history import handle_history, handle_history_clear, prune_history
+from .histthumbs import handle_history_thumb
 from .importers import handle_import_styles, handle_import_wildcards
 from .intake import handle_extract_apply, handle_extract_image
 from .library import (
@@ -85,6 +86,9 @@ ROUTES = (
     ("post", "/mrln/prompt/thumb-delete", handle_thumb_delete, True),
     ("post", "/mrln/prompt/lora-preview", handle_lora_preview, True),
     ("get", "/mrln/prompt/history", handle_history, False),
+    # the mini thumbnail on a history row: bytes like /thumb, and a 404 is a
+    # normal answer (that render has no image on disk)
+    ("get", "/mrln/prompt/history-thumb", handle_history_thumb, False),
     # clearing is destructive, so it takes JSON true like every other start
     # flag here — a query string can never trigger it
     ("post", "/mrln/prompt/history-clear", handle_history_clear, True),
