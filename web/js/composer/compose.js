@@ -1152,28 +1152,10 @@ export function createCompose(hub) {
       el(
         "label",
         { class: "mrln-field" },
-        // Both lines ride the TABLE's grid: the heading sits over the section
-        // column and the slug over the drawn-value column, so the bar reads as
-        // the table's header rather than as a separate block above it.
-        el(
-          "span",
-          { class: "mrln-field-name pc-tplbar" },
-          "Template",
-          // The slug rides the heading line, where there is room for all of it.
-          // Beside the name it was squeezed to 'animal/docum…', and the slug is
-          // the half of this row you cannot look up anywhere else on screen: it
-          // is what the NODE's template widget holds.
-          el(
-            "span",
-            {
-              class: "pc-tpl-slug",
-              title: "The template's slug — the identifier the Prompt Template node's "
-                + "template widget holds (set that node's 'template_names' to 'label' "
-                + "if you would rather it held the name above).",
-            },
-            state.slug
-          )
-        ),
+        el("span", { class: "mrln-field-name" }, "Template"),
+        // The control row rides the TABLE's grid: the picker's trigger spans
+        // the section columns, and everything after it starts where DRAWN
+        // VALUE starts — slug first, badges hard right.
         el(
           "div",
           { class: "pc-tplbar" },
@@ -1186,19 +1168,35 @@ export function createCompose(hub) {
             sideOf: (entry) => entry.value,
           }),
           el(
-            "span",
-            { class: "pc-tpl-actions" },
-            tierChip(state.detail.tier),
+            "div",
+            { class: "pc-tpl-meta" },
+            // the slug is what the NODE's template widget holds — the one thing
+            // on this row you cannot look up anywhere else on screen
             el(
-              "button",
+              "span",
               {
-                class: "mrln-btn mrln-mini mrln-new-tpl",
-                title: "Start a NEW empty template (net-new composition)",
-                onclick: (e) => busy(e.currentTarget, newTemplate),
+                class: "pc-tpl-slug",
+                title: "The template's slug — the identifier the Prompt Template node's "
+                  + "template widget holds (set that node's 'template_names' to 'label' "
+                  + "if you would rather it held the name above).",
               },
-              "＋"
+              state.slug
             ),
-            exportBtn("template", state.slug)
+            el(
+              "span",
+              { class: "pc-tpl-actions" },
+              tierChip(state.detail.tier),
+              el(
+                "button",
+                {
+                  class: "mrln-btn mrln-mini mrln-new-tpl",
+                  title: "Start a NEW empty template (net-new composition)",
+                  onclick: (e) => busy(e.currentTarget, newTemplate),
+                },
+                "＋"
+              ),
+              exportBtn("template", state.slug)
+            )
           )
         )
       ),

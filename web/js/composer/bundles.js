@@ -402,15 +402,24 @@ export function createBundles(hub) {
       field("Source", select),
       hint,
       field("Folder, file or link", input),
+      // The overwrite switch is a DECISION about what this button is going to
+      // do, so it gets room of its own and says what it means — stacked
+      // directly on the actions it changes, it read as one dense block and the
+      // consequence of ticking it was easy to miss.
       el(
         "label",
-        { class: "mrln-check" },
+        { class: "mrln-check pc-danger-check" },
         overwriteBox,
-        el("span", {}, " overwrite files I already have")
+        el("span", {}, " overwrite files I already have"),
+        el(
+          "span",
+          { class: "mrln-note" },
+          "off: existing files are kept and reported as skipped"
+        )
       ),
       el(
         "div",
-        { class: "mrln-actions" },
+        { class: "mrln-actions pc-import-actions" },
         el("button", { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, preview) }, "Preview"),
         el(
           "button",

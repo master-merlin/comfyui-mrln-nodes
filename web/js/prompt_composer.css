@@ -1767,8 +1767,18 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-transform: uppercase;
   color: var(--pc-fg-3);
 }
+/* everything right of the picker: the slug at the value column's own left
+   edge, the badges hard right */
+.pc-panel .pc-tpl-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pc-gap);
+  min-width: 0;
+}
 .pc-panel .pc-tpl-actions {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 6px;
 }
@@ -2776,6 +2786,33 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font-size: 10.5px;
   color: var(--pc-fg-4);
 }
+/* The import dialog's foot: a decision, then the actions it changes. They
+   were stacked flush, which read as one dense block. */
+.pc-panel .pc-danger-check {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--pc-line);
+  font: 11.5px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .pc-danger-check > .mrln-note {
+  flex: 1 0 100%;
+  margin-left: 22px;
+  font-size: 10.5px;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-danger-check > input:checked ~ span:not(.mrln-note) {
+  color: var(--pc-held);
+}
+.pc-panel .mrln-actions.pc-import-actions {
+  margin-top: 10px;
+  gap: var(--pc-gap);
+}
+
 /* CHOICES DRAWN: id · drawn item · state pill, one line each. It was a
    preformatted paragraph, which is the right shape for the node's report and
    the wrong one for reading down a column. */
