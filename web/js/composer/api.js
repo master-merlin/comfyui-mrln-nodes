@@ -281,6 +281,9 @@ export function createApi(deps = {}) {
           models: body.models ?? [],
           suggested: body.suggested ?? [],
           keySet: body.key_set ?? null,
+          // a backend switched off answers 200 with this flag and no network
+          // traffic — it is not an error and must not read as one
+          disabled: Boolean(body.disabled),
           fetchedAt: now(),
           error: null,
           pending: null,

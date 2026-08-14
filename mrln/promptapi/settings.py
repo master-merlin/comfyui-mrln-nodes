@@ -102,6 +102,12 @@ def allow_remote_backends(settings):
     return bool(_llm_settings(settings).get("allow_remote"))
 
 
+def backend_enabled(settings, key):
+    """Is this local backend switched on? Absent means yes: a settings.json
+    written before the switch existed keeps working exactly as it did."""
+    return _llm_settings(settings).get(f"{key}_enabled") is not False
+
+
 def backend_url(settings, key, default):
     """The URL a fetch site should actually use: the stored value (or the
     packaged default) re-validated NOW. Raises BackendUrlError."""
@@ -149,6 +155,10 @@ def handle_settings(lib, payload):
         "llm": {
             "ollama_url": llm.get("ollama_url") or DEFAULT_OLLAMA_URL,
             "lmstudio_url": llm.get("lmstudio_url") or DEFAULT_LMSTUDIO_URL,
+            # absent means on, so nobody's existing settings.json changes
+            # meaning by upgrading
+            "ollama_enabled": backend_enabled(settings, "ollama"),
+            "lmstudio_enabled": backend_enabled(settings, "lmstudio"),
             # the stored value is echoed as-is even when it would be refused
             # now (old settings.json): the user has to SEE it to fix it
             "allow_remote": allow_remote_backends(settings),
@@ -202,6 +212,12 @@ def handle_save_settings(lib, payload):
                 if not isinstance(flag, bool):
                     raise ApiError("'llm.allow_remote' must be true or false")
                 llm["allow_remote"] = flag
+            for key in ("ollama_enabled", "lmstudio_enabled"):
+                if key in raw_llm:
+                    flag = raw_llm[key]
+                    if not isinstance(flag, bool):
+                        raise ApiError(f"'llm.{key}' must be true or false")
+                    llm[key] = flag
             remote_ok = bool(llm.get("allow_remote"))
             for key in ("ollama_url", "lmstudio_url"):
                 if key in raw_llm:

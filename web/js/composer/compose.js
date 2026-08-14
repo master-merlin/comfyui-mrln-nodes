@@ -27,6 +27,7 @@ import {
   mount,
   smallBtn,
   tierChip,
+  titled,
   validateRefs,
 } from "./dom.js";
 import { closePicker, openPicker, pickerIsOpen } from "./picker.js";
@@ -450,6 +451,22 @@ export function createCompose(hub) {
     node?.setAttribute("data-selected", "true");
   }
 
+  /**
+   * Wrap a row action so finishing it with the POINTER drops the selection.
+   *
+   * Only the pointer: the keyboard shortcuts call the same actions and must
+   * keep the row selected, or ↑↑↑ would move a row once and then lose it.
+   * The amber outline says "the keyboard is aimed here" — once a mouse has
+   * finished the job, the aim is spent.
+   */
+  function finishing(action) {
+    return (...args) => {
+      const result = action?.(...args);
+      clearSelection();
+      return result;
+    };
+  }
+
   /** Let go. A selection you cannot drop is a mode, not a selection. */
   function clearSelection() {
     if (!state.selectedRow) return;
@@ -499,7 +516,10 @@ export function createCompose(hub) {
       } else if (e.key === "Delete") {
         if (!actions.remove) return;
         actions.remove();
-      } else if (e.key === "Escape") {
+      } else if (e.key === "Enter" || e.key === "Escape") {
+        // Enter confirms, Escape abandons — with actions applied as you make
+        // them, both mean the same thing here: the row is no longer the
+        // keyboard's subject.
         clearSelection();
         e.preventDefault();
         return; // nothing left to focus
@@ -561,7 +581,12 @@ export function createCompose(hub) {
       trigger.title = option?.title || "";
     };
     paint();
-    select.addEventListener("change", paint);
+    // A committed pick is a finished row action — nothing dispatches `change`
+    // on these but the picker and a person.
+    select.addEventListener("change", () => {
+      paint();
+      clearSelection();
+    });
     return el("span", { class: "pc-cell-value" }, select, trigger);
   }
 
@@ -615,6 +640,9 @@ export function createCompose(hub) {
       {
         class: "pc-cell-wt",
         "data-weighted": shown !== 1 ? "true" : "false",
+        // read-only: there is nothing here to finish, so a click on it should
+        // not leave the row sitting selected either
+        onclick: () => clearSelection(),
         title:
           `Draw weight of '${name ?? "—"}' — how often this item comes up `
           + "relative to its siblings. Lives on the item in the section file; "
@@ -652,6 +680,7 @@ export function createCompose(hub) {
       const close = () => {
         state.seedEdit.delete(id);
         onChange();
+        clearSelection(); // the seed is typed and committed: action finished
       };
       input.addEventListener("keydown", (e) => {
         if (e.key !== "Enter" && e.key !== "Escape") return;
@@ -701,15 +730,19 @@ export function createCompose(hub) {
         // live, not captured: the value select can retire the seed after this
         // cell was built
         const now = rowMode(row);
-        if (now === "fixed") return;
-        if (now === "held") row.seed = "";
-        else {
-          const used = resolved?.seed_used;
-          if (used === undefined || used === null) return;
+        const used = resolved?.seed_used;
+        if (now === "held") {
+          row.seed = "";
+          row.touched = true;
+          onChange();
+        } else if (now === "random" && used !== undefined && used !== null) {
           row.seed = String(used);
+          row.touched = true;
+          onChange();
         }
-        row.touched = true;
-        onChange();
+        // Whatever the pin decided — including deciding there was nothing to
+        // pin yet — the pointer is finished with this row.
+        clearSelection();
       }, 220);
     });
     cell.addEventListener("dblclick", () => {
@@ -1412,12 +1445,6 @@ export function createCompose(hub) {
     );
   }
 
-  /** field() with the explanation on the row, so the label can stay one word. */
-  function titled(name, control, title) {
-    const node = field(name, control);
-    node.title = title;
-    return node;
-  }
 
   function orderedRows() {
     const nodes = [];
@@ -1540,6 +1567,10 @@ export function createCompose(hub) {
     if (!isVariantSlot) state.orderIds = state.orderIds.filter((oid) => oid !== id);
     state.rows.delete(id);
     state.labelEdit.delete(id);
+    state.seedEdit.delete(id);
+    // a selection pointing at a row that no longer exists would silently take
+    // the next Del with it
+    if (state.selectedRow === id) state.selectedRow = null;
     markModified();
     renderComposeTab();
     schedulePreview();
@@ -1776,21 +1807,27 @@ export function createCompose(hub) {
     const buttons = el(
       "span",
       { class: "mrln-rowbtns" },
-      smallBtn("Edit the lead-in text rendered before this section (E)", "✎", toggleLabelEdit),
+      smallBtn(
+        "Edit the lead-in text rendered before this section (E)",
+        "✎",
+        finishing(toggleLabelEdit)
+      ),
       smallBtn(
         isVariantSlot ? "Move up within the variant (↑)" : "Move up (↑)",
         "↑",
-        () => moveRow(-1),
+        finishing(() => moveRow(-1)),
         firstRow
       ),
       smallBtn(
         isVariantSlot ? "Move down within the variant (↓)" : "Move down (↓)",
         "↓",
-        () => moveRow(1),
+        finishing(() => moveRow(1)),
         lastRow
       ),
-      smallBtn("Remove this section from the template (Del)", "✕", () =>
-        removeSlot(container, index, slot.id, isVariantSlot)
+      smallBtn(
+        "Remove this section from the template (Del)",
+        "✕",
+        finishing(() => removeSlot(container, index, slot.id, isVariantSlot))
       )
     );
 

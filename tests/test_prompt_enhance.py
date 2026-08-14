@@ -137,6 +137,62 @@ def test_llm_validate_endpoint(tmp_path):
     assert status == 502 and "unreachable" in body["error"]
 
 
+def test_a_switched_off_backend_is_never_contacted(tmp_path, monkeypatch):
+    """The switch has to mean what it says: no probe, no wait for a timeout,
+    and a refusal that names the switch when something tries to USE it. A
+    backend that still answers when it is off would make the setting a lie."""
+    import urllib.request
+
+    lib = build_library(tmp_path)
+    (tmp_path / "user").mkdir(parents=True, exist_ok=True)
+
+    def explode(*a, **k):  # any network call at all is the failure
+        raise AssertionError("a disabled backend was contacted")
+
+    (tmp_path / "user" / "settings.json").write_text(
+        json.dumps({"llm": {"lmstudio_enabled": False}}), encoding="utf-8"
+    )
+    monkeypatch.setattr(urllib.request, "urlopen", explode)
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "lmstudio"})
+    assert status == 200, "disabled is not a fault — a 502 would paint the row red"
+    assert body["state"] == "disabled" and body["disabled"] is True
+    assert body["models"] == []
+    # ... and the generation path refuses by name instead of hanging
+    with pytest.raises(RuntimeError) as err:
+        promptapi.llm_chat(
+            lib,
+            backend="lm studio",
+            model="x",
+            system="s",
+            prompt="p",
+            temperature=0.2,
+            seed=0,
+            max_tokens=16,
+            timeout=5,
+        )
+    assert "switched off" in str(err.value) and "Settings" in str(err.value)
+    # the other backend is untouched by its neighbour's switch
+    status, body = promptapi.handle_llm_validate(lib, {"provider": "ollama"})
+    assert status == 502 and "unreachable" in body["error"]
+
+
+def test_backend_enable_flags_round_trip_and_default_to_on(tmp_path):
+    lib = build_library(tmp_path)
+    (tmp_path / "user").mkdir(parents=True, exist_ok=True)
+    _status, body = promptapi.handle_settings(lib, {})
+    assert body["llm"]["ollama_enabled"] is True, "absent must mean ON"
+    assert body["llm"]["lmstudio_enabled"] is True
+    status, _body = promptapi.handle_save_settings(lib, {"llm": {"ollama_enabled": False}})
+    assert status == 200
+    _status, body = promptapi.handle_settings(lib, {})
+    assert body["llm"]["ollama_enabled"] is False
+    assert body["llm"]["lmstudio_enabled"] is True  # one switch, one backend
+    # the stored URL survives being switched off — you have to see it to fix it
+    assert body["llm"]["ollama_url"]
+    status, body = promptapi.handle_save_settings(lib, {"llm": {"ollama_enabled": "yes"}})
+    assert status == 400 and "true or false" in body["error"]
+
+
 class _FakeResponse:
     """Minimal stand-in for what urlopen() yields: a context manager whose
     read() returns bytes."""

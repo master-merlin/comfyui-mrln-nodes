@@ -7,7 +7,7 @@
 // every .js under WEB_DIRECTORY — see composer/util.js). The persistent
 // progress row lives inside createDecompose().
 import { defaultPlan, jsSlugify, uniqueName } from "./util.js";
-import { armDestructive, autoArea, busy, el, field, loadingNote, mount } from "./dom.js";
+import { armDestructive, autoArea, busy, el, field, loadingNote, mount, titled } from "./dom.js";
 // Model-dropdown value encoding — the SAME builder and sentinels the Enhance
 // node's combo uses (composer/api.js), so the two dropdowns cannot drift apart.
 // Pure exports only; the fetching instance arrives as ctx.api.
@@ -419,7 +419,9 @@ export function createDecompose(hub) {
     const typeInput = el("input", {
       type: "text",
       value: d.type,
-      placeholder: "optional type filter, e.g. object, car",
+      // short enough to survive the value column; the row's tooltip carries
+      // what it means
+      placeholder: "e.g. object, car",
       title: "Restricts matching to sections suiting these classifiers (plus universal ones)",
       oninput: (e) => {
         d.type = e.target.value;
@@ -543,11 +545,42 @@ export function createDecompose(hub) {
           + "and validate every assignment against the real library."
       ),
       field("Prompt to decompose", promptArea),
-      field("Template type (classifiers)", typeInput),
-      el("div", { class: "mrln-grid2" }, field("Engine", engineSelect), field("Backend", (d.engine ?? "programmatic") === "programmatic" ? el("span", { class: "mrln-note" }, "—") : backendSelect)),
-      (d.engine ?? "programmatic") === "programmatic"
-        ? null
-        : field("Model", el("div", { class: "mrln-inline" }, modelSelect, modelNote)),
+      // One form, one label column, one right edge for the values — the four
+      // settings used to be three different geometries stacked (a 108px label
+      // row, a two-up grid, then a full-width row), which is what made this
+      // tab read as clutter next to Compose.
+      el(
+        "div",
+        { class: "mrln-grid2 pc-form" },
+        titled(
+          "Type",
+          typeInput,
+          "Template classifiers, e.g. object, car — they filter which sections "
+            + "a fragment may be matched against. Empty means untyped."
+        ),
+        titled(
+          "Engine",
+          engineSelect,
+          "programmatic is offline and deterministic; llm and hybrid ask a "
+            + "configured backend and validate every assignment against the "
+            + "real library."
+        ),
+        titled(
+          "Backend",
+          (d.engine ?? "programmatic") === "programmatic"
+            ? el("span", { class: "mrln-note" }, "—")
+            : backendSelect,
+          "Which LLM answers. Only used by the llm and hybrid engines."
+        ),
+        (d.engine ?? "programmatic") === "programmatic"
+          ? null
+          : titled(
+              "Model",
+              el("div", { class: "mrln-inline" }, modelSelect, modelNote),
+              "The model this backend runs. The list comes from the backend "
+                + "itself — configure the URLs in the Settings tab."
+            )
+      ),
       verbatimLock
         ? el(
             "div",

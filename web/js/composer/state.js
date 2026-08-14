@@ -20,6 +20,29 @@ import * as util from "./util.js";
 import { diffProfileOverrides, overrideTweakCount, parseToken, structuralDrift } from "./util.js";
 import { el, loadingNote, mount } from "./dom.js";
 
+// The Library view preference outlives the session, so it lives in
+// localStorage rather than the state object — a browser restart is exactly the
+// case the user is asking about. Both helpers swallow storage failures: a
+// locked-down profile (private mode, disabled storage) must degrade to the
+// default, never throw on panel construction.
+export const GRID_PREF_KEY = "mrln.composer.libraryGrid";
+
+export function readGridPref() {
+  try {
+    return window.localStorage.getItem(GRID_PREF_KEY) !== "rows";
+  } catch {
+    return true; // cards by default
+  }
+}
+
+export function writeGridPref(grid) {
+  try {
+    window.localStorage.setItem(GRID_PREF_KEY, grid ? "cards" : "rows");
+  } catch {
+    /* nothing to do — the preference just will not survive this session */
+  }
+}
+
 /** The panel's single state object — created once, shared by every module. */
 export function createState() {
   const state = {
@@ -70,7 +93,10 @@ export function createState() {
     // Library tab: cards instead of rows, and the counter that busts the
     // browser's thumbnail cache after a set/reset (the URL is otherwise
     // identical and Last-Modified would keep the old tile on screen).
-    grid: false,
+    //
+    // Cards are the default — a library this size is browsed by eye first —
+    // and the choice is remembered across reloads and restarts (readGridPref).
+    grid: readGridPref(),
     thumbEpoch: 0,
     libGroups: new Set(), // Library tab: expanded top-level slug groups
     nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed

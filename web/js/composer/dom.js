@@ -192,6 +192,15 @@ export function field(name, control) {
   );
 }
 
+// field() with the explanation on the row, so the label itself can stay one
+// word. A label column is narrow by design; a parenthetical in it only ever
+// renders as 'Template type (class…'.
+export function titled(name, control, title) {
+  const node = field(name, control);
+  node.title = title;
+  return node;
+}
+
 // Auto-growing textarea: height follows content, capped at ~35% viewport.
 export function autoSize(area) {
   const cap = Math.floor(window.innerHeight * 0.35);

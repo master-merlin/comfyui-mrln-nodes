@@ -13,6 +13,7 @@
 // every .js under WEB_DIRECTORY — see composer/util.js). The editor mount and
 // its dirty flag live inside createTree().
 import { armDestructive, autoArea, busy, el, field, loadingNote, mount, tierChip } from "./dom.js";
+import { writeGridPref } from "./state.js";
 
 export function createTree(hub) {
   const { ctx, state, libraryTab } = hub;
@@ -32,6 +33,15 @@ export function createTree(hub) {
   const thumbTile = (...a) => hub.thumbTile(...a);
 
   const editorBox = el("div");
+  // The editor opens INLINE, directly under the row or card that was clicked.
+  // It used to live at the bottom of the tab, below sections, templates and
+  // profiles: with a few hundred entries, clicking a row scrolled nothing and
+  // the editor opened somewhere off-screen — so it read as if clicking a row
+  // did nothing at all. The host is an <li> because that is what it is
+  // inserted between; `editorAnchor` remembers whose row it belongs to, so a
+  // re-render (filter keystroke, view toggle, reload) can put it back.
+  const editorHost = el("li", { class: "mrln-editor-slot" }, editorBox);
+  let editorAnchor = null; // {kind, slug} of the entry whose editor is open
   // Editor forms live only in closures — replacing editorBox drops typed
   // content. Track typing (capture phase: some internal events don't
   // bubble) and gate every user-initiated replacement on confirmReplaceEditor.
@@ -42,6 +52,44 @@ export function createTree(hub) {
   function setEditor(...children) {
     mount(editorBox, ...children);
     editorDirty = false; // fresh (or cleared) content — typing starts clean
+    if (!editorBox.firstChild) {
+      // closed: take the host out with it, so no empty gap is left in the list
+      editorAnchor = null;
+      editorHost.remove();
+    } else if (!editorHost.isConnected) {
+      // opened by something other than a row click (the Compose tab's LoRA
+      // chip, the picker's 'Edit section ↗', a fresh New template…) — dock it
+      // at the bottom, its old home
+      dockEditor();
+    }
+  }
+
+  /** Park the editor at the foot of the tab when no row owns it. */
+  function dockEditor() {
+    let dock = libraryTab.querySelector(".mrln-editor-dock");
+    if (!dock) {
+      dock = el("ul", { class: "mrln-editor-dock" });
+      libraryTab.append(dock);
+    }
+    dock.append(editorHost);
+  }
+
+  /** Put the open editor back under its row after the tree was rebuilt. */
+  function replaceEditorInTree() {
+    if (!editorBox.firstChild) return;
+    const row = editorAnchor
+      ? libraryTab.querySelector(
+          `[data-kind="${editorAnchor.kind}"][data-slug="${cssEscape(editorAnchor.slug)}"]`
+        )
+      : null;
+    if (row) row.after(editorHost);
+    else dockEditor();
+  }
+
+  // slugs are [a-z0-9/-] by the library's own rules, but a selector built from
+  // data is a selector built from data
+  function cssEscape(value) {
+    return window.CSS?.escape ? window.CSS.escape(value) : value.replace(/["\\]/g, "\\$&");
   }
 
   function confirmReplaceEditor() {
@@ -74,8 +122,14 @@ export function createTree(hub) {
     );
   }
 
-  function openEntry(kind, slug) {
+  function openEntry(kind, slug, row) {
     if (!confirmReplaceEditor()) return;
+    // Place the host BEFORE opening: the editor loads asynchronously and mounts
+    // a loading note first, and that note has to appear where the finished
+    // editor will be — not jump there when the fetch lands.
+    editorAnchor = { kind, slug };
+    if (row) row.after(editorHost);
+    else dockEditor();
     if (kind === "sections") openSectionEditor(slug);
     else openTemplateEditor(slug);
   }
@@ -151,7 +205,11 @@ export function createTree(hub) {
   function sectionLi(section) {
     return el(
       "li",
-      { onclick: () => openEntry("sections", section.slug) },
+      {
+        "data-kind": "sections",
+        "data-slug": section.slug,
+        onclick: (e) => openEntry("sections", section.slug, e.currentTarget),
+      },
       section.error ? `⚠ ${section.slug}` : section.label,
       el(
         "span",
@@ -165,7 +223,11 @@ export function createTree(hub) {
   function templateLi(template) {
     return el(
       "li",
-      { onclick: () => openEntry("templates", template.slug) },
+      {
+        "data-kind": "templates",
+        "data-slug": template.slug,
+        onclick: (e) => openEntry("templates", template.slug, e.currentTarget),
+      },
       template.error ? `⚠ ${template.slug}` : template.label,
       el("span", { class: "mrln-slug" }, template.slug),
       ...templateChips(template)
@@ -181,10 +243,12 @@ export function createTree(hub) {
       {
         class: `mrln-lib-card${entry.error ? " mrln-lib-card-error" : ""}`,
         tabindex: "0",
+        "data-kind": kind,
+        "data-slug": entry.slug,
         title: entry.error
           ? `⚠ ${entry.error}`
           : entry.description || `${entry.slug} — click to edit`,
-        onclick: () => openEntry(kind, entry.slug),
+        onclick: (e) => openEntry(kind, entry.slug, e.currentTarget),
         onkeydown: (e) => {
           // A card is a div (it holds the export button, and a button inside a
           // button is invalid HTML), so Enter/Space are wired by hand — but
@@ -194,7 +258,7 @@ export function createTree(hub) {
           if (e.target !== e.currentTarget) return;
           if (e.key !== "Enter" && e.key !== " ") return;
           e.preventDefault();
-          openEntry(kind, entry.slug);
+          openEntry(kind, entry.slug, e.currentTarget);
         },
       },
       thumbTile(kind, entry.slug, {
@@ -359,6 +423,7 @@ export function createTree(hub) {
           : "Browse as thumbnail cards — rows without a thumbnail show their domain glyph",
         onclick: () => {
           state.grid = !state.grid;
+          writeGridPref(state.grid); // survives a reload and a restart
           if (state.grid) revealForCards();
           renderLibraryTab();
         },
@@ -464,9 +529,11 @@ export function createTree(hub) {
       treeBlock("sections", "Sections", lib.sections),
       treeBlock("templates", "Templates", lib.templates),
       profilesBlock(),
-      el("hr", { class: "mrln-sep" }),
-      editorBox
+      el("hr", { class: "mrln-sep" })
     );
+    // the editor is not part of this render — it belongs under whichever row
+    // opened it, and only when one did
+    replaceEditorInTree();
   }
 
   function profilesBlock() {

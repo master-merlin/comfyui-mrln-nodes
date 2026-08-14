@@ -162,6 +162,15 @@ export function createSettings(hub) {
         title: `${label} endpoint used by the Prompt Enhance (MRLN) node`,
       });
       const rowStatus = el("span", { class: "mrln-note" }, "checking…");
+      // Off means OFF: not probed on open, not probed by Validate, and refused
+      // by the node with a message naming this switch. A backend that still
+      // answers when it is switched off would make the switch a lie.
+      const enabled = el("input", {
+        type: "checkbox",
+        checked: "",
+        title: `Use ${label}. Off: never contacted — no availability check, and `
+          + "the Enhance node refuses it instead of waiting for a timeout.",
+      });
       // `force` re-probes without saving: flipping the remote gate changes the
       // ANSWER for an unchanged URL, and the cached probe (30 s TTL) would
       // otherwise keep showing the refusal the user just fixed.
@@ -174,6 +183,12 @@ export function createSettings(hub) {
             "The stored settings never loaded, so Validate will not overwrite them "
               + "with an empty URL. Reopen this tab once the server answers."
           );
+          return;
+        }
+        if (!enabled.checked) {
+          rowStatus.style.color = "";
+          rowStatus.textContent = "switched off — not contacted";
+          rowStatus.title = "";
           return;
         }
         rowStatus.textContent = "…";
@@ -207,17 +222,50 @@ export function createSettings(hub) {
           rowStatus.title = "";
         }
       };
+      const validateBtn = el("button", {
+        class: "mrln-btn",
+        onclick: (e) => busy(e.currentTarget, () => check(true)),
+      });
+      validateBtn.textContent = "Validate";
+      const paintEnabled = () => {
+        validateBtn.disabled = !enabled.checked;
+        urlInput.disabled = !enabled.checked;
+        row.classList.toggle("mrln-off", !enabled.checked);
+      };
+      enabled.addEventListener("change", async () => {
+        if (!settingsLoaded) {
+          enabled.checked = !enabled.checked; // never save over settings we never read
+          ctx.toast(
+            "error",
+            "Settings unavailable",
+            "The stored settings never loaded, so this switch will not overwrite them."
+          );
+          return;
+        }
+        paintEnabled();
+        try {
+          await ctx.apiJson("/mrln/prompt/save-settings", {
+            method: "POST",
+            body: { llm: { [`${provider}_enabled`]: enabled.checked } },
+          });
+        } catch (err) {
+          enabled.checked = !enabled.checked;
+          paintEnabled();
+          ctx.toast("error", "Settings save failed", err.message);
+          return;
+        }
+        // force: the ANSWER changed for an unchanged URL, exactly like the
+        // remote gate — the cached probe would keep showing the old verdict
+        check(false, true);
+      });
       const row = el(
-        "div",
-        { class: "mrln-inline" },
+        "label",
+        { class: "mrln-inline mrln-backend-row" },
+        enabled,
         urlInput,
-        el(
-          "button",
-          { class: "mrln-btn", onclick: (e) => busy(e.currentTarget, () => check(true)) },
-          "Validate"
-        )
+        validateBtn
       );
-      return { row, rowStatus, urlInput, check };
+      return { row, rowStatus, urlInput, enabled, paintEnabled, check };
     };
     const ollama = backendRow("Ollama", "ollama_url", "ollama");
     const lmstudio = backendRow("LM Studio", "lmstudio_url", "lmstudio");
@@ -411,6 +459,10 @@ export function createSettings(hub) {
           : "no key stored — public models still resolve by hash";
         ollama.urlInput.value = body.llm?.ollama_url ?? "";
         lmstudio.urlInput.value = body.llm?.lmstudio_url ?? "";
+        ollama.enabled.checked = body.llm?.ollama_enabled !== false;
+        lmstudio.enabled.checked = body.llm?.lmstudio_enabled !== false;
+        ollama.paintEnabled();
+        lmstudio.paintEnabled();
         allowRemote = body.llm?.allow_remote === true;
         for (const [provider, cloud] of clouds) cloud.setMark(body.llm_keys_set?.[provider]);
         settingsLoaded = true;
@@ -489,7 +541,9 @@ export function createSettings(hub) {
         { class: "mrln-note" },
         "Used by the Prompt Enhance (MRLN) node — checked automatically on "
           + "open; Validate saves an edited URL and re-checks. The model list "
-          + "feeds the node's dropdown."
+          + "feeds the node's dropdown. Clear the checkbox for a backend you do "
+          + "not run: it is then never contacted — no check on open, no wait for "
+          + "a timeout — and the node refuses it by name instead."
       ),
       ollama.row,
       ollama.rowStatus,

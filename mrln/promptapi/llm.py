@@ -17,6 +17,7 @@ from .settings import (
     DEFAULT_OLLAMA_URL,
     BackendUrlError,
     _read_settings,
+    backend_enabled,
     backend_url,
 )
 
@@ -79,6 +80,16 @@ def _exc_detail(exc, limit=200):
 def _backend_url_or_raise(settings, key, default):
     """Same gate as the save handler, but in llm_chat's contract: a
     RuntimeError whose message already says how to fix it."""
+    provider = key.removesuffix("_url")
+    if not backend_enabled(settings, provider):
+        # Disabled has to mean disabled. Skipping only the availability probe
+        # while still calling the thing would make the switch a lie, and a
+        # backend that answers when it is switched off is worse than one that
+        # says exactly why it did not.
+        raise RuntimeError(
+            f"{provider} is switched off in the Composer's Settings tab — "
+            "turn it back on there, or pick another backend on the node"
+        )
     try:
         return backend_url(settings, key, default)
     except BackendUrlError as exc:
@@ -271,6 +282,16 @@ def handle_llm_validate(lib, payload):
         raise ApiError(
             f"unknown provider '{provider}' (have: ollama, lmstudio, {', '.join(CLOUD_PROVIDERS)})"
         )
+    if not backend_enabled(settings, provider):
+        # 200, not an error: a backend you switched off is not a fault, and the
+        # whole point of the switch is that nothing here touches the network.
+        return 200, {
+            "state": "disabled",
+            "provider": provider,
+            "models": [],
+            "suggested": [],
+            "disabled": True,
+        }
     try:  # re-checked here, not just at save: an old settings.json is not trusted
         url = f"{backend_url(settings, key, default)}{path}"
     except BackendUrlError as exc:

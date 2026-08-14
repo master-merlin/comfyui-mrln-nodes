@@ -2274,8 +2274,21 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* The unsaved-changes warning leads with its state in amber; the sentence that
-   explains it stays a note. One flat grey line read like every other note in
-   the panel, which is what a warning must not do. */
+   explains it stays a note. It also stops being help text: at 10.5px in
+   fg-4 it sat in the same register as 'Pick a target model to see…' and read
+   as a footnote — which is what a warning must not do. */
+.pc-panel .mrln-tab-body > .mrln-note.mrln-modified {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  padding: 7px var(--pc-pad);
+  font-size: 11px;
+  color: var(--pc-fg-2);
+  background: var(--pc-held-soft);
+  border-left: 2px solid var(--pc-held);
+  border-bottom: 1px solid var(--pc-line);
+}
 .pc-panel .mrln-modified .pc-flag {
   color: var(--pc-held);
   font-weight: 600;
@@ -2482,6 +2495,74 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* The two narrow layouts follow the new template. */
+/* The Library editor opens INLINE, under the row or card that was clicked —
+   at the foot of a 231-section tree it was simply never seen. In the card grid
+   it takes a full row of its own, so it lands directly under the card's row
+   instead of squeezing into a column. */
+.pc-panel .mrln-editor-slot {
+  display: block;
+  grid-column: 1 / -1;
+  margin: 6px 0 10px;
+  padding-left: 10px;
+  list-style: none;
+  border-left: 2px solid var(--pc-live);
+}
+.pc-panel .mrln-editor-slot:empty,
+.pc-panel .mrln-editor-dock:empty {
+  display: none;
+}
+.pc-panel .mrln-editor-dock {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A one-up settings form: same cell geometry as Compose's setup grid, one
+   column, and a value track wide enough for a model name. */
+.pc-panel .mrln-grid2.pc-form {
+  grid-template-columns: 1fr;
+  --pc-valw: 232px;
+}
+.pc-panel .mrln-grid2.pc-form > .mrln-field > input[type="text"] {
+  text-align: right;
+  font: 11.5px var(--pc-mono);
+}
+.pc-panel .mrln-grid2.pc-form > .mrln-field > .mrln-inline {
+  gap: 6px;
+}
+.pc-panel .mrln-grid2.pc-form > .mrln-field > .mrln-inline > select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pc-panel .mrln-grid2.pc-form > .mrln-field > .mrln-inline > .mrln-note {
+  flex: 0 0 auto;
+  font-size: 10.5px;
+}
+/* a backend the row cannot offer prints a dash where its control would be */
+.pc-panel .mrln-grid2.pc-form > .mrln-field > .mrln-note {
+  text-align: right;
+  color: var(--pc-fg-4);
+}
+
+/* A backend switched off keeps its row readable but says it is out of play.
+   The flex rules are load-bearing: .mrln-inline gives every child flex:1, so
+   the new checkbox stretched to half the row and shoved the URL across it. */
+.pc-panel .mrln-backend-row {
+  gap: 8px;
+}
+.pc-panel .mrln-backend-row > input[type="checkbox"],
+.pc-panel .mrln-backend-row > button {
+  flex: 0 0 auto;
+}
+.pc-panel .mrln-backend-row > input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pc-panel .mrln-backend-row.mrln-off > input[type="text"] {
+  color: var(--pc-fg-4);
+  border-style: dashed;
+}
+
 /* --- the value picker (design handoff, phase 3) --------------------------
    The native list mixed two MODES with 200+ items, offered no search, covered
    the row it belonged to, and was painted by the browser — so it was the one
