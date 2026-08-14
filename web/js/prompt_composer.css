@@ -1742,26 +1742,34 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   background: var(--pc-bg-raised);
   border-bottom: 1px solid var(--pc-line);
 }
-/* Both bar lines ride the TABLE's column grid (see .pc-tplbar in the row-grid
-   rules): the heading sits over SECTION, the slug over DRAWN VALUE, and the
-   picker's trigger ends exactly where the value column begins. The bar then
-   reads as the table's own header instead of a block floating above it. */
+/* The control row is a SETUP-GRID row: same two columns, same 1px gutter, same
+   14px cell padding. So the picker's trigger ends exactly where the Mode
+   select ends, the slug starts exactly where 'Format' starts, and the badges
+   end where the Format select ends. The bar runs full-bleed for the same
+   reason .mrln-grid2 does — its cells own the gutter. */
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type {
+  padding-inline: 0;
+}
 .pc-panel .pc-tplbar {
   display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
   align-items: center;
-  gap: var(--pc-gap);
-  padding: 0;
 }
-.pc-panel .pc-tplbar > :first-child {
-  grid-column: 1 / 3;
+.pc-panel .pc-tplbar > * {
   min-width: 0;
+  padding-inline: var(--pc-pad);
 }
-.pc-panel .pc-tplbar > :last-child {
-  grid-column: 3 / -1;
-  min-width: 0;
+@container pcpanel (max-width: 560px) {
+  /* the setup grid goes one-up here, and the bar goes with it */
+  .pc-panel .pc-tplbar {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
 }
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name {
   margin: 0 0 5px;
+  padding-inline: var(--pc-pad);
   font: 600 10px var(--pc-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -2528,8 +2536,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    the value column gives up the width, since it was the widest thing on the
    row and reads fine a little narrower. */
 .pc-panel .pc-row,
-.pc-panel .pc-thead,
-.pc-panel .pc-tplbar {
+.pc-panel .pc-thead {
   /* 72px of seed, not 62: a 10-digit seed measures 58px at this size and the
      field has 10px of padding, so 62 clipped the last digit off every held
      draw. A number you cannot read is not a number. */
@@ -2994,8 +3001,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    has to stay readable long after a value stops needing its full width. */
 @container pcpanel (max-width: 620px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead,
-  .pc-panel .pc-tplbar {
+  .pc-panel .pc-thead {
     grid-template-columns: 26px 1.25fr 1fr 40px 72px 92px;
   }
 }
@@ -3004,8 +3010,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    columns that carry the work were down to 'Conditio…' and '🎲 ra…'. */
 @container pcpanel (max-width: 520px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead,
-  .pc-panel .pc-tplbar {
+  .pc-panel .pc-thead {
     grid-template-columns: 26px 1.25fr 1fr 72px 92px;
   }
   .pc-panel .pc-cell-wt,
@@ -3017,8 +3022,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    to be enormous before the table was whole. */
 @container pcpanel (max-width: 470px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead,
-  .pc-panel .pc-tplbar {
+  .pc-panel .pc-thead {
     grid-template-columns: 26px 1.25fr 1fr 92px;
   }
   .pc-panel .pc-cell-seed,
