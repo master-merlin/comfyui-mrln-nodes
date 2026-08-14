@@ -331,7 +331,7 @@
         }
       },
       "widgets_values": [
-        "LoRA/test/Krea2_turbo/MRLN/ComfyUI"
+        "MRLN/Krea2_turbo/ComfyUI"
       ]
     },
     {
@@ -528,36 +528,6 @@
       "bgcolor": "#335"
     },
     {
-      "id": 47,
-      "type": "MarkdownNote",
-      "pos": [
-        804.9121667495336,
-        -836.7631855831095
-      ],
-      "size": [
-        417.3781918776376,
-        180.2833558972061
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "title": "LoRA Trigger Words and Settings",
-      "properties": {
-        "ue_properties": {
-          "widget_ue_connectable": {},
-          "version": "7.8",
-          "input_ue_unconnectable": {}
-        }
-      },
-      "widgets_values": [
-        "Download the style LoRAs used in this workflow from [Comfy-Org/Krea-2/loras](https://huggingface.co/Comfy-Org/Krea-2/tree/main/loras). Place the `.safetensors` files in `ComfyUI/models/loras/`.\n\n| LoRA               | Trigger Words                        | Recommended Strength |\n|--------------------|--------------------------------------|-------|\n| [krea2_coolblue](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_coolblue.safetensors)   | teal watercolor illustration style | 0.8 |\n| [krea2_darkbrush](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_darkbrush.safetensors)  | monochrome ink wash style          | 1.0 |\n| [krea2_plasmoid](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_plasmoid.safetensors)   | ethereal shimmering light style    | 0.8 |\n| [krea2_warmpastel](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_warmpastel.safetensors) | muted minimalist sketch style      | 0.8 |"
-      ],
-      "color": "#222",
-      "bgcolor": "#000"
-    },
-    {
       "id": 73,
       "type": "MRLN_PromptEnhance",
       "pos": [
@@ -736,7 +706,7 @@
         }
       },
       "widgets_values": [
-        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n**loras**\n\n- [krea2_warmpastel.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/loras/krea2_warmpastel.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   ├── 📂 vae/\n│   │   └── qwen_image_vae.safetensors\n│   └── 📂 loras/\n│       └── krea2_warmpastel.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_vae.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
       ],
       "color": "#222",
       "bgcolor": "#000"
@@ -766,7 +736,7 @@
         }
       },
       "widgets_values": [
-        "# MRLN Prompting — Krea-2 Turbo\n\nThis graph is the pack's end-to-end example: the **Prompt Template (MRLN)**\nnode composes a prompt from the factory library, an optional LLM pass rewrites\nit, and **Krea-2 Turbo** renders it in 8 steps.\n\n## What the MRLN nodes do here\n\n**Prompt Template (MRLN)** is the source of the prompt. It is set to\n`animal/documentary` — pick any of the 100 shipped templates from the\n`template` widget, or open the **Prompt Composer** sidebar tab (the book icon)\nto browse them with thumbnails, pin individual slots and preview the result\nbefore you queue anything. Its outputs are wired in the order you use them:\n\n- `prompt` -> the positive prompt (via the enhance switch below)\n- `llm` -> **Prompt Enhance (MRLN)**: one wire carrying the prompt, the\n  profile's system prompt and any LoRA trigger words that must survive verbatim\n- `loras` -> **LoRA Apply (MRLN)** in graphs that draw LoRA-bearing items\n- `negative`, `choices`, `gen_info` -> the Show Text nodes, so you can see what\n  was drawn, why, and what metadata the render carries\n\n`seed` drives every random slot deterministically: the same seed and library\nalways draw the same prompt. Set `batch_count` above 1 and one queue renders a\nwhole batch of *different* draws instead of copies of one.\n\n**Use enhanced Prompt** switches between the composed prompt and the LLM\nrewrite. The Enhance node is set to a local Ollama model and to `pass through`\non error, so the graph still renders if no backend is running.\n\n## Text to Image (Krea-2 Turbo) subgraph\n\nDouble-click it to open the pipeline. Inside: **Models** loads the diffusion\nmodel, text encoder, VAE and an optional style LoRA; **Image Generation**\nhandles latent sizing, 8-step sampling and VAE decode. The `enable_lora?`\ntoggle on the left switches the style LoRA on.\n\n## LoRA & trigger word (CustomCombo)\n\nPick the style LoRA you are using (e.g. `krea2_coolblue`, `krea2_darkbrush`)\nand the workflow appends the matching trigger word for you.\n\n- Download the files from [Comfy-Org/Krea-2/loras](https://huggingface.co/Comfy-Org/Krea-2/tree/main/loras)\n  into `ComfyUI/models/loras/`\n- Select the name that matches the file loaded inside the subgraph\n- Trigger words and recommended strengths are in the **LoRA Trigger Words and\n  Settings** note beside this one\n\nMRLN's own LoRA path is different and complementary: a template whose items\ncarry LoRA blocks sends them out of the `loras` output into **LoRA Apply\n(MRLN)**, which loads them at their authored strengths and warns when a LoRA's\nbase family does not match the checkpoint."
+        "# MRLN Prompting — Krea-2 Turbo\n\nThis graph is the pack's end-to-end example: the **Prompt Template (MRLN)**\nnode composes a prompt from the factory library, an optional LLM pass rewrites\nit, and **Krea-2 Turbo** renders it in 8 steps.\n\n## What the MRLN nodes do here\n\n**Prompt Template (MRLN)** is the source of the prompt. It is set to\n`animal/documentary` — pick any of the 100 shipped templates from the\n`template` widget, or open the **Prompt Composer** sidebar tab (the book icon)\nto browse them with thumbnails, pin individual slots and preview the result\nbefore you queue anything. Its outputs are wired in the order you use them:\n\n- `prompt` -> the positive prompt (via the enhance switch below)\n- `llm` -> **Prompt Enhance (MRLN)**: one wire carrying the prompt, the\n  profile's system prompt and any LoRA trigger words that must survive verbatim\n- `loras` -> **LoRA Apply (MRLN)** in graphs that draw LoRA-bearing items\n- `negative`, `choices`, `gen_info` -> the Show Text nodes, so you can see what\n  was drawn, why, and what metadata the render carries\n\n`seed` drives every random slot deterministically: the same seed and library\nalways draw the same prompt. Set `batch_count` above 1 and one queue renders a\nwhole batch of *different* draws instead of copies of one.\n\n**Use enhanced Prompt** switches between the composed prompt and the LLM\nrewrite. The Enhance node is set to a local Ollama model and to `pass through`\non error, so the graph still renders if no backend is running.\n\n## Text to Image (Krea-2 Turbo) subgraph\n\nDouble-click it to open the pipeline. Inside: **Models** loads the diffusion\nmodel, text encoder, VAE and an optional style LoRA; **Image Generation**\nhandles latent sizing, 8-step sampling and VAE decode. The `enable_lora?`\ntoggle on the left switches the style LoRA on.\n\n## LoRAs, the MRLN way\n\nThis graph enables no style LoRA — the look comes from the prompt. When you do\nwant LoRAs, MRLN carries them *inside the prompt library* rather than as loader\nnodes you wire by hand:\n\n- Any item in a section or template can declare a LoRA block\n- When that item is drawn, its LoRA leaves the node on the `loras` output\n- **LoRA Apply (MRLN)** loads each one at the strength the item's author set,\n  keeps the item's trigger words in the prompt verbatim, and warns when a\n  LoRA's base family does not match the checkpoint\n- A draw that selected no LoRA applies nothing, so the graph always runs\n\nAdd a LoRA to an item in the Composer's section editor and every template that\ndraws that item gains it — the prompt and the weights traveling together is the\nwhole point.\n"
       ],
       "color": "#222",
       "bgcolor": "#000"
@@ -988,7 +958,7 @@
         "",
         "",
         "as configured",
-        0,
+        730198984095416,
         "randomize",
         "template default",
         "template default",

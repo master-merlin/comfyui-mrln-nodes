@@ -2908,7 +2908,7 @@ export function createCompose(hub) {
     const blocked = state.modified
       ? "save your unsaved template edits first — the copy is made from the saved file"
       : null;
-    const unchanged = write.order.join(" ") === state.orderIds.join(" ");
+    const unchanged = write.order.join("\u0000") === state.orderIds.join("\u0000");
     for (const note of write.notes) nodes.push(el("div", { class: "mrln-note" }, note));
     if (unchanged && !blocked) {
       nodes.push(

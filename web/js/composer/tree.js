@@ -69,14 +69,26 @@ export function createTree(hub) {
     paintFocus();
   }
 
-  /** Park the editor at the foot of the tab when no row owns it. */
+  /**
+   * Park the editor at the TOP of the tab when no row owns it — directly
+   * under the New section…/New combine…/New template… bar that opened it.
+   *
+   * It used to dock at the FOOT, below sections, templates and profiles, so a
+   * fresh editor opened several hundred rows off-screen and the button read as
+   * if it had done nothing. Same failure the inline row editor already fixed;
+   * this is the other half of it.
+   */
   function dockEditor() {
     let dock = libraryTab.querySelector(".mrln-editor-dock");
     if (!dock) {
       dock = el("ul", { class: "mrln-editor-dock" });
-      libraryTab.append(dock);
+      const bar = libraryTab.querySelector(".mrln-actions");
+      if (bar) bar.after(dock);
+      else libraryTab.prepend(dock);
     }
     dock.append(editorHost);
+    // 'nearest' so an editor already on screen does not make the tab jump.
+    editorHost.scrollIntoView({ block: "nearest" });
   }
 
   /** Put the open editor back under its row after the tree was rebuilt. */

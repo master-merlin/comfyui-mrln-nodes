@@ -1,9 +1,33 @@
 {
   "id": "09fa6574-314c-4fca-b5a8-28eec93f9d70",
   "revision": 0,
-  "last_node_id": 7,
+  "last_node_id": 8,
   "last_link_id": 5,
   "nodes": [
+    {
+      "id": 8,
+      "type": "MarkdownNote",
+      "pos": [
+        -1120.0,
+        -1072.0
+      ],
+      "size": [
+        700,
+        960
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: MRLN Introduction",
+      "properties": {},
+      "widgets_values": [
+        "# MRLN Prompting — start here\n\nThis is the pack's **starter graph**. It loads no checkpoint and renders no\nimage, so it runs on any machine: queue it and watch the text arrive. Wire the\n`prompt` output into whatever sampler you already use when you are ready.\n\n## The three nodes in front of you\n\n**Prompt Template (MRLN)** composes a whole prompt from the shipped library.\nPick one of the 100 templates in the `template` widget (they are grouped by\nfolder: `portrait/…`, `vehicle/…`, `scifi/…`) and queue. Every random slot the\ntemplate declares is drawn for you.\n\n**Prompt Section (MRLN)** draws from a *single* section instead of a whole\ntemplate — one location, one wardrobe, one lighting setup. Use it to bolt one\nrandom element onto a prompt you wrote yourself.\n\n**Show Text (MRLN)** just displays what came out. The three here are wired to\n`prompt`, `choices` and `gen_info`, which is the fastest way to learn the\nsystem: you see the prompt, then exactly which item each slot drew, then the\nmetadata the draw carries.\n\n## The five things worth knowing\n\n1. **`seed` decides everything.** The same seed against the same library always\n   draws the same prompt. Change one digit and every random slot moves.\n2. **`batch_count` above 1** makes one queue produce that many *different*\n   draws — not copies. `batch_mode` picks how the seed walks.\n3. **`selection` overrides individual slots**, one `name=value` per line, e.g.\n   `location=studio`. Anything you do not name stays random.\n4. **`format`** switches the output between natural language, comma tags and\n   A1111-style weighting, so the same template feeds any model family.\n5. **`conflict_policy`** decides what happens when two drawn items disagree\n   (a winter coat under desert sun). The default resolves it quietly.\n\n## The Composer panel is the real interface\n\nOpen the sidebar tab with the 📖 icon. It gives you the whole library with\nthumbnails, a live preview, and per-slot control: pin a value you like, reroll\nthe rest, and only then send it to the node. You can also build your own\ntemplates and sections there — nothing is hardcoded, everything shipped is a\nplain JSON file you can read, extend or replace.\n\nThe full walkthrough is in `docs/prompt-composer-guide.md`.\n\n## Next\n\n`mrln-prompting-krea2-turbo.json` beside this file is the same system wired to\na real image pipeline, with the LLM enhance pass and LoRA handling included.\n"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
     {
       "id": 6,
       "type": "MRLN_ShowText",
@@ -16,7 +40,7 @@
         252.2302021602801
       ],
       "flags": {},
-      "order": 3,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
@@ -58,7 +82,7 @@
         186.46755715303982
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -99,7 +123,7 @@
         326
       ],
       "flags": {},
-      "order": 0,
+      "order": 1,
       "mode": 0,
       "inputs": [
         {
@@ -252,7 +276,7 @@
         377.13767985964796
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -294,7 +318,7 @@
         194
       ],
       "flags": {},
-      "order": 1,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {

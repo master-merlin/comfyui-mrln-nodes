@@ -212,15 +212,6 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
   color: var(--mrln-new);
   font-weight: bold;
 }
-.mrln-combine-picks {
-  max-height: 190px;
-  overflow-y: auto;
-  border: 1px solid var(--border-color, #444);
-  border-radius: 4px;
-}
-.mrln-combine-pick { padding: 3px 6px; cursor: pointer; }
-.mrln-combine-pick:hover { background: var(--comfy-menu-bg, #333); }
-.mrln-combine-chosen { display: flex; flex-direction: column; gap: 3px; }
 .mrln-import-plan { margin: 4px 0; padding-left: 16px; }
 .mrln-import-plan li { margin: 2px 0; }
 .mrln-composer button.mrln-mini.mrln-m-on {
@@ -3023,6 +3014,89 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font: 10.5px var(--pc-mono);
   color: var(--pc-fg-4);
 }
+/* ---- the combine builder -------------------------------------------------
+   A combine is built the same way a template is composed — pick sections,
+   weight them — so it is drawn with the same table language: one grid shared
+   by the header and the rows, the panel's own picker for adding, and the
+   footer action bar every other editor ends with. */
+
+.pc-panel .pc-comb-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--pc-gap);
+  margin-top: 4px;
+}
+.pc-panel .pc-comb-n {
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-comb-list {
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-lg);
+  overflow: hidden;
+  background: var(--pc-bg-panel);
+}
+.pc-panel .pc-comb-head,
+.pc-panel .pc-comb-row {
+  display: grid;
+  /* section · items · weight · actions */
+  grid-template-columns: 1fr 52px 62px 34px;
+  gap: var(--pc-gap);
+  align-items: center;
+  padding: 0 var(--pc-pad);
+}
+.pc-panel .pc-comb-head {
+  height: 28px;
+  background: var(--pc-bg-app);
+  border-bottom: 1px solid var(--pc-line);
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-comb-head > :nth-child(2),
+.pc-panel .pc-comb-head > :nth-child(3) {
+  text-align: right;
+}
+.pc-panel .pc-comb-row {
+  min-height: var(--pc-row);
+  border-bottom: 1px solid var(--pc-line-row);
+}
+.pc-panel .pc-comb-row:last-child {
+  border-bottom: 0;
+}
+.pc-panel .pc-comb-row:hover {
+  background: var(--pc-bg-raised);
+}
+.pc-panel .pc-comb-slug {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 11.5px var(--pc-mono);
+  color: var(--pc-fg-value);
+}
+.pc-panel .pc-comb-items {
+  text-align: right;
+  font: 10.5px var(--pc-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--pc-fg-4);
+}
+.pc-panel input.pc-comb-wt {
+  width: 100%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.pc-panel .pc-comb-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.pc-panel .pc-comb-empty {
+  padding: 12px var(--pc-pad);
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-3);
+}
+
 /* On a panel too narrow to float a 300px list, the same markup docks. */
 .pc-pick.pc-pick-sheet {
   left: 0;

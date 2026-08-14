@@ -64,66 +64,77 @@ export function createSectionEditor(hub) {
       value: existing?.body.label ?? "",
       placeholder: "e.g. Anywhere — urban, nature or studio",
     });
-    const filterInput = el("input", {
-      type: "text",
-      placeholder: "Filter sections…",
-      oninput: () => renderPicks(),
-    });
-    const pickList = el("div", { class: "mrln-combine-picks" });
-    const chosenList = el("div", { class: "mrln-combine-chosen" });
+    // The picker every other "choose a section" control in the panel uses,
+    // filter row and Names/Deep search included. The builder used to grow its
+    // own filter box over a 40-row scroll list, so the one screen carried two
+    // competing lists and two search boxes that did not match anything else.
+    const picker = sectionPicker();
+    const refSelect = picker.select;
+    const chosenList = el("div", { class: "pc-comb-list" });
+    const countLine = el("span", { class: "pc-comb-n" });
     const errorLine = el("div", { class: "mrln-error" });
 
+    const itemCount = (slug) =>
+      (state.library?.sections ?? []).find((s) => s.slug === slug)?.item_count;
+
+    function addPicked() {
+      const slug = refSelect.value;
+      if (!slug) return;
+      if (chosen.has(slug)) {
+        errorLine.textContent = `${slug} is already in this combine`;
+        return;
+      }
+      errorLine.textContent = "";
+      chosen.set(slug, 1);
+      renderChosen();
+    }
+
     function renderChosen() {
-      const rows = [...chosen.entries()].map(([slug, weight]) =>
-        el(
+      countLine.textContent = chosen.size
+        ? `${chosen.size} section${chosen.size === 1 ? "" : "s"}`
+        : "none yet";
+      const rows = [...chosen.entries()].map(([slug, weight]) => {
+        const count = itemCount(slug);
+        return el(
           "div",
-          { class: "mrln-inline" },
-          el("span", {}, slug),
+          { class: "pc-comb-row" },
+          el("span", { class: "pc-comb-slug", title: slug }, slug),
+          el("span", { class: "pc-comb-items" }, count == null ? "—" : String(count)),
           el("input", {
             type: "number",
-            class: "mrln-narrow",
+            class: "pc-comb-wt",
             min: "0.1",
             step: "0.1",
             value: String(weight),
             title: "Draw weight — 2 means twice as likely as a 1",
             oninput: (e) => chosen.set(slug, Math.max(0.1, Number(e.target.value) || 1)),
           }),
-          smallBtn("Remove from the combine", "✕", () => {
-            chosen.delete(slug);
-            renderChosen();
-            renderPicks();
-          })
-        )
-      );
-      mount(chosenList, 
-        el("div", { class: "mrln-field-name" }, `Combining ${chosen.size} section(s)`),
-        ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "nothing picked yet")])
-      );
-    }
-
-    function renderPicks() {
-      const filter = filterInput.value.trim().toLowerCase();
-      const rows = (state.library?.sections ?? [])
-        .filter((s) => !chosen.has(s.slug))
-        .filter((s) => !filter || s.slug.toLowerCase().includes(filter))
-        .slice(0, 40)
-        .map((s) =>
           el(
-            "div",
-            {
-              class: "mrln-combine-pick",
-              onclick: () => {
-                chosen.set(s.slug, 1);
-                renderChosen();
-                renderPicks();
-              },
-            },
-            `+ ${s.slug}`,
-            el("span", { class: "mrln-slug" }, ` ${s.item_count ?? "?"} items`)
+            "span",
+            { class: "pc-comb-actions" },
+            smallBtn("Remove from the combine", "✕", () => {
+              chosen.delete(slug);
+              renderChosen();
+            })
           )
         );
-      mount(pickList, 
-        ...(rows.length ? rows : [el("div", { class: "mrln-note" }, "no matches")])
+      });
+      mount(
+        chosenList,
+        // Header over rows on ONE shared grid, exactly like the Compose table:
+        // that is what makes these columns you can read down instead of a
+        // stack of inline controls at whatever width their content happens to be.
+        el(
+          "div",
+          { class: "pc-comb-head", role: "presentation" },
+          el("span", {}, "Section"),
+          el("span", {}, "Items"),
+          el("span", { title: "Draw weight — 2 means twice as likely as a 1" }, "Wt"),
+          el("span", {}, "Actions")
+        ),
+        ...(rows.length
+          ? rows
+          : [el("div", { class: "pc-comb-empty" }, "Nothing picked yet — add a section below.")])
       );
     }
 
@@ -153,7 +164,6 @@ export function createSectionEditor(hub) {
     }
 
     renderChosen();
-    renderPicks();
     setEditor(
       el(
         "div",
@@ -169,9 +179,26 @@ export function createSectionEditor(hub) {
           + "the normal section editor opens so you can save it."
       ),
       field("Label", labelInput),
+      // A block title with its count on the right, the same shape the other
+      // tabs use to head a list — so the table below reads as one thing.
+      el(
+        "div",
+        { class: "pc-comb-title" },
+        el("span", { class: "mrln-field-name" }, "Combining"),
+        countLine
+      ),
       chosenList,
-      field("Add a section", filterInput),
-      pickList,
+      el("div", { class: "pc-comb-title" }, el("span", { class: "mrln-field-name" }, "Add a section")),
+      // mrln-addrow is what Compose uses for its own picker + Add, so the two
+      // screens now have the same control in the same place. NOT wrapped in a
+      // field() label: the picker carries Names/Deep <button>s, and a button
+      // inside a <label> is labelable — clicking one would retrigger the row.
+      el(
+        "div",
+        { class: "mrln-addrow", title: "Add a section to this combine" },
+        picker.node,
+        el("button", { class: "mrln-btn", onclick: addPicked }, "+ Add")
+      ),
       errorLine,
       el(
         "div",
