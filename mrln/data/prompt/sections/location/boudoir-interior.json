@@ -1,9 +1,14 @@
 {
   "version": 1,
   "label": "Boudoir Interior",
-  "description": "Session interiors from the OverDrive boudoir source, adapted to schema and extended in the same register.",
-  "suits": ["human"],
-  "tags": ["boudoir", "indoor"],
+  "description": "Session interiors for boudoir and intimate portrait work — suites, bedrooms and studio corners, all written in the same register.",
+  "suits": [
+    "human"
+  ],
+  "tags": [
+    "boudoir",
+    "indoor"
+  ],
   "items": [
     {
       "name": "parisian-haussmann",
@@ -84,7 +89,9 @@
       "name": "noir-parlor",
       "text": "Moody film-noir parlor featuring dark crimson flock wallpaper, heavy velvet drapes and vintage brass fixtures.",
       "text_short": "film-noir crimson parlor",
-      "tags": ["night"]
+      "tags": [
+        "night"
+      ]
     },
     {
       "name": "ryokan-suite",

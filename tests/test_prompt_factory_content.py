@@ -544,3 +544,30 @@ def test_no_template_restates_an_axis_its_subject_already_draws(lib):
                         f"({slot.ref}) already draws for itself"
                     )
     assert not collisions, "\n".join(collisions)
+
+
+def test_overdrive_is_named_only_where_overdrive_lives():
+    """'OverDrive' is the car pipeline's own name, not a house style. It had
+    leaked into the prose of four unrelated entries — a boudoir template, a
+    camera section, a human section, an interior section — as a note about
+    where the content came FROM. Provenance is not a description: it tells a
+    reader nothing about what they are picking, and it pollutes the search
+    (the word matches, the content has nothing to do with cars).
+
+    Legitimate homes: the overdrive/ templates themselves, and the car parts
+    that name the branded plate.
+    """
+    root = Path(__file__).resolve().parents[1] / "mrln" / "data" / "prompt"
+    allowed = ("templates/overdrive/", "sections/vehicle/car/")
+    strays = []
+    for path in sorted(root.rglob("*.json")):
+        rel = path.relative_to(root).as_posix()
+        if rel.startswith(allowed):
+            continue
+        if "overdrive" in path.read_text(encoding="utf-8").lower():
+            strays.append(rel)
+    assert not strays, (
+        "'overdrive' appears outside the car pipeline: "
+        + ", ".join(strays)
+        + " — describe what the entry IS, not which pack it came from"
+    )

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Model Profile",
-  "description": "Composable person profiles — each item carries child slots over the shared human/wardrobe pools (nested randomness). Emphasis weights follow the OverDrive boudoir source.",
+  "description": "Composable person profiles — each item carries child slots over the shared human/wardrobe pools (nested randomness). Emphasis weights are tuned for portrait and boudoir work.",
   "suits": [
     "human"
   ],

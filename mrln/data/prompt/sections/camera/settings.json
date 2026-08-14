@@ -1,7 +1,7 @@
 {
   "version": 1,
   "label": "Photographic Settings",
-  "description": "Complete settings blocks in the labeled OverDrive style — one committed technical recipe per item.",
+  "description": "Complete settings blocks — one committed technical recipe per item, written as a labeled block rather than loose camera words.",
   "items": [
     {
       "name": "tele-150mm-action",
@@ -22,63 +22,116 @@
       "name": "85mm-f14-portrait",
       "text": "Lens Type: 85mm prime\nAperture: f/1.4\nShutter Speed: 1/250s\nISO: 200\nBokeh: Creamy circular\nWhite Balance: Warm daylight\nFocus: Razor plane on the subject, background melted.",
       "text_short": "85mm f/1.4 portrait recipe",
-      "data": { "lens": "85mm", "aperture": "f/1.4", "shutter": "1/250s", "iso": 200 }
+      "data": {
+        "lens": "85mm",
+        "aperture": "f/1.4",
+        "shutter": "1/250s",
+        "iso": 200
+      }
     },
     {
       "name": "wide-24mm-environment",
       "text": "Lens Type: 24mm wide-angle\nAperture: f/8\nShutter Speed: 1/125s\nISO: 100\nWhite Balance: Daylight\nFocus: Deep focus placing the subject in its full environment.",
       "text_short": "24mm f/8 deep environment recipe",
-      "data": { "lens": "24mm", "aperture": "f/8", "shutter": "1/125s", "iso": 100 }
+      "data": {
+        "lens": "24mm",
+        "aperture": "f/8",
+        "shutter": "1/125s",
+        "iso": 100
+      }
     },
     {
       "name": "50mm-f12-night",
       "text": "Lens Type: 50mm prime\nAperture: f/1.2\nShutter Speed: 1/60s\nISO: 1600\nBokeh: Large luminous discs from every light source\nWhite Balance: Tungsten\nFocus: Selective focus, night lights blooming soft.",
       "text_short": "50mm f/1.2 high-ISO night recipe",
-      "tags": ["night"],
-      "data": { "lens": "50mm", "aperture": "f/1.2", "shutter": "1/60s", "iso": 1600 }
+      "tags": [
+        "night"
+      ],
+      "data": {
+        "lens": "50mm",
+        "aperture": "f/1.2",
+        "shutter": "1/60s",
+        "iso": 1600
+      }
     },
     {
       "name": "long-exposure-tripod",
       "text": "Lens Type: 35mm\nAperture: f/11\nShutter Speed: 30s on tripod\nISO: 64\nWhite Balance: Auto\nFocus: Hyperfocal, moving elements streaked into silk while the static world stays etched.",
       "text_short": "30s tripod long-exposure recipe",
-      "data": { "lens": "35mm", "aperture": "f/11", "shutter": "30s", "iso": 64 }
+      "data": {
+        "lens": "35mm",
+        "aperture": "f/11",
+        "shutter": "30s",
+        "iso": 64
+      }
     },
     {
       "name": "macro-stack",
       "text": "Lens Type: 100mm macro\nAperture: f/5.6 focus-bracketed\nShutter Speed: 1/200s with diffused flash\nISO: 100\nFocus: Stacked for impossible front-to-back micro sharpness.",
       "text_short": "100mm macro stack recipe",
-      "data": { "lens": "100mm macro", "aperture": "f/5.6", "shutter": "1/200s", "iso": 100 }
+      "data": {
+        "lens": "100mm macro",
+        "aperture": "f/5.6",
+        "shutter": "1/200s",
+        "iso": 100
+      }
     },
     {
       "name": "sports-freeze",
       "text": "Lens Type: 400mm tele\nAperture: f/2.8\nShutter Speed: 1/4000s\nISO: 800\nBokeh: Compressed distant wash\nFocus: Continuous tracking locked on the subject at peak action.",
       "text_short": "400mm 1/4000s freeze recipe",
-      "data": { "lens": "400mm", "aperture": "f/2.8", "shutter": "1/4000s", "iso": 800 }
+      "data": {
+        "lens": "400mm",
+        "aperture": "f/2.8",
+        "shutter": "1/4000s",
+        "iso": 800
+      }
     },
     {
       "name": "cinema-anamorphic",
       "text": "Lens Type: 40mm anamorphic\nAperture: T2.2\nShutter: 180-degree cinema shutter\nISO: 800\nCharacter: Oval bokeh, horizontal flares, gentle motion blur at cinematic cadence.",
       "text_short": "anamorphic T2.2 cinema recipe",
-      "data": { "lens": "40mm anamorphic", "aperture": "T2.2", "iso": 800 }
+      "data": {
+        "lens": "40mm anamorphic",
+        "aperture": "T2.2",
+        "iso": 800
+      }
     },
     {
       "name": "zone-focus-street",
       "text": "Lens Type: 28mm\nAperture: f/8 zone-focused at two meters\nShutter Speed: 1/500s\nISO: 400\nWhite Balance: Daylight\nFocus: Everything from one to four meters sharp, framed at walking pace with candid immediacy.",
       "text_short": "28mm f/8 zone-focus street recipe",
-      "data": { "lens": "28mm", "aperture": "f/8", "shutter": "1/500s", "iso": 400 }
+      "data": {
+        "lens": "28mm",
+        "aperture": "f/8",
+        "shutter": "1/500s",
+        "iso": 400
+      }
     },
     {
       "name": "studio-strobe-product",
       "text": "Lens Type: 105mm macro\nAperture: f/11\nShutter Speed: 1/200s flash sync\nISO: 100\nLighting: Strobes overpowering ambient to pure black\nWhite Balance: Flash\nFocus: Edge-to-edge crisp on the product, background controlled entirely by light.",
       "text_short": "f/11 strobe product recipe",
-      "data": { "lens": "105mm macro", "aperture": "f/11", "shutter": "1/200s", "iso": 100 }
+      "data": {
+        "lens": "105mm macro",
+        "aperture": "f/11",
+        "shutter": "1/200s",
+        "iso": 100
+      }
     },
     {
       "name": "blue-hour-tripod",
       "text": "Lens Type: 24mm wide\nAperture: f/8\nShutter Speed: 6s on tripod\nISO: 100\nWhite Balance: 4000K holding the sky cobalt against warm practicals\nFocus: Hyperfocal, moving lights ribboning into trails while the architecture stays etched.",
       "text_short": "6s blue-hour tripod recipe",
-      "tags": ["night"],
-      "data": { "lens": "24mm", "aperture": "f/8", "shutter": "6s", "iso": 100 }
+      "tags": [
+        "night"
+      ],
+      "data": {
+        "lens": "24mm",
+        "aperture": "f/8",
+        "shutter": "6s",
+        "iso": 100
+      }
     }
   ]
 }
