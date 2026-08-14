@@ -301,15 +301,17 @@ export function createSectionEditor(hub) {
         .filter(Boolean);
     const itemRows = [];
     const table = el("table", { class: "mrln-items-table" });
+    // The column head, named like every other table in the panel — including
+    // ACTIONS, which was an empty cell above two buttons nobody had a word for.
     table.append(
       el(
         "tr",
-        {},
+        { class: "mrln-items-head" },
         el("td", { class: "mrln-w-origin" }),
-        el("td", { class: "mrln-w-name mrln-note" }, "name"),
-        el("td", { class: "mrln-note" }, "text"),
-        el("td", { class: "mrln-w-weight mrln-note" }, "wt"),
-        el("td", { class: "mrln-w-act" })
+        el("td", { class: "mrln-w-name" }, "Name"),
+        el("td", {}, "Text"),
+        el("td", { class: "mrln-w-weight", title: "Draw weight — 2 is twice as likely as a 1" }, "Wt"),
+        el("td", { class: "mrln-w-act" }, "Actions")
       )
     );
 

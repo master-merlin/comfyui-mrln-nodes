@@ -141,6 +141,7 @@
 .mrln-chip.mrln-override { border-color: var(--mrln-warn); color: var(--mrln-warn-soft); }
 .mrln-chip.mrln-merged { border-color: var(--mrln-info); color: var(--mrln-info-soft); }
 .mrln-chip.mrln-missing { border-color: var(--mrln-error); color: var(--mrln-error-soft); }
+.mrln-chip.mrln-combine { border-style: dashed; opacity: 0.85; }
 button.mrln-chip-btn { cursor: pointer; font: inherit; font-size: 10px; }
 button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; }
 
@@ -1092,6 +1093,22 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   --pc-held-line: rgba(224, 178, 118, 0.4);
   --pc-bad: #e08a76;
   --pc-info: #8ea8d8;
+  --pc-info-soft: rgba(142, 168, 216, 0.1);
+  --pc-info-line: rgba(142, 168, 216, 0.35);
+  /* the primary button's hover, one step up from --pc-live */
+  --pc-live-hi: #93dcc6;
+  /* neutral chip fill: a tint of the surface, so it inverts with the theme */
+  --pc-chip-bg: rgba(255, 255, 255, 0.06);
+  /* the scrim a tier badge sits on over a THUMBNAIL — it rides an arbitrary
+     photo, so it needs its own ground and cannot borrow the panel's */
+  --pc-scrim: rgba(10, 10, 12, 0.75);
+  /* popovers: the picker and the row menu float ABOVE the panel, so their
+     surface is one step off the panel's, not the panel's own. Tokens because
+     both were hardcoded and were the two things that stayed dark under a
+     light ComfyUI theme. */
+  --pc-bg-pop: #17171a;
+  --pc-bg-pop-2: #1a1a1d;
+  --pc-shadow-pop: rgba(0, 0, 0, 0.66);
   /* metrics */
   --pc-row: 32px;
   --pc-row-lg: 38px;
@@ -1130,7 +1147,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   --pc-fg-value: #1d1d22;
   --pc-fg-2: #55555f;
   --pc-fg-3: #63636d;
-  --pc-fg-4: #6f6f79;
+  /* Measured, not eyeballed: #6f6f79 cleared 4.5:1 on the panel (4.60) and on
+     an input (4.97) but only reached 4.07 on --pc-bg-app — which is precisely
+     the surface the 9.5px column heads and the tab labels sit on. Same mistake
+     the dark ramp made and the same fix: the dimmest grey carries the smallest
+     type, so it is the one that cannot be approximate. 4.59 / 5.19 / 5.61. */
+  --pc-fg-4: #67676f;
   --pc-live: #16775e;
   --pc-live-soft: rgba(22, 119, 94, 0.1);
   --pc-live-line: rgba(22, 119, 94, 0.35);
@@ -1141,6 +1163,14 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   --pc-held-line: rgba(122, 84, 16, 0.4);
   --pc-bad: #a52d13;
   --pc-info: #2b5192;
+  --pc-info-soft: rgba(43, 81, 146, 0.1);
+  --pc-info-line: rgba(43, 81, 146, 0.35);
+  --pc-live-hi: #0f5f4a;
+  --pc-chip-bg: rgba(0, 0, 0, 0.06);
+  --pc-scrim: rgba(246, 246, 248, 0.82);
+  --pc-bg-pop: #ffffff;
+  --pc-bg-pop-2: #fafafc;
+  --pc-shadow-pop: rgba(20, 20, 28, 0.22);
 }
 
 .pc-panel *,
@@ -1235,7 +1265,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   flex: 0 0 auto;
   padding: 8px 13px 9px;
   font: 500 12.5px var(--pc-ui);
-  color: #75757e;
+  color: var(--pc-fg-4);
   background: none;
   border: 0;
   border-bottom: 2px solid transparent;
@@ -1243,7 +1273,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   cursor: pointer;
 }
 .pc-panel .mrln-tabs button:hover {
-  color: #c8c8d0;
+  color: var(--pc-fg);
 }
 .pc-panel .mrln-tabs button[aria-selected="true"] {
   color: var(--pc-fg);
@@ -1282,7 +1312,14 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* --- rule 6: one primary per view, everything else ghost ---------------- */
-.pc-panel .mrln-btn {
+/* `button.` is load-bearing, not decoration. The legacy rule this supersedes
+   is `.mrln-composer button.mrln-btn` — (0,2,1) with its element selector,
+   which BEATS a bare `.pc-panel .mrln-btn` at (0,2,0). Without the element
+   here, every ordinary button in the panel silently kept painting itself with
+   ComfyUI's --comfy-input-bg instead of the token: invisible under a dark
+   ComfyUI, and near-black text on a near-black fill under a light one. Same
+   trap the .mrln-mini rules above document. */
+.pc-panel button.mrln-btn {
   min-height: 26px;
   padding: 0 10px;
   font: 11.5px var(--pc-ui);
@@ -1292,11 +1329,11 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-radius: var(--pc-r-sm);
   cursor: pointer;
 }
-.pc-panel .mrln-btn:hover:not(:disabled) {
+.pc-panel button.mrln-btn:hover:not(:disabled) {
   background: var(--pc-line);
   border-color: var(--pc-fg-4);
 }
-.pc-panel .mrln-btn:disabled {
+.pc-panel button.mrln-btn:disabled {
   color: var(--pc-fg-4);
   border-color: var(--pc-line);
   cursor: default;
@@ -1310,8 +1347,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-btn.mrln-primary:hover:not(:disabled),
 .pc-panel .mrln-btn[data-variant="primary"]:hover:not(:disabled) {
-  background: #93dcc6;
-  border-color: #93dcc6;
+  background: var(--pc-live-hi);
+  border-color: var(--pc-live-hi);
 }
 /* The generic :disabled rule above loses to the primary fill (same specificity,
    declared earlier), so a disabled primary button looked exactly like a live
@@ -1393,7 +1430,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-radius: var(--pc-r-md);
   padding: 9px 11px;
   font: 12px/1.7 var(--pc-mono);
-  color: #cfcfd6;
+  color: var(--pc-fg-value);
 }
 .pc-panel .mrln-chip {
   padding: 0 6px;
@@ -1402,8 +1439,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   line-height: 16px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #8b8b95;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--pc-fg-2);
+  background: var(--pc-chip-bg);
   border: 1px solid transparent;
   opacity: 1;
 }
@@ -1415,8 +1452,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-chip.mrln-factory,
 .pc-panel .mrln-chip[data-tier="factory"] {
-  color: #8b8b95;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--pc-fg-2);
+  background: var(--pc-chip-bg);
   border-color: transparent;
 }
 .pc-panel .mrln-chip.mrln-override {
@@ -1426,8 +1463,17 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-chip.mrln-merged {
   color: var(--pc-info);
-  background: rgba(142, 168, 216, 0.1);
-  border-color: rgba(142, 168, 216, 0.35);
+  background: var(--pc-info-soft);
+  border-color: var(--pc-info-line);
+}
+/* A combine's chip states STRUCTURE, not state, so it stays out of the three
+   colours that are allowed to carry meaning here. The dashed edge is the whole
+   tell: this section holds no values of its own, it points at other sections. */
+.pc-panel .mrln-chip.mrln-combine {
+  color: var(--pc-fg-3);
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--pc-line-strong);
 }
 
 /* Library cards: the tier badge overlays the thumbnail instead of taking a
@@ -1442,11 +1488,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   position: absolute;
   left: 5px;
   bottom: 5px;
-  background: rgba(10, 10, 12, 0.75);
+  background: var(--pc-scrim);
   backdrop-filter: blur(2px);
 }
 .pc-panel .mrln-thumb-empty {
-  background: repeating-linear-gradient(135deg, #232327 0 6px, #1d1d21 6px 12px);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--pc-bg-row) 0 6px,
+    var(--pc-bg-row-alt) 6px 12px
+  );
 }
 
 /* Status semantics: ok is live, unreachable is bad, nothing else is tinted. */
@@ -1597,7 +1647,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .pc-row[data-state="held"] .pc-field,
 .pc-panel .pc-row[data-state="fixed"] .pc-field {
-  color: #e8c493;
+  color: var(--pc-held);
   border-color: var(--pc-held-line);
   background-color: var(--pc-held-soft);
 }
@@ -1665,10 +1715,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   gap: 4px;
   min-width: 168px;
   padding: 8px;
-  background: #1a1a1d;
+  background: var(--pc-bg-pop-2);
   border: 1px solid var(--pc-line-strong);
   border-radius: var(--pc-r-lg);
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.62);
+  box-shadow: 0 18px 38px var(--pc-shadow-pop);
 }
 /* the table header the grid is aligned to */
 .pc-panel .pc-thead {
@@ -2637,7 +2687,11 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   display: block;
   grid-column: 1 / -1;
   margin: 6px 0 10px;
+  /* Both sides. With padding on the left only, every right-aligned thing in
+     an editor (a count, a value column) sat flush against the panel edge and
+     the scrollbar clipped it. */
   padding-left: 10px;
+  padding-right: 10px;
   list-style: none;
   border-left: 2px solid var(--pc-live);
 }
@@ -2744,10 +2798,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   flex-direction: column;
   max-height: min(420px, 70vh);
   padding: 0;
-  background: #17171a;
+  background: var(--pc-bg-pop);
   border: 1px solid var(--pc-line-strong);
   border-radius: var(--pc-r-lg);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.66);
+  box-shadow: 0 22px 48px var(--pc-shadow-pop);
   overflow: hidden;
 }
 .pc-pick .pc-pick-head {
@@ -3201,4 +3255,161 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   .pc-panel .pc-cell-actions {
     grid-area: actions;
   }
+}
+
+/* ---- the last legacy surfaces, re-skinned onto the token scale -----------
+   These blocks predate the design pass and still paint with ComfyUI's own
+   greys (--comfy-menu-bg #202020, --comfy-input-bg #1c1c1c, #2a2a2a hovers).
+   Inside a panel that has its own scale that reads as *almost* right, which is
+   worse than plainly wrong: tab bodies at #131315 with popovers at #242424 and
+   hovers at #2a2a2a, three greys where the design has one ramp.
+
+   Re-pointing them at the tokens fixes both halves of the problem at once —
+   the panel becomes one surface, and every one of these follows the LIGHT
+   theme too, which none of them did while they read ComfyUI's variables.
+
+   Last in the file on purpose: several legacy rules score (0,2,0) and this
+   matches them, so order is what wins the cascade — honestly, and without the
+   !important these would otherwise need. */
+
+/* headings and rules */
+.pc-panel .mrln-tree-head {
+  color: var(--pc-fg);
+  opacity: 1;
+}
+.pc-panel .mrln-sep {
+  border-top-color: var(--pc-line);
+}
+.pc-panel .mrln-footer {
+  background: var(--pc-bg-app);
+  border-top: 1px solid var(--pc-line);
+}
+
+/* the library tree: rows, folder summaries, and their hovers */
+.pc-panel .mrln-tree li:hover,
+.pc-panel .mrln-tree-group > summary:hover,
+.pc-panel .mrln-tree-block > summary.mrln-tree-head:hover,
+.pc-panel .mrln-history-batch > summary:hover {
+  background: var(--pc-bg-raised);
+}
+.pc-panel .mrln-slot.mrln-nest-row {
+  background: var(--pc-bg-row-alt);
+}
+
+/* popovers — the same bug the picker had: a surface that never moved */
+.pc-panel .mrln-brace-menu,
+.pc-panel .mrln-lora-menu {
+  background: var(--pc-bg-pop-2);
+  border: 1px solid var(--pc-line-strong);
+  border-radius: var(--pc-r-md);
+  box-shadow: 0 12px 28px var(--pc-shadow-pop);
+}
+.pc-panel .mrln-brace-menu.mrln-menu-up {
+  box-shadow: 0 -12px 28px var(--pc-shadow-pop);
+}
+.pc-panel .mrln-brace-item:hover {
+  background: var(--pc-bg-raised);
+}
+.pc-panel .mrln-brace-item.mrln-lora-sel {
+  background: var(--pc-bg-raised);
+  border-left-color: var(--pc-live);
+}
+
+/* boxed groups: the remote-backend gate, the missing-LoRA banner, a history
+   batch — all boxes drawn on the panel, so all one border token */
+.pc-panel .mrln-gate,
+.pc-panel .mrln-history-batch {
+  background: var(--pc-bg-panel);
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-md);
+}
+.pc-panel .mrln-lora-banner {
+  border-color: var(--pc-bad);
+  border-radius: var(--pc-r-md);
+}
+.pc-panel .mrln-history-items {
+  border-left-color: var(--pc-line);
+}
+.pc-panel .mrln-optimize-row.mrln-moved {
+  background: var(--pc-live-soft);
+}
+
+/* drop zones (intake card, thumbnail setters) */
+.pc-panel .mrln-drop,
+.pc-panel .mrln-thumb-drop {
+  background: var(--pc-bg-input);
+  border-color: var(--pc-line-strong);
+  border-radius: var(--pc-r-md);
+}
+.pc-panel .mrln-drop.mrln-drop-hot,
+.pc-panel .mrln-thumb-drop:hover {
+  background: var(--pc-bg-raised);
+}
+.pc-panel .mrln-drop-hot {
+  border-color: var(--pc-live);
+  box-shadow: inset 0 0 0 1px var(--pc-live);
+}
+.pc-panel .mrln-drop:focus-visible {
+  border-color: var(--pc-live);
+  box-shadow: 0 0 0 2px var(--pc-live-ring);
+}
+
+/* the busy spinner */
+.pc-panel .mrln-spinner {
+  border-color: var(--pc-line-strong);
+  border-top-color: var(--pc-fg);
+}
+
+/* ---- the section editor's item table ------------------------------------
+   The last screen still drawn the old way. Two things were wrong with it:
+
+   1. `table-layout: auto`. Every input in it is `width: 100%`, and under auto
+      layout that percentage resolves against a column width the browser is
+      deriving FROM the content — circular, so each input collapsed to its
+      intrinsic ~177px and every item's text was clipped to a third of the
+      space that was sitting empty beside it. Fixed layout is what makes the
+      declared column widths real.
+   2. Its header was four lowercase words in the body font, so a table with a
+      dozen rows had no head to read down. Same treatment as the Compose
+      table's now. */
+.pc-panel .mrln-items-table {
+  table-layout: fixed;
+}
+.pc-panel .mrln-items-table .mrln-w-name {
+  width: 22%;
+}
+.pc-panel .mrln-items-table .mrln-w-weight {
+  width: 54px;
+}
+.pc-panel .mrln-items-table .mrln-w-act {
+  width: 68px;
+}
+.pc-panel .mrln-items-table .mrln-w-origin {
+  width: 26px;
+}
+.pc-panel .mrln-items-table > tbody > tr.mrln-items-head,
+.pc-panel .mrln-items-table > tr.mrln-items-head {
+  background: var(--pc-bg-app);
+}
+.pc-panel .mrln-items-table tr.mrln-items-head > td {
+  height: 26px;
+  padding: 0 5px;
+  border-bottom: 1px solid var(--pc-line);
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-panel .mrln-items-table tr.mrln-items-head > .mrln-w-weight {
+  text-align: right;
+}
+
+/* The tier scope row: its own line between the filter and the tree, because
+   both of them answer "what does this list show" and the button bar above
+   answers "what do I create". Aligned to the panel gutter so it reads as a
+   header for the tree rather than a stray control. */
+.pc-panel .mrln-lib-scope {
+  display: flex;
+  align-items: center;
+  padding: 2px var(--pc-pad) 0;
 }

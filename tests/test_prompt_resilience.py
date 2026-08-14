@@ -506,3 +506,98 @@ def test_rename_rewrites_fully_qualified_defaults(tmp_path):
         "leaf": "shinjuku",
         "untouched": "urban/shibuya-station",
     }
+
+
+# -- a factory section that GROWS --------------------------------------------
+# The question this answers: "will a future factory update break my templates?"
+# Three separate contracts, and only the first one moves.
+
+
+def _grow_lib(tmp_path):
+    """A template with one random slot and one pinned slot on the same
+    section, so both halves of the contract are observable at once."""
+    factory = tmp_path / "factory"
+    user = tmp_path / "user"
+    _write(
+        factory,
+        "sections/color.json",
+        {
+            "label": "Color",
+            "items": [{"name": "red", "text": "red"}, {"name": "blue", "text": "blue"}],
+        },
+    )
+    _write(
+        user,
+        "templates/mine.json",
+        {
+            "label": "Mine",
+            "text": "{roll} and {pinned}",
+            "slots": [
+                {"id": "roll", "ref": "color"},
+                {"id": "pinned", "ref": "color", "default": "blue"},
+            ],
+        },
+    )
+    return Library(factory, user)
+
+
+def _draw(lib, seed=11):
+    tpl = lib.load_template("mine")
+    resolved = resolve_template(
+        lib, tpl, seed=seed, mode="as configured", selection={}, variables={}
+    )
+    return {s.id: s.item_name for s in resolved.slots}
+
+
+def test_factory_growth_shifts_random_draws_but_never_pinned_ones(tmp_path):
+    lib = _grow_lib(tmp_path)
+    before = _draw(lib)
+    assert before["pinned"] == "blue"
+
+    # ship an update: the factory section gains items
+    _write(
+        tmp_path / "factory",
+        "sections/color.json",
+        {
+            "label": "Color",
+            "items": [
+                {"name": "red", "text": "red"},
+                {"name": "blue", "text": "blue"},
+                {"name": "green", "text": "green"},
+                {"name": "amber", "text": "amber"},
+            ],
+        },
+    )
+    lib = Library(tmp_path / "factory", tmp_path / "user")
+    after = _draw(lib)
+
+    # A random slot draws by weighted INDEX over the live pool, so a bigger
+    # pool is a different draw for the same seed. That is the trade-off of
+    # random-over-a-living-library and it is deliberate: the alternative is a
+    # library that can never gain content. Pinning is the escape hatch.
+    assert after["roll"] in {"red", "blue", "green", "amber"}
+    # ...and the pinned slot does NOT move. This is the contract that matters:
+    # anything a user chose on purpose survives every factory update.
+    assert after["pinned"] == "blue"
+    # stable in itself: re-resolving the updated library repeats exactly
+    assert _draw(lib) == after
+
+
+def test_factory_growth_leaves_no_warning_on_a_still_valid_pin(tmp_path):
+    lib = _grow_lib(tmp_path)
+    _write(
+        tmp_path / "factory",
+        "sections/color.json",
+        {
+            "label": "Color",
+            "items": [{"name": "blue", "text": "blue"}, {"name": "teal", "text": "teal"}],
+        },
+    )
+    lib = Library(tmp_path / "factory", tmp_path / "user")
+    tpl = lib.load_template("mine")
+    resolved = resolve_template(lib, tpl, seed=3, mode="as configured", selection={}, variables={})
+    pinned = next(s for s in resolved.slots if s.id == "pinned")
+    # 'red' disappeared but 'blue' survived: the pin still resolves, silently.
+    assert pinned.item_name == "blue"
+    assert pinned.stale_note == ""
+    assert "⚠" not in render(resolved, "string", tpl.render).choices

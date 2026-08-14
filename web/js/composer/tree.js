@@ -13,7 +13,7 @@
 // every .js under WEB_DIRECTORY — see composer/util.js). The editor mount and
 // its dirty flag live inside createTree().
 import { armDestructive, autoArea, busy, el, field, loadingNote, mount, tierChip } from "./dom.js";
-import { writeGridPref } from "./state.js";
+import { writeGridPref, writeTierPref } from "./state.js";
 
 export function createTree(hub) {
   const { ctx, state, libraryTab } = hub;
@@ -188,6 +188,22 @@ export function createTree(hub) {
   // same entry.
   function sectionChips(section) {
     return [
+      // A combine is a section by design — same file, same save path — so
+      // nothing in the list told you one apart from an ordinary section, and
+      // opening it was the only way to find out. Its item count is a count of
+      // SOURCES, not of drawable values, which is the other thing this says.
+      section.combine
+        ? el(
+            "span",
+            {
+              class: "mrln-chip mrln-combine",
+              title: `Combine — draws from ${section.item_count} other section(s) `
+                + "instead of holding its own items. Opening it opens the combine "
+                + "builder.",
+            },
+            "combine"
+          )
+        : null,
       section.has_lora
         ? el(
             "span",
@@ -353,6 +369,12 @@ export function createTree(hub) {
     // overspill as soon as more domains land. Expansion state survives
     // re-renders within the session. An active filter narrows entries and
     // forces matching groups open.
+    // The tier view narrows first: it answers "show me MY library", which is a
+    // different question from "find this slug", and a user with 12 entries in
+    // a library of 340 should not have to remember all 12 names to see them.
+    // A merged entry (your file extends the factory's) counts as BOTH — it is
+    // yours to edit and it is factory content underneath.
+    entries = entries.filter((entry) => tierMatches(entry, state.libTier));
     const filter = (state.libFilter ?? "").trim().toLowerCase();
     if (filter) {
       entries = entries.filter(
@@ -460,6 +482,45 @@ export function createTree(hub) {
       state.libGroups.add(`${kind}:${withThumb ?? groups[0]}`);
       state.libGroups.add(`${kind}:@block:touched`); // don't re-apply the default
     }
+  }
+
+  /** Does an entry belong in the current tier view? */
+  function tierMatches(entry, view) {
+    if (view === "user") return entry.tier === "user" || entry.merged === true;
+    if (view === "factory") return entry.tier === "factory" || entry.merged === true;
+    return true;
+  }
+
+  /**
+   * All / Factory / Yours. The same segmented control the section picker uses
+   * for Names/Deep, so a scope switch looks like a scope switch everywhere in
+   * the panel — and it persists, because re-narrowing the library after every
+   * restart is what stops people from keeping their own content in it.
+   */
+  function tierToggle() {
+    const segment = (label, value, tip) =>
+      el(
+        "button",
+        {
+          class: "mrln-btn pc-seg",
+          "aria-pressed": String(state.libTier === value),
+          title: tip,
+          onclick: () => {
+            if (state.libTier === value) return;
+            state.libTier = value;
+            writeTierPref(value);
+            renderLibraryTab();
+          },
+        },
+        label
+      );
+    return el(
+      "span",
+      { class: "pc-segmented", role: "group", "aria-label": "Library tier" },
+      segment("All", "all", "Everything in the library"),
+      segment("Factory", "factory", "Only what the pack ships — including entries your files extend"),
+      segment("Yours", "user", "Only entries you created or extended")
+    );
   }
 
   function viewToggle() {
@@ -575,6 +636,12 @@ export function createTree(hub) {
         viewToggle()
       ),
       filterInput,
+      // The tier view gets a row of its own directly above the tree, not a
+      // seat in the button bar: it scopes WHAT THE TREE SHOWS, like the filter
+      // right above it, and dropping it in among the New…/Import… actions both
+      // wrapped that bar onto two lines and filed a view control under things
+      // that create files.
+      el("div", { class: "mrln-lib-scope" }, tierToggle()),
       treeBlock("sections", "Sections", lib.sections),
       treeBlock("templates", "Templates", lib.templates),
       profilesBlock(),

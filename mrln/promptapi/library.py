@@ -66,6 +66,17 @@ def handle_library(lib, payload):
                 item_count=len(section.items),
                 suits=list(section.suits),
                 merged=section.merged,
+                # A "combine" is an ordinary section whose every item only
+                # delegates to another section, so nothing structural marks one
+                # — in the library it looked exactly like any other section and
+                # the only way to find out was to open it. The panel draws a
+                # chip from this, and the shape it tests is the one the combine
+                # builder generates (util.js isCombineItem).
+                combine=bool(section.items)
+                and all(
+                    i.text.strip() == "{pick}" and len(i.slots) == 1 and i.slots[0].id == "pick"
+                    for i in section.items
+                ),
                 has_lora=any(i.data and i.data.get("lora") for i in section.items),
                 lora_bases=sorted(
                     {

@@ -39,6 +39,35 @@ def test_library_listing(lib):
     assert body["fingerprint"] == lib.fingerprint()
 
 
+def test_library_marks_combine_sections(lib):
+    # A combine is an ordinary section file, so only its SHAPE tells it apart:
+    # every item delegates to another section and holds no text of its own.
+    # The panel draws its chip from this flag; without it a combine and a
+    # normal section are indistinguishable in the library.
+    combine = lib.user_root / "sections" / "anywhere.json"
+    combine.write_text(
+        json.dumps(
+            {
+                "label": "Anywhere",
+                "items": [
+                    {"name": "loc-a", "text": "{pick}", "slots": [{"id": "pick", "ref": "color"}]},
+                    {
+                        "name": "loc-b",
+                        "text": "{pick}",
+                        "weight": 2,
+                        "slots": [{"id": "pick", "ref": "lighting"}],
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    sections = {s["slug"]: s for s in ok(promptapi.handle_library(lib, {}))["sections"]}
+    assert sections["anywhere"]["combine"] is True
+    assert sections["anywhere"]["item_count"] == 2  # a count of SOURCES here
+    assert sections["lighting"]["combine"] is False
+
+
 def test_library_survives_broken_user_file(lib):
     bad = lib.user_root / "sections" / "broken.json"
     bad.write_text("{not json", encoding="utf-8")

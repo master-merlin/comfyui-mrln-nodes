@@ -22,6 +22,13 @@ draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
 - 🧩 **[Nodes](#nodes)** — what each node does, if you would rather read the
   contract than the guide.
 
+<p align="center">
+  <img src="docs/images/12-node.png" alt="The Prompt Template (MRLN) node on the ComfyUI canvas, showing its six outputs and its widgets" width="420">
+</p>
+
+<p align="center"><em>One node, six outputs: the prompt, the LLM hand-off, the
+LoRAs the draw selected, and three that tell you what happened.</em></p>
+
 ## Install
 
 Until the pack is on the [Comfy Registry](https://registry.comfy.org), install manually:

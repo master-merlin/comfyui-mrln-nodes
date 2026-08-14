@@ -43,6 +43,29 @@ export function writeGridPref(grid) {
   }
 }
 
+// The tier filter, persisted for the same reason: someone building their own
+// library wants to see THEIR entries, and having to re-narrow 340 factory
+// entries after every restart is the thing that makes them stop looking.
+export const TIER_PREF_KEY = "mrln.composer.libraryTier";
+export const TIER_VIEWS = ["all", "factory", "user"];
+
+export function readTierPref() {
+  try {
+    const value = window.localStorage.getItem(TIER_PREF_KEY);
+    return TIER_VIEWS.includes(value) ? value : "all";
+  } catch {
+    return "all";
+  }
+}
+
+export function writeTierPref(view) {
+  try {
+    window.localStorage.setItem(TIER_PREF_KEY, TIER_VIEWS.includes(view) ? view : "all");
+  } catch {
+    /* see writeGridPref */
+  }
+}
+
 /** The panel's single state object — created once, shared by every module. */
 export function createState() {
   const state = {
@@ -103,6 +126,8 @@ export function createState() {
     // Cards are the default — a library this size is browsed by eye first —
     // and the choice is remembered across reloads and restarts (readGridPref).
     grid: readGridPref(),
+    // Library tab tier view: "all" | "factory" | "user", also remembered
+    libTier: readTierPref(),
     thumbEpoch: 0,
     libGroups: new Set(), // Library tab: expanded top-level slug groups
     nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed
