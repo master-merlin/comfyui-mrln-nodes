@@ -34,15 +34,18 @@ LIGHTS = [
     {"name": "night", "text": "moonlit night"},
 ]
 
-# Captured from the PRE-change node (single-value outputs) with seed 7.
+# Captured from the PRE-change node (single-value outputs) with seed 7, in the
+# node's own output order — re-cut once before shipping, when the outputs were
+# grouped by what you WIRE them to (prompt, llm, loras) ahead of the reporting
+# ones. The strings are untouched: same render, read in a new order.
 GOLDEN = (
     "a car, bright red, moonlit night",
+    '{"target": "standard", "prompt": "a car, bright red, moonlit night"}',
+    "[]",
     "",
     "template: batch/tiny   seed: 7   mode: as configured   format: string\n"
     "color: red  [random]  (user)\n"
     "light: night  [random]  (user)",
-    "[]",
-    '{"target": "standard", "prompt": "a car, bright red, moonlit night"}',
 )
 
 # Pre-change single renders at seeds 7, 8, 9, 10 — the reference an
@@ -137,7 +140,7 @@ def test_default_call_reproduces_the_pre_change_golden_as_length_one_lists(node)
     # the appended output is a length-1 list too (its content: test_prompt_gen_info.py)
     assert out[5] == ["a car, bright red, moonlit night\nSeed: 7"]
     # and no batch bookkeeping leaks into a single render
-    assert "batch " not in out[2][0]
+    assert "batch " not in out[4][0]
 
 
 def test_batch_count_one_is_identical_to_omitting_the_widgets(node):
@@ -149,7 +152,7 @@ def test_batch_count_one_is_identical_to_omitting_the_widgets(node):
     fixed = run(node, selection_mode="all fixed defaults")
     assert run(node, selection_mode="all fixed defaults", batch_mode="combinatorial") == fixed
     assert len(fixed[0]) == 1
-    assert "mode: all fixed defaults" in fixed[2][0]
+    assert "mode: all fixed defaults" in fixed[4][0]
 
 
 def test_output_is_list_covers_every_output(classes):
@@ -181,13 +184,16 @@ def test_batch_widgets_append_after_profile(classes):
         "conflict_policy",
     ]
     assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
+    # Grouped by what you WIRE (prompt -> encode, llm -> Enhance, loras -> LoRA
+    # Apply), then the reporting outputs. Re-cut once before shipping;
+    # test_protocol_nodes.FROZEN_ORDER owns the contract from here.
     assert list(classes["MRLN_PromptTemplate"].RETURN_NAMES) == [
         "prompt",
+        "llm",
+        "loras",
         "negative",
         "choices",
-        "loras",
-        "llm",
-        "gen_info",  # appended by SPEC 6.4; proof lives in test_prompt_gen_info.py
+        "gen_info",
     ]
 
 
@@ -225,8 +231,8 @@ def test_increment_seed_items_equal_the_single_renders(node):
     than a literal: a batch of N is N single renders at seed..seed+N-1."""
     batched = run(node, batch_count=5, seed=1234)
     singles = [run(node, seed=1234 + i) for i in range(5)]
-    # output 2 (choices) carries the extra batch line and is asserted below
-    for output in (0, 1, 3, 4):
+    # output 4 (choices) carries the extra batch line and is asserted below
+    for output in (0, 1, 2, 3, 5):
         assert batched[output] == [single[output][0] for single in singles], output
 
 
@@ -236,10 +242,10 @@ def test_batch_line_prefixes_every_item_and_only_when_batched(node):
     N == 1 the line is absent entirely."""
     batched = run(node, batch_count=3, seed=1234)
     for index in range(3):
-        head, _, rest = batched[2][index].partition("\n")
+        head, _, rest = batched[4][index].partition("\n")
         assert head == f"batch {index + 1}/3 (seed {1234 + index})"
-        assert rest == run(node, seed=1234 + index)[2][0]
-    assert not run(node, batch_count=1)[2][0].startswith("batch ")
+        assert rest == run(node, seed=1234 + index)[4][0]
+    assert not run(node, batch_count=1)[4][0].startswith("batch ")
 
 
 def test_batch_count_is_clamped_not_trusted(node):
@@ -270,13 +276,13 @@ def test_combinatorial_ignores_batch_count(node):
 
 def test_combinatorial_pins_each_combination_and_names_the_axes(node):
     out = run(node, batch_mode="combinatorial")
-    head, _, rest = out[2][0].partition("\n")
+    head, _, rest = out[4][0].partition("\n")
     assert head == "batch 1/6 (seed 7)   combinatorial: color, light"
     # every enumerated slot is PINNED for that item, which is what makes the
     # product exhaustive instead of a lucky sequence of draws
     assert "color: red  [fixed]" in rest
     assert "light: day  [fixed]" in rest
-    assert out[2][5].startswith("batch 6/6 (seed 7)")
+    assert out[4][5].startswith("batch 6/6 (seed 7)")
 
 
 def test_combinatorial_takes_fixed_slots_out_of_the_product(node):
@@ -286,7 +292,7 @@ def test_combinatorial_takes_fixed_slots_out_of_the_product(node):
     assert out[0] == ["a car, deep green, bright daylight", "a car, deep green, moonlit night"]
     out = run(node, batch_mode="combinatorial", selection="color=green\nlight=night")
     assert out[0] == ["a car, deep green, moonlit night"]
-    assert not out[2][0].startswith("batch ")  # collapsed to a single render
+    assert not out[4][0].startswith("batch ")  # collapsed to a single render
 
 
 def test_combinatorial_works_under_randomize_all(node):
@@ -300,7 +306,7 @@ def test_combinatorial_works_under_randomize_all(node):
 def test_combinatorial_skips_muted_slots(node):
     out = run(node, batch_mode="combinatorial", selection="light=off")
     assert out[0] == ["a car, bright red", "a car, deep green", "a car, ocean blue"]
-    assert "combinatorial: color" in out[2][0]
+    assert "combinatorial: color" in out[4][0]
 
 
 def test_combinatorial_excludes_weight_zero_items(node, user_tier):
@@ -337,7 +343,7 @@ def test_combinatorial_pins_the_drawn_variant(node, user_tier):
     out = run(
         node, template="batch/var", batch_mode="combinatorial", selection_mode="randomize all"
     )
-    variants = {line for report in out[2] for line in report.splitlines() if "variant:" in line}
+    variants = {line for report in out[4] for line in report.splitlines() if "variant:" in line}
     assert len(variants) == 1, "the variant must be constant across the batch"
     # tone and color are both random under 'randomize all' -> 2 x 3
     assert len(out[0]) == 6
@@ -429,7 +435,7 @@ def test_every_output_stays_aligned_across_the_batch(node, user_tier):
             "render": {"format": "string", "joiner": ", "},
         },
     )
-    prompts, negatives, choices, loras, llms, gen_info = run(
+    prompts, llms, loras, negatives, choices, gen_info = run(
         node, template="batch/kitted", batch_mode="combinatorial"
     )
     assert (
@@ -502,7 +508,7 @@ def test_include_narrows_the_random_pool_without_touching_fixed_picks(node, user
             "render": {"format": "string", "joiner": ", "},
         },
     )
-    drawn = {run(node, seed=s)[2][0].split("color: ")[1].split(" ")[0] for s in seeds}
+    drawn = {run(node, seed=s)[4][0].split("color: ")[1].split(" ")[0] for s in seeds}
     assert drawn <= {"red", "blue"}, "a whitelisted slot drew an item outside its pool"
     assert drawn == {"red", "blue"}, "both whitelisted items must still be reachable"
     # an explicit pick is NOT restricted by the whitelist: the user asked for it
@@ -525,7 +531,7 @@ def test_an_include_naming_nothing_that_exists_falls_back_to_the_whole_section(n
             "render": {"format": "string", "joiner": ", "},
         },
     )
-    drawn = {run(node, seed=s)[2][0].split("color: ")[1].split(" ")[0] for s in range(20)}
+    drawn = {run(node, seed=s)[4][0].split("color: ")[1].split(" ")[0] for s in range(20)}
     assert drawn == {"red", "green", "blue"}
 
 

@@ -402,7 +402,7 @@ def test_node_llm_output_and_profile_render(node_env):
             profile="sdxl",
         )
     ]
-    llm = json.loads(out[4])
+    llm = json.loads(out[1])
     assert llm["target"] == "sdxl" and "system" in llm
     assert llm["prompt"] == out[0]  # single wire: the llm output carries the prompt
     standard = [
@@ -415,7 +415,7 @@ def test_node_llm_output_and_profile_render(node_env):
             format="template default",
         )
     ]
-    standard_llm = json.loads(standard[4])
+    standard_llm = json.loads(standard[1])
     assert standard_llm["target"] == "standard" and standard_llm["prompt"] == standard[0]
     assert (
         node_env.VALIDATE_INPUTS(template="overdrive/full-shot", selection="", profile="krea2")
@@ -429,7 +429,7 @@ def test_node_llm_output_and_profile_render(node_env):
 
 def test_preview_parity_with_profile(node_env):
     node = node_env()
-    prompt, negative, choices, _loras, llm, *_rest = node.execute(
+    prompt, llm, _loras, negative, choices, *_rest = node.execute(
         template="overdrive/full-shot",
         selection="paint=guards-red",
         selection_mode="as configured",

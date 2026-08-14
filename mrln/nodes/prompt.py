@@ -432,7 +432,11 @@ class PromptTemplate:
     DESCRIPTION = cleandoc(__doc__)
     FUNCTION = "execute"
     RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "STRING")
-    RETURN_NAMES = ("prompt", "negative", "choices", "loras", "llm", "gen_info")
+    # Wiring order: the three you connect to something (prompt -> CLIP encode,
+    # llm -> Prompt Enhance, loras -> LoRA Apply), then the reporting ones.
+    # `negative` leads the second group because it is the one of them that also
+    # gets wired, into the negative encode.
+    RETURN_NAMES = ("prompt", "llm", "loras", "negative", "choices", "gen_info")
     # Every output is a list so one queue can carry a whole batch; ComfyUI
     # then runs the downstream graph once per item. A length-1 list is
     # indistinguishable from a single value downstream, which is what keeps
@@ -440,15 +444,15 @@ class PromptTemplate:
     OUTPUT_IS_LIST = (True, True, True, True, True, True)
     OUTPUT_TOOLTIPS = (
         "The rendered positive prompt in the chosen format.",
+        "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, protect, system, params} "
+        "— the rendered prompt, the profile's LLM system prompt, and the LoRA trigger "
+        "words the enhancer must keep verbatim.",
+        "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
+        "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
         "The joined negative prompt (template + section + item negatives), always a plain string.",
         "Report of the variant/items chosen per slot with seed and tier — wire to a text "
         "preview to see what was drawn. Batched runs prefix each item with a "
         "'batch i/N (seed …)' line.",
-        "JSON list of the drawn LoRA blocks (file + strengths) — wire into the "
-        "'LoRA Apply (MRLN)' node between your model/clip loaders and the sampler.",
-        "The 'Prompt Enhance (MRLN)' single wire: {target, prompt, protect, system, params} "
-        "— the rendered prompt, the profile's LLM system prompt, and the LoRA trigger "
-        "words the enhancer must keep verbatim.",
         "Generation metadata in the A1111 'parameters' dialect, for a save node that can "
         "embed a metadata string: the positive prompt, a 'Negative prompt:' line when there "
         "is one, then 'Seed: <seed>' plus 'Civitai resources:' naming the drawn LoRAs by "
@@ -763,7 +767,7 @@ class PromptTemplate:
             kind=batch_mode,
             rows=history_rows,
         )
-        return (prompts, negatives, choices, loras, llms, gen_infos)
+        return (prompts, llms, loras, negatives, choices, gen_infos)
 
 
 class PromptSection:

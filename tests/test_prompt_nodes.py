@@ -65,7 +65,9 @@ def run_template(node, **kw):
         "format": "template default",
     }
     args.update(kw)
-    return single(node.execute(**args)[:3])  # (prompt, negative, choices); loras tested separately
+    out = node.execute(**args)
+    # (prompt, negative, choices) out of the node's own order; loras tested separately
+    return single((out[0], out[3], out[4]))
 
 
 def test_domain_registered(classes):
@@ -108,7 +110,7 @@ def test_loras_output_json(classes, template_node, user_tier):
     )
     assert "HycadeBodykit" in out[0]
     assert "<lora:" not in out[0]  # signalling rides the loras output, not the prompt
-    assert _json.loads(out[3]) == [
+    assert _json.loads(out[2]) == [
         {"lora": "kits\\hycade.safetensors", "strength_model": 0.87, "strength_clip": 0.87}
     ]
     # empty stack renders as an empty JSON list, and LoraApply validates it
@@ -121,8 +123,8 @@ def test_loras_output_json(classes, template_node, user_tier):
             format="template default",
         )
     )
-    assert _json.loads(plain[3]) == []
-    assert classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras=plain[3]) is True
+    assert _json.loads(plain[2]) == []
+    assert classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras=plain[2]) is True
     assert "not valid JSON" in classes["MRLN_LoraApply"].VALIDATE_INPUTS(loras="{nope")
 
 

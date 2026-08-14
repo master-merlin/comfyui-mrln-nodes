@@ -238,7 +238,7 @@ FROZEN_ORDER = {
             "conflict_policy",
         ],
         "optional": ["variables", "profile", "batch_count", "batch_mode"],
-        "outputs": ["prompt", "negative", "choices", "loras", "llm"],
+        "outputs": ["prompt", "llm", "loras", "negative", "choices"],
     },
     "MRLN_ShowText": {
         "required": ["value"],
@@ -288,4 +288,4 @@ def test_lora_report_is_json_serializable_and_stringy(classes):
     # promise is unchanged — no None ever reaches a downstream text node.
     assert all(isinstance(values, list) and values for values in out)
     assert all(isinstance(value, str) for values in out for value in values)
-    assert isinstance(json.loads(out[3][0]), list)
+    assert isinstance(json.loads(out[2][0]), list)

@@ -480,7 +480,7 @@ def records():
 
 
 def test_a_single_render_writes_one_restorable_line(node, user_tier):
-    prompts, negatives, choices, loras, _llms, _gen = run(node)
+    prompts, _llms, loras, negatives, choices, _gen = run(node)
     (record,) = records()
     assert record["template"] == "hist/tiny"
     assert (record["seed"], record["mode"]) == (7, "as configured")
@@ -553,7 +553,7 @@ def test_the_node_added_no_widget_and_no_output(classes):
     inputs = cls.INPUT_TYPES()
     assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
     assert list(inputs["required"])[-1] == "conflict_policy"
-    assert cls.RETURN_NAMES == ("prompt", "negative", "choices", "loras", "llm", "gen_info")
+    assert cls.RETURN_NAMES == ("prompt", "llm", "loras", "negative", "choices", "gen_info")
     assert cls.OUTPUT_IS_LIST == (True,) * 6
 
 

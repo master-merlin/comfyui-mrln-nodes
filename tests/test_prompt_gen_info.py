@@ -190,7 +190,7 @@ def parse(text):
 
 
 def test_round_trips_the_prompt_and_negative_it_was_built_from(node):
-    prompts, negatives, _c, _l, _m, gen_info = run(node, template="gi/negative")
+    prompts, _llm, _loras, negatives, _choices, gen_info = run(node, template="gi/negative")
     parsed = parse(gen_info[0])
     assert parsed["positive"] == prompts[0]
     assert parsed["negative"] == negatives[0]
@@ -202,7 +202,7 @@ def test_round_trips_the_prompt_and_negative_it_was_built_from(node):
 def test_empty_negative_omits_the_line_rather_than_emitting_an_empty_one(node):
     """`Negative prompt:` with nothing after it is a real negative prompt of
     the empty string to a parser — worse than silence."""
-    negatives, gen_info = run(node)[1], run(node)[GEN_INFO]
+    negatives, gen_info = run(node)[3], run(node)[GEN_INFO]
     assert negatives[0] == ""
     assert "Negative prompt" not in gen_info[0]
     assert gen_info[0] == "a car, bright red\nSeed: 7"
@@ -268,7 +268,7 @@ def test_lora_bearing_render_emits_the_airs_with_their_strengths(node):
         {"type": "lora", "weight": 0.65, "modelVersionId": 525084},
     ]
     # every drawn LoRA on the `loras` wire that has an AIR is accounted for
-    entries = json.loads(out[3][0])
+    entries = json.loads(out[2][0])
     with_air = [e for e in entries if e.get("air")]
     assert len(with_air) == len(resources)
     assert [e["strength_model"] for e in with_air] == [1.0, 0.65]
@@ -283,7 +283,7 @@ def test_lora_without_an_air_is_skipped_not_half_emitted(node):
     model version is malformed; one with a guessed version is a false
     attribution against someone else's model."""
     out = run(node, template="gi/noair")
-    entries = json.loads(out[3][0])
+    entries = json.loads(out[2][0])
     assert [e["lora"] for e in entries] == ["homebrew.safetensors"]  # it DID draw
     assert "air" not in entries[0]
     text = out[GEN_INFO][0]
@@ -357,7 +357,10 @@ def test_output_declarations_stay_consistent(classes):
 # INDEX in a saved workflow, so appending is the only safe edit: extend a list
 # at its END, never touch an existing entry.
 FROZEN_OUTPUTS = {
-    "MRLN_PromptTemplate": ["prompt", "negative", "choices", "loras", "llm"],
+    # re-cut once before shipping (see test_protocol_nodes.FROZEN_ORDER): the
+    # outputs are grouped by what you wire them to. What this test still owns
+    # is that gen_info is LAST and that nothing else appeared or vanished.
+    "MRLN_PromptTemplate": ["prompt", "llm", "loras", "negative", "choices"],
     "MRLN_PromptSection": ["text", "negative", "choice"],
     "MRLN_LoraApply": ["model", "clip", "report"],
     "MRLN_PromptEnhance": ["prompt", "report"],
