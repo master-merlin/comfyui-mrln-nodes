@@ -869,7 +869,10 @@ export function createCompose(hub) {
         {
           class: `mrln-btn mrln-mini${state.muted.has(id) ? " mrln-m-on" : ""}`,
           title: "Mute — exclude this section ('slot=off'); Apply to node carries it over",
-          onclick: () => toggleAudition(state.muted, id),
+          // finishing(): toggling an audition is a COMPLETE action, so the
+          // pointer should not leave the row selected behind it — the same
+          // rule the dropdown, the weight, the seed and the ✎↑↓✕ icons follow.
+          onclick: finishing(() => toggleAudition(state.muted, id)),
         },
         "M"
       ),
@@ -878,7 +881,7 @@ export function createCompose(hub) {
         {
           class: `mrln-btn mrln-mini${state.soloed.has(id) ? " mrln-s-on" : ""}`,
           title: "Solo — only soloed sections render (others become 'off'; solo overrides mute)",
-          onclick: () => toggleAudition(state.soloed, id),
+          onclick: finishing(() => toggleAudition(state.soloed, id)),
         },
         "S"
       )

@@ -228,6 +228,30 @@ One row per draw, and the columns mean:
 **Click a row to select it**, then **E** edits, **↑ ↓** move it and **Del**
 removes it. Enter or Escape lets it go, and so does clicking anywhere else.
 
+#### Mute and solo — auditioning a prompt
+
+The two letters on every row are borrowed from a mixing desk, and they mean the
+same thing here.
+
+- **M** mutes that slot. It renders as `off`, so its block leaves the prompt
+  entirely — the way to answer *is this line actually doing anything?*
+- **S** solos it. Everything else goes `off` instead, which answers the other
+  question: *what does this block contribute on its own?* Solo several rows and
+  you get that set together. Solo overrides mute.
+
+This is an audition, not an edit. It changes no draw and no seed — clear it and
+every row comes back exactly as it was, on the values it already had. Toggle M
+on four rows, read the preview, toggle them off: nothing was lost.
+
+A muted row dims, but its **M and S stay at full strength on purpose** — the one
+control you need is the one that undoes the state you are looking at, and a
+greyed-out button reads as a disabled button.
+
+It does travel to the node: *Apply to node* writes muted slots into `selection`
+as `slot=off`, because that is what they render as. So an audition you decide to
+keep is already saved, and one you meant to undo should be cleared before you
+apply.
+
 ### The value picker
 
 <img src="images/03-value-picker.png" width="301" alt="The value picker">

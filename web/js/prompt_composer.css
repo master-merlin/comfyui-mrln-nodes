@@ -3536,3 +3536,23 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   flex: 1 1 auto;
   min-width: 0;
 }
+
+/* The muted row's dimming is done by the per-cell rules further up, which
+   deliberately skip the M/S buttons — you need to see the control that undoes
+   the state you are looking at. The legacy blanket rule
+   `.mrln-slot.mrln-muted { opacity: .45 }` was still applying underneath them,
+   and opacity does not work like colour: a child cannot undo an ancestor's,
+   so the M sat at an effective 0.45 no matter what it set for itself. It came
+   out the same pale red as the row it was supposed to stand out from. */
+.pc-panel .mrln-slot.mrln-muted {
+  opacity: 1;
+}
+/* ...and 'on' should read as a state, not just a tinted glyph: the two
+   audition toggles get a filled chip like everything else in the panel that
+   is switched on. */
+.pc-panel .mrln-slot .mrln-btn.mrln-m-on {
+  background: rgba(238, 119, 119, 0.16);
+}
+.pc-panel .mrln-slot .mrln-btn.mrln-s-on {
+  background: rgba(221, 204, 85, 0.16);
+}
