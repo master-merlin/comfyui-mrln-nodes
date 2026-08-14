@@ -616,40 +616,44 @@ export function createHistory(hub) {
     }
     // Conditional children stay null here and are filtered by dom.js's mount()
     // — the raw replaceChildren stringifies a null into a "null" text node.
+    // Refresh and Clear act on the LIST, so they sit directly above it rather
+    // than riding the title line at the very top edge of the tab. The head is
+    // then a heading and nothing else, which is what every other tab opens
+    // with (Compose's TEMPLATE bar, De-compose's IMAGE → TEMPLATE).
+    const historyActions = el(
+      "div",
+      { class: "mrln-actions mrln-history-actions" },
+      el(
+        "button",
+        {
+          class: "mrln-btn",
+          title: "Reload the newest page",
+          onclick: (e) => busy(e.currentTarget, () => loadPage(firstPageRequest())),
+        },
+        "Refresh"
+      ),
+      el(
+        "button",
+        {
+          class: "mrln-btn",
+          title: "Delete every history month file — unrecoverable",
+          onclick: (e) => {
+            // capture: currentTarget is null once the event finished, and
+            // the armed action runs on the NEXT click
+            const button = e.currentTarget;
+            armDestructive(button, "Really delete every record?", () =>
+              busy(button, clearHistory)
+            );
+          },
+        },
+        "Clear history"
+      )
+    );
     const parts = [
       el(
         "div",
         { class: "mrln-history-head" },
-        el("div", { class: "mrln-tree-head" }, "Generation history"),
-        el(
-          "div",
-          { class: "mrln-actions" },
-          el(
-            "button",
-            {
-              class: "mrln-btn",
-              title: "Reload the newest page",
-              onclick: (e) => busy(e.currentTarget, () => loadPage(firstPageRequest())),
-            },
-            "Refresh"
-          ),
-          el(
-            "button",
-            {
-              class: "mrln-btn",
-              title: "Delete every history month file — unrecoverable",
-              onclick: (e) => {
-                // capture: currentTarget is null once the event finished, and
-                // the armed action runs on the NEXT click
-                const button = e.currentTarget;
-                armDestructive(button, "Really delete every record?", () =>
-                  busy(button, clearHistory)
-                );
-              },
-            },
-            "Clear history"
-          )
-        )
+        el("div", { class: "mrln-tree-head" }, "Generation history")
       ),
       el(
         "div",
@@ -676,6 +680,9 @@ export function createHistory(hub) {
           )
         : null,
       history.loading ? loadingNote("Loading history…") : null,
+      // above the list, and above the empty note too — Refresh is exactly what
+      // you reach for when the list is empty
+      historyActions,
       !history.loading && !history.error && !groups.length ? emptyNote() : null,
       groups.length ? list : null,
       groups.length || hasPreviousPage(history) ? pager() : null,

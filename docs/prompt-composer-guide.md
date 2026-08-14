@@ -576,7 +576,7 @@ not, so you find out before the import rather than after.
 
 ## History
 
-<img src="images/10-history.png" width="900" alt="The History tab">
+<img src="images/10-history.png" width="885" alt="The History tab">
 
 Every render the node makes is one line, newest first: the template, the seed,
 the mode and what was drawn. **Restore** puts all nine inputs back — template,

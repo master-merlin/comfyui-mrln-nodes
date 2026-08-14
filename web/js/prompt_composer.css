@@ -1787,19 +1787,34 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    label sat beside them: the template name is the loudest thing in the block
    and gets the full width, while the tier badge, ＋ and export ride the right
    edge behind it. */
-.pc-panel .mrln-tab-body > label.mrln-field:first-of-type {
-  display: block;
-  padding: 9px var(--pc-pad) 11px;
+/* The De-compose tab opens on the image path, so THAT card is its head block
+   and is grouped in here rather than given a second implementation: same
+   band, same rule, same uppercase mono label. It used to be a bare line of
+   body text while the head treatment landed further down the tab, on 'Prompt
+   to decompose' — the first label, and the only thing this selector could
+   reach. Both tabs now open the same way.
+
+   The bar runs full-bleed (padding-inline 0) for the same reason .mrln-grid2
+   does — its cells own the gutter, so the picker's trigger ends exactly where
+   the Mode select ends and the badges end where the Format select ends. */
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type,
+.pc-panel .mrln-tab-body > .mrln-intake,
+.pc-panel .mrln-tab-body > .mrln-history-head {
+  padding: 9px 0 11px;
   background: var(--pc-bg-raised);
   border-bottom: 1px solid var(--pc-line);
 }
-/* The control row is a SETUP-GRID row: same two columns, same 1px gutter, same
-   14px cell padding. So the picker's trigger ends exactly where the Mode
-   select ends, the slug starts exactly where 'Format' starts, and the badges
-   end where the Format select ends. The bar runs full-bleed for the same
-   reason .mrln-grid2 does — its cells own the gutter. */
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type {
-  padding-inline: 0;
+  display: block;
+}
+/* the intake card keeps its own column layout; only its children inset */
+.pc-panel .mrln-tab-body > .mrln-intake > * {
+  padding-inline: var(--pc-pad);
+}
+/* its own border-bottom is the separator now — the authored <hr> beside it
+   would draw a second line 1px away */
+.pc-panel .mrln-tab-body > .mrln-intake + .mrln-sep {
+  display: none;
 }
 .pc-panel .pc-tplbar {
   display: grid;
@@ -1818,13 +1833,21 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     row-gap: 6px;
   }
 }
-.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name {
-  margin: 0 0 5px;
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name,
+.pc-panel .mrln-tab-body > .mrln-intake > .mrln-field-name,
+.pc-panel .mrln-tab-body > .mrln-history-head > .mrln-tree-head {
+  margin: 0;
   padding-inline: var(--pc-pad);
   font: 600 10px var(--pc-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--pc-fg-3);
+}
+/* the two heads that carry a control row under the label need the 5px; the
+   history head is a label on its own and would sit off-centre in the band */
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name,
+.pc-panel .mrln-tab-body > .mrln-intake > .mrln-field-name {
+  margin-bottom: 5px;
 }
 /* everything right of the picker: the slug at the value column's own left
    edge, the badges hard right */
@@ -3248,6 +3271,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   color: var(--pc-fg);
   opacity: 1;
 }
+/* The 'new template' ＋ was still painting itself --mrln-new (#77ff00), a raw
+   acid green from before the token system and the one colour in the panel
+   that belonged to no scale. This panel allows exactly three meaningful
+   colours plus the info blue; an additive affordance is the accent green.
+   Same specificity as the legacy rule (0,3,1) — this block wins on order,
+   which is why it lives down here. */
+.pc-panel button.mrln-mini.mrln-new-tpl {
+  color: var(--pc-live);
+}
 .pc-panel .mrln-sep {
   border-top-color: var(--pc-line);
 }
@@ -3300,6 +3332,22 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-history-items {
   border-left-color: var(--pc-line);
+}
+/* the action row above the list: its own breathing room, and its buttons on
+   the right edge like every other action bar in the panel */
+.pc-panel .mrln-history-actions {
+  justify-content: flex-end;
+  gap: 6px;
+  margin: 10px 0 2px;
+}
+/* The date separator ruled the full width from the very left edge, so the
+   date itself sat hard against it. It labels the rows below, so it lines up
+   with their text instead of with the panel's edge. */
+.pc-panel .mrln-history-day {
+  padding: 0 var(--pc-pad) 3px;
+  border-bottom-color: var(--pc-line);
+  color: var(--pc-fg-3);
+  opacity: 1;
 }
 .pc-panel .mrln-optimize-row.mrln-moved {
   background: var(--pc-live-soft);
