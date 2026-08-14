@@ -59,6 +59,31 @@ It ships with 100 templates and 3465 items so it is useful on the first render,
 not after an evening of authoring. The content is opinionated on purpose:
 somebody has to decide what a good documentary wildlife brief contains.
 
+### What I hope people do with it
+
+Build things, and pass them on.
+
+The library that ships is a starting point, not a boundary. Anyone can add items
+to a shipped section without forking it, write a template for the thing they
+actually shoot, attach the LoRAs it needs, and end up with something better than
+what came in the box — because they know their subject better than I do.
+
+The part I care about is the second half: **⤓ Export** turns any template into a
+single `.mrln.json`. It carries the template, only the sections you wrote (the
+factory ones resolve on the other machine), and a resolvable link to every LoRA
+involved rather than a copy of the weights. A template drawing 36 sections comes
+out around 4 KB — small enough to attach to a Civitai post, drop in a Discord,
+or ship next to a workflow.
+
+On the other end, **Import…** dry-runs first and shows the exact write/skip plan
+before anything touches disk, then offers to fetch any missing LoRA by its AIR.
+So someone can take your file and reproduce your renders — same seed, same
+prompt — without you having to explain anything.
+
+If that works, the interesting content stops being what I wrote and starts being
+what the community wrote. A section of shared templates on Civitai would be a
+fine place for it. That is the wish.
+
 ## Install
 
 Until the pack is on the [Comfy Registry](https://registry.comfy.org), install manually:
