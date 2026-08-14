@@ -3425,3 +3425,27 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-lib-scope > .pc-segmented {
   margin-left: auto;
 }
+
+/* The item text: a one-liner at rest, its full height while focused.
+   `resize: none` because the height is driven by content, not by a grab
+   handle; `overflow: hidden` so the idle state clips instead of showing a
+   scrollbar inside a 30px row. The open state lifts above its neighbours so a
+   grown field is never overlapped by the row under it. */
+.pc-panel textarea.mrln-item-text {
+  display: block;
+  width: 100%;
+  height: var(--pc-control);
+  min-height: var(--pc-control);
+  padding: 6px 8px;
+  font: 11.5px/1.45 var(--pc-ui);
+  white-space: pre;
+  overflow: hidden;
+  resize: none;
+}
+.pc-panel textarea.mrln-item-text.mrln-text-open {
+  position: relative;
+  z-index: 3;
+  min-height: var(--pc-control);
+  white-space: pre-wrap;
+  overflow: hidden;
+}

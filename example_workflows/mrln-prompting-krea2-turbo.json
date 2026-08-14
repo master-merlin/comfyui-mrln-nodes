@@ -48,7 +48,7 @@
         }
       },
       "widgets_values": [
-        "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.\nSubject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25)\nFieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green\nConditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land\nHour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow\nField Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us.\nNegative prompt: watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences, cages, collars, domestic pets\nSeed: 778424221823093"
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -269,15 +269,15 @@
         ]
       },
       "widgets_values": [
-        "A highly realistic image of a SkylineGTR34Vspec, in the center of the scene, stationary at Shibuya Crossing.\n\nStyle & Color Scheme: Vibrant High Class Car Photography\nPrimara Car Color: Carbon grey matte\n\n\n\nViewing Angle & Composition:\nMedium-shot, eye-level, front-three-quarter view, reflections on the painting. \n\nTime of Day / Atmosphere:\nDaylight at early sundown during summer with long shadows and warm light.\n\nLighting Conditions:\nHDR, Cinematic lighting, Volumetric light, strong contrasts between light and shadow. The scene is bathed in the warm, vibrant light of a summer sundown, creating long, dramatic shadows.\n\nAdditional Details & Photographic Settings:\nMicro-Details: Hyper-detailed surfaces capturing textures, curves, reflections. \n\nPhotographic Settings:\nLens Type: Tele 150mm\nAperture: f/5.6\nShutter Speed: 1/1000s\nISO: 100\nBokeh: Noticeable hexagonal\nWhite Balance: Daylight\nExposure Compensation: 0 EV\nFocus: Sharp focus on the main body.\n",
+        "",
         1024,
         1024,
         13407433464150,
-        "KREA2\\krea2_turbo_bf16.safetensors",
-        "qwen3vl_4b_bf16.safetensors",
-        "krea2RealVae_v10.safetensors",
+        "krea2_turbo_fp8_scaled.safetensors",
+        "qwen3vl_4b_fp8_scaled.safetensors",
+        "qwen_image_vae.safetensors",
         false,
-        "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality.",
+        "",
         true
       ]
     },
@@ -378,7 +378,7 @@
         }
       },
       "widgets_values": [
-        "template: animal/documentary   seed: 778424221823093   mode: as configured   format: string_labeled\nvariant: mammal  [fixed]\nsubject: red-deer-stag  [random]\nfieldcraft: belly-crawl-stalk  [fixed]\nweather: standing-puddles  [random]\ntime: golden-hour  [random]"
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -427,7 +427,7 @@
         }
       },
       "widgets_values": [
-        "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.\nSubject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25)\nFieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green\nConditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land\nHour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow\nField Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us."
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -476,7 +476,7 @@
         }
       },
       "widgets_values": [
-        "An award-caliber wildlife documentary photograph, the kind that closes a nature magazine’s year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for. Subject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25). Fieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green. Conditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land. Hour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow. Field Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us."
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -522,7 +522,7 @@
         }
       },
       "widgets_values": [
-        "enhanced via ollama:gemma3:12b seed 817956400522913 temp 0.25 (vram kept) · generic system prompt (no profile system on the wire — pick a profile on the Template node for model-tuned rewriting)"
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -706,7 +706,7 @@
         }
       },
       "widgets_values": [
-        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_vae.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n## Required node packs\n\nThis graph's subgraph uses two nodes from outside core ComfyUI. Install both,\nor those nodes come up red and the graph will not run:\n\n- **KJNodes** (`comfyui-kjnodes`) — `Krea2PromptWeight`\n- **Impact Pack** (`ComfyUI-Impact-Pack`) — `ImpactConcatConditionings`\n\nEverything MRLN contributes needs nothing but this pack.\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_vae.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
       ],
       "color": "#222",
       "bgcolor": "#000"
@@ -1013,7 +1013,7 @@
         }
       },
       "widgets_values": [
-        "watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences, cages, collars, domestic pets"
+        ""
       ],
       "color": "#223",
       "bgcolor": "#335"
@@ -1523,7 +1523,7 @@
               }
             },
             "widgets_values": [
-              "KREA2\\krea2_turbo_bf16.safetensors",
+              "krea2_turbo_fp8_scaled.safetensors",
               "default"
             ]
           },
@@ -1582,7 +1582,7 @@
               }
             },
             "widgets_values": [
-              "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality."
+              ""
             ],
             "color": "#232",
             "bgcolor": "#353"
@@ -1688,7 +1688,7 @@
               }
             },
             "widgets_values": [
-              "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality."
+              ""
             ],
             "color": "#322",
             "bgcolor": "#533"
@@ -1767,7 +1767,7 @@
               }
             },
             "widgets_values": [
-              "qwen3vl_4b_bf16.safetensors",
+              "qwen3vl_4b_fp8_scaled.safetensors",
               "krea2",
               "default"
             ]
@@ -1825,7 +1825,7 @@
               }
             },
             "widgets_values": [
-              "krea2RealVae_v10.safetensors"
+              "qwen_image_vae.safetensors"
             ]
           },
           {
@@ -2665,12 +2665,6 @@
   "config": {},
   "extra": {
     "frontendVersion": "1.45.19",
-    "VHS_latentpreview": false,
-    "VHS_latentpreviewrate": 0,
-    "VHS_MetadataImage": true,
-    "VHS_KeepIntermediate": true,
-    "ue_links": [],
-    "links_added_by_ue": [],
     "ds": {
       "scale": 0.6902737934620341,
       "offset": [

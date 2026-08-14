@@ -40,6 +40,18 @@ MODEL_DEPENDENT = {
     "mrln-prompting-krea2-turbo.json": ("Krea-2 Turbo", "loras"),
 }
 
+# Third-party nodes an example is ALLOWED to use, because the graph is a real
+# pipeline rather than a demo. Declaring one here is a decision, not a
+# formality: the same name has to appear in the workflow's own notes, so a user
+# who opens it and sees a red node is told which pack to install rather than
+# left guessing. The starter example declares nothing and must stay that way.
+DECLARED_THIRD_PARTY = {
+    "mrln-prompting-krea2-turbo.json": {
+        "Krea2PromptWeight",  # KJNodes
+        "ImpactConcatConditionings",  # Impact Pack
+    },
+}
+
 
 @pytest.mark.parametrize("path", EXAMPLES, ids=lambda p: p.name)
 def test_example_is_self_contained(path):
@@ -55,6 +67,13 @@ def test_example_is_self_contained(path):
         "PreviewImage",
         "EmptyLatentImage",
         "CheckpointLoaderSimple",
+        # core loaders and conditioning — only reachable now that this rule
+        # walks inside subgraphs, which is where a real pipeline puts them
+        "UNETLoader",
+        "CLIPLoader",
+        "VAELoader",
+        "LoraLoaderModelOnly",
+        "ConditioningZeroOut",
         "Note",
         "MarkdownNote",
         "PrimitiveString",
@@ -67,14 +86,28 @@ def test_example_is_self_contained(path):
     }
     # a subgraph instance's `type` is the subgraph's uuid, and its definition
     # travels inside the same file — nothing third-party about it
-    defined = {sub.get("id") for sub in (data.get("definitions") or {}).get("subgraphs", [])}
-    for node in data["nodes"]:
+    subgraphs = (data.get("definitions") or {}).get("subgraphs", [])
+    defined = {sub.get("id") for sub in subgraphs}
+    # Walk INSIDE the subgraphs too. This rule used to check only the top
+    # level, and the Krea-2 example quietly carried two custom-pack nodes in
+    # its subgraph for exactly that reason: a graph whose pipeline lives in a
+    # subgraph is where a dependency is easiest to miss, not hardest.
+    every_node = list(data["nodes"])
+    for sub in subgraphs:
+        every_node.extend(sub.get("nodes") or [])
+    for node in every_node:
         node_type = node.get("type", "")
-        ok = node_type.startswith(core_prefixes) or node_type in core_types or node_type in defined
+        ok = (
+            node_type.startswith(core_prefixes)
+            or node_type in core_types
+            or node_type in defined
+            or node_type in DECLARED_THIRD_PARTY.get(path.name, ())
+        )
         assert ok, (
             f"{path.name}: node '{node_type}' is not MRLN, core ComfyUI or a "
             "subgraph defined in this file — examples must load without "
-            "third-party packs"
+            "third-party packs, and a deliberate exception has to be declared "
+            "in DECLARED_THIRD_PARTY and named in the workflow's own notes"
         )
 
 
@@ -90,6 +123,25 @@ def test_the_starter_example_needs_no_downloaded_model():
     assert not (used & loaders), (
         f"the starter loads a model ({used & loaders}) — it must run with nothing downloaded"
     )
+
+
+@pytest.mark.parametrize("name", sorted(DECLARED_THIRD_PARTY))
+def test_a_declared_dependency_is_named_in_the_notes(name):
+    """Declaring a third-party node in the table above is not enough — the
+    workflow has to tell the user which pack to install, in the workflow."""
+    path = Path(support.ROOT) / "example_workflows" / name
+    data = json.loads(path.read_text(encoding="utf-8"))
+    notes = " ".join(
+        str(value)
+        for node in data["nodes"]
+        if node.get("type") in ("Note", "MarkdownNote")
+        for value in (node.get("widgets_values") or [])
+    ).lower()
+    for pack in ("kjnodes", "impact pack"):
+        assert pack in notes, (
+            f"{name}: uses a node from {pack} but never says so — a user who "
+            "opens this sees a red node and no idea which pack is missing"
+        )
 
 
 @pytest.mark.parametrize("name,needles", sorted(MODEL_DEPENDENT.items()))

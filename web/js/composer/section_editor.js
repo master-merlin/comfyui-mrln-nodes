@@ -349,13 +349,58 @@ export function createSectionEditor(hub) {
       return request;
     }
 
+    /**
+     * An item's text, one line at rest and its full height while you edit it.
+     *
+     * Item texts are sentences — most are longer than the column they live in,
+     * so editing one meant scrolling a single-line field sideways to find the
+     * word you wanted. A textarea (not an input: only a textarea can wrap)
+     * that grows to its content on focus and folds back on blur keeps the
+     * table readable when you are scanning it and shows the whole sentence the
+     * moment you are actually working on one.
+     *
+     * Enter commits instead of inserting a newline: at rest the field shows
+     * one line, so a newline typed here would be invisible in the row it was
+     * typed into — and an item's text is a fragment of a prompt, not prose.
+     */
+    function itemTextField(value) {
+      const area = el("textarea", { class: "mrln-item-text", rows: "1", title: value }, value);
+      const grow = () => {
+        area.style.height = "auto"; // measure the content, not the last height
+        // The panel is box-sizing: border-box, so a height of exactly
+        // scrollHeight leaves the content the two 1px borders short — the last
+        // line clips and the field is quietly scrollable, which is the one
+        // thing this control exists to avoid. offsetHeight - clientHeight IS
+        // that border, whatever the theme sets it to.
+        const chrome = area.offsetHeight - area.clientHeight;
+        area.style.height = `${area.scrollHeight + chrome}px`;
+      };
+      area.addEventListener("focus", () => {
+        area.classList.add("mrln-text-open");
+        grow();
+      });
+      area.addEventListener("input", () => {
+        if (area.classList.contains("mrln-text-open")) grow();
+      });
+      area.addEventListener("blur", () => {
+        area.classList.remove("mrln-text-open");
+        area.style.height = ""; // back to the one-line height the sheet sets
+      });
+      area.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" || e.shiftKey) return;
+        e.preventDefault();
+        area.blur();
+      });
+      return area;
+    }
+
     function addItemRow(item = { name: "", text: "" }) {
       const row = {
         orig: item,
         hidden: Boolean(item.hidden),
         slots: (item.slots ?? []).map((s) => ({ ...s })), // child refs, grown via '{'
         name: el("input", { type: "text", value: item.name ?? "" }),
-        text: el("input", { type: "text", value: item.text ?? "", title: item.text ?? "" }),
+        text: itemTextField(item.text ?? ""),
         weight: el("input", { type: "text", value: item.weight ?? "" }),
       };
       // '{' assist: pick a declared child, the trigger, or any section —
