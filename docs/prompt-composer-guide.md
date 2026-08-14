@@ -6,11 +6,36 @@ Template (MRLN)** node. Nothing it does is magic: everything you see here ends
 up as plain JSON in your user library and plain text in the node, so a
 workflow you share still runs on a machine that has never opened this panel.
 
-This guide walks the five tabs in the order you meet them, then covers the two
-things that are hard to discover on your own — **nested draws** and **combine
-sections**.
+## What you can actually do with it
 
-- [The node itself](#the-node-itself)
+Concretely, and all of it without leaving the panel:
+
+- **Roll a whole prompt** from 100 templates over 237 sections, and re-roll any
+  single part of it without disturbing the rest
+- **Hold what you like, let the rest move** — pin one slot's value, or its
+  seed, and keep rolling the others until the whole thing lands
+- **Restrict a random slot to a subset** you tick, so "random location" means
+  random *from these nine*
+- **Queue a batch of genuinely different prompts** — `batch_count 8` is eight
+  different draws, not eight copies
+- **Add your own items to a shipped section** without forking it: your file
+  extends the factory one, and pack updates still reach you
+- **Build an item that draws its own sub-slots** (a nested draw), so one pick
+  fans out into a coherent set of picks
+- **Merge several sections into one draw pool** (a combine) with weights
+- **Attach a LoRA to an item**, so drawing that item loads its weights and
+  keeps its trigger words verbatim
+- **Rewrite the result through a local or cloud LLM** without losing the words
+  that must survive
+- **Take a prompt you already have apart** and file its pieces into your
+  library (De-compose)
+- **Reproduce any past render exactly** from History
+
+The rest of this guide is the five tabs in the order you meet them, the three
+nodes they drive, and then the two things that are hard to discover on your
+own — **nested draws** and **combine sections**.
+
+- [The three nodes](#the-three-nodes)
 - [Compose](#compose)
   - [The template bar](#the-template-bar)
   - [The setup grid](#the-setup-grid)
@@ -27,12 +52,38 @@ sections**.
 - [De-compose](#de-compose)
 - [History](#history)
 - [Settings](#settings)
+- [Recipes](#recipes)
 
 ---
 
-## The node itself
+## The three nodes
 
-<img src="images/12-node.png" width="505" alt="The Prompt Template node's widgets">
+The panel drives one node, but the domain ships three, and the full picture is
+what the three do *together*: one composes, one rewrites, one loads weights.
+
+```
+                    ┌──────────────────────────┐
+                    │  Prompt Template (MRLN)  │
+                    └──┬────┬─────┬────────────┘
+        prompt ────────┘    │     │
+                            │     └──── negative / choices / gen_info → Show Text
+        llm ────────────────┘
+          │                            ┌───────────────────────┐
+          └───────────────────────────►│ Prompt Enhance (MRLN) │──► prompt
+                                       └───────────────────────┘
+        loras ─────────────────────────┐
+                                       ▼
+                              ┌────────────────────┐
+          MODEL / CLIP ──────►│ LoRA Apply (MRLN)  │──► MODEL / CLIP + report
+                              └────────────────────┘
+```
+
+Wire only what you need: `prompt` alone is a complete workflow. Everything
+below is optional and additive.
+
+### Prompt Template (MRLN) — the composer
+
+<img src="images/12-node.png" width="420" alt="The Prompt Template node's widgets">
 
 The panel is a convenience. The node is the contract, and it reads top to
 bottom in the order the work happens:
@@ -51,6 +102,62 @@ bottom in the order the work happens:
 Outputs are grouped by what you wire them to: **`prompt`**, **`llm`**,
 **`loras`** first, then the reports **`negative`**, **`choices`**,
 **`gen_info`**.
+
+| Output | Wire it to | What it carries |
+| --- | --- | --- |
+| `prompt` | your positive conditioning | the rendered prompt |
+| `llm` | **Prompt Enhance (MRLN)** | one wire: the prompt, the profile's system prompt, and the words that must survive a rewrite |
+| `loras` | **LoRA Apply (MRLN)** | JSON list of the LoRA blocks the draw selected |
+| `negative` | your negative conditioning | the template's negatives plus anything a drawn item added |
+| `choices` | a Show Text | every slot and what it drew — the fastest way to learn why a prompt looks the way it does, and where stale-pick warnings appear |
+| `gen_info` | a Show Text / metadata | template, seed, mode and profile for the render |
+
+### Prompt Enhance (MRLN) — the rewrite
+
+An LLM pass that improves the wording **without losing the words that carry
+meaning**. That is the whole reason it takes the `llm` wire instead of a plain
+string: the wire carries the prompt, the template profile's system prompt, and
+a `protect` list — your trigger words, LoRA activators, product names — which
+the node instructs the model to reproduce verbatim.
+
+What you set on it:
+
+| Widget | What it decides |
+| --- | --- |
+| `backend` | `ollama` · `lm studio` · a cloud backend. Local URLs and cloud keys live in the Composer's **Settings** tab, never in the node |
+| `model` | e.g. `gemma3:12b`. Required for Ollama; LM Studio falls back to whatever it has loaded |
+| `temperature` | keep it low — this is a faithful rewrite, not a brainstorm |
+| `seed` | reproducible rewrites where the backend supports it. `0` derives a stable seed from the prompt itself, so identical input enhances identically |
+| `max_tokens` | auto-raised when the input is longer than the cap, because a keep-everything rewrite can never be shorter than its input |
+| `free_vram` | Ollama `keep_alive`. **`after call`** hands the VRAM straight back to the diffusion model — the right default on one GPU |
+| `on_error` | **`pass through`** sends the ORIGINAL prompt on when the backend is unreachable, so the render never dies because Ollama was not running. `raise` stops the queue instead |
+
+Two optional inputs make it useful outside this pack: `prompt` enhances any
+string you wire in (it wins over the `llm` input), and `system` overrides the
+profile's system prompt (the template guides, you decide).
+
+The second output, `report`, says what happened — which backend answered, what
+it cost, whether protected words survived, and why it passed through if it did.
+
+### LoRA Apply (MRLN) — weights that travel with the prompt
+
+The idea: a LoRA belongs to the *item that needs it*, not to a loader you wire
+by hand. Add a LoRA block to an item in the section editor, and every template
+that can draw that item now loads it — automatically, at the strength its
+author set, only on the draws that actually selected it.
+
+Wire `loras` → this node, plus your `model` and `clip`. It:
+
+- loads each drawn LoRA at its authored model/clip strength
+- applies nothing at all when the draw selected none, so the graph always runs
+- returns a `report` naming what it loaded
+
+Two policies decide what happens when reality disagrees with the library:
+
+| Widget | Options |
+| --- | --- |
+| `on_missing` | the file is not on this machine — **`error`** names it and stops (the safe default) · `skip` renders without it · `download` fetches it by AIR if it can |
+| `on_mismatch` | the LoRA was trained for a different base model than the connected checkpoint (a FLUX LoRA on an SDXL one) — it loads without erroring but quietly degrades the image, so **`warn`** says so · `skip` leaves it out · `error` stops · `ignore` if you know better |
 
 ---
 
@@ -328,6 +435,84 @@ confirm.
   never echoed back, never written into a workflow
 - **Render history** — whether renders are recorded, and how many month files
   to keep
+
+---
+
+## Recipes
+
+Short end-to-end answers to the things people actually want to do.
+
+### Keep one thing, re-roll everything else
+
+Open **Compose**, click the value you want to keep and pick it explicitly (or
+click its ◆ to hold it on the seed it just used). Then hit **🎲 Randomize** as
+often as you like: held and pinned rows do not move. **Apply to node** writes
+exactly that state into `selection`, so the node reproduces it headless.
+
+### Get eight different prompts from one queue
+
+Set `batch_count` to 8 on the node. `batch_mode` decides how the seed walks
+(`increment seed` is the usual choice). This is eight *draws*, not eight copies
+— every random slot moves each time, and every pinned one stays.
+
+### Make "random" mean random from a short list
+
+In the value picker, switch `full` → `selected` and tick the items you want.
+The header counts the live pool (`ITEMS · 19 IN POOL`). This is stored on the
+**template**, so the node honours it with the panel closed. Naming an item
+explicitly always beats the whitelist.
+
+### Add your own wording to a shipped section
+
+Open the section in **Library**, leave **Save mode** on `extend factory`, add
+items at the bottom, save. You now own a small user file holding *only your
+additions* — the factory items still come from the pack, so a pack update
+still reaches you. To retire a factory item rather than add one, tombstone it
+(`hidden`) instead of editing it in place.
+
+### Make an item load its own LoRA
+
+In the section editor, click **+ LoRA block** on the item's row and fill in the
+file and strengths. Wire the node's `loras` output to **LoRA Apply (MRLN)**.
+From now on, any template that draws that item loads that LoRA, and its trigger
+words are in the prompt because they are part of the item's text.
+
+### Run it through a local LLM without risking the render
+
+Wire `llm` → **Prompt Enhance (MRLN)**. Set the backend and model, leave
+`on_error` on `pass through`, and set `free_vram` to `after call`. If Ollama is
+not running, the original prompt goes through unchanged and the `report` says
+why — the queue never dies for want of an LLM.
+
+### Reproduce a render from last week
+
+**History** → find the row → **Restore**. All nine inputs come back (template,
+profile, seed, mode, selection, variables, format, length, conflict policy), so
+it reproduces the render rather than approximating it.
+
+### Turn a prompt you already have into library content
+
+**De-compose** → paste the prompt → it proposes which parts are which and lets
+you file them as items in sections you choose. Good for importing your own
+back catalogue without retyping it.
+
+---
+
+## What survives a pack update
+
+A fair question before you invest in your own content:
+
+| You did this | A factory update… |
+| --- | --- |
+| Extended a factory section | leaves it alone — your file holds only your additions and the factory items keep flowing in |
+| Pinned an item by name | keeps working while that item exists. If it is renamed or removed, the draw falls back to a **seeded random** and says so in `choices` (with a "did you mean…" hint) rather than failing the queue |
+| Left a slot random | draws **differently** if the section gained or lost items — a weighted draw is over the live pool, and that is the price of a library that can grow. Pin what must not move |
+| Referenced a section that was renamed | follows an alias automatically; nothing to do |
+| Referenced a section that was deleted | renders without that slot and warns in `choices`, instead of dying |
+
+The Section node is deliberately stricter: it raises instead of falling back,
+because a node whose entire job is one named item should not quietly hand you
+a different one.
 
 ---
 

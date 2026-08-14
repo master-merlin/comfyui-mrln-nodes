@@ -13,10 +13,11 @@ retyping them: 100 templates, 237 sections, 3465 items, every one with a
 thumbnail. Per-slot fixed-or-random draws on a deterministic seed, nested
 draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
 
-- 📖 **[Prompt Composer user guide](docs/prompt-composer-guide.md)** — the
-  panel tab by tab with screenshots, including how to build a template with
-  **nested draws** and a **combine** section. Start here if you want to *use*
-  the pack.
+- 📖 **[Prompt Composer user guide](docs/prompt-composer-guide.md)** — what you
+  can do with it, the panel tab by tab with screenshots, all three nodes
+  (compose → LLM rewrite → LoRA load), recipes for the common tasks, and how to
+  build a template with **nested draws** and a **combine** section. Start here
+  if you want to *use* the pack.
 - ▶ **Example workflows** — `mrln-prompting` opens and runs with no models
   downloaded at all; `mrln-prompting-krea2-turbo` is the same idea end to end.
 - 🧩 **[Nodes](#nodes)** — what each node does, if you would rather read the
