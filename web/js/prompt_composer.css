@@ -1229,20 +1229,13 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   background: var(--pc-bg-raised);
   border-color: var(--pc-line-strong);
 }
-/* A select with no visible chrome still has to announce that it opens. */
+/* A select with no visible chrome still has to announce that it opens. Only
+   the room for the caret is set here: refinement 5 below decided the caret is
+   painted AT REST, not on hover, and its rule wins on document order — so the
+   transparent-gradient reset and the hover caret that used to live here were
+   both dead, and editing them did nothing. */
 .pc-panel select {
-  background-image: linear-gradient(transparent, transparent);
   padding-right: 18px;
-}
-.pc-panel select:hover {
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--pc-fg-3) 50%),
-    linear-gradient(135deg, var(--pc-fg-3) 50%, transparent 50%);
-  background-position:
-    calc(100% - 10px) calc(50% + 1px),
-    calc(100% - 6px) calc(50% + 1px);
-  background-size: 4px 4px;
-  background-repeat: no-repeat;
 }
 
 /* --- focus: one visible ring everywhere --------------------------------- */
@@ -1403,10 +1396,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* --- surfaces that already exist, retuned to the token scale ------------ */
-.pc-panel .mrln-tab-body {
-  padding: 10px var(--pc-pad) 0;
-  gap: 10px;
-}
+/* (.mrln-tab-body's padding/gap were set here too, and both were overridden
+   further down where blocks were made to run full-bleed — see 'Blocks run
+   full-bleed'. Dead declarations in a 3.5k-line sheet are how the next edit
+   gets made in the wrong place.) */
 .pc-panel .mrln-note {
   font: 10.5px/1.45 var(--pc-ui);
   color: var(--pc-fg-3);
@@ -1528,9 +1521,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   padding: 0;
   gap: 0;
 }
+/* The column track list is NOT here — .pc-row and .pc-thead share one
+   definition further down (search 'The row's last column is ACTIONS') so the
+   header can never drift from the rows it labels. A copy lived here and was
+   overridden; tuning a column width in this block did nothing. */
 .pc-panel .pc-row {
   display: grid;
-  grid-template-columns: 26px 1fr 1.15fr 40px 62px 28px;
   align-items: center;
   gap: var(--pc-gap);
   /* ONE gutter for the whole panel: the rows used to sit at 12px while every
@@ -1591,11 +1587,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   white-space: nowrap;
 }
 /* Chips describe the SECTION, not the draw, so they sit with the name and
-   stay quiet — 9.5px, no wrap, and they give up space before the name does. */
+   stay quiet — 9.5px, no wrap, and they give up space before the name does.
+   The shrink FACTOR that makes them yield lives with its own reasoning below
+   ('Shrink factor 8'); setting it here as well only looked like it worked. */
 .pc-panel .pc-cell-chips {
   display: flex;
   gap: 3px;
-  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
 }
@@ -1720,10 +1717,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-radius: var(--pc-r-lg);
   box-shadow: 0 18px 38px var(--pc-shadow-pop);
 }
-/* the table header the grid is aligned to */
+/* the table header the grid is aligned to — track list shared with .pc-row,
+   defined once further down (see the note on .pc-row above) */
 .pc-panel .pc-thead {
   display: grid;
-  grid-template-columns: 26px 1fr 1.15fr 40px 62px 28px;
   gap: var(--pc-gap);
   align-items: center;
   padding: 0 var(--pc-pad);
@@ -1957,21 +1954,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font: 600 10px var(--pc-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--pc-fg-3);
   cursor: pointer;
-  list-style: none;
 }
-.pc-panel details.mrln-fold > summary::-webkit-details-marker {
-  display: none;
-}
-.pc-panel details.mrln-fold > summary::before {
-  content: "▸";
-  color: var(--pc-fg-4);
-  font-size: 9px;
-}
-.pc-panel details.mrln-fold[open] > summary::before {
-  content: "▾";
-}
+/* The marker, its colour and the summary's own colour are NOT set here: one
+   shared rule at the end of this file draws every disclosure in the panel
+   (search 'Every disclosure in the panel'). This block had its own copy and
+   lost to that rule on document order. */
 .pc-panel details.mrln-fold[open] {
   padding-bottom: 10px;
 }
@@ -2070,12 +2058,14 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 
 /* j. The value field's resting box, quieter than the first cut. A visible
    affordance was the point (user's call over the spec) — but bg-input plus a
-   full --pc-line border made twelve rows read as twelve inputs again, which
-   is the exact thing rule 3 exists to prevent. Transparent ground, hairline
-   box; the full treatment still arrives on hover and focus. */
+   full border made twelve rows read as twelve inputs again, which is the
+   exact thing rule 3 exists to prevent. The TRANSPARENT GROUND is what does
+   that work and it is set here; the resting border-color is settled later,
+   with the select's box, so that a field and a dropdown in the same row draw
+   the same edge (search '--- the row value field'). It was also set here, to
+   a quieter --pc-line-row, and had been silently losing ever since. */
 .pc-panel .pc-field {
   background-color: transparent;
-  border-color: var(--pc-line-row);
 }
 .pc-panel .pc-row:hover .pc-field {
   border-color: var(--pc-line-strong);
@@ -2094,7 +2084,6 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font: 11px var(--pc-ui);
   letter-spacing: 0;
   text-transform: none;
-  color: var(--pc-fg-4);
 }
 
 /* The action bar's primary was not taking the room: the actions div is not a
@@ -2168,9 +2157,9 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   color: var(--pc-fg-4);
 }
 
-/* The add-section strip stops looking like a dropzone. */
+/* The add-section strip stops looking like a dropzone. (Its gap is set with
+   the rest of its flex layout below, not here — twice was once too many.) */
 .pc-panel .mrln-addrow {
-  gap: var(--pc-gap);
   padding-block: 8px;
   border: 0;
   border-bottom: 1px solid var(--pc-line);
@@ -2231,27 +2220,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-nest > .mrln-slot:last-child:nth-of-type(even) > .pc-row > .pc-cell-name::after {
   background: var(--pc-bg-row-alt);
 }
-/* a collapsed group summary sits on the same rule */
+/* a collapsed group summary sits on the same rule. Marker and colour come
+   from the shared disclosure rule at the end of the file, not from here. */
 .pc-panel .mrln-nest-branch > summary {
   display: flex;
   align-items: center;
   gap: 6px;
   min-height: 26px;
   font: 11.5px var(--pc-ui);
-  color: var(--pc-fg-3);
   cursor: pointer;
-  list-style: none;
-}
-.pc-panel .mrln-nest-branch > summary::-webkit-details-marker {
-  display: none;
-}
-.pc-panel .mrln-nest-branch > summary::before {
-  content: "▸";
-  font-size: 9px;
-  color: var(--pc-fg-4);
-}
-.pc-panel .mrln-nest-branch[open] > summary::before {
-  content: "▾";
 }
 
 /* the overflow control in the action bar */
@@ -2346,19 +2323,14 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 
 /* A fold's own label was --pc-fg-4 on the panel ground: legible in a mock at
    2x, barely readable on a real screen. Both the label and its aside move up
-   a step, and the disclosure triangle takes the accent green — it is the one
-   glyph in the strip that says 'this opens', so it should be the one that
-   catches the eye. */
+   a step. (The triangle's accent green started here too; it now belongs to
+   the shared disclosure rule at the end of the file, which is the only place
+   the marker is drawn.) */
 .pc-panel details.mrln-fold > summary {
   color: var(--pc-fg-2);
 }
 .pc-panel details.mrln-fold > summary > .pc-summary-note {
   color: var(--pc-fg-3);
-}
-.pc-panel details.mrln-fold > summary::before,
-.pc-panel .mrln-nest-branch > summary::before {
-  color: var(--pc-live);
-  font-size: 10px;
 }
 .pc-panel details.mrln-fold > summary:hover,
 .pc-panel .mrln-nest-branch > summary:hover {
@@ -2381,9 +2353,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   background-size: 4px 4px;
   background-repeat: no-repeat;
 }
-.pc-panel select:hover {
-  border-color: var(--pc-line-strong);
-}
+/* (select:hover needs nothing of its own: the shared control-hover rule near
+   the top already gives it --pc-line-strong.) */
 /* A selected row is the keyboard's subject — E edits, ↑ ↓ move, Del removes.
    Amber, and an inset outline so selecting never shifts the table by a pixel.
    It reads differently from a HELD draw (which tints the value field and the
@@ -2455,7 +2426,6 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    whole. The chips describe the section; the name IS the row. */
 .pc-panel .pc-cell-chips {
   flex: 0 8 auto;
-  min-width: 0;
 }
 @container pcpanel (max-width: 560px) {
   /* the drag handle costs 14px of a column with none to spare, and ↑ ↓ in
@@ -2581,7 +2551,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   box-shadow: inset 0 -2px 0 var(--pc-live);
 }
 
-/* the row value field: the same box, over its own caret geometry from phase 2 */
+/* --- the row value field: the same box, over its own caret geometry from
+   phase 2. This is the ONE place the resting border-color is decided. */
 .pc-panel .pc-field {
   border-color: var(--pc-line);
 }

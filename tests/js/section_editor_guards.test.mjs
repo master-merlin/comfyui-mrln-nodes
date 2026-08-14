@@ -16,6 +16,22 @@ const SRC = readFileSync(
 );
 
 /**
+ * The source between two anchors. `to` is searched FORWARD FROM `from`, not
+ * from the top of the file: `const picker =` occurs four times, and anchoring
+ * it at the first one silently produced an empty slice that matched nothing
+ * and passed nothing. A zero-length region is a moved anchor, never a pass —
+ * so it fails loudly here instead of vacuously in the assertion below.
+ */
+function region(from, to) {
+  const start = SRC.indexOf(from);
+  assert.ok(start !== -1, `section_editor.js no longer contains ${from}`);
+  const end = to ? SRC.indexOf(to, start + from.length) : SRC.length;
+  assert.ok(end !== -1, `no ${to} after ${from}`);
+  assert.ok(end > start, `empty region between ${from} and ${to} — an anchor moved`);
+  return SRC.slice(start, end);
+}
+
+/**
  * The body of `name`, however it is declared — plain function, async
  * function, or a const arrow — ending at ITS OWN closing brace (matched on
  * indentation, so a nested block never ends the slice early).
@@ -93,19 +109,18 @@ describe("editing a slot never silently edits the file", () => {
   test("renaming an id rewrites the placeholder in the same edit", () => {
     // otherwise every rename breaks the item, which is why nobody renamed the
     // auto-derived ids and {model-a} was unreachable
-    const region = SRC.slice(SRC.indexOf("idInput.addEventListener"));
-    assert.match(region.slice(0, 900), /setText\(renameToken\(row\.text\.value, from, next\)\)/);
+    const src = region("idInput.addEventListener", "const picker =");
+    assert.match(src, /setText\(renameToken\(row\.text\.value, from, next\)\)/);
   });
 
   test("a duplicate or empty id is refused, not applied", () => {
-    const region = SRC.slice(SRC.indexOf("idInput.addEventListener"), SRC.indexOf("const picker ="));
-    assert.match(region, /idInput\.value = slot\.id/, "a refused rename must snap back");
-    assert.match(region, /taken\.has\(next\)/);
+    const src = region("idInput.addEventListener", "const picker =");
+    assert.match(src, /idInput\.value = slot\.id/, "a refused rename must snap back");
+    assert.match(src, /taken\.has\(next\)/);
   });
 
   test("changing the ref drops the default and tags that belonged to the old one", () => {
-    const region = SRC.slice(SRC.indexOf("picker.select.addEventListener"));
-    const change = region.slice(0, 500);
+    const change = region("picker.select.addEventListener").slice(0, 500);
     for (const key of ["default", "tags_any", "tags_none"]) {
       assert.match(change, new RegExp(`delete slot\\.${key}`), `a stale ${key} would be a lie`);
     }

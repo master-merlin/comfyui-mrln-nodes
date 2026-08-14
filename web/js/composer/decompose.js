@@ -43,13 +43,27 @@ export function createDecompose(hub) {
   // (heuristic engine server-side; an Ollama/LLM engine plugs into the same
   // endpoint later), resolve the residue, store the result as a template.
 
+  // model name -> already being watched. The Enhance node's twin watcher
+  // (prompt_composer.js) learned this the hard way: the server answers an
+  // already-running pull with 200, so without the guard every re-pick of the
+  // same model added another 4 s poller and another completion toast.
+  const activePulls = new Set();
+
   function watchDecomposePull(model) {
+    if (activePulls.has(model)) return;
+    activePulls.add(model);
     const started = Date.now();
+    // every exit runs through stop(), so a finished pull is watchable again —
+    // a guard that outlives its watcher would make the model un-re-pickable
+    const stop = (severity, summary, detail = "") => {
+      activePulls.delete(model);
+      ctx.toast(severity, summary, detail);
+    };
     const tick = async () => {
       if (Date.now() - started > 45 * 60 * 1000) {
         // a watcher that ends without a word leaves the user guessing whether
         // a multi-GB pull ever finished
-        ctx.toast(
+        stop(
           "info",
           "Stopped watching the pull",
           `${model} — still running after 45 min. Ollama keeps downloading in the `
@@ -64,12 +78,12 @@ export function createDecompose(hub) {
         /* transient — keep polling */
       }
       if (body?.status === "done") {
-        ctx.toast("success", "Model pulled", `${model} is installed`);
+        stop("success", "Model pulled", `${model} is installed`);
         if (state.tab === "decompose") renderDecomposeTab(); // list shows it now
         return;
       }
       if (body?.status === "error") {
-        ctx.toast("error", `Pull failed: ${model}`, body.detail ?? "");
+        stop("error", `Pull failed: ${model}`, body.detail ?? "");
         return;
       }
       setTimeout(tick, 4000);

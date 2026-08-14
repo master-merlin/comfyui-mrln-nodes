@@ -22,3 +22,17 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: pytest
+
+  js-test:
+    # The 528 node:test guards were unreachable from CI until now, and one of
+    # them had been silently vacuous for exactly that reason: its source anchor
+    # moved, the slice went empty, and nothing was there to notice. Zero deps,
+    # no package.json — the runner is Node's own.
+    name: JS guards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --test "tests/js/*.test.mjs"
