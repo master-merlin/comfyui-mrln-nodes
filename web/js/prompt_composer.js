@@ -11,6 +11,7 @@ import { api } from "../../scripts/api.js";
 import { createComposerPanel } from "./prompt_composer_panel.js";
 import {
   CUSTOM_ENTRY,
+  LIBRARY_ROUTE,
   PULL_PREFIX,
   buildModelValues,
   createApi,
@@ -185,6 +186,78 @@ function installBackendCombo(node) {
   }
 }
 
+/**
+ * Make `template_names` actually change the template combo.
+ *
+ * The combo's list is built SERVER-side in INPUT_TYPES from the library's
+ * slugs. INPUT_TYPES is a classmethod — it knows nothing about one node's
+ * widget values — so no reload, and not even 'Refresh node definitions', can
+ * make the server hand out labels for one node and slugs for another. Swapping
+ * the list is therefore a client job, and this is the progressive enhancement
+ * over a server side that already accepts BOTH forms: without this file the
+ * node still renders, it just always lists slugs.
+ *
+ * The slug list captured here is the identity list and is never thrown away —
+ * labels are a display over it, and a label shared by two templates keeps its
+ * slug, because a name that identifies two things identifies neither (the
+ * server refuses such a label by name for the same reason).
+ */
+function enhanceTemplateNames(node) {
+  const tpl = (node.widgets ?? []).find((w) => w.name === "template");
+  const mode = (node.widgets ?? []).find((w) => w.name === "template_names");
+  if (!tpl || !mode || mode.__mrlnWired) return;
+  mode.__mrlnWired = true;
+  const slugs = [...(tpl.options?.values ?? [])];
+  const bySlug = new Map(); // slug -> what the combo shows
+  const byShown = new Map(); // what the combo shows -> slug
+
+  async function loadLabels() {
+    if (bySlug.size) return;
+    let body;
+    try {
+      body = await mrln.apiJson(LIBRARY_ROUTE);
+    } catch {
+      return; // no labels available: the list stays slugs, which always works
+    }
+    const labelOf = new Map();
+    const uses = new Map();
+    for (const entry of body.templates ?? []) {
+      const label = String(entry.label ?? "").trim();
+      if (!label) continue;
+      labelOf.set(entry.slug, label);
+      uses.set(label, (uses.get(label) ?? 0) + 1);
+    }
+    for (const slug of slugs) {
+      const label = labelOf.get(slug);
+      const shown = label && uses.get(label) === 1 ? label : slug;
+      bySlug.set(slug, shown);
+      byShown.set(shown, slug);
+    }
+  }
+
+  async function apply() {
+    const wantLabels = mode.value === "label";
+    if (wantLabels) await loadLabels();
+    const asSlug = byShown.get(tpl.value) ?? tpl.value;
+    if (!tpl.options) tpl.options = {};
+    tpl.options.values = wantLabels ? slugs.map((s) => bySlug.get(s) ?? s) : [...slugs];
+    tpl.value = wantLabels ? (bySlug.get(asSlug) ?? asSlug) : asSlug;
+    app.graph?.setDirtyCanvas(true, true);
+  }
+
+  const inner = mode.callback;
+  mode.callback = function (...args) {
+    const result = inner?.apply(this, args);
+    apply();
+    return result;
+  };
+  apply();
+  // A workflow load assigns widget values AFTER the node is built and does not
+  // fire callbacks, so a graph saved in label mode would come back with a label
+  // in a list of slugs. Re-apply once the load has settled.
+  setTimeout(apply, 0);
+}
+
 function enhanceModelDropdown(node) {
   // Mutating a text widget's `type` does NOT change its behavior — the
   // click handler is bound to the widget instance (it kept opening the
@@ -294,8 +367,12 @@ app.registerExtension({
     // the extension-level hook fires for every constructed node with its
     // widgets already built — prototype onNodeCreated is NOT reliably
     // invoked across frontend versions
-    if ((node.comfyClass ?? node.type) === "MRLN_PromptEnhance") {
+    const kind = node.comfyClass ?? node.type;
+    if (kind === "MRLN_PromptEnhance") {
       enhanceModelDropdown(node);
+    }
+    if (kind === "MRLN_PromptTemplate") {
+      enhanceTemplateNames(node);
     }
   },
   setup() {
