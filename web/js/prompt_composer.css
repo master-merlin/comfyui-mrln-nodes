@@ -2005,7 +2005,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font: 10.5px var(--pc-mono);
   color: var(--pc-fg-3);
 }
-.pc-panel .mrln-tab-body > .mrln-pre {
+/* The live preview is a BOXED block — it carries its own border — so the next
+   block's separator landed flush against it: two 1px lines with nothing
+   between them, which reads as no separator at all. This selector used to say
+   `.mrln-tab-body > .mrln-pre` and matched nothing: the preview lives inside
+   its own persistent box, not as a direct child of the tab. */
+.pc-panel .mrln-tab-body .mrln-pre {
   margin-bottom: 12px;
 }
 
