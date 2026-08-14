@@ -385,6 +385,12 @@ failed history write can never break a render that already succeeded.
 
 ### Settings
 
+An optional **Civitai API key** unlocks the parts that talk to Civitai — LoRA
+lookup by file hash (trigger words, AIR, base family), preview images, downloading a
+missing LoRA, importing a Wildcards pack, and de-composing from a civitai.com image
+link. Public content works without one; a key is what reaches anything gated behind
+an account, and the panel names the field when Civitai answers 401 or 403.
+
 The Settings tab holds the local backend URLs (Ollama / LM Studio,
 auto-validated with installed-model lists, each with a checkbox that takes it
 out of circulation entirely — cleared, a backend is never contacted, not even

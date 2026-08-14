@@ -30,6 +30,8 @@ Concretely, and all of it without leaving the panel:
 - **Take a prompt you already have apart** and file its pieces into your
   library (De-compose)
 - **Reproduce any past render exactly** from History
+- **Share a template as one file** — the bundle carries the sections it needs
+  and resolvable links to the LoRAs, so someone else can rebuild your renders
 
 The rest of this guide is the five tabs in the order you meet them, the three
 nodes they drive, and then the two things that are hard to discover on your
@@ -52,7 +54,7 @@ own — **nested draws** and **combine sections**.
   - [Nested draws: an item that draws its own slots](#nested-draws)
   - [Combine: one slot, several sections](#combine)
   - [Building a template from scratch](#building-a-template)
-  - [Bringing content in from elsewhere](#bringing-content-in-from-elsewhere)
+  - [Sharing a template — export and import](#sharing-a-template--export-and-import)
 - [History](#history)
 - [Settings](#settings)
 - [Recipes](#recipes)
@@ -459,18 +461,29 @@ pick-and-weight view rather than a table of `{pick}` rows.
 5. **Save** writes it to your user library. **⤓** exports it with every user
    section it depends on.
 
-### Bringing content in from elsewhere
+### Sharing a template — export and import
 
-Two buttons in the Library toolbar, both of which **dry-run first** and show you
-the exact write/skip plan before anything touches disk:
+This is how a template you built travels to someone else, and it is worth
+knowing about before you need it.
 
-**Import…** takes a `.mrln.json` bundle — the thing **⤓ Export** produces. A
-bundle carries the template plus every *user-tier* section it draws from
-(factory content resolves on the other machine, so the file stays small) and the
-Civitai AIR of any LoRA involved. Colliding files are kept unless you tick
-overwrite, and opening the imported template offers to fetch missing LoRAs.
+**⤓ Export** sits on every template and section row. It writes a `.mrln.json`
+**bundle** containing:
 
-**Migrate…** takes content that was never MRLN's:
+- the template itself
+- every **user-tier** section it draws from — and only those, because factory
+  content resolves on the other machine, which keeps the file small
+- the **Civitai AIR** of every LoRA any of those sections declares
+
+So the recipient gets your composition, your wording, and a resolvable pointer
+to the weights — not a copy of the weights. Share the bundle next to your
+workflow and they can rebuild your renders end to end.
+
+**Import…** takes one back. It **dry-runs first**: you see the exact write/skip
+plan before anything touches disk, colliding files are kept unless you tick
+overwrite, and opening the imported template offers to download any LoRA the
+machine is missing (by AIR, verified against the SHA256 Civitai publishes).
+
+**Migrate…** is the same plan preview for content that was never MRLN's:
 
 | Source | What happens |
 | --- | --- |
@@ -501,8 +514,21 @@ confirm.
 
 <img src="images/11-settings.png" width="900" alt="The Settings tab">
 
-- **Civitai** — an optional API key for LoRA lookups. Stored server-side in
-  your user tier and never echoed back
+- **Civitai API key** — stored server-side in your user tier, never echoed back
+  and never written into a workflow. Everything that talks to Civitai goes
+  through it:
+
+  | Feature | Without a key | With a key |
+  | --- | --- | --- |
+  | LoRA lookup by file hash — trigger words, AIR, base family | works for public models | also reaches models that need an account |
+  | **Get from Civitai** / `on_missing: download` | public downloads work | required for anything gated behind an account |
+  | LoRA preview images on tiles | public previews work | same, and fewer rate limits |
+  | **Migrate…** a Civitai *Wildcards* pack | public packs work | required for packs that need an account |
+  | De-compose from a `civitai.com/images/…` link | public images work | required for images behind an account |
+
+  When Civitai answers 401 or 403, the panel says so and points at this field
+  rather than failing silently. A key is never needed for anything that stays on
+  your own machine
 - **Local LLM backends** — Ollama and LM Studio URLs, validated on open with
   the model list they report. **Clear a backend's checkbox and it is never
   contacted** — no check on open, no wait for a timeout, and the Enhance node
