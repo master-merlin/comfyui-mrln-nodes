@@ -283,6 +283,19 @@ from items you tick — the picker's `full` / `selected` switch, with all-on and
 all-off above the list. It is stored on the template (`slot.include`), not on
 the node, so the node honours it headless.
 
+**Target profiles.** 29 shipped profiles describe what one model family
+rewards — `flux`, `krea2`, `sdxl`, `sd15`, `pony`, `illustrious`, `qwen-image`,
+`zimage`, `ideogram4` and more. Choosing one changes the render **format**, the
+**text length** (long form or each item's `text_short`), the **block reading
+order**, and the **negative policy** — `drop` for families that do not use a
+negative prompt at all — and it emits that family's **LLM system prompt** on the
+`llm` output. Precedence is *explicit widget > profile > template*, so leaving
+`format` and `text_length` on `template default` is what lets a profile do its
+job. `standard` is the neutral baseline and always the way back. Profiles live
+in `profiles.json` in both tiers and can be extended per template, including a
+sparse `overrides` block that makes one template read differently for one
+target without a second copy on disk.
+
 **Emphasis and variants.** A slot can carry an emphasis multiplier (`×1.2`),
 rendered in whatever weighting syntax the target format uses — so the same
 template emphasises correctly for a tag model and a prose one. A template can

@@ -48,6 +48,7 @@ own — **nested draws** and **combine sections**.
   - [Preview, choices, apply](#preview-choices-apply)
   - [Variants](#variants)
   - [Optimize for](#optimize-for)
+  - [Profiles](#profiles--telling-it-which-model-you-are-rendering-with)
 - [De-compose](#de-compose)
 - [Library](#library)
   - [Editing a section](#editing-a-section)
@@ -352,6 +353,50 @@ Nothing is written. If you want the new order to be permanent, one explicit
 button — *write this order into the template…* — copies it in. Otherwise the
 comparison is just something you looked at, and the profile keeps doing the
 reordering at render time.
+
+### Profiles — telling it which model you are rendering with
+
+`Target profile` in the setup grid is the same mechanism seen from the other
+side. A profile is a named description of **what one model family rewards**, and
+29 ship with the pack — `flux`, `krea2`, `sdxl`, `sd15`, `pony`, `illustrious`,
+`qwen-image`, `zimage`, `chroma`, `hidream`, `ideogram4` and more.
+
+Picking one is not picking "better". It changes four things, all at render time:
+
+| Part | What it decides |
+| --- | --- |
+| `format` | tag list, plain string, labeled blocks — how this family likes to be addressed |
+| `text_length` | whether each item renders its long form or its `text_short` |
+| `block_order` | the reading order, per subject domain — the thing **Optimize for** previews |
+| `negative_policy` | `keep`, or `drop` for families that do not use a negative prompt at all |
+
+A profile can also carry an **LLM system prompt**, which is what leaves the
+node's `llm` output — so `Prompt Enhance` rewrites in the idiom that family
+wants rather than a generic one. A few carry more: `ideogram4` carries a JSON
+caption scaffold, because that is how that model is addressed.
+
+**Using them correctly comes down to four things.**
+
+1. **Match the profile to the checkpoint you are actually rendering with.** A
+   Flux-shaped prompt on SD 1.5 is a worse prompt, not a fancier one.
+2. **Leave `Format` and `Text length` on `template default`.** Precedence is
+   *explicit widget > profile > template*, so setting either one by hand takes
+   that decision away from the profile — which is fine when you mean it, and
+   silently defeats the profile when you do not.
+3. **`standard` is the neutral baseline**, not a lesser option. It renders the
+   template as written, and it is always the way back.
+4. **Use *Optimize for* before committing.** It shows exactly what a profile
+   would change — including the ⚠ lines for the things that are not order.
+
+Some templates pin their own profile: the `showcase/*` ones each target one
+model, so choosing the template has already chosen the target.
+
+**They are yours to extend.** Profiles come from `profiles.json` in the factory
+tier and in yours, and a template can carry its own under the same names — your
+file extends the shipped one rather than replacing it. A template-level profile
+may also carry an `overrides` block: a sparse per-profile *variant* of the
+template (prefix, suffix, negative, and per-slot default or emphasis), so one
+template can read differently for one target without a second copy on disk.
 
 ---
 
