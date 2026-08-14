@@ -265,8 +265,6 @@ export function createCompose(hub) {
         },
         "🎲 Randomize"
       ),
-      el("button", { class: "mrln-btn", onclick: () => loadFromNode() }, "Load"),
-      el("button", { class: "mrln-btn", title: "Fix every random slot to what the preview just drew", onclick: () => pinLastDraw() }, "Pin draw"),
       el(
         "button",
         {
@@ -276,7 +274,18 @@ export function createCompose(hub) {
         },
         "Save"
       ),
-      el(
+      overflowMenu(
+        el("button", { class: "mrln-btn", onclick: () => loadFromNode() }, "Load"),
+        el(
+          "button",
+          {
+            class: "mrln-btn",
+            title: "Fix every random slot to what the preview just drew",
+            onclick: () => pinLastDraw(),
+          },
+          "Pin draw"
+        ),
+        el(
         "button",
         {
           class: "mrln-btn",
@@ -306,6 +315,7 @@ export function createCompose(hub) {
           },
         },
         "Save as…"
+        )
       )
     ),
     previewBox
@@ -371,6 +381,31 @@ export function createCompose(hub) {
         schedulePreview();
       }
     });
+  }
+
+  /**
+   * A `⋯` button holding the actions that do not earn a permanent slot.
+   * Same shape as the row menu, one primary per view being the point.
+   */
+  function overflowMenu(...actions) {
+    const menu = el("div", { class: "pc-rowmenu pc-overflow", style: "display:none" }, ...actions);
+    const button = el(
+      "button",
+      {
+        class: "mrln-btn pc-overflow-btn",
+        "aria-haspopup": "menu",
+        "aria-expanded": "false",
+        title: "More actions",
+        onclick: (e) => {
+          e.stopPropagation();
+          const open = menu.style.display === "none";
+          menu.style.display = open ? "" : "none";
+          button.setAttribute("aria-expanded", open ? "true" : "false");
+        },
+      },
+      "⋯"
+    );
+    return el("span", { class: "pc-overflow-wrap" }, button, menu);
   }
 
   // ---- the design-pass row grid -------------------------------------------
@@ -1915,6 +1950,20 @@ export function createCompose(hub) {
           { class: "mrln-field-name" },
           "Live preview",
           preview.variant && state.variant === "random" ? ` — drew variant: ${preview.variant}` : ""
+        ),
+        // The design puts a length readout on this line, and it earns the
+        // space: prompt length is the one thing about a composed prompt you
+        // cannot see by reading it. A word/comma count, NOT a real tokenizer —
+        // labelled 'terms' rather than 'tokens' so it never claims to be the
+        // model's count.
+        el(
+          "span",
+          {
+            class: "pc-meta",
+            title: "Comma-separated fragments and words in the positive prompt. "
+              + "An indication of length, not a model tokenizer count.",
+          },
+          `${(preview.positive.match(/[^\s,]+/g) ?? []).length} terms`
         ),
         auditionActive()
           ? el(

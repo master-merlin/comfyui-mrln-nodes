@@ -2128,3 +2128,153 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-slot.mrln-variant-head .pc-cell-seed {
   cursor: default;
 }
+
+/* --- look-and-feel refinement 4 ------------------------------------------ */
+
+/* Nested draws are indented by the NAME and carry a vertical rule that runs
+   out of the parent block's own shape, so depth is legible without reading
+   ids. The rule lives on the nest container (which already wraps exactly the
+   children of one parent) and each row hangs an elbow off it — so a nest
+   inside a nest stacks its own rule and the tree draws itself. */
+.pc-panel .mrln-nest {
+  position: relative;
+  margin-left: 20px;
+  border-left: 1px solid var(--pc-line-strong);
+}
+.pc-panel .mrln-nest > .mrln-slot > .pc-row > .pc-cell-name,
+.pc-panel .mrln-nest .mrln-nest-branch > summary {
+  position: relative;
+  padding-left: 12px;
+}
+/* the elbow: a short horizontal tick meeting the vertical rule */
+.pc-panel .mrln-nest > .mrln-slot > .pc-row > .pc-cell-name::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  width: 8px;
+  border-top: 1px solid var(--pc-line-strong);
+}
+/* the rule stops at the last child instead of running past it into nothing */
+.pc-panel .mrln-nest > .mrln-slot:last-child > .pc-row > .pc-cell-name::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: calc(50% + 1px);
+  bottom: -20px;
+  width: 2px;
+  background: var(--pc-bg-row);
+}
+.pc-panel .mrln-nest > .mrln-slot:last-child:nth-of-type(even) > .pc-row > .pc-cell-name::after {
+  background: var(--pc-bg-row-alt);
+}
+/* a collapsed group summary sits on the same rule */
+.pc-panel .mrln-nest-branch > summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  font: 11.5px var(--pc-ui);
+  color: var(--pc-fg-3);
+  cursor: pointer;
+  list-style: none;
+}
+.pc-panel .mrln-nest-branch > summary::-webkit-details-marker {
+  display: none;
+}
+.pc-panel .mrln-nest-branch > summary::before {
+  content: "▸";
+  font-size: 9px;
+  color: var(--pc-fg-4);
+}
+.pc-panel .mrln-nest-branch[open] > summary::before {
+  content: "▾";
+}
+
+/* the overflow control in the action bar */
+.pc-panel .pc-overflow-wrap {
+  position: relative;
+  flex: 0 0 auto;
+}
+.pc-panel .mrln-btn.pc-overflow-btn {
+  width: 34px;
+  min-height: 32px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+}
+.pc-panel .pc-rowmenu.pc-overflow {
+  top: auto;
+  bottom: 36px;
+  min-width: 150px;
+}
+.pc-panel .pc-rowmenu.pc-overflow > .mrln-btn {
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 28px;
+}
+
+/* The add-section strip reads as one control row, not a dropzone with a
+   tower of a button in it. */
+.pc-panel .mrln-addrow {
+  display: flex;
+  align-items: center;
+  gap: var(--pc-gap);
+  min-height: 38px;
+}
+.pc-panel .mrln-addrow .mrln-btn {
+  flex: 0 0 auto;
+  min-height: 26px;
+}
+.pc-panel .mrln-picker.mrln-picker-compact,
+.pc-panel .mrln-addrow > .mrln-picker {
+  flex-direction: row;
+  /* wrap is not cosmetic here: the note below carries flex-basis 100% so it
+     takes its own line. Without wrap it consumed the ONE line and squeezed
+     the filter input and the section select to zero width — the strip
+     rendered as a lone 'Names' button and the search looked deleted. */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+/* Turning the picker into a flex ROW left its .mrln-inline wrapper with no
+   basis, so it shrank to 0 and took the filter input with it — the strip
+   rendered as a bare 'Names' button. Flex items need an explicit basis when
+   their own children are flex:1 of it. */
+.pc-panel .mrln-addrow > .mrln-picker > .mrln-inline {
+  flex: 1 1 200px;
+  min-width: 0;
+  gap: 6px;
+}
+.pc-panel .mrln-addrow > .mrln-picker > .mrln-inline > input {
+  flex: 1 1 auto;
+  min-width: 90px;
+  min-height: 26px;
+  background: var(--pc-bg-input);
+  border-color: var(--pc-line);
+  font: 12px var(--pc-mono);
+}
+.pc-panel .mrln-addrow > .mrln-picker > .mrln-inline > button {
+  flex: 0 0 auto;
+}
+.pc-panel .mrln-addrow > .mrln-picker > select {
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 26px;
+}
+.pc-panel .mrln-addrow > .mrln-picker > .mrln-note {
+  flex: 1 0 100%;
+  order: 9;
+}
+
+/* Preview meta: the token count belongs on the header line, right-aligned,
+   in the same mono the values use. */
+.pc-panel .mrln-preview-head .pc-meta {
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-3);
+}
+
+/* The CHOICES / NEGATIVE folds match the template-text strip. */
+.pc-panel .mrln-tab-body details.mrln-fold > summary {
+  color: var(--pc-fg-4);
+}
