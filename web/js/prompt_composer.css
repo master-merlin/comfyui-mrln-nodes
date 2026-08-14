@@ -3524,3 +3524,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-lora-row .mrln-inline > .mrln-lora-tag {
   flex: 0 0 auto;
 }
+
+/* The filter shares the NAME column with the tag, so it has to be allowed to
+   shrink into it: an <input> carries an intrinsic minimum width that ignores
+   its cell, and .mrln-inline's flex children need min-width:0 to give it up. */
+.pc-panel .mrln-lora-row > .mrln-w-name,
+.pc-panel .mrln-lora-row > .mrln-w-name > .mrln-inline {
+  min-width: 0;
+}
+.pc-panel .mrln-lora-row input.mrln-lora-filter {
+  flex: 1 1 auto;
+  min-width: 0;
+}

@@ -1173,22 +1173,24 @@ export function createSectionEditor(hub) {
           "tr",
           { class: "mrln-lora-row" },
           row.loraTileMount,
-          // The chip rides the WIDE cell, not the 26px origin column beside it.
-          // That column holds a one-letter tier mark (F/U); "LoRA" measures
-          // 37px in it and painted straight over the filter field to its
-          // right. The row's two continuation rows already leave the column
-          // empty, so this also makes the three agree.
+          // Two real cells, not one spanning both. The chip and its filter sit
+          // in the NAME column and the file picker in the TEXT column, so the
+          // row lines up with the item above it for free — the filter ends
+          // exactly where a name ends and the picker starts exactly where the
+          // text starts, at any panel width, with no measurement to keep in
+          // sync. (The chip also can no longer sit in the 26px origin column,
+          // where "LoRA" measures 37px and painted over the field beside it.)
           el(
             "td",
-            { colspan: 2 },
+            { class: "mrln-w-name" },
             el(
               "div",
               { class: "mrln-inline" },
               el("span", { class: "mrln-chip mrln-user mrln-lora-tag" }, "LoRA"),
-              row.loraFilter,
-              row.loraControl
+              row.loraFilter
             )
           ),
+          el("td", {}, row.loraControl),
           el("td", { class: "mrln-w-weight" }, el("div", { class: "mrln-inline" }, row.sm, row.sc)),
           el("td", { class: "mrln-w-act" })
         );
