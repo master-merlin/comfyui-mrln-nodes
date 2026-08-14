@@ -44,12 +44,15 @@ own — **nested draws** and **combine sections**.
   - [Random from a subset](#random-from-a-subset)
   - [Editing a row](#editing-a-row)
   - [Preview, choices, apply](#preview-choices-apply)
+  - [Variants](#variants)
+  - [Optimize for](#optimize-for)
 - [De-compose](#de-compose)
 - [Library](#library)
   - [Editing a section](#editing-a-section)
   - [Nested draws: an item that draws its own slots](#nested-draws)
   - [Combine: one slot, several sections](#combine)
   - [Building a template from scratch](#building-a-template)
+  - [Bringing content in from elsewhere](#bringing-content-in-from-elsewhere)
 - [History](#history)
 - [Settings](#settings)
 - [Recipes](#recipes)
@@ -166,7 +169,7 @@ Two policies decide what happens when reality disagrees with the library:
 **What a LoRA looks like in the library.** `loralab/anime-style` is a shipped
 section whose every item carries one:
 
-<img src="images/12-library-lora-section.png" width="885" alt="The loralab/anime-style section open in the Library, each item carrying a LoRA block">
+<img src="images/library-lora-section.png" width="885" alt="The loralab/anime-style section open in the Library, each item carrying a LoRA block">
 
 Per item: the **LoRA** tag, the `.safetensors` it needs (⚠ when this machine does
 not have the file), its model and clip strengths, its trained words, its Civitai
@@ -277,6 +280,44 @@ which slot it came from.
 **Apply to node** writes the selection lines into the selected Prompt Template
 node. **Randomize** rerolls, **Save** stores the template in your user library,
 and **⋯** holds *Load from node*, *Pin draw* and *Save as…*.
+
+### Variants
+
+Some templates carry **variants**: alternative slot sets under one template,
+picked by a row at the top of the table marked `@variant`. `animal/documentary`
+has one per taxon — a mammal brief and a bird brief need different behaviour and
+habitat pools, and forcing both through one slot list would produce neither.
+
+Leave it on `random` and the variant is drawn like anything else, on the same
+seed; pin it and the whole set below follows. A variant can add slots the base
+template does not have, which is why the table can change shape when you switch.
+
+### Optimize for
+
+<img src="images/compose-optimize-for.png" width="885" alt="Optimize for: authored order beside the order optimized for flux, with the reading order below and six blocks marked as moved">
+
+The same words in a different order are not the same prompt. Models weight
+early tokens differently, some want the subject first and the camera last,
+others the reverse — and a template cannot store a copy per target without
+becoming a maintenance problem.
+
+So reading order is a **render-time function of the profile**, and this is where
+you see it. Pick a target and the panel renders the current and the target
+version side by side:
+
+- the two prompts, each with the **format** it would use (`STRING_LABELED`
+  against `STRING` above)
+- the two **negatives**, because a profile can carry its own negative policy
+- the **reading order** underneath, one row per block, with `was 5` on every
+  block that moved — six of nine here
+- a plain-language summary: *'flux' reads this template in a different order —
+  6 block(s) move*, plus a ⚠ for each thing that is **not** order (the render
+  format, the negative policy)
+
+Nothing is written. If you want the new order to be permanent, one explicit
+button — *write this order into the template…* — copies it in. Otherwise the
+comparison is just something you looked at, and the profile keeps doing the
+reordering at render time.
 
 ---
 
@@ -418,6 +459,29 @@ pick-and-weight view rather than a table of `{pick}` rows.
 5. **Save** writes it to your user library. **⤓** exports it with every user
    section it depends on.
 
+### Bringing content in from elsewhere
+
+Two buttons in the Library toolbar, both of which **dry-run first** and show you
+the exact write/skip plan before anything touches disk:
+
+**Import…** takes a `.mrln.json` bundle — the thing **⤓ Export** produces. A
+bundle carries the template plus every *user-tier* section it draws from
+(factory content resolves on the other machine, so the file stays small) and the
+Civitai AIR of any LoRA involved. Colliding files are kept unless you tick
+overwrite, and opening the imported template offers to fetch missing LoRAs.
+
+**Migrate…** takes content that was never MRLN's:
+
+| Source | What happens |
+| --- | --- |
+| A wildcard folder of `.txt` / `.yaml` files | each file becomes a section, each line an item; weighted lines (`3::rare option`) keep their weight |
+| The `.zip` a published wildcard pack ships as | same, unpacked for you |
+| An A1111 `styles.csv` | each style becomes an item, its positive and negative kept together |
+| A Civitai **Wildcards** model link | downloaded, checked against the SHA256 Civitai publishes, then planned like any other import — with the creator's licence terms shown *before* anything is written |
+
+The plan says plainly which third-party syntax survives the trip and which does
+not, so you find out before the import rather than after.
+
 ---
 
 ## History
@@ -466,9 +530,20 @@ exactly that state into `selection`, so the node reproduces it headless.
 
 ### Get eight different prompts from one queue
 
-Set `batch_count` to 8 on the node. `batch_mode` decides how the seed walks
-(`increment seed` is the usual choice). This is eight *draws*, not eight copies
-— every random slot moves each time, and every pinned one stays.
+Set `batch_count` to 8 on the node. This is eight *draws*, not eight copies —
+every random slot moves each time, and every pinned one stays.
+
+`batch_mode` decides how it walks:
+
+- **`increment seed`** — image *i* is drawn at `seed + i`. The usual choice, and
+  reproducible: any image in the batch can be recreated on its own seed.
+- **`combinatorial`** — ignores the count and enumerates *every combination* of
+  the slots still on random, capped at 512. Pin everything except two slots and
+  you get their full cross product: the way to see a whole axis at once rather
+  than sampling it.
+
+Every output is a list either way, and a length-1 list is indistinguishable from
+a single value downstream — so wiring a batch changes nothing about the graph.
 
 ### Make "random" mean random from a short list
 

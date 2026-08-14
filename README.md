@@ -256,6 +256,14 @@ from items you tick — the picker's `full` / `selected` switch, with all-on and
 all-off above the list. It is stored on the template (`slot.include`), not on
 the node, so the node honours it headless.
 
+**Emphasis and variants.** A slot can carry an emphasis multiplier (`×1.2`),
+rendered in whatever weighting syntax the target format uses — so the same
+template emphasises correctly for a tag model and a prose one. A template can
+also carry **variants**: alternative slot sets under one name, drawn on the same
+seed or pinned like any other row. `animal/documentary` has one per taxon,
+because a mammal brief and a bird brief need different behaviour and habitat
+pools.
+
 **Read the factory version under your own.** A user file shadows the factory
 file of the same slug everywhere — that is the point of the two tiers. Where
 both exist, the tier pill becomes a switch: read what you are shadowing, in
@@ -378,7 +386,10 @@ failed history write can never break a render that already succeeded.
 ### Settings
 
 The Settings tab holds the local backend URLs (Ollama / LM Studio,
-auto-validated with installed-model lists), the cloud API keys — stored
+auto-validated with installed-model lists, each with a checkbox that takes it
+out of circulation entirely — cleared, a backend is never contacted, not even
+to check, and the Enhance node refuses it by name instead of timing out), the
+cloud API keys — stored
 server-side in your user tier, never echoed back and never written into
 workflows — the history retention controls, and the switch that allows an
 LLM backend on another machine (off by default: ComfyUI itself makes that
