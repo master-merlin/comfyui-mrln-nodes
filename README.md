@@ -28,7 +28,7 @@ display name carries an `(MRLN)` marker so they are easy to find in search.
 
 | Domain | Nodes |
 | ------ | ----- |
-| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template *and* reorder the rendered blocks into the reading order that model rewards; six outputs — `prompt`, `negative`, `choices`, `loras`, `llm`, `gen_info`). `batch_count` renders a whole batch from one queue: `increment seed` draws item *i* at seed + *i*, so four images are four different draws instead of four copies of one; `combinatorial` instead enumerates every combination of the slots left on random, capped at 512. Every output is a list, and a length-1 list is indistinguishable from a single value downstream, so existing workflows are untouched. `gen_info` is an A1111 `parameters` string a metadata-capable save node can embed — carrying only what this node actually knows (the prompts, the seed it drew with, and the Civitai ids of the LoRAs it selected), never a guessed Steps/Sampler/CFG/Model; **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
+| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template *and* reorder the rendered blocks into the reading order that model rewards; a `template_names` switch that makes the template widget list slugs (the stable identifier, and what a shared workflow should carry) or human labels; six outputs in wiring order — `prompt`, `llm`, `loras`, then the reports `negative`, `choices`, `gen_info`). `batch_count` renders a whole batch from one queue: `increment seed` draws item *i* at seed + *i*, so four images are four different draws instead of four copies of one; `combinatorial` instead enumerates every combination of the slots left on random, capped at 512. Every output is a list, and a length-1 list is indistinguishable from a single value downstream, so existing workflows are untouched. `gen_info` is an A1111 `parameters` string a metadata-capable save node can embed — carrying only what this node actually knows (the prompts, the seed it drew with, and the Civitai ids of the LoRAs it selected), never a guessed Steps/Sampler/CFG/Model; **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
 | `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
 
 Prompt libraries are plain JSON files: a multiverse of factory content ships
@@ -40,7 +40,8 @@ full replacement). Same-name templates replace the factory file entirely.
 
 ### Factory library
 
-208 sections / ~2900 curated items across dimension folders every template
+**100 templates / 237 sections / 3465 curated items**, every one of them
+carrying a rendered thumbnail. The dimension folders every template
 shares (`location` incl. anime/sci-fi/fantasy/historical/underwater/coastal
 places, `lighting` organic/dramatic/studio, `atmosphere` weather/season/mood/
 particles/reentry, `viewpoint`, `camera` with film stocks and real lens/
@@ -71,7 +72,14 @@ combination reads like a specialist wrote the brief:
 | `landscape/grand`, `landscape/astro-nightscape`, `landscape/moody-intimate` | landform hero shots; celestial heroes over dark landforms; intimate weather |
 | `architecture/study`, `architecture/blue-hour-icon`, `architecture/golden-interior`, `architecture/cozy-moment` | architectural formulas from icon to interior to hygge |
 | `food/editorial`, `food/dark-mood`, `food/pour-shot`, `product/hero`, `product/lifestyle-scene`, `product/teardown-sheet` | commercial photography formulas |
-| `design/travel-poster`, `design/movie-poster`, `design/album-cover` | any place as a vintage poster; one-sheet and sleeve design |
+| `design/travel-poster`, `design/movie-poster`, `design/album-cover`, `design/book-cover` | any place as a vintage poster; one-sheet, sleeve and jacket design |
+| `design/sticker-sheet`, `design/tee-print`, `design/logo-mark`, `design/coloring-page`, `design/tattoo-flash`, `design/seamless-pattern` | the print-and-merch cluster, each written to the constraints that decide whether a design survives manufacture — cut line, screen palette, colour count, tileable repeat |
+| `screen/avatar`, `screen/wallpaper`, `screen/thumbnail`, `screen/emote-set` | what gets made for screens: a PFP legible as a 32 px circle, a wallpaper with room for the clock, a thumbnail that wins at 210 px, emotes that survive at 28 px |
+| `card/trading-card`, `card/tarot`, `card/deck-back` | cards as printed artifacts — illustration window, stat corner, numeral and title banner. The frame is what makes it a card |
+| `game/pixel-sprite`, `game/isometric-room`, `game/concept-environment` | assets a game can use: sprite sheets with real pixel discipline, true 2:1 isometric tiles, production concept paintings |
+| `product/figure`, `anime/chibi`, `anime/comic-page` | the collectible figure shot (factory paint, seam lines, a real base), super-deformed proportions, a laid-out comic page with gutters and a reading order |
+| `portrait/wedding`, `portrait/fashion-editorial`, `portrait/beauty-macro`, `architecture/property-listing` | the commercial photography people are actually paid for |
+| `scifi/cyberpunk-street`, `scifi/post-apocalypse`, `fantasy/steampunk-workshop` | the three genre worlds the community asks for most |
 | `showcase/krea2-art-direction`, `showcase/flux1-reportage`, `showcase/flux2-storefront`, `showcase/qwen-typographic`, `showcase/zimage-bilingual-counter` | one per target model, each built to what that family actually rewards — KREA 2's art-direction layering, FLUX.1's early-token weighting, FLUX.2's structured scene plus lettering spec, Qwen-Image's layout control and in-image type, Z-Image's all-positive phrasing with bilingual text. Each pins its own profile, so picking the template already targets the model |
 | `showcase/ideogram4-type-poster` | Ideogram 4.0's typography and flat graphic design, composed straight into that model's structured JSON caption: the `ideogram4` profile carries the caption scaffold and the template extends it with a second element that holds the literal headline and its bounding box. The headline is a slot rather than a template variable, because the JSON filler sees slot texts. Supplying a JSON caption contractually disables Ideogram's magic-prompt rewriting, so this is the one target that renders the composed prompt verbatim — in stock ComfyUI, wire it to `IdeogramPImage` with `prompt_upsampling` OFF (the stock `IdeogramV4` node only accepts a plain text prompt, which re-enables the rewrite) |
 
@@ -106,10 +114,31 @@ loud ⚠ in the choices output, and the Composer offers a one-click remap.
 ### Prompt Composer panel
 
 On frontends with the sidebar-extension API, the pack adds a **Prompt
-Composer** sidebar tab: browse the library, pick items per slot from
-dropdowns, watch a live preview (prompt / negative / choices) as you click,
-then *Apply to node* — it writes the plain selection lines into the selected
-Prompt Template node, so workflows stay fully shareable and headless-safe.
+Composer** sidebar tab: browse the library, pick items per slot, watch a live
+preview (prompt / negative / choices) as you click, then *Apply to node* — it
+writes the plain selection lines into the selected Prompt Template node, so
+workflows stay fully shareable and headless-safe.
+
+The compose table is one row per draw — state · section · drawn value ·
+weight · seed · actions — with the panel's own value picker in place of the
+browser dropdown: a filter over 200+ items, the two *modes* (`random`, `off`)
+pinned above the content instead of buried in it, each item's draw weight on
+the row, and a link straight to the section it came from. Clicking a row
+selects it, after which **E** edits, **↑ ↓** reorder and **Del** removes.
+Click the state glyph to hold a draw on the seed it just used; click the seed
+to pin it, double-click to type one.
+
+**Random from a subset.** A slot's random can draw from the whole section or
+from items you tick — the picker's `full` / `selected` switch, with all-on and
+all-off above the list. It is stored on the template (`slot.include`), not on
+the node, so the node honours it headless.
+
+**Read the factory version under your own.** A user file shadows the factory
+file of the same slug everywhere — that is the point of the two tiers. Where
+both exist, the tier pill becomes a switch: read what you are shadowing, in
+the Compose tab and in either editor. Rendering it is the single explicit
+exception, written only when you *Apply to node* from that view (the template
+value picks up a `factory:` prefix, which the node resolves back).
 The Library tab edits sections with a form — merged factory+user views mark
 each item's tier (F/U), factory items can be hidden/restored, and saving
 defaults to a thin "extend factory" diff that survives pack updates (full
@@ -174,8 +203,11 @@ re-derives it with nothing to lose. A LoRA whose trigger is baked in (or
 unwanted) can mute all of them and contribute no text at all while still
 loading its weights.
 
-**Thumbnails.** Sections, templates and LoRAs can carry a 256 px webp tile,
-and the Library tab switches between rows and a card grid. Drop or paste an
+**Thumbnails.** Every shipped section and template carries a 256 px webp tile
+— 337 of them, ~2.5 MB for the whole set — and the Library tab opens as a card
+grid (rows are one click away, and the choice is remembered). Clicking an entry
+opens its editor *under that entry* with the rest of the group stepped aside,
+so the editor cannot open somewhere off-screen in a 237-section list. Drop or paste an
 image to set one; *reset to factory* removes yours and the shipped one
 reappears. A LoRA downloaded from Civitai brings its own preview along
 (PG/PG-13 only, and nothing at all rather than something you did not ask
@@ -234,6 +266,14 @@ ComfyUI's workflow template browser under this pack's name. Start with
 **mrln-prompting**: a Prompt Template and a Prompt Section wired into Show
 Text nodes, so you can explore the library, seeds and selection lines
 before connecting anything to a sampler.
+
+## User guide
+
+[**docs/prompt-composer-guide.md**](docs/prompt-composer-guide.md) walks the
+Composer tab by tab with screenshots — including the two things that are hard
+to discover on your own: building a template whose items carry **nested child
+draws**, and the **combine** section that merges several sections into one
+draw pool.
 
 ## Design principles
 

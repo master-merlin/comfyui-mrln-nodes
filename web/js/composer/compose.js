@@ -113,41 +113,81 @@ export function orderComparison(authored, optimized) {
 
 /**
  * The template `order` array (slot ids + "@variant") that reproduces a
- * render's reading order, or `{error}` when it cannot be expressed.
+ * render's reading order — as closely as a template file can store it.
  *
- * Resolved variant slots render as "<variant>/<slot id>" and the whole block
- * rides ONE "@variant" token, so a policy that interleaves variant slots with
- * shared ones has no representation on disk — refuse instead of writing an
- * order that renders differently from the comparison the user just approved.
+ * Two shapes have no verbatim representation on disk, and neither is a reason
+ * to refuse the write (UAT: a refusal reads as a dead button, and the order
+ * that IS storable is still the one the user asked for). They are approximated
+ * and reported in `notes` instead:
+ *
+ *  - A variant slot keeps its BARE id in a render — "<variant>/<id>" is only
+ *    its seed key (mrln/promptlib/resolve.py) — and the whole block rides ONE
+ *    "@variant" token. A policy that interleaves variant slots with shared
+ *    ones collapses to the block's FIRST position; the rest of the block keeps
+ *    its place inside it.
+ *  - A slot that drew nothing this run (muted, or a variant block that is off)
+ *    gets no position from the render, so it keeps its authored one, anchored
+ *    to the nearest authored neighbour that did render. It must still be
+ *    LISTED: a partial 'order' silently drops the slot and every pick aimed at
+ *    it (mrln/promptlib/resolve.py), which is the one outcome worse than a
+ *    slightly approximate order.
+ *
+ * `variantIds` (the ids of every variant's slots) tells a variant slot from a
+ * stale id; without it, any unknown id is read as a variant slot when the
+ * template has a block for it.
  */
-export function orderWriteBack(renderOrder, orderIds) {
-  const shared = new Set((orderIds ?? []).filter((id) => id !== "@variant"));
+export function orderWriteBack(renderOrder, orderIds, variantIds = null) {
+  const authored = (orderIds ?? []).filter(Boolean);
+  const shared = new Set(authored.filter((id) => id !== "@variant"));
+  const hasVariant = authored.includes("@variant");
+  const known = variantIds ? new Set(variantIds) : null;
   const out = [];
+  const carried = []; // variant slots the block cannot carry to a new position
+  const unknown = [];
   let variantPlaced = false;
   for (const id of renderOrder ?? []) {
     if (shared.has(id)) {
-      out.push(id);
+      if (!out.includes(id)) out.push(id);
       continue;
     }
-    if (!id.includes("/")) return { error: `'${id}' is not a slot of this template` };
+    if (!hasVariant || (known && !known.has(id))) {
+      if (!unknown.includes(id)) unknown.push(id);
+      continue;
+    }
     if (out[out.length - 1] === "@variant") continue; // still inside the block
     if (variantPlaced) {
-      return {
-        error: "this order splits the variant block apart, and a template stores it as one "
-          + "'@variant' entry — reorder the slots by hand instead",
-      };
+      if (!carried.includes(id)) carried.push(id);
+      continue;
     }
     out.push("@variant");
     variantPlaced = true;
   }
-  const missing = (orderIds ?? []).filter((id) => !out.includes(id));
-  if (missing.length) {
-    return {
-      error: `this draw never rendered ${missing.join(", ")}, so the order cannot place `
-        + "them — un-mute them (and pick a variant) and compare again",
-    };
+  const missing = authored.filter((id) => !out.includes(id));
+  for (const id of missing) {
+    let anchor = -1;
+    for (let i = authored.indexOf(id) - 1; i >= 0 && anchor < 0; i--) {
+      anchor = out.indexOf(authored[i]);
+    }
+    out.splice(anchor + 1, 0, id);
   }
-  return { order: out };
+  const notes = [];
+  if (carried.length) {
+    notes.push(
+      `${carried.join(", ")} sit inside the variant block, and a template stores that block as `
+        + "one '@variant' entry — they keep their place inside it rather than moving alone."
+    );
+  }
+  if (missing.length) {
+    notes.push(
+      `${missing.join(", ")} drew nothing in this comparison, so the order keeps `
+        + (missing.length > 1 ? "their" : "its")
+        + " authored position — listing every slot is what stops the file from dropping it."
+    );
+  }
+  if (unknown.length) {
+    notes.push(`${unknown.join(", ")} is not a slot of this template — skipped.`);
+  }
+  return { order: out, notes };
 }
 
 /**
@@ -2816,8 +2856,11 @@ export function createCompose(hub) {
     ctx.toast(
       "success",
       "Optimized order written",
-      `${slug} — ${order.length} block(s) in '${target}' reading order. The profile still `
-        + "applies its own order on top; this is the order every other profile now reads."
+      order.join(" ") === state.orderIds.join(" ")
+        ? `${slug} — a copy, but the storable part of '${target}' order is the order this `
+          + "template already had, so its 'order' is unchanged."
+        : `${slug} — ${order.length} block(s) in '${target}' reading order. The profile still `
+          + "applies its own order on top; this is the order every other profile now reads."
     );
     ctx.refreshCombos();
     // the comparison described the template we just left
@@ -2854,10 +2897,31 @@ export function createCompose(hub) {
     }
     if (!cmp.moved) return nodes; // nothing moved (or nothing comparable) — no button at all
 
-    const write = orderWriteBack(result.optimized.render_order, state.orderIds);
+    const variantIds = (state.rawData?.variants ?? []).flatMap((v) =>
+      (v.slots ?? []).map((slot) => slot.id)
+    );
+    const write = orderWriteBack(result.optimized.render_order, state.orderIds, variantIds);
+    // Only an unsaved edit blocks the write: the copy is made from the saved
+    // file, so the order on screen is not the one that would be written.
+    // Anything a template cannot store verbatim is approximated and said out
+    // loud (write.notes) — the storable order still wins.
     const blocked = state.modified
       ? "save your unsaved template edits first — the copy is made from the saved file"
-      : (write.error ?? null);
+      : null;
+    const unchanged = write.order.join(" ") === state.orderIds.join(" ");
+    for (const note of write.notes) nodes.push(el("div", { class: "mrln-note" }, note));
+    if (unchanged && !blocked) {
+      nodes.push(
+        el(
+          "div",
+          { class: "mrln-note" },
+          "Everything that moves here moves inside the variant block, so the order a template "
+            + "file can store is the one this template already has — the copy would differ only "
+            + "in name. To render this reading order, set Target profile to "
+            + `'${result.target}' and Apply instead.`
+        )
+      );
+    }
     nodes.push(
       el(
         "div",

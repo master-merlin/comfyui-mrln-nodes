@@ -34,3 +34,4 @@ Thumbs.db
 *.log
 /user_data/
 .playwright-mcp/
+phase1-compose.png

@@ -289,3 +289,63 @@ def test_lora_report_is_json_serializable_and_stringy(classes):
     assert all(isinstance(values, list) and values for values in out)
     assert all(isinstance(value, str) for values in out for value in values)
     assert isinstance(json.loads(out[2][0]), list)
+
+
+# ---------------------------------------------------------------------------
+# The shipped example workflow is a CONSUMER of the frozen contract
+# ---------------------------------------------------------------------------
+
+
+def test_the_example_workflow_matches_the_nodes_current_contract(classes):
+    """A saved workflow stores outputs by INDEX and widget values POSITIONALLY,
+    so the example we ship is the first thing that rots when either order is
+    re-cut — and it is also the first thing a new user opens. Both re-cuts made
+    before release broke it exactly this way: slot 2 stopped being 'choices',
+    and every widget value shifted by one.
+    """
+    import pathlib
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    workflow = json.loads(
+        (root / "example_workflows" / "mrln-prompting.json").read_text(encoding="utf-8")
+    )
+    by_id = {node["id"]: node for node in workflow["nodes"]}
+    for node in workflow["nodes"]:
+        node_id = node.get("type")
+        if node_id not in classes:
+            continue
+        cls = classes[node_id]
+        saved = [out["name"] for out in node.get("outputs", [])]
+        assert saved == list(cls.RETURN_NAMES)[: len(saved)], (
+            f"{node_id}: the example workflow's sockets no longer match RETURN_NAMES"
+        )
+        # a link records which slot it leaves from; a moved socket moves that
+        for index, out in enumerate(node.get("outputs", [])):
+            for link_id in out.get("links") or []:
+                link = next(row for row in workflow["links"] if row[0] == link_id)
+                assert link[2] == index, (
+                    f"{node_id}: link {link_id} still leaves from slot {link[2]}, "
+                    f"but '{out['name']}' is slot {index} now"
+                )
+                assert link[3] in by_id, f"link {link_id} points at a node that is gone"
+        # widgets_values is positional, so a re-cut widget order silently
+        # re-points every value in a saved graph. Checked for the Template node
+        # only: Show Text writes its DISPLAYED text back into widgets_values,
+        # so a count there says nothing about the contract.
+        if node_id != "MRLN_PromptTemplate":
+            continue
+        inputs = cls.INPUT_TYPES()
+        names = [*inputs.get("required", {}), *inputs.get("optional", {})]
+        wired = {row.get("name") for row in node.get("inputs", []) if row.get("link") is not None}
+        expected = []
+        for name in names:
+            if name in wired:
+                continue
+            expected.append(name)
+            if name == "seed":
+                expected.append("control_after_generate")  # injected by the frontend
+        assert len(node.get("widgets_values", [])) == len(expected), (
+            f"{node_id}: the example workflow carries "
+            f"{len(node.get('widgets_values', []))} widget values, the node now "
+            f"has {len(expected)}: {expected}"
+        )

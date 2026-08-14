@@ -14,8 +14,9 @@
 //   orderComparison  — "did anything actually move", and the differences that
 //                      are NOT order (a profile can also change the format, the
 //                      negative or the drawn text).
-//   orderWriteBack   — resolved slot ids -> a template `order` array, refusing
-//                      the shapes a template cannot store.
+//   orderWriteBack   — resolved slot ids -> a template `order` array. Shapes a
+//                      template cannot store verbatim are approximated and
+//                      reported, never refused, and no slot is ever dropped.
 //
 // The sort itself lives in mrln/promptlib/render.py and is never reimplemented
 // here: `render_order` comes off the preview response.
@@ -274,58 +275,75 @@ describe("orderWriteBack", () => {
   test("a plain reorder is the order array itself", () => {
     assert.deepEqual(
       orderWriteBack(["camera", "subject", "style"], ["subject", "style", "camera"]),
-      { order: ["camera", "subject", "style"] }
+      { order: ["camera", "subject", "style"], notes: [] }
     );
   });
 
   test("a contiguous variant block collapses into one '@variant' entry", () => {
-    // resolved variant slots render as '<variant>/<slot id>'; a template stores
-    // the whole block as a single token
+    // A resolved variant slot keeps its BARE id ('<variant>/<id>' is only its
+    // seed key), so the block is recognised by the ids, not by their shape.
     assert.deepEqual(
-      orderWriteBack(
-        ["night/mood", "night/glow", "subject", "style"],
-        ["subject", "style", "@variant"]
-      ),
-      { order: ["@variant", "subject", "style"] }
+      orderWriteBack(["mood", "glow", "subject", "style"], ["subject", "style", "@variant"], [
+        "mood",
+        "glow",
+      ]),
+      { order: ["@variant", "subject", "style"], notes: [] }
     );
     assert.deepEqual(
-      orderWriteBack(
-        ["subject", "night/mood", "night/glow", "style"],
-        ["subject", "style", "@variant"]
-      ),
-      { order: ["subject", "@variant", "style"] }
+      orderWriteBack(["subject", "mood", "glow", "style"], ["subject", "style", "@variant"], [
+        "mood",
+        "glow",
+      ]),
+      { order: ["subject", "@variant", "style"], notes: [] }
     );
   });
 
-  test("a split variant block is refused, not silently rejoined", () => {
+  test("a split variant block writes the block's first position and says so", () => {
+    // animal/documentary under 'krea2': subject leads, fieldcraft trails, and
+    // both live in the variant block a template stores as ONE entry.
     const out = orderWriteBack(
-      ["night/mood", "subject", "night/glow", "style"],
-      ["subject", "style", "@variant"]
+      ["subject", "weather", "time", "fieldcraft"],
+      ["@variant", "weather", "time"],
+      ["subject", "fieldcraft"]
     );
-    assert.ok(!out.order);
-    assert.match(out.error, /splits the variant block/);
+    assert.deepEqual(out.order, ["@variant", "weather", "time"]);
+    assert.equal(out.notes.length, 1);
+    assert.match(out.notes[0], /fieldcraft/);
+    assert.match(out.notes[0], /variant block/);
   });
 
-  test("an order that cannot place every slot is refused", () => {
-    // the draw muted 'camera', so nothing says where it belongs
-    const out = orderWriteBack(["subject", "style"], ["subject", "style", "camera"]);
-    assert.ok(!out.order);
-    assert.match(out.error, /camera/);
+  test("a slot that drew nothing keeps its authored position, never dropped", () => {
+    // the draw muted 'camera' — a partial order would DELETE it server-side
+    // it follows 'style', the authored neighbour it was grouped with — which is
+    // usually its domain sibling, so it lands near where its domain went
+    const out = orderWriteBack(["style", "subject"], ["subject", "style", "camera"]);
+    assert.deepEqual(out.order, ["style", "camera", "subject"]);
+    assert.match(out.notes[0], /camera/);
     // …and the same for a template whose variant block never rendered
-    assert.match(
-      orderWriteBack(["subject"], ["subject", "@variant"]).error,
-      /@variant/
-    );
+    const off = orderWriteBack(["subject"], ["@variant", "subject"]);
+    assert.deepEqual(off.order, ["@variant", "subject"]);
+    assert.match(off.notes[0], /@variant/);
   });
 
-  test("an id the template does not know is refused", () => {
+  test("an unplaceable leader lands in front, not silently last", () => {
+    const out = orderWriteBack(["style"], ["subject", "style"]);
+    assert.deepEqual(out.order, ["subject", "style"]);
+  });
+
+  test("an id the template does not know is skipped, not fatal", () => {
     const out = orderWriteBack(["subject", "ghost"], ["subject"]);
-    assert.ok(!out.order);
-    assert.match(out.error, /'ghost' is not a slot/);
+    assert.deepEqual(out.order, ["subject"]);
+    assert.match(out.notes[0], /ghost is not a slot/);
+    // with a variant block, only a KNOWN variant slot may claim it
+    const guarded = orderWriteBack(["ghost", "subject"], ["subject", "@variant"], ["mood"]);
+    assert.deepEqual(guarded.order, ["subject", "@variant"]);
+    assert.match(guarded.notes.join(" "), /ghost/);
   });
 
   test("empty inputs never produce a half-written order", () => {
-    assert.deepEqual(orderWriteBack([], []), { order: [] });
-    assert.match(orderWriteBack(undefined, ["subject"]).error, /subject/);
+    assert.deepEqual(orderWriteBack([], []), { order: [], notes: [] });
+    const nothing = orderWriteBack(undefined, ["subject"]);
+    assert.deepEqual(nothing.order, ["subject"]);
+    assert.match(nothing.notes[0], /subject/);
   });
 });

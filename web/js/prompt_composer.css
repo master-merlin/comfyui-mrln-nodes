@@ -153,7 +153,11 @@ button.mrln-chip-btn:hover { border-color: var(--input-text, #888); opacity: 1; 
   cursor: pointer;
   white-space: nowrap;
 }
-.mrln-composer button.mrln-btn:hover { background: var(--comfy-menu-bg, #333); }
+/* :not(:disabled) — this rule outweighs the primary fill below (it carries an
+   element selector), so without it a DISABLED primary button repainted itself
+   dark the moment the pointer touched it and read as "my click did something"
+   when the click had in fact been swallowed (UAT). */
+.mrln-composer button.mrln-btn:hover:not(:disabled) { background: var(--comfy-menu-bg, #333); }
 .mrln-composer button.mrln-primary { border-color: var(--mrln-accent); }
 /* two-step confirm: first click arms (question label), second executes */
 .mrln-composer button.mrln-armed {
@@ -1317,6 +1321,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-btn[data-variant="primary"]:hover:not(:disabled) {
   background: #93dcc6;
   border-color: #93dcc6;
+}
+/* The generic :disabled rule above loses to the primary fill (same specificity,
+   declared earlier), so a disabled primary button looked exactly like a live
+   one — the click did nothing and there was nothing on screen to say why. */
+.pc-panel .mrln-btn.mrln-primary:disabled,
+.pc-panel .mrln-btn[data-variant="primary"]:disabled {
+  color: var(--pc-fg-4);
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line);
 }
 .pc-panel .mrln-btn[data-variant="danger"],
 .pc-panel .mrln-btn.mrln-armed {
