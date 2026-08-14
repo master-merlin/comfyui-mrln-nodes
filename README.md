@@ -22,13 +22,42 @@ draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
   downloaded at all; `mrln-prompting-krea2-turbo` is the same idea end to end.
 - 🧩 **[Nodes](#nodes)** — what each node does, if you would rather read the
   contract than the guide.
+- 🧠 **[Why this exists](#why-this-exists)** — the problem it is actually
+  solving, if you are deciding whether to install it.
 
-<p align="center">
-  <img src="docs/images/12-node.png" alt="The Prompt Template (MRLN) node on the ComfyUI canvas, showing its six outputs and its widgets" width="420">
-</p>
+## Why this exists
 
-<p align="center"><em>One node, six outputs: the prompt, the LLM hand-off, the
-LoRAs the draw selected, and three that tell you what happened.</em></p>
+Prompting in ComfyUI is mostly copy-paste. The good prompt you wrote last month
+lives in a text file, a screenshot, or a workflow you have to open to read. When
+you want it again with a different car, a different light, a different season,
+you edit it by hand — and the edit is where the quality goes.
+
+The usual answer is wildcards. They randomise *words*, but they do not know what
+the words are for: a wildcard cannot tell you it just put a winter coat under a
+desert sun, cannot weight one option above another, cannot be reproduced from a
+seed, and cannot bring a LoRA's trigger words along with the phrase that needs
+them.
+
+So this pack treats a prompt as **composed content rather than typed text**:
+
+- every fragment is a library **item** — with a long form and a short form, draw
+  weight, tags, optional negatives, and optionally the LoRA it needs
+- a **template** says which sections fill which slots, and each slot is fixed,
+  random, or random-from-a-subset
+- **one seed** decides every random slot, so a prompt is reproducible and a
+  batch of eight is eight different draws rather than eight copies
+- the whole library is **plain JSON you own** — extend a shipped section and
+  pack updates still reach you
+
+Two things follow that are the actual point. A LoRA declared on an item loads
+itself, at the strength its author set, with its trigger words already in the
+prompt — because they were written into the item. And a shared workflow keeps
+working on a machine that has never opened the panel, since what the panel
+writes into the node is plain text.
+
+It ships with 100 templates and 3465 items so it is useful on the first render,
+not after an evening of authoring. The content is opinionated on purpose:
+somebody has to decide what a good documentary wildlife brief contains.
 
 ## Install
 
@@ -49,36 +78,27 @@ imports that disable just those features if the libraries are ever absent.
 
 Nodes appear in the Add-Node menu under **MRLN/**, grouped by domain, and every
 display name carries an `(MRLN)` marker so they are easy to find in search.
+One row per node — a new node adds a row, so this list cannot quietly fall
+behind what the pack ships.
 
-| Domain | Nodes |
-| ------ | ----- |
-| `MRLN/prompt` | **Prompt Template** — template-driven prompt composition from a persistent JSON library (per-slot fixed/random with deterministic seeds, variants, negatives, 4 output formats incl. JSON, target-model `profile` selector that can also swap in a per-profile tuned variant of the template *and* reorder the rendered blocks into the reading order that model rewards; a `template_names` switch that makes the template widget list slugs (the stable identifier, and what a shared workflow should carry) or human labels; six outputs in wiring order — `prompt`, `llm`, `loras`, then the reports `negative`, `choices`, `gen_info`). `batch_count` renders a whole batch from one queue: `increment seed` draws item *i* at seed + *i*, so four images are four different draws instead of four copies of one; `combinatorial` instead enumerates every combination of the slots left on random, capped at 512. Every output is a list, and a length-1 list is indistinguishable from a single value downstream, so existing workflows are untouched. `gen_info` is an A1111 `parameters` string a metadata-capable save node can embed — carrying only what this node actually knows (the prompts, the seed it drew with, and the Civitai ids of the LoRAs it selected), never a guessed Steps/Sampler/CFG/Model; **Prompt Section** — a single library section as a standalone node for graph-native wiring; **LoRA Apply** — loads the LoRA blocks a template drew onto MODEL/CLIP at their authored strengths (wire the `loras` output; trigger words stay in the prompt, loading stays out of it); **Prompt Enhance** — rewrites the prompt with a local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter) LLM under the selected profile's per-model system prompt: ONE wire (the Template node's `llm` output carries prompt + system + protected LoRA trigger words, which are enforced verbatim and re-injected if the LLM rewrites them), a model dropdown listing installed models plus pull suggestions Ollama downloads on pick, deterministic per seed, VRAM freed/kept per choice, pass-through on backend failure. Best for thin hand-typed prompts, tag→prose conversion and de-compose assistance — the curated library prompts usually render better un-rewritten |
-| `MRLN/text` | **Show Text** — display any input as text inside the node (strings as-is, other types stringified, dicts/lists as pretty JSON) with a STRING passthrough output |
+| Domain | Node | What it does |
+| --- | --- | --- |
+| `MRLN/prompt` | <img src="docs/images/node-prompt-template.png" width="240" alt="Prompt Template (MRLN)"> | **Prompt Template** — composes a whole prompt from the library. Every slot is fixed, random, or random from a subset you ticked, all derived from one `seed`, so the same seed and library always draw the same prompt. `batch_count` renders a batch from one queue (`increment seed` = *n* different draws, not *n* copies; `combinatorial` enumerates every combination of the still-random slots, capped at 512). `format` and `text_length` reshape the same library for tag-based or prose models; `profile` targets a model family and can swap in a tuned variant of the template *and* reorder the rendered blocks into the reading order that family rewards. Six outputs in wiring order: `prompt`, `llm`, `loras`, then the reports `negative`, `choices`, `gen_info` — the last an A1111 `parameters` string carrying only what this node actually knows, never a guessed Steps/Sampler/CFG |
+| `MRLN/prompt` | <img src="docs/images/node-prompt-enhance.png" width="240" alt="Prompt Enhance (MRLN)"> | **Prompt Enhance** — an optional LLM rewrite that cannot lose the words that matter. It takes ONE wire (`llm`), which carries the prompt, the profile's system prompt and the protected trigger words; those are enforced verbatim and re-injected if the model rewrites them. Local (Ollama / LM Studio) or cloud (Anthropic / OpenAI / Gemini / OpenRouter), deterministic per seed, VRAM handed back per choice, and `pass through` on a dead backend so a render never fails for want of an LLM. Best on thin hand-typed prompts and tag→prose conversion — the curated library usually renders better un-rewritten |
+| `MRLN/prompt` | <img src="docs/images/node-lora-apply.png" width="240" alt="LoRA Apply (MRLN)"> | **LoRA Apply** — loads the LoRAs the draw selected onto MODEL/CLIP at their authored strengths. Wire the `loras` output: trigger words stay in the prompt, loading stays out of it. `on_missing` stops with the file named, skips it, or downloads it by its Civitai AIR; `on_mismatch` warns when a LoRA's base family does not match the checkpoint — which ComfyUI itself accepts silently while the image quietly degrades |
+| `MRLN/prompt` | <img src="docs/images/node-prompt-section.png" width="240" alt="Prompt Section (MRLN)"> | **Prompt Section** — one library section as a standalone node, for bolting a single random element onto a prompt you wrote yourself. Deliberately strict where the template node is forgiving: a named item that no longer exists raises instead of quietly drawing something else |
+| `MRLN/text` | <img src="docs/images/node-show-text.png" width="240" alt="Show Text (MRLN)"> | **Show Text** — displays any input as text inside the node (strings as-is, other types stringified, dicts and lists as pretty JSON) and passes the STRING through. Wire `choices` into one and you can read exactly which item every slot drew, and why |
 
-The three prompt nodes, in the order a full pipeline uses them — compose, then
-rewrite, then load the weights the draw selected:
+## The prompt library
 
-<p align="center">
-  <img src="docs/images/13-enhance.png" alt="The Prompt Enhance (MRLN) node" width="330">
-  &nbsp;&nbsp;
-  <img src="docs/images/14-lora.png" alt="The LoRA Apply (MRLN) node" width="330">
-</p>
+Prompt libraries are plain JSON files: the factory content ships with the pack,
+your personal library lives in `<ComfyUI>/user/mrln/prompt/` and survives pack
+updates. Same-name SECTIONS compound — your file *extends* the factory one by
+default (same item name wins, new items append, `"hidden": true` tombstones a
+factory item, `"replaces": true` opts into a full replacement). Same-name
+templates replace the factory file entirely.
 
-<p align="center"><em><strong>Prompt Enhance</strong> takes the single
-<code>llm</code> wire — prompt, system prompt and the words that must survive
-verbatim — and passes the original through untouched if the backend is down.
-<strong>LoRA Apply</strong> takes <code>loras</code> and loads what the draw
-selected, warning when a LoRA's base model does not match the
-checkpoint.</em></p>
-
-Prompt libraries are plain JSON files: a multiverse of factory content ships
-with the pack, your personal library lives in `<ComfyUI>/user/mrln/prompt/`
-and survives pack updates. Same-name SECTIONS compound: your file *extends*
-the factory one by default (same item name wins, new items append,
-`"hidden": true` tombstones a factory item, `"replaces": true` opts into a
-full replacement). Same-name templates replace the factory file entirely.
-
-### Factory library
+### What ships
 
 **100 templates / 237 sections / 3465 curated items**, every one of them
 carrying a rendered thumbnail. The dimension folders every template
@@ -95,33 +115,32 @@ flow and prose models get prose from the same library. Genre coupling runs on
 tags (`anime`, `scifi`, `fantasy`, `historical`, `night`…) that templates
 select with per-slot `tags_any` / `tags_none` filters.
 
-Flagship templates — every one permutation-tested seed by seed so any draw
-combination reads like a specialist wrote the brief:
+All 100, by folder. The order is alphabetical rather than historical, and the
+count is the whole folder — every one permutation-tested seed by seed, so any
+draw combination reads like a specialist wrote the brief:
 
-| Template | What it composes |
-| --- | --- |
-| `overdrive/full-shot`, `overdrive/night-pursuit`, `overdrive/design-studio` | the OverDrive concept-car showcase (day/night variants), neon-noir pursuit, design-studio reveal |
-| `vehicle/apex-attack`, `vehicle/night-ride`, `vehicle/heritage-classic` | motorsport at the limit; neon-noir motion (parked/rolling); classic-car portraiture with your own LoRA trigger |
-| `vehicle/aviation-shot`, `vehicle/maritime-shot`, `vehicle/blueprint-sheet`, `vehicle/rider-lifestyle` | aircraft/vessel × state × weather × long glass; any machine as an annotated technical sheet; motorcycle culture with an optional nested rider |
-| `scifi/fleet-arrival`, `scifi/vista`, `scifi/mecha-clash`, `scifi/android-portrait` | capital fleets making atmospheric entry (day-raid/night-siege), genre vistas, mech combat, synthetic portraiture |
-| `fantasy/epic-encounter`, `fantasy/battlefield-charge`, `fantasy/dragon-hoard`, `fantasy/realm-vista`, `fantasy/enchanted-portrait` | archetype vs mythical creature at romanticist scale; massed armies (charge/last-stand/aftermath); treasure-light interiors; realm panoramas |
-| `anime/cinema-still`, `anime/keyvisual`, `anime/slice-of-life`, `anime/character` | theatrical anime master shots, key visuals, quiet everyday scenes, character sheets |
-| `portrait/studio`, `portrait/character-concept`, `portrait/noir-night`, `portrait/street-candid` | studio portraits, character-design sheets, one hard light on pushed Delta 3200, decisive-moment street |
-| `boudoir/session`, `boudoir/vanity-portrait`, `boudoir/window-silhouette` | solo / duo / couple via nested model profiles (adults only, tasteful glamour) |
-| `animal/documentary`, `animal/small-world`, `animal/storybook` | subject × behavior × habitat; macro textures as landscapes; pet-in-handmade-media |
-| `landscape/grand`, `landscape/astro-nightscape`, `landscape/moody-intimate` | landform hero shots; celestial heroes over dark landforms; intimate weather |
-| `architecture/study`, `architecture/blue-hour-icon`, `architecture/golden-interior`, `architecture/cozy-moment` | architectural formulas from icon to interior to hygge |
-| `food/editorial`, `food/dark-mood`, `food/pour-shot`, `product/hero`, `product/lifestyle-scene`, `product/teardown-sheet` | commercial photography formulas |
-| `design/travel-poster`, `design/movie-poster`, `design/album-cover`, `design/book-cover` | any place as a vintage poster; one-sheet, sleeve and jacket design |
-| `design/sticker-sheet`, `design/tee-print`, `design/logo-mark`, `design/coloring-page`, `design/tattoo-flash`, `design/seamless-pattern` | the print-and-merch cluster, each written to the constraints that decide whether a design survives manufacture — cut line, screen palette, colour count, tileable repeat |
-| `screen/avatar`, `screen/wallpaper`, `screen/thumbnail`, `screen/emote-set` | what gets made for screens: a PFP legible as a 32 px circle, a wallpaper with room for the clock, a thumbnail that wins at 210 px, emotes that survive at 28 px |
-| `card/trading-card`, `card/tarot`, `card/deck-back` | cards as printed artifacts — illustration window, stat corner, numeral and title banner. The frame is what makes it a card |
-| `game/pixel-sprite`, `game/isometric-room`, `game/concept-environment` | assets a game can use: sprite sheets with real pixel discipline, true 2:1 isometric tiles, production concept paintings |
-| `product/figure`, `anime/chibi`, `anime/comic-page` | the collectible figure shot (factory paint, seam lines, a real base), super-deformed proportions, a laid-out comic page with gutters and a reading order |
-| `portrait/wedding`, `portrait/fashion-editorial`, `portrait/beauty-macro`, `architecture/property-listing` | the commercial photography people are actually paid for |
-| `scifi/cyberpunk-street`, `scifi/post-apocalypse`, `fantasy/steampunk-workshop` | the three genre worlds the community asks for most |
-| `showcase/krea2-art-direction`, `showcase/flux1-reportage`, `showcase/flux2-storefront`, `showcase/qwen-typographic`, `showcase/zimage-bilingual-counter` | one per target model, each built to what that family actually rewards — KREA 2's art-direction layering, FLUX.1's early-token weighting, FLUX.2's structured scene plus lettering spec, Qwen-Image's layout control and in-image type, Z-Image's all-positive phrasing with bilingual text. Each pins its own profile, so picking the template already targets the model |
-| `showcase/ideogram4-type-poster` | Ideogram 4.0's typography and flat graphic design, composed straight into that model's structured JSON caption: the `ideogram4` profile carries the caption scaffold and the template extends it with a second element that holds the literal headline and its bounding box. The headline is a slot rather than a template variable, because the JSON filler sees slot texts. Supplying a JSON caption contractually disables Ideogram's magic-prompt rewriting, so this is the one target that renders the composed prompt verbatim — in stock ComfyUI, wire it to `IdeogramPImage` with `prompt_upsampling` OFF (the stock `IdeogramV4` node only accepts a plain text prompt, which re-enables the rewrite) |
+| Folder | Templates | What the folder gives you |
+| --- | --- | --- |
+| `animal/` 3 | documentary · small-world · storybook | The documentary formula — subject × behaviour × habitat × hour — plus macro worlds shot as landscapes and pets rendered in handmade media. Taxon-matched fieldcraft: the lens, distance and light change with the animal drawn |
+| `anime/` 6 | character · chibi · cinema-still · comic-page · keyvisual · slice-of-life | Theatrical master shots and key visuals, character sheets, super-deformed proportions, and a laid-out comic page with real gutters and a reading order. Anime tags gate the pools, so western faces and photographic lenses cannot leak in |
+| `architecture/` 5 | blue-hour-icon · cozy-moment · golden-interior · property-listing · study | From the icon at blue hour to an interior at golden hour to the shot an estate agent actually needs. Camera treatments are architectural — shift lens, one-point axis, worm's eye — not generic photography |
+| `boudoir/` 4 | pin-up · session · vanity-portrait · window-silhouette | Solo, duo and couple configurations through nested model profiles. Adults only and kept at a tasteful glamour level, lint-enforced, with matching safety negatives carried by default |
+| `card/` 3 | deck-back · tarot · trading-card | Cards as printed artifacts: illustration window, stat corner, numeral and title banner, symmetrical back. The frame is what makes it a card, so the frame is what the template composes |
+| `design/` 10 | album-cover · book-cover · coloring-page · logo-mark · movie-poster · seamless-pattern · sticker-sheet · tattoo-flash · tee-print · travel-poster | The print-and-merch cluster, each written to the constraint that decides whether a design survives manufacture — cut line, screen palette, colour count, tileable repeat, spine and trim |
+| `fantasy/` 7 | battlefield-charge · dragon-hoard · enchanted-portrait · epic-encounter · folk-portrait · realm-vista · steampunk-workshop | Archetype against mythical creature at romanticist scale, massed armies (charge / last stand / aftermath), treasure-lit interiors, realm panoramas, and the folk of a world as portrait subjects |
+| `food/` 3 | dark-mood · editorial · pour-shot | Commercial food formulas: the editorial plate, the dark moody table, and the pour caught at the right millisecond — each with the surface, garnish and light that sell it |
+| `game/` 3 | concept-environment · isometric-room · pixel-sprite | Assets a game can actually use: sprite sheets with real pixel discipline, true 2:1 isometric tiles, and production concept paintings |
+| `landscape/` 3 | astro-nightscape · grand · moody-intimate | Landform hero shots, celestial subjects over dark landforms, and intimate weather — the small landscape that is about a mood rather than a vista |
+| `moment/` 3 | celebration · everyday · maker | Human moments rather than portraits: a celebration, an ordinary day, someone making something. Reportage lenses and candid staging |
+| `music/` 3 | instrument-still · live · studio | The instrument as still life, the stage under performance light, and the control room — three lighting worlds the same subject reads completely differently in |
+| `overdrive/` 3 | design-studio · full-shot · night-pursuit | The OverDrive concept-car showcase: day full shot, neon-noir pursuit, design-studio reveal. The vehicle domain's flagship, and the deepest slot stack in the library |
+| `portrait/` 10 | beauty-macro · character-concept · fashion-editorial · illustrated · night-out · noir-night · period-portrait · street-candid · studio · wedding | The portraiture spine — studio, editorial, beauty macro, character sheets, one hard light on pushed Delta 3200, decisive-moment street, period and wedding work. Most draw a nested model profile, so one slot fans out into a coherent person |
+| `product/` 4 | figure · hero · lifestyle-scene · teardown-sheet | Commercial product photography plus the collectible figure shot (factory paint, seam lines, a real base) and the annotated exploded teardown |
+| `scifi/` 6 | android-portrait · cyberpunk-street · fleet-arrival · mecha-clash · post-apocalypse · vista | Capital fleets making atmospheric entry, genre vistas, mech combat, synthetic portraiture, and the two worlds most asked for — cyberpunk street level and post-apocalypse |
+| `screen/` 4 | avatar · emote-set · thumbnail · wallpaper | What gets made for screens, composed to the size it will be seen at: a PFP legible as a 32 px circle, a wallpaper with room for the clock, a thumbnail that wins at 210 px, emotes that survive at 28 px |
+| `showcase/` 9 | detail-portrait · flux1-reportage · flux2-storefront · ideogram4-type-poster · krea2-art-direction · night-machine · qwen-typographic · style-lab · zimage-bilingual-counter | One per target model, each built to what that family rewards — KREA 2's art-direction layering, FLUX.1's early-token weighting, FLUX.2's structured scene plus lettering spec, Qwen-Image's layout control, Z-Image's all-positive bilingual phrasing, Ideogram 4.0's JSON caption. Each pins its own profile, so picking the template already targets the model. `detail-portrait`, `night-machine` and `style-lab` do the same for the LoRA Lab |
+| `sport/` 3 | action · discipline-study · winter | The decisive athletic moment, the discipline studied as craft, and winter sport — long glass, panning, and the weather that comes with it |
+| `vehicle/` 8 | apex-attack · aviation-shot · blueprint-sheet · heritage-classic · maritime-shot · night-ride · rider-lifestyle · terrain-run | Motorsport at the limit, neon-noir motion, classic-car portraiture with your own LoRA trigger, aircraft and vessels crossed with state and weather, any machine as an annotated technical sheet, motorcycle culture with an optional nested rider, and off-road terrain |
 
 The human-domain content is strictly adults-only and kept at a tasteful
 glamour level (lint-enforced); templates carry matching safety negatives by
@@ -151,7 +170,7 @@ keep resolving through shipped aliases, and a template whose section
 genuinely vanished still loads and runs — the dead slot is skipped with a
 loud ⚠ in the choices output, and the Composer offers a one-click remap.
 
-### Prompt Composer panel
+## The Composer panel
 
 > Walked tab by tab with screenshots in the
 > **[user guide](docs/prompt-composer-guide.md)**.
@@ -162,7 +181,7 @@ preview (prompt / negative / choices) as you click, then *Apply to node* — it
 writes the plain selection lines into the selected Prompt Template node, so
 workflows stay fully shareable and headless-safe.
 
-#### Compose
+### Compose
 
 The compose table is one row per draw — state · section · drawn value ·
 weight · seed · actions — with the panel's own value picker in place of the
@@ -213,7 +232,7 @@ from the things that are not order (format, negative policy, a different
 draw). If you want the new order made permanent, one explicit button writes
 it into a copy — never automatically.
 
-#### De-compose
+### De-compose
 
 LoRA blocks also declare the base model they were trained for (`data.base`,
 or the ecosystem segment of their AIR). LoRA Apply reads the architecture of
@@ -242,7 +261,7 @@ de-composer above. Inline `<lora:…>` tags are lifted out and resolved to
 local files or Civitai AIRs. When an embedded graph is genuinely ambiguous
 about which string is the positive, you get a picker rather than a guess.
 
-#### Library
+### Library
 
 **Trigger words get mute/solo.** A LoRA's full trained-word list is
 provenance and is never edited; the words that actually render are the
@@ -288,7 +307,7 @@ kept unless you opt into overwrite — and opening the imported template
 offers to auto-download missing LoRA files. Share the bundle next to your
 workflow and the recipient rebuilds your renders end to end.
 
-#### History
+### History
 
 **History.** Every render the Prompt Template node makes is recorded as one
 line — newest first, with restore (template, profile, seed, mode, selection,
@@ -297,7 +316,7 @@ rather than approximates) and copy-prompt. A batch collapses to one row.
 Recording and retention are settings, clearing is a two-step confirm, and a
 failed history write can never break a render that already succeeded.
 
-#### Settings
+### Settings
 
 The Settings tab holds the local backend URLs (Ollama / LM Studio,
 auto-validated with installed-model lists), the cloud API keys — stored
@@ -312,7 +331,7 @@ The panel talks to the pack's own endpoints under `/mrln/prompt/*`
 (registered only inside a running ComfyUI). The library is shared per
 installation — in `--multi-user` setups all users see the same library.
 
-### Example workflows
+## Example workflows
 
 The pack ships ready-made graphs in `example_workflows/` — they appear in
 ComfyUI's workflow template browser under this pack's name.
@@ -323,8 +342,9 @@ seeds and selection lines before connecting anything to a sampler. It runs on
 a fresh install with no models at all.
 
 **mrln-prompting-krea2-turbo** is the same idea end to end — compose, optional
-LLM rewrite, 8-step render — and needs the Krea-2 Turbo model plus its style
-LoRAs, both linked from notes inside the graph.
+LLM rewrite, 8-step render. It needs the Krea-2 Turbo models, and two nodes from
+other packs inside its subgraph; the notes in the graph name every file and
+every pack, with download links.
 
 ## Design principles
 

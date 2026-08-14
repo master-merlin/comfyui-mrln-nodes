@@ -83,7 +83,7 @@ below is optional and additive.
 
 ### Prompt Template (MRLN) — the composer
 
-<img src="images/12-node.png" width="420" alt="The Prompt Template node's widgets">
+<img src="images/node-prompt-template.png" width="420" alt="The Prompt Template node's widgets">
 
 The panel is a convenience. The node is the contract, and it reads top to
 bottom in the order the work happens:
@@ -114,7 +114,7 @@ Outputs are grouped by what you wire them to: **`prompt`**, **`llm`**,
 
 ### Prompt Enhance (MRLN) — the rewrite
 
-<img src="images/13-enhance.png" width="420" alt="The Prompt Enhance node">
+<img src="images/node-prompt-enhance.png" width="420" alt="The Prompt Enhance node">
 
 An LLM pass that improves the wording **without losing the words that carry
 meaning**. That is the whole reason it takes the `llm` wire instead of a plain
@@ -143,7 +143,7 @@ it cost, whether protected words survived, and why it passed through if it did.
 
 ### LoRA Apply (MRLN) — weights that travel with the prompt
 
-<img src="images/14-lora.png" width="420" alt="The LoRA Apply node">
+<img src="images/node-lora-apply.png" width="420" alt="The LoRA Apply node">
 
 The idea: a LoRA belongs to the *item that needs it*, not to a loader you wire
 by hand. Add a LoRA block to an item in the section editor, and every template
@@ -166,7 +166,7 @@ Two policies decide what happens when reality disagrees with the library:
 **What a LoRA looks like in the library.** `loralab/anime-style` is a shipped
 section whose every item carries one:
 
-<img src="images/15-lora-section.png" width="885" alt="The loralab/anime-style section open in the Library, each item carrying a LoRA block">
+<img src="images/12-library-lora-section.png" width="885" alt="The loralab/anime-style section open in the Library, each item carrying a LoRA block">
 
 Per item: the **LoRA** tag, the `.safetensors` it needs (⚠ when this machine does
 not have the file), its model and clip strengths, its trained words, its Civitai
