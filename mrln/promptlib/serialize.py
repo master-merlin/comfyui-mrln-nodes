@@ -70,6 +70,8 @@ def dump_slot(slot):
         out["tags_any"] = list(slot.tags_any)
     if slot.tags_none:
         out["tags_none"] = list(slot.tags_none)
+    if slot.include:
+        out["include"] = list(slot.include)
     return out
 
 

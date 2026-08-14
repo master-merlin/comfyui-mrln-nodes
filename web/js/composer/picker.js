@@ -42,7 +42,11 @@ export function pickerIsOpen() {
  * @param {Function} [options.onEditSection] opens this section in the Library
  * @param {string} [options.sectionRef] shown in the footer action
  */
-export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) {
+export function openPicker(options) {
+  // Destructured INSIDE, not in the signature: composer_modules.test.mjs scans
+  // top-level lines and a multi-line parameter list reads as loose statements.
+  const { select, pool, anchor, onEditSection, sectionRef, subset } = options;
+  const { itemsLabel = "Items", sideLabel = "weight", sideOf = null } = options;
   closePicker();
 
   const weights = new Map();
@@ -99,14 +103,25 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
     closePicker(true);
   }
 
+  // Subset mode: `random` draws from the ticked items only. The list stops
+  // committing a pick and starts toggling membership, which is a different
+  // gesture on the same rows — so the rows SAY so (a box instead of a tick)
+  // and the header carries the two bulk actions.
+  const subsetOn = () => Boolean(subset && subset.enabled());
+  const inSubset = (name) => subset.has(name);
+
   function entryRow(entry) {
+    const picking = !subsetOn() || entry.mode;
     const chosen = entry.value === select.value;
     const weight = weights.get(entry.value);
     const right = entry.mode
       ? MODE_HINT[entry.value] ?? ""
-      : weight === undefined
-        ? ""
-        : `×${weight}`;
+      : sideOf
+        ? sideOf(entry)
+        : weight === undefined
+          ? ""
+          : `×${weight}`;
+    const ticked = !entry.mode && subsetOn() && inSubset(entry.value);
     const row = el(
       "div",
       {
@@ -119,19 +134,94 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
         title: entry.title || "",
         onmousedown: (e) => {
           e.preventDefault(); // keep focus in the search field
-          commit(entry.value);
+          if (picking) commit(entry.value);
+          else {
+            subset.toggle(entry.value);
+            render();
+          }
         },
       },
       el(
         "span",
         { class: "pc-pick-mark" },
-        chosen ? "✓" : entry.mode ? MODE_GLYPH[entry.value] ?? "" : ""
+        entry.mode
+          ? MODE_GLYPH[entry.value] ?? ""
+          : subsetOn()
+            ? ticked
+              ? "☑"
+              : "☐"
+            : chosen
+              ? "✓"
+              : ""
       ),
       el("span", { class: "pc-pick-name" }, entry.mode ? entry.value : entry.label),
       el("span", { class: "pc-pick-side" }, right)
     );
-    if (chosen) row.classList.add("pc-pick-current");
+    if (chosen && !subsetOn()) row.classList.add("pc-pick-current");
+    if (ticked) row.classList.add("pc-pick-ticked");
     return row;
+  }
+
+  /** The random row's own control: draw from everything, or from a subset. */
+  function subsetBar() {
+    if (!subset) return null;
+    const on = subsetOn();
+    const seg = (label, want, title) =>
+      el(
+        "button",
+        {
+          class: "mrln-btn pc-seg",
+          "aria-pressed": String(on === want),
+          title,
+          onmousedown: (e) => {
+            e.preventDefault();
+            if (on === want) return;
+            subset.setEnabled(want);
+            render();
+          },
+        },
+        label
+      );
+    return el(
+      "div",
+      { class: "pc-pick-subset" },
+      el(
+        "span",
+        { class: "pc-segmented", role: "group", "aria-label": "Random pool" },
+        seg("full", false, "Random draws from every item in the section"),
+        seg("selected", true, "Random draws only from the items ticked below")
+      ),
+      on
+        ? el(
+            "span",
+            { class: "pc-pick-bulk" },
+            el(
+              "button",
+              {
+                class: "mrln-btn mrln-mini",
+                onmousedown: (e) => {
+                  e.preventDefault();
+                  subset.setAll(items.map((entry) => entry.value));
+                  render();
+                },
+              },
+              "all on"
+            ),
+            el(
+              "button",
+              {
+                class: "mrln-btn mrln-mini",
+                onmousedown: (e) => {
+                  e.preventDefault();
+                  subset.setAll([]);
+                  render();
+                },
+              },
+              "all off"
+            )
+          )
+        : null
+    );
   }
 
   function render() {
@@ -150,13 +240,19 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
       const row = entryRow(entry);
       rows.push(row);
       children.push(row);
+      // the pool control belongs to `random` — it is that mode's own setting
+      if (entry.value === "random") {
+        const bar = subsetBar();
+        if (bar) children.push(bar);
+      }
     }
+    const ticked = subsetOn() ? items.filter((entry) => inSubset(entry.value)).length : 0;
     children.push(
       el(
         "div",
         { class: "pc-pick-sep" },
-        el("span", {}, "Items"),
-        el("span", {}, "weight")
+        el("span", {}, subsetOn() ? `${itemsLabel} · ${ticked} in pool` : itemsLabel),
+        el("span", {}, sideLabel)
       )
     );
     if (!shown.length) {
@@ -211,10 +307,26 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
       if (!rows.length) return;
       active = (active + (e.key === "ArrowDown" ? 1 : -1) + rows.length) % rows.length;
       paintActive();
-    } else if (e.key === "Enter") {
-      e.preventDefault();
+    } else if (e.key === "Enter" || e.key === " ") {
       const row = rows[active];
-      if (row) commit(row.dataset.value);
+      if (!row) return;
+      const isMode = row.classList.contains("pc-pick-mode");
+      // In subset mode ⏎ ticks the row it is on — the same thing the pointer
+      // does there. Space would otherwise type into the filter, so it only
+      // acts when the row it lands on is a toggle.
+      if (subsetOn() && !isMode) {
+        if (e.key === " " && document.activeElement === search && search.value) return;
+        e.preventDefault();
+        subset.toggle(row.dataset.value);
+        const at = active;
+        render();
+        active = Math.min(at, rows.length - 1);
+        paintActive();
+        return;
+      }
+      if (e.key === " ") return; // typing a space in the filter
+      e.preventDefault();
+      commit(row.dataset.value);
     } else if (e.key === "Escape") {
       e.preventDefault();
       closePicker(true);

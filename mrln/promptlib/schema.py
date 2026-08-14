@@ -74,6 +74,11 @@ class Slot:
     emphasis: float | None = None
     tags_any: tuple = ()  # random pool: keep items carrying at least one
     tags_none: tuple = ()  # random pool: drop items carrying any of these
+    # Random pool: draw ONLY from these item names. Empty means the whole
+    # section, which is what every template written before this said and
+    # still means. A name that is not in the section is ignored (a section can
+    # be edited under a template that names its items).
+    include: tuple = ()
 
 
 @dataclass(frozen=True)
@@ -326,6 +331,7 @@ def _parse_slot(raw, where, source):
         emphasis=emphasis,
         tags_any=_str_tuple(raw.get("tags_any"), source, "tags_any"),
         tags_none=_str_tuple(raw.get("tags_none"), source, "tags_none"),
+        include=_str_tuple(raw.get("include"), source, "include"),
     )
 
 

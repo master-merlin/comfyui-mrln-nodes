@@ -12,6 +12,7 @@ import {
   overrideTweakCount,
   parseKvLines,
   parseToken,
+  renameToken,
   uniqueName,
   wordPrefixMatch,
 } from "./util.js";
@@ -540,10 +541,45 @@ export function createCompose(hub) {
    * control is still there for anything (tests, ComfyUI, a screen reader) that
    * reads the row's value out of the DOM.
    */
-  function valueCell(select, pool, sectionRef) {
+  /**
+   * A slot's random-pool subset, as the picker's `subset` contract.
+   *
+   * It lives on the TEMPLATE (slot.include), not on the row: the node reads
+   * the template, so a pool narrowed here is what renders headless too. Empty
+   * means the whole section — which is what every template written before this
+   * said and still says.
+   */
+  function subsetFor(slot, pool) {
+    if (!slot) return null;
+    const names = () => slot.include ?? [];
+    const write = (list) => {
+      const clean = [...new Set(list)];
+      if (clean.length) slot.include = clean;
+      else delete slot.include;
+      markModified();
+      schedulePreview();
+    };
+    return {
+      enabled: () => (slot.include ?? []).length > 0,
+      setEnabled: (on) => {
+        // Turning it on with nothing ticked would be a pool of zero items, so
+        // it starts as everything and the user takes items OUT — the same
+        // direction the 'all off' button offers.
+        write(on ? (pool ?? []).map((item) => item.name) : []);
+      },
+      has: (name) => names().includes(name),
+      toggle: (name) => {
+        const list = names();
+        write(list.includes(name) ? list.filter((n) => n !== name) : [...list, name]);
+      },
+      setAll: (list) => write(list),
+    };
+  }
+
+  function valueCell(select, pool, sectionRef, slot, extra = {}) {
     select.classList.add("pc-field-native");
     const trigger = el("button", {
-      class: "pc-field pc-trigger",
+      class: `pc-field pc-trigger${extra.triggerClass ? ` ${extra.triggerClass}` : ""}`,
       "aria-haspopup": "listbox",
       "aria-expanded": "false",
       onclick: (e) => {
@@ -558,6 +594,10 @@ export function createCompose(hub) {
           pool,
           anchor: trigger,
           sectionRef,
+          subset: subsetFor(slot, pool),
+          itemsLabel: extra.itemsLabel,
+          sideLabel: extra.sideLabel,
+          sideOf: extra.sideOf,
           onEditSection: sectionRef
             ? async () => {
                 if (!confirmReplaceEditor()) return;
@@ -1109,15 +1149,20 @@ export function createCompose(hub) {
     formatSelect.value = state.format;
 
     const parts = [
-      field(
-        "Template",
+      el(
+        "label",
+        { class: "mrln-field" },
+        // Both lines ride the TABLE's grid: the heading sits over the section
+        // column and the slug over the drawn-value column, so the bar reads as
+        // the table's header rather than as a separate block above it.
         el(
-          "div",
-          { class: "mrln-inline" },
-          templateSelect,
-          // The slug, inline and quieter than the name: it is what the NODE's
-          // template widget holds, and without it the panel showed a label the
-          // node never mentions.
+          "span",
+          { class: "mrln-field-name pc-tplbar" },
+          "Template",
+          // The slug rides the heading line, where there is room for all of it.
+          // Beside the name it was squeezed to 'animal/docum…', and the slug is
+          // the half of this row you cannot look up anywhere else on screen: it
+          // is what the NODE's template widget holds.
           el(
             "span",
             {
@@ -1127,18 +1172,34 @@ export function createCompose(hub) {
                 + "if you would rather it held the name above).",
             },
             state.slug
-          ),
-          tierChip(state.detail.tier),
+          )
+        ),
+        el(
+          "div",
+          { class: "pc-tplbar" },
+          // the same picker the value fields use: a filter over 70+ templates,
+          // and every row showing the slug it will write to the node
+          valueCell(templateSelect, null, null, null, {
+            triggerClass: "pc-tpl-trigger",
+            itemsLabel: "Templates",
+            sideLabel: "slug",
+            sideOf: (entry) => entry.value,
+          }),
           el(
-            "button",
-            {
-              class: "mrln-btn mrln-mini mrln-new-tpl",
-              title: "Start a NEW empty template (net-new composition)",
-              onclick: (e) => busy(e.currentTarget, newTemplate),
-            },
-            "＋"
-          ),
-          exportBtn("template", state.slug)
+            "span",
+            { class: "pc-tpl-actions" },
+            tierChip(state.detail.tier),
+            el(
+              "button",
+              {
+                class: "mrln-btn mrln-mini mrln-new-tpl",
+                title: "Start a NEW empty template (net-new composition)",
+                onclick: (e) => busy(e.currentTarget, newTemplate),
+              },
+              "＋"
+            ),
+            exportBtn("template", state.slug)
+          )
         )
       ),
     ];
@@ -1580,6 +1641,85 @@ export function createCompose(hub) {
     return card;
   }
 
+  /** Every slot id in the template — a placeholder has to be unique. */
+  function allSlotIds() {
+    const ids = new Set();
+    for (const slot of state.rawData?.slots ?? []) ids.add(slot.id);
+    for (const variant of state.rawData?.variants ?? []) {
+      for (const slot of variant.slots ?? []) ids.add(slot.id);
+    }
+    return ids;
+  }
+
+  /**
+   * Rename a slot's id — the {placeholder} the template weaves inline.
+   *
+   * The id is a KEY, not a label: it names the slot in the prefix/suffix text,
+   * in the node's selection lines, in the audition sets and in the row map. A
+   * rename that moved only `slot.id` would leave a {token} in the prose
+   * pointing at a slot that no longer exists — the drawn text would silently
+   * stop appearing. So everything that keys off it moves in the same step.
+   */
+  function renameSlotId(slot, raw, isVariantSlot, input) {
+    const next = String(raw ?? "")
+      .trim()
+      .replace(/[^A-Za-z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    if (!next || next === slot.id) {
+      input.value = slot.id; // nothing to do, and never leave a half-typed id on screen
+      return;
+    }
+    if (allSlotIds().has(next)) {
+      input.value = slot.id;
+      ctx.toast(
+        "error",
+        "That id is taken",
+        `Another slot in this template is already called '${next}'. Ids are the `
+          + "placeholders the prefix/suffix weave in, so they have to be unique."
+      );
+      return;
+    }
+    const from = slot.id;
+    if (state.rawData) {
+      state.rawData.prefix = renameToken(state.rawData.prefix ?? "", from, next);
+      state.rawData.suffix = renameToken(state.rawData.suffix ?? "", from, next);
+    }
+    const move = (set) => {
+      if (set.has(from)) {
+        set.delete(from);
+        set.add(next);
+      }
+    };
+    if (state.rows.has(from)) {
+      state.rows.set(next, state.rows.get(from));
+      state.rows.delete(from);
+    }
+    move(state.muted);
+    move(state.soloed);
+    move(state.labelEdit);
+    move(state.seedEdit);
+    if (!isVariantSlot) {
+      state.orderIds = state.orderIds.map((id) => (id === from ? next : id));
+    }
+    if (state.selectedRow === from) state.selectedRow = next;
+    slot.id = next;
+    markModified();
+    renderComposeTab();
+    schedulePreview();
+  }
+
+  /** Point a slot at a different section — the Remap flow, off the row. */
+  async function remapSlot(slot, ref) {
+    if (!ref || ref === slot.ref) return;
+    slot.ref = ref;
+    delete slot.default; // the old default named an item of the old section
+    state.rows.set(slot.id, parseToken("random"));
+    await ensurePool(ref, { force: true });
+    markModified();
+    renderComposeTab();
+    schedulePreview();
+  }
+
   function removeSlot(container, index, id, isVariantSlot) {
     container.splice(index, 1);
     if (!isVariantSlot) state.orderIds = state.orderIds.filter((oid) => oid !== id);
@@ -1883,7 +2023,7 @@ export function createCompose(hub) {
           el("span", { class: "pc-cell-label" }, labelText),
           el("span", { class: "pc-cell-chips" }, chips)
         ),
-          valueCell(itemSelect, pool, slot.ref),
+          valueCell(itemSelect, pool, slot.ref, slot),
           weightCell(pool, row, resolved),
           seedNode,
           // ✎ ↑ ↓ ✕ ride the row under an ACTIONS header instead of hiding in
@@ -1903,10 +2043,39 @@ export function createCompose(hub) {
       // One block, and every field says what it is. The lead-in used to open as
       // a bare textarea holding the row's name — nothing on screen said THAT
       // text was what you were editing.
+      const idInput = el("input", {
+        type: "text",
+        value: slot.id,
+        // `change`, not `input`: renaming on every keystroke would rewrite the
+        // prefix/suffix tokens to every half-typed prefix on the way to the
+        // name actually wanted
+        onchange: (e) => renameSlotId(slot, e.target.value, isVariantSlot, e.target),
+      });
+      const refPicker = sectionPicker({
+        typeOf: state.rawData?.type,
+        initial: slot.ref,
+        compact: true,
+      });
+      refPicker.select.addEventListener("change", () =>
+        busy(refPicker.select, () => remapSlot(slot, refPicker.select.value))
+      );
       parts.push(
         el(
           "div",
           { class: "pc-slot-edit" },
+          titled(
+            "Id",
+            idInput,
+            "The {placeholder} this slot answers to: in the prefix/suffix text, "
+              + "in the node's selection lines and in nested references. Renaming it "
+              + "here rewrites the prefix/suffix references with it."
+          ),
+          titled(
+            "Section",
+            refPicker.node,
+            "Which section this slot draws from. Changing it clears the slot's "
+              + "default — the old one named an item of the old section."
+          ),
           titled(
             "Label",
             autoArea(
@@ -2337,9 +2506,105 @@ export function createCompose(hub) {
         el("summary", {}, title),
         el("pre", { class: "mrln-pre" }, text)
       );
-    children.push(fold("Choices (what was drawn per section)", preview.choices, "choicesOpen"));
+    children.push(choicesFold(preview));
     if (preview.negative) children.push(fold("Negative", preview.negative, "negativeOpen"));
     mount(previewBox, ...children);
+  }
+
+  /**
+   * CHOICES DRAWN as a table, not a paragraph.
+   *
+   * Built from the preview's structured slots, NOT by parsing `preview.choices`
+   * — that string is a node OUTPUT with a frozen shape, and re-deriving it here
+   * with a regex would make a display change able to break a render report.
+   * The dotted id already carries the hierarchy, so nested draws need no indent.
+   */
+  function choicesFold(preview) {
+    const rows = [];
+    if (preview.variant) {
+      rows.push({
+        id: "variant",
+        item: preview.variant,
+        state: preview.variant_random ? "random" : "fixed",
+      });
+    }
+    const walk = (slots) => {
+      for (const slot of slots ?? []) {
+        rows.push({
+          id: slot.id,
+          item: slot.missing
+            ? `section '${slot.ref}' is missing`
+            : (slot.item ?? (slot.random ? "(omitted)" : "(muted)")),
+          state: slot.missing
+            ? "missing"
+            : slot.item === null || slot.item === undefined
+              ? slot.random
+                ? "omitted"
+                : "muted"
+              : slot.fixed_first
+                ? "default"
+                : slot.random
+                  ? "random"
+                  : "fixed",
+          note: [
+            // the preview body carries no master seed — state.seed IS the one
+            // it was rendered with, so a per-slot pin is what differs from it
+            slot.random && slot.seed_used !== state.seed ? `@${slot.seed_used}` : "",
+            slot.tier === "user" ? "user" : "",
+            slot.inline ? "inline" : "",
+          ]
+            .filter(Boolean)
+            .join(" · "),
+          stale: slot.stale_note ?? "",
+        });
+        walk(slot.children);
+      }
+    };
+    walk(preview.slots);
+    return el(
+      "details",
+      {
+        class: "mrln-fold",
+        open: state.choicesOpen ? "" : null,
+        ontoggle: (e) => {
+          state.choicesOpen = e.target.open;
+        },
+      },
+      el(
+        "summary",
+        {},
+        "Choices drawn",
+        el("span", { class: "pc-summary-note" }, `${rows.length} per section`)
+      ),
+      el(
+        "div",
+        { class: "pc-choices" },
+        rows.map((row) =>
+          el(
+            "div",
+            { class: "pc-choice", "data-state": row.state, title: row.stale || "" },
+            // The PARENT path gives way, never the leaf: at a nested depth of
+            // three, 'configuration.model.natio…' hides the one word that says
+            // what was drawn.
+            el(
+              "span",
+              { class: "pc-choice-id", title: row.id },
+              row.id.includes(".")
+                ? el("span", { class: "pc-choice-path" }, `${row.id.slice(0, row.id.lastIndexOf(".") + 1)}`)
+                : null,
+              el("span", { class: "pc-choice-leaf" }, row.id.split(".").pop())
+            ),
+            el(
+              "span",
+              { class: "pc-choice-item" },
+              row.item,
+              row.note ? el("span", { class: "pc-choice-note" }, ` ${row.note}`) : null
+            ),
+            el("span", { class: "pc-choice-state" }, row.state)
+          )
+        )
+      )
+    );
   }
 
   // ---- "Optimize for …" (SPEC 5.3) -----------------------------------------

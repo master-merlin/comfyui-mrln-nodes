@@ -121,9 +121,14 @@ def _find_item(pool, ref, token):
 
 
 def _filtered_pool(pool, slot, template_type):
-    """Random-draw pool after suits/type and slot tag filters. Fixed picks
-    always search the FULL pool — tagging never restricts an explicit
-    choice."""
+    """Random-draw pool after suits/type, the slot tag filters and its
+    `include` whitelist. Fixed picks always search the FULL pool — neither
+    tagging nor a whitelist ever restricts an explicit choice."""
+    # A whitelist naming nothing this section has left is treated as no
+    # whitelist: sections are edited under the templates that name their
+    # items, and silently drawing from an empty pool would be a worse answer
+    # than drawing from the whole one.
+    include = {name for name in slot.include if name in {q for q, _, _ in pool}}
     result = []
     for qualified, section, item in pool:
         if template_type and section.suits and not (set(section.suits) & set(template_type)):
@@ -132,6 +137,8 @@ def _filtered_pool(pool, slot, template_type):
         if slot.tags_any and not (effective & set(slot.tags_any)):
             continue
         if slot.tags_none and (effective & set(slot.tags_none)):
+            continue
+        if include and qualified not in include:
             continue
         result.append((qualified, section, item))
     return result

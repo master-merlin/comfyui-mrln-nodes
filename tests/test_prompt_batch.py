@@ -477,3 +477,58 @@ def test_the_template_widget_accepts_a_label_and_a_slug_always_wins(node, user_t
     assert "batch/tiny" in message and "batch/tiny-two" in message
     # ... while the slug is still unambiguous and keeps working
     assert run(node, template="batch/tiny") == by_slug
+
+
+# ---------------------------------------------------------------------------
+# slot.include: random draws from a chosen subset of the section
+# ---------------------------------------------------------------------------
+
+
+def test_include_narrows_the_random_pool_without_touching_fixed_picks(node, user_tier):
+    """'random (selected)' in the picker. The whitelist lives on the TEMPLATE,
+    so the node honours it headless — that is the whole point of storing it
+    there rather than in the node's selection lines."""
+    seeds = range(20)
+    _write(
+        user_tier,
+        "templates/batch/tiny.json",
+        {
+            "label": "Tiny",
+            "prefix": "a car",
+            "slots": [
+                {
+                    "id": "color",
+                    "ref": "batch/color",
+                    "default": "random",
+                    "include": ["red", "blue"],
+                },
+                {"id": "light", "ref": "batch/light", "default": "random"},
+            ],
+            "render": {"format": "string", "joiner": ", "},
+        },
+    )
+    drawn = {run(node, seed=s)[2][0].split("color: ")[1].split(" ")[0] for s in seeds}
+    assert drawn <= {"red", "blue"}, "a whitelisted slot drew an item outside its pool"
+    assert drawn == {"red", "blue"}, "both whitelisted items must still be reachable"
+    # an explicit pick is NOT restricted by the whitelist: the user asked for it
+    out = run(node, selection="color=green")
+    assert "deep green" in out[0][0]
+
+
+def test_an_include_naming_nothing_that_exists_falls_back_to_the_whole_section(node, user_tier):
+    """Sections get edited under the templates that name their items. Drawing
+    from an empty pool would be a worse answer than drawing from all of it."""
+    _write(
+        user_tier,
+        "templates/batch/tiny.json",
+        {
+            "label": "Tiny",
+            "prefix": "a car",
+            "slots": [
+                {"id": "color", "ref": "batch/color", "default": "random", "include": ["gone"]},
+            ],
+            "render": {"format": "string", "joiner": ", "},
+        },
+    )
+    drawn = {run(node, seed=s)[2][0].split("color: ")[1].split(" ")[0] for s in range(20)}
+    assert drawn == {"red", "green", "blue"}

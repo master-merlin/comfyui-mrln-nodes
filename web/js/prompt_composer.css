@@ -1742,18 +1742,40 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   background: var(--pc-bg-raised);
   border-bottom: 1px solid var(--pc-line);
 }
+/* Both bar lines ride the TABLE's column grid (see .pc-tplbar in the row-grid
+   rules): the heading sits over SECTION, the slug over DRAWN VALUE, and the
+   picker's trigger ends exactly where the value column begins. The bar then
+   reads as the table's own header instead of a block floating above it. */
+.pc-panel .pc-tplbar {
+  display: grid;
+  align-items: center;
+  gap: var(--pc-gap);
+  padding: 0;
+}
+.pc-panel .pc-tplbar > :first-child {
+  grid-column: 1 / 3;
+  min-width: 0;
+}
+.pc-panel .pc-tplbar > :last-child {
+  grid-column: 3 / -1;
+  min-width: 0;
+}
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name {
-  display: block;
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   font: 600 10px var(--pc-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--pc-fg-3);
 }
+.pc-panel .pc-tpl-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-inline {
   gap: 6px;
 }
-/* the slug rides with the name, one shade quieter — it is what the NODE holds */
+/* the slug on the heading line: full width available, so it is never clipped */
 .pc-panel .pc-tpl-slug {
   flex: 0 1 auto;
   min-width: 0;
@@ -1761,11 +1783,13 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-overflow: ellipsis;
   white-space: nowrap;
   font: 11px var(--pc-mono);
-  color: var(--pc-fg-4);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--pc-fg-3);
 }
-.pc-panel .mrln-tab-body > label.mrln-field:first-of-type select {
-  flex: 1 1 auto;
-  height: 28px;
+/* the template picker's trigger: the loudest line in the panel */
+.pc-panel .pc-trigger.pc-tpl-trigger {
+  height: 30px;
   font: 600 14px var(--pc-ui);
   color: var(--pc-fg);
 }
@@ -2382,6 +2406,32 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-align: right;
   font: 600 11.5px var(--pc-mono);
 }
+.pc-panel .pc-slot-edit > .mrln-field > input[type="text"] {
+  font: 12px var(--pc-mono);
+}
+/* the section picker inside the editor: filter, scope and select stacked */
+.pc-panel .pc-slot-edit .mrln-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.pc-panel .pc-slot-edit .mrln-picker > select {
+  flex: 1 1 100%;
+  order: 1;
+  min-height: 26px;
+}
+.pc-panel .pc-slot-edit .mrln-picker > input {
+  flex: 1 1 120px;
+  min-height: 24px;
+  font: 11.5px var(--pc-mono);
+}
+.pc-panel .pc-slot-edit .mrln-picker > .mrln-note {
+  flex: 1 0 100%;
+  order: 2;
+  font-size: 10px;
+}
 .pc-panel .pc-slot-edit > .mrln-note {
   padding-left: 78px;
   font-size: 10.5px;
@@ -2462,7 +2512,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    the value column gives up the width, since it was the widest thing on the
    row and reads fine a little narrower. */
 .pc-panel .pc-row,
-.pc-panel .pc-thead {
+.pc-panel .pc-thead,
+.pc-panel .pc-tplbar {
   /* 72px of seed, not 62: a 10-digit seed measures 58px at this size and the
      field has 10px of padding, so 62 clipped the last digit off every held
      draw. A number you cannot read is not a number. */
@@ -2725,6 +2776,118 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font-size: 10.5px;
   color: var(--pc-fg-4);
 }
+/* CHOICES DRAWN: id · drawn item · state pill, one line each. It was a
+   preformatted paragraph, which is the right shape for the node's report and
+   the wrong one for reading down a column. */
+.pc-panel .pc-choices {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 6px;
+}
+.pc-panel .pc-choice {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr auto;
+  align-items: center;
+  gap: var(--pc-gap);
+  min-height: 24px;
+  border-bottom: 1px solid var(--pc-line-row);
+}
+.pc-panel .pc-choice:last-child {
+  border-bottom: 0;
+}
+.pc-panel .pc-choice-id {
+  display: flex;
+  min-width: 0;
+  font: 11px var(--pc-mono);
+  color: var(--pc-fg-3);
+}
+.pc-panel .pc-choice-path {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-choice-leaf {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.pc-panel .pc-choice-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 11.5px var(--pc-mono);
+  color: var(--pc-fg-value);
+}
+.pc-panel .pc-choice-note {
+  font-weight: 400;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-choice-state {
+  justify-self: end;
+  padding: 1px 6px;
+  font: 600 9px var(--pc-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  color: var(--pc-live);
+  background: var(--pc-live-soft);
+  border: 1px solid var(--pc-live-line);
+}
+.pc-panel .pc-choice[data-state="fixed"] .pc-choice-state,
+.pc-panel .pc-choice[data-state="default"] .pc-choice-state {
+  color: var(--pc-held);
+  background: var(--pc-held-soft);
+  border-color: var(--pc-held-line);
+}
+.pc-panel .pc-choice[data-state="muted"] .pc-choice-state,
+.pc-panel .pc-choice[data-state="omitted"] .pc-choice-state {
+  color: var(--pc-fg-4);
+  background: transparent;
+  border-color: var(--pc-line);
+}
+.pc-panel .pc-choice[data-state="missing"] .pc-choice-state {
+  color: var(--pc-bad);
+  background: transparent;
+  border-color: var(--pc-bad);
+}
+.pc-panel .pc-choice[data-state="muted"] .pc-choice-item,
+.pc-panel .pc-choice[data-state="omitted"] .pc-choice-item {
+  color: var(--pc-fg-4);
+  font-weight: 400;
+}
+
+/* The random row's pool control, and the two bulk actions it turns on. */
+.pc-pick .pc-pick-subset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pc-gap);
+  padding: 5px 10px 7px 32px;
+}
+.pc-pick .pc-pick-bulk {
+  display: flex;
+  gap: 4px;
+}
+.pc-pick .pc-pick-bulk .mrln-btn {
+  min-height: 22px;
+  padding: 0 8px;
+  font: 10.5px var(--pc-ui);
+  color: var(--pc-fg-3);
+  border-color: var(--pc-line);
+}
+.pc-pick .pc-pick-bulk .mrln-btn:hover {
+  color: var(--pc-fg);
+  border-color: var(--pc-line-strong);
+}
+.pc-pick .pc-pick-ticked .pc-pick-mark {
+  color: var(--pc-live);
+}
+.pc-pick .pc-pick-ticked .pc-pick-name {
+  color: var(--pc-fg);
+}
+
 .pc-pick .pc-pick-sep {
   display: flex;
   justify-content: space-between;
@@ -2788,7 +2951,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    has to stay readable long after a value stops needing its full width. */
 @container pcpanel (max-width: 620px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead {
+  .pc-panel .pc-thead,
+  .pc-panel .pc-tplbar {
     grid-template-columns: 26px 1.25fr 1fr 40px 72px 92px;
   }
 }
@@ -2797,7 +2961,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    columns that carry the work were down to 'Conditio…' and '🎲 ra…'. */
 @container pcpanel (max-width: 520px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead {
+  .pc-panel .pc-thead,
+  .pc-panel .pc-tplbar {
     grid-template-columns: 26px 1.25fr 1fr 72px 92px;
   }
   .pc-panel .pc-cell-wt,
@@ -2809,7 +2974,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    to be enormous before the table was whole. */
 @container pcpanel (max-width: 470px) {
   .pc-panel .pc-row,
-  .pc-panel .pc-thead {
+  .pc-panel .pc-thead,
+  .pc-panel .pc-tplbar {
     grid-template-columns: 26px 1.25fr 1fr 92px;
   }
   .pc-panel .pc-cell-seed,
