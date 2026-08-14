@@ -6,6 +6,22 @@ A multi-domain collection of custom nodes for [ComfyUI](https://github.com/comfy
 > library, Composer sidebar, LoRA integration and LLM tooling; further node
 > domains are added incrementally.
 
+## Start here
+
+**Prompt domain** — compose prompts from a curated JSON library instead of
+retyping them: 100 templates, 237 sections, 3465 items, every one with a
+thumbnail. Per-slot fixed-or-random draws on a deterministic seed, nested
+draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
+
+- 📖 **[Prompt Composer user guide](docs/prompt-composer-guide.md)** — the
+  panel tab by tab with screenshots, including how to build a template with
+  **nested draws** and a **combine** section. Start here if you want to *use*
+  the pack.
+- ▶ **Example workflows** — `mrln-prompting` opens and runs with no models
+  downloaded at all; `mrln-prompting-krea2-turbo` is the same idea end to end.
+- 🧩 **[Nodes](#nodes)** — what each node does, if you would rather read the
+  contract than the guide.
+
 ## Install
 
 Until the pack is on the [Comfy Registry](https://registry.comfy.org), install manually:
@@ -112,6 +128,9 @@ genuinely vanished still loads and runs — the dead slot is skipped with a
 loud ⚠ in the choices output, and the Composer offers a one-click remap.
 
 ### Prompt Composer panel
+
+> Walked tab by tab with screenshots in the
+> **[user guide](docs/prompt-composer-guide.md)**.
 
 On frontends with the sidebar-extension API, the pack adds a **Prompt
 Composer** sidebar tab: browse the library, pick items per slot, watch a live
@@ -272,14 +291,6 @@ a fresh install with no models at all.
 **mrln-prompting-krea2-turbo** is the same idea end to end — compose, optional
 LLM rewrite, 8-step render — and needs the Krea-2 Turbo model plus its style
 LoRAs, both linked from notes inside the graph.
-
-## User guide
-
-[**docs/prompt-composer-guide.md**](docs/prompt-composer-guide.md) walks the
-Composer tab by tab with screenshots — including the two things that are hard
-to discover on your own: building a template whose items carry **nested child
-draws**, and the **combine** section that merges several sections into one
-draw pool.
 
 ## Design principles
 
