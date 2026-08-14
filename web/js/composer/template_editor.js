@@ -17,10 +17,37 @@ export function createTemplateEditor(hub) {
   const setEditor = (...a) => hub.setEditor(...a);
   const thumbControls = (...a) => hub.thumbControls(...a);
 
-  async function openTemplateEditor(slug) {
+  /**
+   * The tier pill, and a switch when the slug has a file in BOTH tiers — the
+   * same one the Compose tab and the section editor carry. A user file shadows
+   * the factory file everywhere, so this is the only way to read what you are
+   * shadowing before deciding your version is the better one.
+   */
+  function tierSwitch(slug, body) {
+    const tiers = body.tiers ?? [];
+    const showing = body.viewing ?? body.tier;
+    if (tiers.length < 2) return tierChip(body.tier);
+    const other = showing === "factory" ? "user" : "factory";
+    return el(
+      "button",
+      {
+        class: `mrln-chip mrln-chip-btn mrln-${showing}`,
+        title: `Showing the ${showing} file — click to read the ${other} one. `
+          + "Your file wins every render either way.",
+        onclick: (e) => busy(e.currentTarget, () => openTemplateEditor(slug, other)),
+      },
+      showing
+    );
+  }
+
+  async function openTemplateEditor(slug, tier = "") {
     let body;
     try {
-      body = await ctx.apiJson(`/mrln/prompt/template?slug=${encodeURIComponent(slug)}`);
+      // `tier` reads ONE tier's own file. The editor edits what it is SHOWN,
+      // so the JSON below is that tier's — and saving it writes the user tier,
+      // which is why the factory view says so out loud.
+      const query = tier ? `&tier=${encodeURIComponent(tier)}` : "";
+      body = await ctx.apiJson(`/mrln/prompt/template?slug=${encodeURIComponent(slug)}${query}`);
     } catch (err) {
       setEditor(el("div", { class: "mrln-error" }, err.message));
       return;
@@ -80,10 +107,29 @@ export function createTemplateEditor(hub) {
         )
       );
     }
+    const viewingFactoryUnderMine = body.viewing === "factory" && body.tier === "user";
     setEditor(
-      el("div", { class: "mrln-tree-head" }, `Template: ${slug}`, tierChip(body.tier), editorCloseBtn()),
+      el(
+        "div",
+        { class: "mrln-tree-head" },
+        `Template: ${slug}`,
+        tierSwitch(slug, body),
+        editorCloseBtn()
+      ),
       body.tier === "factory"
         ? el("div", { class: "mrln-note" }, "Factory file — saving creates a user-tier override.")
+        : null,
+      // The one genuinely destructive combination: this JSON is the factory's,
+      // and Save writes the user tier — which replaces your own version with
+      // what you are reading.
+      viewingFactoryUnderMine
+        ? el(
+            "div",
+            { class: "mrln-note pc-tier-note" },
+            el("span", { class: "pc-flag" }, "● reading the factory file"),
+            " — your version still wins every render, and Save here would "
+              + "REPLACE it with this one."
+          )
         : null,
       // The thumbnail is the template's face in the browse grid, and it is
       // independent of the JSON below: setting one writes an image file, never

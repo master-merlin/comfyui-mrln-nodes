@@ -1382,6 +1382,18 @@ export function createSectionEditor(hub) {
         tierSwitch(slug, body),
         editorCloseBtn()
       ),
+      // Reading the factory file of a section YOUR file extends: the item list
+      // below is the factory's, and Save writes the user tier — so it would
+      // replace your extensions with what you are reading.
+      body.viewing === "factory" && body.tier === "user"
+        ? el(
+            "div",
+            { class: "mrln-note pc-tier-note" },
+            el("span", { class: "pc-flag" }, "● reading the factory file"),
+            " — unmerged, so your own items are not shown. Your version still "
+              + "wins every draw, and Save here would REPLACE it with this one."
+          )
+        : null,
       body.merged
         ? el(
             "div",
