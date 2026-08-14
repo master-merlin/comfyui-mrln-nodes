@@ -3449,3 +3449,72 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   white-space: pre-wrap;
   overflow: hidden;
 }
+
+/* ---- one disclosure pattern, everywhere ---------------------------------
+   Folded content was easy to walk straight past. TEMPLATE TEXT is the case
+   that proved it: its arrow was a dim grey glyph the same colour as the label
+   beside it, so the whole row read as a heading rather than as something with
+   more behind it — and a heading is exactly the thing your eye skips.
+
+   Every disclosure in the panel now says the same two things the same way:
+
+     closed   green ▸   label in the held amber      "there is more here"
+     open     green ▾   label in the quiet grey      "the content is below"
+
+   The arrow stays green in both states because it is the same control either
+   way; the LABEL carries the state. Amber is the panel's "held" colour, and
+   this is the same idea one level up — content held back rather than a value
+   held back — so it reuses the token rather than inventing a sixth colour.
+
+   Five different summaries had grown three different marker implementations
+   and two native ones; they are one rule now, so a new fold cannot come out
+   looking like something else. */
+
+.pc-panel details.mrln-fold > summary,
+.pc-panel .mrln-nest-branch > summary,
+.pc-panel .mrln-history-batch > summary,
+.pc-panel .mrln-tree-block > summary,
+.pc-panel .mrln-tree-group > summary {
+  list-style: none;
+}
+.pc-panel details.mrln-fold > summary::-webkit-details-marker,
+.pc-panel .mrln-nest-branch > summary::-webkit-details-marker,
+.pc-panel .mrln-history-batch > summary::-webkit-details-marker,
+.pc-panel .mrln-tree-block > summary::-webkit-details-marker,
+.pc-panel .mrln-tree-group > summary::-webkit-details-marker {
+  display: none;
+}
+.pc-panel details.mrln-fold > summary::before,
+.pc-panel .mrln-nest-branch > summary::before,
+.pc-panel .mrln-history-batch > summary::before,
+.pc-panel .mrln-tree-block > summary::before,
+.pc-panel .mrln-tree-group > summary::before {
+  content: "▸";
+  flex: 0 0 auto;
+  width: 10px;
+  margin-right: 5px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--pc-live);
+}
+.pc-panel details.mrln-fold[open] > summary::before,
+.pc-panel .mrln-nest-branch[open] > summary::before,
+.pc-panel .mrln-history-batch[open] > summary::before,
+.pc-panel .mrln-tree-block[open] > summary::before,
+.pc-panel .mrln-tree-group[open] > summary::before {
+  content: "▾";
+}
+/* the closed label, and only the label — chips and counts beside it keep
+   their own colours, or a closed group would repaint half the row */
+.pc-panel details.mrln-fold:not([open]) > summary,
+.pc-panel .mrln-nest-branch:not([open]) > summary,
+.pc-panel .mrln-history-batch:not([open]) > summary,
+.pc-panel .mrln-tree-block:not([open]) > summary,
+.pc-panel .mrln-tree-group:not([open]) > summary {
+  color: var(--pc-held);
+}
+.pc-panel .mrln-tree-block > summary,
+.pc-panel .mrln-tree-group > summary {
+  display: flex;
+  align-items: center;
+}
