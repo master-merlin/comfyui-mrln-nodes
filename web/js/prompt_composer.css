@@ -1040,3 +1040,420 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 /* the add-section row lays its children out horizontally; the picker is a
    column that must still be allowed to grow into the space it has */
 .mrln-addrow > .mrln-picker { flex: 1 1 auto; }
+
+/* ==========================================================================
+   DESIGN PASS — phases 0 and 1 of design_handoff_prompt_composer.
+   ==========================================================================
+
+   Appended rather than shipped as a second <link>: prompt_composer.js already
+   loads exactly one sheet, and a second one would fight ~1000 lines of equal
+   specificity here on elements that carry BOTH class families. Living at the
+   end of this file means the design rules win the cascade at equal
+   specificity, and superseded old rules get deleted as each phase lands
+   rather than left to race.
+
+   Scope: every selector below starts at .pc-panel, which is the same element
+   as .mrln-composer (set in prompt_composer_panel.js). Nothing can reach the
+   rest of the ComfyUI graph UI.
+
+   Deviation from the handoff, deliberate: the spec's tokens are dark-only
+   literals. This panel supports ComfyUI's LIGHT palettes with a second, audited
+   token block (see the top of this file: >=4.5:1 text, >=3:1 borders on both
+   light surfaces). Shipping raw #131315 would have made the panel unreadable
+   on a light theme. So the --pc-* tokens are declared TWICE — the spec's values
+   for dark, a matched light set behind the existing light guard — and every
+   rule reads tokens only, exactly as the spec requires. */
+
+.pc-panel {
+  /* surfaces */
+  --pc-bg-app: #131315;
+  --pc-bg-panel: #1b1b1e;
+  --pc-bg-raised: #1e1e21;
+  --pc-bg-row: #212125;
+  --pc-bg-row-alt: #1e1e22;
+  --pc-bg-input: #17171a;
+  /* lines */
+  --pc-line: #2c2c33;
+  --pc-line-row: #232327;
+  --pc-line-strong: #3a3a42;
+  /* text */
+  --pc-fg: #f0f0f2;
+  --pc-fg-value: #eaeaee;
+  --pc-fg-2: #9a9aa4;
+  --pc-fg-3: #6a6a74;
+  --pc-fg-4: #5e5e66;
+  /* the only three colours allowed to carry meaning, plus the token blue */
+  --pc-live: #7fd1b9;
+  --pc-live-soft: rgba(127, 209, 185, 0.1);
+  --pc-live-line: rgba(127, 209, 185, 0.35);
+  --pc-live-ring: rgba(127, 209, 185, 0.18);
+  --pc-on-live: #0d0d0f;
+  --pc-held: #e0b276;
+  --pc-held-soft: rgba(224, 178, 118, 0.1);
+  --pc-held-line: rgba(224, 178, 118, 0.4);
+  --pc-bad: #e08a76;
+  --pc-info: #8ea8d8;
+  /* metrics */
+  --pc-row: 32px;
+  --pc-row-lg: 38px;
+  --pc-control: 30px;
+  --pc-r-sm: 6px;
+  --pc-r-md: 8px;
+  --pc-r-lg: 10px;
+  --pc-pad: 14px;
+  --pc-gap: 8px;
+  --pc-ui: system-ui, -apple-system, "Segoe UI", Helvetica, sans-serif;
+  --pc-mono: ui-monospace, Menlo, Consolas, monospace;
+
+  /* phase 0: the responsive rules query THIS box, not the viewport, because
+     the panel is a resizable sidebar and the window says nothing about it */
+  container-type: inline-size;
+  container-name: pcpanel;
+  background: var(--pc-bg-panel);
+  color: var(--pc-fg);
+  font-family: var(--pc-ui);
+}
+
+/* Light ComfyUI palettes — same guard the --mrln-* block uses (see top of
+   file for why `no dark-theme anywhere` is the only usable light signal).
+   Hues held, luminance inverted, contrast checked against #fff and #c9c9c9. */
+:root:not(.dark-theme):not(:has(body.dark-theme)) .pc-panel {
+  --pc-bg-app: #e8e8ec;
+  --pc-bg-panel: #f6f6f8;
+  --pc-bg-raised: #ededf1;
+  --pc-bg-row: #f2f2f5;
+  --pc-bg-row-alt: #eaeaef;
+  --pc-bg-input: #ffffff;
+  --pc-line: #d0d0d8;
+  --pc-line-row: #e0e0e6;
+  --pc-line-strong: #b4b4c0;
+  --pc-fg: #17171b;
+  --pc-fg-value: #1d1d22;
+  --pc-fg-2: #55555f;
+  --pc-fg-3: #6a6a74;
+  --pc-fg-4: #7a7a84;
+  --pc-live: #16775e;
+  --pc-live-soft: rgba(22, 119, 94, 0.1);
+  --pc-live-line: rgba(22, 119, 94, 0.35);
+  --pc-live-ring: rgba(22, 119, 94, 0.18);
+  --pc-on-live: #ffffff;
+  --pc-held: #7a5410;
+  --pc-held-soft: rgba(122, 84, 16, 0.1);
+  --pc-held-line: rgba(122, 84, 16, 0.4);
+  --pc-bad: #a52d13;
+  --pc-info: #2b5192;
+}
+
+.pc-panel *,
+.pc-panel *::before,
+.pc-panel *::after {
+  box-sizing: border-box;
+}
+
+/* --- rule 3: controls lose their chrome until hover/focus ---------------- */
+/* Twelve stacked rows have to read as a table, not twelve widgets. This is
+   the single highest-value rule in the sheet, so it is panel-wide and the
+   old .mrln-composer select/input block above is superseded by it. */
+.pc-panel select,
+.pc-panel input[type="text"],
+.pc-panel input[type="number"],
+.pc-panel input[type="search"],
+.pc-panel textarea,
+.pc-panel button {
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  color: var(--pc-fg-value);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--pc-r-sm);
+  min-width: 0;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.pc-panel select::-ms-expand {
+  display: none;
+}
+.pc-panel select,
+.pc-panel input[type="text"],
+.pc-panel input[type="number"],
+.pc-panel input[type="search"],
+.pc-panel textarea {
+  padding: 0 8px;
+  min-height: 26px;
+}
+.pc-panel textarea {
+  padding: 6px 8px;
+  resize: vertical;
+  font-family: var(--pc-mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  background: var(--pc-bg-input);
+  border-color: var(--pc-line);
+}
+.pc-panel select:hover,
+.pc-panel input[type="text"]:hover,
+.pc-panel input[type="number"]:hover,
+.pc-panel input[type="search"]:hover {
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+/* A select with no visible chrome still has to announce that it opens. */
+.pc-panel select {
+  background-image: linear-gradient(transparent, transparent);
+  padding-right: 18px;
+}
+.pc-panel select:hover {
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--pc-fg-3) 50%),
+    linear-gradient(135deg, var(--pc-fg-3) 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) calc(50% + 1px),
+    calc(100% - 6px) calc(50% + 1px);
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
+
+/* --- focus: one visible ring everywhere --------------------------------- */
+.pc-panel :focus-visible {
+  outline: none;
+  border-color: var(--pc-live);
+  box-shadow: 0 0 0 3px var(--pc-live-ring);
+  border-radius: var(--pc-r-sm);
+}
+
+/* --- rule 1 groundwork + tab bar ---------------------------------------- */
+/* Text with a 2px underline, not boxed buttons. Overrides .mrln-tabs button. */
+.pc-panel .mrln-tabs {
+  gap: 0;
+  padding: 8px 12px 0;
+  background: var(--pc-bg-app);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .mrln-tabs button {
+  flex: 0 0 auto;
+  padding: 8px 13px 9px;
+  font: 500 12.5px var(--pc-ui);
+  color: #75757e;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+}
+.pc-panel .mrln-tabs button:hover {
+  color: #c8c8d0;
+}
+.pc-panel .mrln-tabs button[aria-selected="true"] {
+  color: var(--pc-fg);
+  border-bottom-color: var(--pc-live);
+  font-weight: 500;
+  background: none;
+}
+.pc-panel .mrln-tabs button:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--pc-live-ring);
+}
+/* Text tabs no longer stretch (flex:1 -> auto), so at sidebar widths five of
+   them stop fitting and 'Settings' clipped. Responsiveness is driven by the
+   PANEL's width, not the viewport, so this is a container query. The strip
+   can scroll as the last resort rather than truncate a tab name. */
+.pc-panel .mrln-tabs {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pc-panel .mrln-tabs::-webkit-scrollbar {
+  display: none;
+}
+@container pcpanel (max-width: 460px) {
+  .pc-panel .mrln-tabs {
+    padding-inline: 8px;
+  }
+  .pc-panel .mrln-tabs button {
+    padding: 8px 8px 9px;
+    font-size: 12px;
+  }
+}
+@container pcpanel (max-width: 380px) {
+  .pc-panel .mrln-tabs button {
+    padding: 8px 6px 9px;
+    font-size: 11.5px;
+  }
+}
+
+/* --- rule 6: one primary per view, everything else ghost ---------------- */
+.pc-panel .mrln-btn {
+  min-height: 26px;
+  padding: 0 10px;
+  font: 11.5px var(--pc-ui);
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+  border: 1px solid var(--pc-line-strong);
+  border-radius: var(--pc-r-sm);
+  cursor: pointer;
+}
+.pc-panel .mrln-btn:hover:not(:disabled) {
+  background: var(--pc-line);
+  border-color: var(--pc-fg-4);
+}
+.pc-panel .mrln-btn:disabled {
+  color: var(--pc-fg-4);
+  border-color: var(--pc-line);
+  cursor: default;
+}
+.pc-panel .mrln-btn.mrln-primary,
+.pc-panel .mrln-btn[data-variant="primary"] {
+  font-weight: 600;
+  color: var(--pc-on-live);
+  background: var(--pc-live);
+  border-color: var(--pc-live);
+}
+.pc-panel .mrln-btn.mrln-primary:hover:not(:disabled),
+.pc-panel .mrln-btn[data-variant="primary"]:hover:not(:disabled) {
+  background: #93dcc6;
+  border-color: #93dcc6;
+}
+.pc-panel .mrln-btn[data-variant="danger"],
+.pc-panel .mrln-btn.mrln-armed {
+  color: var(--pc-bad);
+  background: transparent;
+  border-color: var(--pc-bad);
+}
+/* The old red circle-slash row buttons read as errors on a resting row; the
+   handoff calls that out by name. Quiet at rest, target size preserved. */
+.pc-panel button.mrln-mini {
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0 5px;
+  font-size: 11px;
+  color: var(--pc-fg-3);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--pc-r-sm);
+  cursor: pointer;
+}
+.pc-panel button.mrln-mini:hover {
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+
+/* --- rule 7: zebra every list over six rows ----------------------------- */
+.pc-panel .mrln-items-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.pc-panel .mrln-items-table > tbody > tr:nth-of-type(odd),
+.pc-panel .mrln-items-table > tr:nth-of-type(odd) {
+  background: var(--pc-bg-row);
+}
+.pc-panel .mrln-items-table > tbody > tr:nth-of-type(even),
+.pc-panel .mrln-items-table > tr:nth-of-type(even) {
+  background: var(--pc-bg-row-alt);
+}
+.pc-panel .mrln-items-table td {
+  border-bottom: 1px solid var(--pc-line-row);
+  padding: 2px 4px;
+}
+
+/* --- surfaces that already exist, retuned to the token scale ------------ */
+.pc-panel .mrln-tab-body {
+  padding: 10px var(--pc-pad) 0;
+  gap: 10px;
+}
+.pc-panel .mrln-note {
+  font: 10.5px/1.45 var(--pc-ui);
+  color: var(--pc-fg-3);
+  opacity: 1;
+}
+.pc-panel .mrln-field-name {
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .mrln-slug {
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-3);
+}
+.pc-panel .mrln-error {
+  font: 11px var(--pc-ui);
+  color: var(--pc-bad);
+}
+.pc-panel .mrln-pre {
+  background: var(--pc-bg-input);
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-md);
+  padding: 9px 11px;
+  font: 12px/1.7 var(--pc-mono);
+  color: #cfcfd6;
+}
+.pc-panel .mrln-chip {
+  padding: 0 6px;
+  border-radius: 4px;
+  font: 600 9.5px var(--pc-mono);
+  line-height: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8b8b95;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  opacity: 1;
+}
+.pc-panel .mrln-chip.mrln-user,
+.pc-panel .mrln-chip[data-tier="user"] {
+  color: var(--pc-live);
+  background: var(--pc-live-soft);
+  border-color: var(--pc-live-line);
+}
+.pc-panel .mrln-chip.mrln-factory,
+.pc-panel .mrln-chip[data-tier="factory"] {
+  color: #8b8b95;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: transparent;
+}
+.pc-panel .mrln-chip.mrln-override {
+  color: var(--pc-held);
+  background: var(--pc-held-soft);
+  border-color: var(--pc-held-line);
+}
+.pc-panel .mrln-chip.mrln-merged {
+  color: var(--pc-info);
+  background: rgba(142, 168, 216, 0.1);
+  border-color: rgba(142, 168, 216, 0.35);
+}
+
+/* Library cards: the tier badge overlays the thumbnail instead of taking a
+   third line (phase 1 item in the plan). */
+.pc-panel .mrln-thumb {
+  position: relative;
+  border-radius: var(--pc-r-md);
+  border: 1px solid var(--pc-line);
+  overflow: hidden;
+}
+.pc-panel .mrln-thumb .mrln-chip {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(2px);
+}
+.pc-panel .mrln-thumb-empty {
+  background: repeating-linear-gradient(135deg, #232327 0 6px, #1d1d21 6px 12px);
+}
+
+/* Status semantics: ok is live, unreachable is bad, nothing else is tinted. */
+.pc-panel [data-status="ok"] {
+  color: var(--pc-live);
+}
+.pc-panel [data-status="bad"] {
+  color: var(--pc-bad);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-panel *,
+  .pc-panel *::before,
+  .pc-panel *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

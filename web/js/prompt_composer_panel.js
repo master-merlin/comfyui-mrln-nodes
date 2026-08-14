@@ -44,7 +44,12 @@ import { createTree } from "./composer/tree.js";
 import { el } from "./composer/dom.js";
 
 export function createComposerPanel(root, ctx) {
-  root.classList.add("mrln-composer");
+  // Two classes on one element, on purpose. `mrln-composer` is the existing
+  // scope every rule in prompt_composer.css already hangs off; `pc-panel` is
+  // the design handoff's token scope AND its container-query box, so it has to
+  // sit on the element that actually resizes with the sidebar — this one.
+  // Aliasing the two here beats renaming ~380 class references in the modules.
+  root.classList.add("mrln-composer", "pc-panel");
 
   const state = createState();
 
@@ -67,12 +72,25 @@ export function createComposerPanel(root, ctx) {
   };
   const tabButtons = el(
     "div",
-    { class: "mrln-tabs" },
-    el("button", { class: "mrln-active", onclick: () => switchTab("compose") }, "Compose"),
-    el("button", { onclick: () => switchTab("decompose") }, "De-compose"),
-    el("button", { onclick: () => switchTab("library") }, "Library"),
-    el("button", { onclick: () => switchTab("history") }, "History"),
-    el("button", { onclick: () => switchTab("settings") }, "Settings")
+    { class: "mrln-tabs", role: "tablist" },
+    ...[
+      ["compose", "Compose"],
+      ["decompose", "De-compose"],
+      ["library", "Library"],
+      ["history", "History"],
+      ["settings", "Settings"],
+    ].map(([name, text]) =>
+      el(
+        "button",
+        {
+          class: name === "compose" ? "mrln-active" : null,
+          role: "tab",
+          "aria-selected": name === "compose" ? "true" : "false",
+          onclick: () => switchTab(name),
+        },
+        text
+      )
+    )
   );
   root.replaceChildren(
     tabButtons,
@@ -87,7 +105,9 @@ export function createComposerPanel(root, ctx) {
     state.tab = name;
     for (const tab of tabNames) tabBodies[tab].style.display = tab === name ? "" : "none";
     tabButtons.querySelectorAll("button").forEach((button, i) => {
-      button.classList.toggle("mrln-active", tabNames[i] === name);
+      const on = tabNames[i] === name;
+      button.classList.toggle("mrln-active", on);
+      button.setAttribute("aria-selected", on ? "true" : "false");
     });
     if (name === "library") hub.renderLibraryTab();
     if (name === "decompose") hub.renderDecomposeTab();
