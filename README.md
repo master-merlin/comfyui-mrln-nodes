@@ -262,10 +262,16 @@ installation — in `--multi-user` setups all users see the same library.
 ### Example workflows
 
 The pack ships ready-made graphs in `example_workflows/` — they appear in
-ComfyUI's workflow template browser under this pack's name. Start with
-**mrln-prompting**: a Prompt Template and a Prompt Section wired into Show
-Text nodes, so you can explore the library, seeds and selection lines
-before connecting anything to a sampler.
+ComfyUI's workflow template browser under this pack's name.
+
+**mrln-prompting** is the starter and downloads nothing: a Prompt Template and
+a Prompt Section wired into Show Text nodes, so you can explore the library,
+seeds and selection lines before connecting anything to a sampler. It runs on
+a fresh install with no models at all.
+
+**mrln-prompting-krea2-turbo** is the same idea end to end — compose, optional
+LLM rewrite, 8-step render — and needs the Krea-2 Turbo model plus its style
+LoRAs, both linked from notes inside the graph.
 
 ## User guide
 

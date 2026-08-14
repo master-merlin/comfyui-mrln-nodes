@@ -1,0 +1,2713 @@
+{
+  "id": "a70f796f-f598-4b74-844f-bedb89a3e429",
+  "revision": 0,
+  "last_node_id": 85,
+  "last_link_id": 197,
+  "nodes": [
+    {
+      "id": 81,
+      "type": "MRLN_ShowText",
+      "pos": [
+        -44.94739623548224,
+        -1328.5983082052824
+      ],
+      "size": [
+        789.4802059539606,
+        388.5155613521573
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 197
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "A1111",
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "df65ad0824b8cfd16c1cd8e4ecfd86ece052c903",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.\nSubject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25)\nFieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green\nConditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land\nHour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow\nField Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us.\nNegative prompt: watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences, cages, collars, domestic pets\nSeed: 778424221823093"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 49,
+      "type": "ResolutionSelector",
+      "pos": [
+        798.2373071112297,
+        -1078.824919289156
+      ],
+      "size": [
+        270,
+        190
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "megapixels",
+          "name": "megapixels",
+          "type": "FLOAT",
+          "widget": {
+            "name": "megapixels"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "multiple",
+          "name": "multiple",
+          "type": "INT",
+          "widget": {
+            "name": "multiple"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "links": [
+            69
+          ]
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "links": [
+            71
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "ResolutionSelector",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "16:9 (Widescreen)",
+        1.5,
+        8
+      ]
+    },
+    {
+      "id": 30,
+      "type": "b0e5ca93-2731-42b9-8e0a-d28ea851ff81",
+      "pos": [
+        1088.1022836547731,
+        -1265.962599148804
+      ],
+      "size": [
+        544.0606168938384,
+        350.35606723832154
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": 189
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 69
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 71
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "unet_name"
+          },
+          "link": null
+        },
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "clip_name"
+          },
+          "link": null
+        },
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        },
+        {
+          "label": "enable_lora?",
+          "name": "value_2",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "value_2"
+          },
+          "link": null
+        },
+        {
+          "label": "negative",
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 193
+        },
+        {
+          "label": "use negative",
+          "name": "boolean",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "boolean"
+          },
+          "link": null
+        },
+        {
+          "name": "loras",
+          "type": "STRING",
+          "link": 195
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            44
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "ue_properties": {
+          "widget_ue_connectable": {
+            "value_1": true,
+            "max_length": true,
+            "width": true,
+            "height": true,
+            "value_2": true,
+            "strength_model": true,
+            "string_b": true
+          },
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "3",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
+      },
+      "widgets_values": [
+        "A highly realistic image of a SkylineGTR34Vspec, in the center of the scene, stationary at Shibuya Crossing.\n\nStyle & Color Scheme: Vibrant High Class Car Photography\nPrimara Car Color: Carbon grey matte\n\n\n\nViewing Angle & Composition:\nMedium-shot, eye-level, front-three-quarter view, reflections on the painting. \n\nTime of Day / Atmosphere:\nDaylight at early sundown during summer with long shadows and warm light.\n\nLighting Conditions:\nHDR, Cinematic lighting, Volumetric light, strong contrasts between light and shadow. The scene is bathed in the warm, vibrant light of a summer sundown, creating long, dramatic shadows.\n\nAdditional Details & Photographic Settings:\nMicro-Details: Hyper-detailed surfaces capturing textures, curves, reflections. \n\nPhotographic Settings:\nLens Type: Tele 150mm\nAperture: f/5.6\nShutter Speed: 1/1000s\nISO: 100\nBokeh: Noticeable hexagonal\nWhite Balance: Daylight\nExposure Compensation: 0 EV\nFocus: Sharp focus on the main body.\n",
+        1024,
+        1024,
+        13407433464150,
+        "KREA2\\krea2_turbo_bf16.safetensors",
+        "qwen3vl_4b_bf16.safetensors",
+        "krea2RealVae_v10.safetensors",
+        false,
+        "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality.",
+        true
+      ]
+    },
+    {
+      "id": 29,
+      "type": "SaveImage",
+      "pos": [
+        1664.2837054146598,
+        -1265.962599148804
+      ],
+      "size": [
+        880,
+        1020
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 44
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "SaveImage",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "LoRA/test/Krea2_turbo/MRLN/ComfyUI"
+      ]
+    },
+    {
+      "id": 60,
+      "type": "MRLN_ShowText",
+      "pos": [
+        212.59378530795811,
+        -831.0648029775698
+      ],
+      "size": [
+        560,
+        120
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 194
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Choices",
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "81f573bab92b0bb37214a31ad6565645e10de637",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "template: animal/documentary   seed: 778424221823093   mode: as configured   format: string_labeled\nvariant: mammal  [fixed]\nsubject: red-deer-stag  [random]\nfieldcraft: belly-crawl-stalk  [fixed]\nweather: standing-puddles  [random]\ntime: golden-hour  [random]"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 59,
+      "type": "MRLN_ShowText",
+      "pos": [
+        -44.94739623548224,
+        -1265.962599148804
+      ],
+      "size": [
+        820,
+        370
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 190
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Prompt",
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "81f573bab92b0bb37214a31ad6565645e10de637",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "An award-caliber wildlife documentary photograph — the kind that closes a nature magazine's year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for.\nSubject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25)\nFieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green\nConditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land\nHour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow\nField Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us."
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 67,
+      "type": "MRLN_ShowText",
+      "pos": [
+        -44.94739623548224,
+        -646.0960882920764
+      ],
+      "size": [
+        820,
+        370
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 130
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "LLM Prompt",
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "81f573bab92b0bb37214a31ad6565645e10de637",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "An award-caliber wildlife documentary photograph, the kind that closes a nature magazine’s year. A wild animal, utterly unaware of the camera, caught in a moment biologists wait weeks for. Subject: (a red deer stag roaring in the autumn rut, neck swollen and mane matted, breath pluming into the mist:1.25). Fieldcraft: a long stalk finished flat on the ground, elbows in the dew, shooting wide open through out-of-focus grass stems that frame the subject in soft green. Conditions: standing puddles across every low point, the sky doubled in them and rings still spreading where drops land. Hour: deep golden hour, the low sun turning the air honey-colored and edging every contour with glow. Field Rendering: authentic unstaged wild behavior, (feather and fur detail individually resolved:1.2), (a crisp catchlight in the eye:1.25), the habitat compressed into a painterly wash behind the subject, the animal's full attention on its own world — never on us."
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 68,
+      "type": "MRLN_ShowText",
+      "pos": [
+        -44.94739623548224,
+        -217.4423876585989
+      ],
+      "size": [
+        820,
+        110
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 131
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "4f065ca602caaa0785b9c0166d587dd62da14132",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "enhanced via ollama:gemma3:12b seed 817956400522913 temp 0.25 (vram kept) · generic system prompt (no profile system on the wire — pick a profile on the Template node for model-tuned rewriting)"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 47,
+      "type": "MarkdownNote",
+      "pos": [
+        804.9121667495336,
+        -836.7631855831095
+      ],
+      "size": [
+        417.3781918776376,
+        180.2833558972061
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "LoRA Trigger Words and Settings",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "Download the style LoRAs used in this workflow from [Comfy-Org/Krea-2/loras](https://huggingface.co/Comfy-Org/Krea-2/tree/main/loras). Place the `.safetensors` files in `ComfyUI/models/loras/`.\n\n| LoRA               | Trigger Words                        | Recommended Strength |\n|--------------------|--------------------------------------|-------|\n| [krea2_coolblue](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_coolblue.safetensors)   | teal watercolor illustration style | 0.8 |\n| [krea2_darkbrush](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_darkbrush.safetensors)  | monochrome ink wash style          | 1.0 |\n| [krea2_plasmoid](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_plasmoid.safetensors)   | ethereal shimmering light style    | 0.8 |\n| [krea2_warmpastel](https://huggingface.co/Comfy-Org/Krea-2/blob/main/loras/krea2_warmpastel.safetensors) | muted minimalist sketch style      | 0.8 |"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 73,
+      "type": "MRLN_PromptEnhance",
+      "pos": [
+        -489.0524335576673,
+        -652.7565009332766
+      ],
+      "size": [
+        410,
+        340
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "llm",
+          "name": "llm",
+          "shape": 7,
+          "type": "STRING",
+          "link": 196
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "localized_name": "backend",
+          "name": "backend",
+          "type": "COMBO",
+          "widget": {
+            "name": "backend"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "temperature",
+          "name": "temperature",
+          "type": "FLOAT",
+          "widget": {
+            "name": "temperature"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_tokens",
+          "name": "max_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "max_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "timeout",
+          "name": "timeout",
+          "type": "INT",
+          "widget": {
+            "name": "timeout"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "free_vram",
+          "name": "free_vram",
+          "type": "COMBO",
+          "widget": {
+            "name": "free_vram"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "on_error",
+          "name": "on_error",
+          "type": "COMBO",
+          "widget": {
+            "name": "on_error"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "system",
+          "name": "system",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "system"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            130,
+            187
+          ]
+        },
+        {
+          "localized_name": "report",
+          "name": "report",
+          "type": "STRING",
+          "links": [
+            131
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "3563d562af6728d3f5cf8603d7c065a800e51aaf",
+        "Node name for S&R": "MRLN_PromptEnhance",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "ollama",
+        "gemma3:12b",
+        0.25,
+        817956400522913,
+        "fixed",
+        512,
+        60,
+        "always keep",
+        "pass through",
+        ""
+      ]
+    },
+    {
+      "id": 48,
+      "type": "MarkdownNote",
+      "pos": [
+        -1988.7627653241557,
+        -1266.2380141758126
+      ],
+      "size": [
+        700,
+        950
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Model Links",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links (for Local Users)\n\nFor BF16 and NVFP4 variants, see [Comfy-Org/Krea-2](https://huggingface.co/Comfy-Org/Krea-2)\n\n\n**diffusion_models**\n\n- [krea2_turbo_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_4b_fp8_scaled.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors)\n\n**vae**\n\n- [qwen_image_vae.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors)\n\n**loras**\n\n- [krea2_warmpastel.safetensors](https://huggingface.co/Comfy-Org/Krea-2/resolve/main/loras/krea2_warmpastel.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   └── krea2_turbo_fp8_scaled.safetensors\n│   ├── 📂 text_encoders/\n│   │   └── qwen3vl_4b_fp8_scaled.safetensors\n│   ├── 📂 vae/\n│   │   └── qwen_image_vae.safetensors\n│   └── 📂 loras/\n│       └── krea2_warmpastel.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 50,
+      "type": "MarkdownNote",
+      "pos": [
+        -1248.7627653241505,
+        -1266.2380141758126
+      ],
+      "size": [
+        700,
+        950
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: MRLN Prompting",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "# MRLN Prompting — Krea-2 Turbo\n\nThis graph is the pack's end-to-end example: the **Prompt Template (MRLN)**\nnode composes a prompt from the factory library, an optional LLM pass rewrites\nit, and **Krea-2 Turbo** renders it in 8 steps.\n\n## What the MRLN nodes do here\n\n**Prompt Template (MRLN)** is the source of the prompt. It is set to\n`animal/documentary` — pick any of the 100 shipped templates from the\n`template` widget, or open the **Prompt Composer** sidebar tab (the book icon)\nto browse them with thumbnails, pin individual slots and preview the result\nbefore you queue anything. Its outputs are wired in the order you use them:\n\n- `prompt` -> the positive prompt (via the enhance switch below)\n- `llm` -> **Prompt Enhance (MRLN)**: one wire carrying the prompt, the\n  profile's system prompt and any LoRA trigger words that must survive verbatim\n- `loras` -> **LoRA Apply (MRLN)** in graphs that draw LoRA-bearing items\n- `negative`, `choices`, `gen_info` -> the Show Text nodes, so you can see what\n  was drawn, why, and what metadata the render carries\n\n`seed` drives every random slot deterministically: the same seed and library\nalways draw the same prompt. Set `batch_count` above 1 and one queue renders a\nwhole batch of *different* draws instead of copies of one.\n\n**Use enhanced Prompt** switches between the composed prompt and the LLM\nrewrite. The Enhance node is set to a local Ollama model and to `pass through`\non error, so the graph still renders if no backend is running.\n\n## Text to Image (Krea-2 Turbo) subgraph\n\nDouble-click it to open the pipeline. Inside: **Models** loads the diffusion\nmodel, text encoder, VAE and an optional style LoRA; **Image Generation**\nhandles latent sizing, 8-step sampling and VAE decode. The `enable_lora?`\ntoggle on the left switches the style LoRA on.\n\n## LoRA & trigger word (CustomCombo)\n\nPick the style LoRA you are using (e.g. `krea2_coolblue`, `krea2_darkbrush`)\nand the workflow appends the matching trigger word for you.\n\n- Download the files from [Comfy-Org/Krea-2/loras](https://huggingface.co/Comfy-Org/Krea-2/tree/main/loras)\n  into `ComfyUI/models/loras/`\n- Select the name that matches the file loaded inside the subgraph\n- Trigger words and recommended strengths are in the **LoRA Trigger Words and\n  Settings** note beside this one\n\nMRLN's own LoRA path is different and complementary: a template whose items\ncarry LoRA blocks sends them out of the `loras` output into **LoRA Apply\n(MRLN)**, which loads them at their authored strengths and warns when a LoRA's\nbase family does not match the checkpoint."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 85,
+      "type": "MRLN_PromptTemplate",
+      "pos": [
+        -489.0524335576673,
+        -1266.2380141758126
+      ],
+      "size": [
+        410,
+        540
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "template",
+          "name": "template",
+          "type": "COMBO",
+          "widget": {
+            "name": "template"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "template_names",
+          "name": "template_names",
+          "type": "COMBO",
+          "widget": {
+            "name": "template_names"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "trigger",
+          "name": "trigger",
+          "type": "STRING",
+          "widget": {
+            "name": "trigger"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "selection",
+          "name": "selection",
+          "type": "STRING",
+          "widget": {
+            "name": "selection"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "selection_mode",
+          "name": "selection_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "selection_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMBO",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "text_length",
+          "name": "text_length",
+          "type": "COMBO",
+          "widget": {
+            "name": "text_length"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "conflict_policy",
+          "name": "conflict_policy",
+          "type": "COMBO",
+          "widget": {
+            "name": "conflict_policy"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "variables",
+          "name": "variables",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "variables"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "profile",
+          "name": "profile",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "profile"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "batch_count",
+          "name": "batch_count",
+          "shape": 7,
+          "type": "INT",
+          "widget": {
+            "name": "batch_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "batch_mode",
+          "name": "batch_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "batch_mode"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            190,
+            191
+          ],
+          "slot_index": 0
+        },
+        {
+          "localized_name": "llm",
+          "name": "llm",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            196
+          ],
+          "slot_index": 1
+        },
+        {
+          "localized_name": "loras",
+          "name": "loras",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            195
+          ],
+          "slot_index": 2
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            192,
+            193
+          ],
+          "slot_index": 3
+        },
+        {
+          "localized_name": "choices",
+          "name": "choices",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            194
+          ],
+          "slot_index": 4
+        },
+        {
+          "localized_name": "gen_info",
+          "name": "gen_info",
+          "shape": 6,
+          "type": "STRING",
+          "links": [
+            197
+          ],
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "1e52718ed1fb5bad17c26fa1bb925597e27a9f21",
+        "Node name for S&R": "MRLN_PromptTemplate"
+      },
+      "widgets_values": [
+        "animal/documentary",
+        "slug",
+        "",
+        "",
+        "as configured",
+        0,
+        "randomize",
+        "template default",
+        "template default",
+        "negative prevails",
+        "",
+        "standard",
+        1,
+        "increment seed"
+      ]
+    },
+    {
+      "id": 61,
+      "type": "MRLN_ShowText",
+      "pos": [
+        -44.94739623548224,
+        -831.0648029775698
+      ],
+      "size": [
+        240,
+        120
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "*",
+          "link": 192
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "Negatives",
+      "properties": {
+        "aux_id": "master-merlin/comfyui-mrln-nodes",
+        "ver": "ba64526657f2067cc46422e2486e9f9279db5814",
+        "Node name for S&R": "MRLN_ShowText",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "widgets_values": [
+        "watermark, text, cartoon, anthropomorphic, deformed anatomy, zoo fences, cages, collars, domestic pets"
+      ],
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 84,
+      "type": "ComfySwitchNode",
+      "pos": [
+        798.2373071112297,
+        -1265.962599148804
+      ],
+      "size": [
+        270,
+        130
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "on_false",
+          "name": "on_false",
+          "type": "STRING",
+          "link": 187
+        },
+        {
+          "localized_name": "on_true",
+          "name": "on_true",
+          "type": "STRING",
+          "link": 191
+        },
+        {
+          "localized_name": "switch",
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output",
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            189
+          ]
+        }
+      ],
+      "title": "Use enhanced Prompt",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.25.0",
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        false
+      ]
+    }
+  ],
+  "links": [
+    [
+      44,
+      30,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ],
+    [
+      69,
+      49,
+      0,
+      30,
+      1,
+      "INT"
+    ],
+    [
+      71,
+      49,
+      1,
+      30,
+      2,
+      "INT"
+    ],
+    [
+      130,
+      73,
+      0,
+      67,
+      0,
+      "STRING"
+    ],
+    [
+      131,
+      73,
+      1,
+      68,
+      0,
+      "STRING"
+    ],
+    [
+      187,
+      73,
+      0,
+      84,
+      0,
+      "STRING"
+    ],
+    [
+      189,
+      84,
+      0,
+      30,
+      0,
+      "STRING"
+    ],
+    [
+      190,
+      85,
+      0,
+      59,
+      0,
+      "STRING"
+    ],
+    [
+      191,
+      85,
+      0,
+      84,
+      1,
+      "STRING"
+    ],
+    [
+      192,
+      85,
+      3,
+      61,
+      0,
+      "STRING"
+    ],
+    [
+      193,
+      85,
+      3,
+      30,
+      8,
+      "STRING"
+    ],
+    [
+      194,
+      85,
+      4,
+      60,
+      0,
+      "STRING"
+    ],
+    [
+      195,
+      85,
+      2,
+      30,
+      10,
+      "STRING"
+    ],
+    [
+      196,
+      85,
+      1,
+      73,
+      0,
+      "STRING"
+    ],
+    [
+      197,
+      85,
+      5,
+      81,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "b0e5ca93-2731-42b9-8e0a-d28ea851ff81",
+        "version": 1,
+        "state": {
+          "lastGroupId": 10,
+          "lastNodeId": 85,
+          "lastLinkId": 197,
+          "lastRerouteId": 0
+        },
+        "revision": 0,
+        "config": {},
+        "name": "Text to Image (Krea-2 Turbo)",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -999.7173144876327,
+            17.406360424028296,
+            128,
+            268
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            2061.871059880893,
+            72.94843349783613,
+            128,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "b0f5c754-5322-440c-8c1c-ba732e910d33",
+            "name": "value",
+            "type": "STRING",
+            "linkIds": [
+              184
+            ],
+            "pos": [
+              -895.7173144876327,
+              41.40636042402829
+            ]
+          },
+          {
+            "id": "2d1c0f16-25d7-46d1-b774-e6b5519810ae",
+            "name": "width",
+            "type": "INT",
+            "linkIds": [
+              50
+            ],
+            "pos": [
+              -895.7173144876327,
+              61.40636042402829
+            ]
+          },
+          {
+            "id": "8bb87b44-fecc-46d7-bdae-642002250a43",
+            "name": "height",
+            "type": "INT",
+            "linkIds": [
+              51
+            ],
+            "pos": [
+              -895.7173144876327,
+              81.40636042402829
+            ]
+          },
+          {
+            "id": "75652c4f-cde2-4ad7-b322-73d47b533ef8",
+            "name": "seed",
+            "type": "INT",
+            "linkIds": [
+              75
+            ],
+            "pos": [
+              -895.7173144876327,
+              101.40636042402829
+            ]
+          },
+          {
+            "id": "14e2eb6a-5fa1-40c9-81d1-a928360fcd80",
+            "name": "unet_name",
+            "type": "COMBO",
+            "linkIds": [
+              61
+            ],
+            "pos": [
+              -895.7173144876327,
+              121.40636042402829
+            ]
+          },
+          {
+            "id": "e27ba0c5-697f-44f4-b475-c2dcfa594724",
+            "name": "clip_name",
+            "type": "COMBO",
+            "linkIds": [
+              62
+            ],
+            "pos": [
+              -895.7173144876327,
+              141.4063604240283
+            ]
+          },
+          {
+            "id": "75c25d8e-b881-46e4-aca7-d2ada9e147d0",
+            "name": "vae_name",
+            "type": "COMBO",
+            "linkIds": [
+              63
+            ],
+            "pos": [
+              -895.7173144876327,
+              161.4063604240283
+            ]
+          },
+          {
+            "id": "b0ca5f55-a223-40de-9e37-aaf2cf0904dd",
+            "name": "value_2",
+            "type": "BOOLEAN",
+            "linkIds": [
+              185
+            ],
+            "label": "enable_lora?",
+            "pos": [
+              -895.7173144876327,
+              181.4063604240283
+            ]
+          },
+          {
+            "id": "b2f06dfd-5fd3-4e07-b0da-38266ea26bd1",
+            "name": "text",
+            "type": "STRING",
+            "linkIds": [
+              143
+            ],
+            "label": "negative",
+            "pos": [
+              -895.7173144876327,
+              201.4063604240283
+            ]
+          },
+          {
+            "id": "ba1bd257-40f8-490d-8e07-91e30520cc94",
+            "name": "boolean",
+            "type": "BOOLEAN",
+            "linkIds": [
+              182
+            ],
+            "label": "use negative",
+            "pos": [
+              -895.7173144876327,
+              221.4063604240283
+            ]
+          },
+          {
+            "id": "eca2bec1-0cf3-4e2e-8d0b-a4c1bb95e30d",
+            "name": "loras",
+            "type": "STRING",
+            "linkIds": [
+              94
+            ],
+            "pos": [
+              -895.7173144876327,
+              241.4063604240283
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "e4073813-752d-4584-96b5-6e42eac355dd",
+            "name": "IMAGE",
+            "type": "IMAGE",
+            "linkIds": [
+              186
+            ],
+            "localized_name": "IMAGE",
+            "pos": [
+              2085.871059880893,
+              96.94843349783613
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 5,
+            "type": "EmptyLatentImage",
+            "pos": [
+              170,
+              350
+            ],
+            "size": [
+              320,
+              170
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "width",
+                "name": "width",
+                "type": "INT",
+                "widget": {
+                  "name": "width"
+                },
+                "link": 50
+              },
+              {
+                "localized_name": "height",
+                "name": "height",
+                "type": "INT",
+                "widget": {
+                  "name": "height"
+                },
+                "link": 51
+              },
+              {
+                "localized_name": "batch_size",
+                "name": "batch_size",
+                "type": "INT",
+                "widget": {
+                  "name": "batch_size"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "LATENT",
+                "name": "LATENT",
+                "type": "LATENT",
+                "slot_index": 0,
+                "links": [
+                  2
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "EmptyLatentImage",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              1024,
+              1024,
+              1
+            ]
+          },
+          {
+            "id": 10,
+            "type": "UNETLoader",
+            "pos": [
+              -410,
+              -240
+            ],
+            "size": [
+              450,
+              140
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "unet_name",
+                "name": "unet_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "unet_name"
+                },
+                "link": 61
+              },
+              {
+                "localized_name": "weight_dtype",
+                "name": "weight_dtype",
+                "type": "COMBO",
+                "widget": {
+                  "name": "weight_dtype"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "MODEL",
+                "name": "MODEL",
+                "type": "MODEL",
+                "links": [
+                  28,
+                  95
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "UNETLoader",
+              "models": [
+                {
+                  "name": "krea2_turbo_fp8_scaled.safetensors",
+                  "url": "https://huggingface.co/Comfy-Org/Krea-2/resolve/main/diffusion_models/krea2_turbo_fp8_scaled.safetensors",
+                  "directory": "diffusion_models"
+                }
+              ],
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              "KREA2\\krea2_turbo_bf16.safetensors",
+              "default"
+            ]
+          },
+          {
+            "id": 6,
+            "type": "CLIPTextEncode",
+            "pos": [
+              100,
+              -250
+            ],
+            "size": [
+              480,
+              420
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "link": 98
+              },
+              {
+                "localized_name": "text",
+                "name": "text",
+                "type": "STRING",
+                "widget": {
+                  "name": "text"
+                },
+                "link": 184
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "CONDITIONING",
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "slot_index": 0,
+                "links": [
+                  13,
+                  79,
+                  82
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "CLIPTextEncode",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality."
+            ],
+            "color": "#232",
+            "bgcolor": "#353"
+          },
+          {
+            "id": 13,
+            "type": "ConditioningZeroOut",
+            "pos": [
+              387.71024734982376,
+              229.8374558303887
+            ],
+            "size": [
+              225,
+              26
+            ],
+            "flags": {
+              "collapsed": true
+            },
+            "order": 7,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "conditioning",
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "link": 13
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "CONDITIONING",
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": [
+                  181
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "ConditioningZeroOut",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 75,
+            "type": "CLIPTextEncode",
+            "pos": [
+              121.17865554072722,
+              228.25964930381073
+            ],
+            "size": [
+              480,
+              420
+            ],
+            "flags": {
+              "collapsed": true
+            },
+            "order": 12,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "link": 139
+              },
+              {
+                "localized_name": "text",
+                "name": "text",
+                "type": "STRING",
+                "widget": {
+                  "name": "text"
+                },
+                "link": 143
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "CONDITIONING",
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "slot_index": 0,
+                "links": [
+                  180
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "CLIPTextEncode",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              "A high-contrast, hyper-stylized fashion editorial portrait shot against a saturated mustard-yellow seamless backdrop, with the central figure rendered in crisp desaturated black-and-white, creating a striking duotone aesthetic reminiscent of David LaChapelle meets Helmut Newton with a punk-gothic edge.\n\nThe subject is a fierce young woman with a platinum-bleached, spiked liberty mohawk crown of hair, her expression cold and commanding as she stares directly into the lens. She wears a cropped black leather biker jacket exploding with oversized metallic conical studs and spikes across the shoulders, paired with a minimal black bikini bottom, sheer black thigh-high stockings, and chunky knee-high lace-up combat platform boots. Her toned, athletic physique is fully exposed at the midriff.\n\nShe sits regally upon an ornate throne carved in the shape of a snarling, fanged beast's head — part dragon, part demonic feline — its silver-grey surface intricately detailed with bones, scales, and gothic ornamentation. Her booted foot rests on a battered metal road case wrapped in heavy chains and covered in stickers and band decals.\n\nIn her right hand she grips a massive medieval war scythe, its long wooden shaft wrapped in leather, the enormous curved blade arcing dramatically over her head. Perched on her left fist, talons gripping her knuckles, is a majestic American bald eagle with pristine white head feathers and a sharp yellow beak, staring off to the side with predatory alertness.\n\nStudio lighting is hard and theatrical, casting crisp shadows. The composition is symmetrical, iconic, and poster-like — punk rock goddess of war meets American mythology. Hyperrealistic, high-fashion photography, 8k, sharp detail, magazine cover quality."
+            ],
+            "color": "#322",
+            "bgcolor": "#533"
+          },
+          {
+            "id": 11,
+            "type": "CLIPLoader",
+            "pos": [
+              -410,
+              159.24368993955437
+            ],
+            "size": [
+              450,
+              170
+            ],
+            "flags": {},
+            "order": 5,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "clip_name",
+                "name": "clip_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "clip_name"
+                },
+                "link": 62
+              },
+              {
+                "localized_name": "type",
+                "name": "type",
+                "type": "COMBO",
+                "widget": {
+                  "name": "type"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "device",
+                "name": "device",
+                "shape": 7,
+                "type": "COMBO",
+                "widget": {
+                  "name": "device"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "CLIP",
+                "name": "CLIP",
+                "type": "CLIP",
+                "links": [
+                  76,
+                  97,
+                  139
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "CLIPLoader",
+              "models": [
+                {
+                  "name": "qwen3vl_4b_fp8_scaled.safetensors",
+                  "url": "https://huggingface.co/Comfy-Org/Krea-2/resolve/main/text_encoders/qwen3vl_4b_fp8_scaled.safetensors",
+                  "directory": "text_encoders"
+                }
+              ],
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              "qwen3vl_4b_bf16.safetensors",
+              "krea2",
+              "default"
+            ]
+          },
+          {
+            "id": 12,
+            "type": "VAELoader",
+            "pos": [
+              -410,
+              390
+            ],
+            "size": [
+              450,
+              120
+            ],
+            "flags": {},
+            "order": 6,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "vae_name",
+                "name": "vae_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "vae_name"
+                },
+                "link": 63
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "VAE",
+                "name": "VAE",
+                "type": "VAE",
+                "links": [
+                  12
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "VAELoader",
+              "models": [
+                {
+                  "name": "qwen_image_vae.safetensors",
+                  "url": "https://huggingface.co/Comfy-Org/Krea-2/resolve/main/vae/qwen_image_vae.safetensors",
+                  "directory": "vae"
+                }
+              ],
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              "krea2RealVae_v10.safetensors"
+            ]
+          },
+          {
+            "id": 64,
+            "type": "MRLN_LoraApply",
+            "pos": [
+              -410,
+              -41.38455007746991
+            ],
+            "size": [
+              450,
+              130
+            ],
+            "flags": {},
+            "order": 11,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 95
+              },
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "link": 97
+              },
+              {
+                "localized_name": "loras",
+                "name": "loras",
+                "type": "STRING",
+                "link": 94
+              },
+              {
+                "localized_name": "on_missing",
+                "name": "on_missing",
+                "shape": 7,
+                "type": "COMBO",
+                "widget": {
+                  "name": "on_missing"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "on_mismatch",
+                "name": "on_mismatch",
+                "shape": 7,
+                "type": "COMBO",
+                "widget": {
+                  "name": "on_mismatch"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "links": [
+                  96
+                ]
+              },
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "links": [
+                  98
+                ]
+              },
+              {
+                "localized_name": "report",
+                "name": "report",
+                "type": "STRING",
+                "links": null
+              }
+            ],
+            "properties": {
+              "aux_id": "master-merlin/comfyui-mrln-nodes",
+              "ver": "c52558b5fb35fbac6cddff4c7b87fd9ff5e8a287",
+              "Node name for S&R": "MRLN_LoraApply",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              }
+            },
+            "widgets_values": [
+              "error",
+              "warn"
+            ]
+          },
+          {
+            "id": 53,
+            "type": "Krea2PromptWeight",
+            "pos": [
+              640,
+              101.10111753741869
+            ],
+            "size": [
+              320,
+              190
+            ],
+            "flags": {},
+            "order": 9,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "clip",
+                "name": "clip",
+                "type": "CLIP",
+                "link": 76
+              },
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 77
+              },
+              {
+                "localized_name": "text",
+                "name": "text",
+                "type": "STRING",
+                "widget": {
+                  "name": "text"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "strength",
+                "name": "strength",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "strength"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "links": [
+                  78
+                ]
+              },
+              {
+                "localized_name": "conditioning",
+                "name": "conditioning",
+                "type": "CONDITIONING",
+                "links": [
+                  80
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfyui-kjnodes",
+              "ver": "1.4.8",
+              "Node name for S&R": "Krea2PromptWeight",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              }
+            },
+            "widgets_values": [
+              "(vibrant colors:1.2)",
+              4
+            ]
+          },
+          {
+            "id": 83,
+            "type": "ComfySwitchNode",
+            "pos": [
+              640,
+              -88.05828017019773
+            ],
+            "size": [
+              320,
+              130
+            ],
+            "flags": {},
+            "order": 13,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "CONDITIONING",
+                "link": 180
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "CONDITIONING",
+                "link": 181
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 182
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "CONDITIONING",
+                "links": [
+                  183
+                ]
+              }
+            ],
+            "title": "Use Negative",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "ComfySwitchNode",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "id": 54,
+            "type": "ImpactConcatConditionings",
+            "pos": [
+              640,
+              343.90718545098946
+            ],
+            "size": [
+              320,
+              70
+            ],
+            "flags": {},
+            "order": 10,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "conditioning1",
+                "name": "conditioning1",
+                "type": "CONDITIONING",
+                "link": 79
+              },
+              {
+                "name": "conditioning2",
+                "type": "CONDITIONING",
+                "link": 80
+              },
+              {
+                "name": "conditioning3",
+                "type": "CONDITIONING",
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "CONDITIONING",
+                "name": "CONDITIONING",
+                "type": "CONDITIONING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfyui-impact-pack",
+              "ver": "429d0159ad429e64d2b3916e6e7be9c22d025c3c",
+              "Node name for S&R": "ImpactConcatConditionings",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              }
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 3,
+            "type": "KSampler",
+            "pos": [
+              990.7164432023667,
+              -262.68447440689556
+            ],
+            "size": [
+              320,
+              590
+            ],
+            "flags": {},
+            "order": 0,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "MODEL",
+                "link": 78
+              },
+              {
+                "localized_name": "positive",
+                "name": "positive",
+                "type": "CONDITIONING",
+                "link": 82
+              },
+              {
+                "localized_name": "negative",
+                "name": "negative",
+                "type": "CONDITIONING",
+                "link": 183
+              },
+              {
+                "localized_name": "latent_image",
+                "name": "latent_image",
+                "type": "LATENT",
+                "link": 2
+              },
+              {
+                "localized_name": "seed",
+                "name": "seed",
+                "type": "INT",
+                "widget": {
+                  "name": "seed"
+                },
+                "link": 75
+              },
+              {
+                "localized_name": "steps",
+                "name": "steps",
+                "type": "INT",
+                "widget": {
+                  "name": "steps"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "cfg",
+                "name": "cfg",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "cfg"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "sampler_name",
+                "name": "sampler_name",
+                "type": "COMBO",
+                "widget": {
+                  "name": "sampler_name"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "scheduler",
+                "name": "scheduler",
+                "type": "COMBO",
+                "widget": {
+                  "name": "scheduler"
+                },
+                "link": null
+              },
+              {
+                "localized_name": "denoise",
+                "name": "denoise",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "denoise"
+                },
+                "link": null
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "LATENT",
+                "name": "LATENT",
+                "type": "LATENT",
+                "slot_index": 0,
+                "links": [
+                  7
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "KSampler",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              13407433464150,
+              "fixed",
+              10,
+              1,
+              "euler",
+              "simple",
+              1
+            ]
+          },
+          {
+            "id": 8,
+            "type": "VAEDecode",
+            "pos": [
+              997.7457384851425,
+              375.65136653617105
+            ],
+            "size": [
+              230,
+              100
+            ],
+            "flags": {
+              "collapsed": false
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "samples",
+                "name": "samples",
+                "type": "LATENT",
+                "link": 7
+              },
+              {
+                "localized_name": "vae",
+                "name": "vae",
+                "type": "VAE",
+                "link": 12
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "IMAGE",
+                "name": "IMAGE",
+                "type": "IMAGE",
+                "slot_index": 0,
+                "links": [
+                  186
+                ]
+              }
+            ],
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "VAEDecode",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": []
+          },
+          {
+            "id": 22,
+            "type": "ComfySwitchNode",
+            "pos": [
+              640,
+              -270
+            ],
+            "size": [
+              320,
+              130
+            ],
+            "flags": {},
+            "order": 8,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "on_false",
+                "name": "on_false",
+                "type": "MODEL",
+                "link": 28
+              },
+              {
+                "localized_name": "on_true",
+                "name": "on_true",
+                "type": "MODEL",
+                "link": 96
+              },
+              {
+                "localized_name": "switch",
+                "name": "switch",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "switch"
+                },
+                "link": 185
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "output",
+                "name": "output",
+                "type": "MODEL",
+                "links": [
+                  77
+                ]
+              }
+            ],
+            "title": "Use LoRA",
+            "properties": {
+              "cnr_id": "comfy-core",
+              "ver": "0.25.0",
+              "Node name for S&R": "ComfySwitchNode",
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "version": "7.8",
+                "input_ue_unconnectable": {}
+              }
+            },
+            "widgets_values": [
+              false
+            ]
+          }
+        ],
+        "groups": [
+          {
+            "id": 1,
+            "title": "Models",
+            "bounding": [
+              -430,
+              -320,
+              490,
+              850
+            ],
+            "color": "#3f789e",
+            "flags": {}
+          },
+          {
+            "id": 6,
+            "title": "Image Generation",
+            "bounding": [
+              -440,
+              -360,
+              1780.7612132085324,
+              904.6972669276579
+            ],
+            "color": "#3f789e",
+            "flags": {}
+          },
+          {
+            "id": 7,
+            "title": "Prompt",
+            "bounding": [
+              90,
+              -320,
+              500,
+              570
+            ],
+            "color": "#3f789e",
+            "flags": {}
+          },
+          {
+            "id": 8,
+            "title": "Size",
+            "bounding": [
+              90,
+              270,
+              500,
+              260
+            ],
+            "color": "#3f789e",
+            "flags": {}
+          }
+        ],
+        "links": [
+          {
+            "id": 2,
+            "origin_id": 5,
+            "origin_slot": 0,
+            "target_id": 3,
+            "target_slot": 3,
+            "type": "LATENT"
+          },
+          {
+            "id": 7,
+            "origin_id": 3,
+            "origin_slot": 0,
+            "target_id": 8,
+            "target_slot": 0,
+            "type": "LATENT"
+          },
+          {
+            "id": 12,
+            "origin_id": 12,
+            "origin_slot": 0,
+            "target_id": 8,
+            "target_slot": 1,
+            "type": "VAE"
+          },
+          {
+            "id": 13,
+            "origin_id": 6,
+            "origin_slot": 0,
+            "target_id": 13,
+            "target_slot": 0,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 28,
+            "origin_id": 10,
+            "origin_slot": 0,
+            "target_id": 22,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 50,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 5,
+            "target_slot": 0,
+            "type": "INT"
+          },
+          {
+            "id": 51,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 5,
+            "target_slot": 1,
+            "type": "INT"
+          },
+          {
+            "id": 61,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 10,
+            "target_slot": 0,
+            "type": "COMBO"
+          },
+          {
+            "id": 62,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 11,
+            "target_slot": 0,
+            "type": "COMBO"
+          },
+          {
+            "id": 63,
+            "origin_id": -10,
+            "origin_slot": 6,
+            "target_id": 12,
+            "target_slot": 0,
+            "type": "COMBO"
+          },
+          {
+            "id": 75,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 3,
+            "target_slot": 4,
+            "type": "INT"
+          },
+          {
+            "id": 76,
+            "origin_id": 11,
+            "origin_slot": 0,
+            "target_id": 53,
+            "target_slot": 0,
+            "type": "CLIP"
+          },
+          {
+            "id": 77,
+            "origin_id": 22,
+            "origin_slot": 0,
+            "target_id": 53,
+            "target_slot": 1,
+            "type": "MODEL"
+          },
+          {
+            "id": 78,
+            "origin_id": 53,
+            "origin_slot": 0,
+            "target_id": 3,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 79,
+            "origin_id": 6,
+            "origin_slot": 0,
+            "target_id": 54,
+            "target_slot": 0,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 80,
+            "origin_id": 53,
+            "origin_slot": 1,
+            "target_id": 54,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 82,
+            "origin_id": 6,
+            "origin_slot": 0,
+            "target_id": 3,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 94,
+            "origin_id": -10,
+            "origin_slot": 10,
+            "target_id": 64,
+            "target_slot": 2,
+            "type": "STRING"
+          },
+          {
+            "id": 95,
+            "origin_id": 10,
+            "origin_slot": 0,
+            "target_id": 64,
+            "target_slot": 0,
+            "type": "MODEL"
+          },
+          {
+            "id": 96,
+            "origin_id": 64,
+            "origin_slot": 0,
+            "target_id": 22,
+            "target_slot": 1,
+            "type": "MODEL"
+          },
+          {
+            "id": 97,
+            "origin_id": 11,
+            "origin_slot": 0,
+            "target_id": 64,
+            "target_slot": 1,
+            "type": "CLIP"
+          },
+          {
+            "id": 98,
+            "origin_id": 64,
+            "origin_slot": 1,
+            "target_id": 6,
+            "target_slot": 0,
+            "type": "CLIP"
+          },
+          {
+            "id": 139,
+            "origin_id": 11,
+            "origin_slot": 0,
+            "target_id": 75,
+            "target_slot": 0,
+            "type": "CLIP"
+          },
+          {
+            "id": 143,
+            "origin_id": -10,
+            "origin_slot": 8,
+            "target_id": 75,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 180,
+            "origin_id": 75,
+            "origin_slot": 0,
+            "target_id": 83,
+            "target_slot": 0,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 181,
+            "origin_id": 13,
+            "origin_slot": 0,
+            "target_id": 83,
+            "target_slot": 1,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 182,
+            "origin_id": -10,
+            "origin_slot": 9,
+            "target_id": 83,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 183,
+            "origin_id": 83,
+            "origin_slot": 0,
+            "target_id": 3,
+            "target_slot": 2,
+            "type": "CONDITIONING"
+          },
+          {
+            "id": 184,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 6,
+            "target_slot": 1,
+            "type": "STRING"
+          },
+          {
+            "id": 185,
+            "origin_id": -10,
+            "origin_slot": 7,
+            "target_id": 22,
+            "target_slot": 2,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 186,
+            "origin_id": 8,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "IMAGE"
+          }
+        ],
+        "extra": {
+          "ue_links": [],
+          "links_added_by_ue": []
+        }
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "frontendVersion": "1.45.19",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true,
+    "ue_links": [],
+    "links_added_by_ue": [],
+    "ds": {
+      "scale": 0.6902737934620341,
+      "offset": [
+        2208.9883692286003,
+        1661.461233251237
+      ]
+    }
+  },
+  "version": 0.4
+}
