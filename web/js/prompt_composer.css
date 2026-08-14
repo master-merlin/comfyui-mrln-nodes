@@ -2565,7 +2565,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   color: var(--pc-fg-2);
   cursor: pointer;
 }
-.pc-pick .pc-pick-row[aria-selected="true"] {
+.pc-pick .pc-pick-row[aria-selected="true"],
+.pc-pick .pc-pick-row:hover {
   background: var(--pc-bg-row);
   color: var(--pc-fg);
 }

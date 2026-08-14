@@ -84,11 +84,11 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
   let rows = [];
   let active = -1;
 
-  function paintActive() {
+  function paintActive(scroll = true) {
     rows.forEach((row, i) => {
       row.setAttribute("aria-selected", i === active ? "true" : "false");
     });
-    rows[active]?.scrollIntoView({ block: "nearest" });
+    if (scroll) rows[active]?.scrollIntoView({ block: "nearest" });
   }
 
   function commit(value) {
@@ -191,6 +191,18 @@ export function openPicker({ select, pool, anchor, onEditSection, sectionRef }) 
         )
       : null
   );
+
+  // The mouse moves the same cursor the keys do — otherwise hovering one row
+  // while ⏎ commits another is a trap. No scrollIntoView on hover: the pointer
+  // is already where the user is looking, and scrolling under it fights them.
+  list.addEventListener("mouseover", (e) => {
+    const row = e.target.closest?.(".pc-pick-row");
+    if (!row) return;
+    const index = rows.indexOf(row);
+    if (index < 0 || index === active) return;
+    active = index;
+    paintActive(false);
+  });
 
   search.addEventListener("input", render);
   search.addEventListener("keydown", (e) => {

@@ -450,6 +450,22 @@ export function createCompose(hub) {
     node?.setAttribute("data-selected", "true");
   }
 
+  /** Let go. A selection you cannot drop is a mode, not a selection. */
+  function clearSelection() {
+    if (!state.selectedRow) return;
+    state.selectedRow = null;
+    for (const row of composeTab.querySelectorAll('.pc-row[data-selected="true"]')) {
+      row.removeAttribute("data-selected");
+      if (document.activeElement === row) row.blur();
+    }
+  }
+
+  // Clicking anywhere in the tab that is not a row drops the selection — the
+  // same way clicking empty canvas deselects a node.
+  composeTab.addEventListener("mousedown", (e) => {
+    if (!e.target.closest?.(".pc-row")) clearSelection();
+  });
+
   /** Put focus back on the selected row after an action rebuilt the table. */
   function focusSelectedRow() {
     composeTab.querySelector('.pc-row[data-selected="true"]')?.focus({ preventScroll: true });
@@ -483,6 +499,10 @@ export function createCompose(hub) {
       } else if (e.key === "Delete") {
         if (!actions.remove) return;
         actions.remove();
+      } else if (e.key === "Escape") {
+        clearSelection();
+        e.preventDefault();
+        return; // nothing left to focus
       } else return;
       e.preventDefault();
       focusSelectedRow();
