@@ -3404,12 +3404,24 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-align: right;
 }
 
-/* The tier scope row: its own line between the filter and the tree, because
-   both of them answer "what does this list show" and the button bar above
-   answers "what do I create". Aligned to the panel gutter so it reads as a
-   header for the tree rather than a stray control. */
+/* The scope row: text filter left, tier view right, one line above the tree.
+   The filter does not need the full panel width — it holds a word or two, and
+   a search field spanning 885px reads as the header of the whole tab rather
+   than a control over the list under it. Bounded, and the toggle takes the
+   right edge so the row has two ends instead of one long middle. */
 .pc-panel .mrln-lib-scope {
   display: flex;
   align-items: center;
-  padding: 2px var(--pc-pad) 0;
+  gap: var(--pc-gap);
+  /* room above so the row reads as a header for the tree rather than as
+     something crowded under the button bar it has nothing to do with */
+  padding: 10px var(--pc-pad) 2px;
+}
+.pc-panel .mrln-lib-scope > .mrln-lib-filter {
+  flex: 0 1 320px;
+  min-width: 120px;
+  margin: 0;
+}
+.pc-panel .mrln-lib-scope > .pc-segmented {
+  margin-left: auto;
 }

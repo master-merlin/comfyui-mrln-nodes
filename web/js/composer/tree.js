@@ -635,13 +635,12 @@ export function createTree(hub) {
         el("button", { class: "mrln-btn", onclick: () => loadLibrary() }, "Reload"),
         viewToggle()
       ),
-      filterInput,
-      // The tier view gets a row of its own directly above the tree, not a
-      // seat in the button bar: it scopes WHAT THE TREE SHOWS, like the filter
-      // right above it, and dropping it in among the New…/Import… actions both
-      // wrapped that bar onto two lines and filed a view control under things
-      // that create files.
-      el("div", { class: "mrln-lib-scope" }, tierToggle()),
+      // One row directly above the tree for the two controls that scope it:
+      // the text filter on the left, the tier view right-aligned. Both answer
+      // "what does this list show", which is why neither belongs in the
+      // New…/Import… bar above — that one answers "what do I create", and
+      // putting the toggle there also wrapped it onto two lines.
+      el("div", { class: "mrln-lib-scope" }, filterInput, tierToggle()),
       treeBlock("sections", "Sections", lib.sections),
       treeBlock("templates", "Templates", lib.templates),
       profilesBlock(),
