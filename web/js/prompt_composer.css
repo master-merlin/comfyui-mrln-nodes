@@ -1080,8 +1080,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   --pc-fg: #f0f0f2;
   --pc-fg-value: #eaeaee;
   --pc-fg-2: #9a9aa4;
-  --pc-fg-3: #6a6a74;
-  --pc-fg-4: #5e5e66;
+  /* The spec's greys were picked in a mock at 2x. On a real screen fg-3/fg-4
+     landed at ~3.2:1 and ~2.7:1 — and they carry the SMALLEST type in the
+     panel (9.5–11px column heads, seeds, help notes), which is exactly
+     backwards. Lifted to ~4.7:1 and ~3.6:1 with the ramp order intact. */
+  --pc-fg-3: #83838d;
+  --pc-fg-4: #71717b;
   /* the only three colours allowed to carry meaning, plus the token blue */
   --pc-live: #7fd1b9;
   --pc-live-soft: rgba(127, 209, 185, 0.1);
@@ -1130,8 +1134,8 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   --pc-fg: #17171b;
   --pc-fg-value: #1d1d22;
   --pc-fg-2: #55555f;
-  --pc-fg-3: #6a6a74;
-  --pc-fg-4: #7a7a84;
+  --pc-fg-3: #63636d;
+  --pc-fg-4: #6f6f79;
   --pc-live: #16775e;
   --pc-live-soft: rgba(22, 119, 94, 0.1);
   --pc-live-line: rgba(22, 119, 94, 0.35);
@@ -1625,7 +1629,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   color: var(--pc-fg-2);
   background: var(--pc-bg-raised);
 }
-.pc-panel input.pc-seed-input {
+.pc-panel input.pc-seed-field {
   width: 100%;
   height: 22px;
   min-height: 22px;
@@ -1636,39 +1640,9 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-color: var(--pc-line-strong);
 }
 
-/* column 6 — reserved at every width so hover shifts nothing (rule 8) */
-.pc-panel .pc-cell-menu {
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-}
-.pc-panel .pc-menu-btn {
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  font-size: 13px;
-  line-height: 1;
-  color: var(--pc-fg-4);
-  background: none;
-  border: 1px solid transparent;
-  border-radius: var(--pc-r-sm);
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 120ms ease;
-}
-.pc-panel .pc-row:hover .pc-menu-btn,
-.pc-panel .pc-row:focus-within .pc-menu-btn,
-.pc-panel .pc-menu-btn[aria-expanded="true"] {
-  opacity: 1;
-}
-.pc-panel .pc-menu-btn:hover {
-  color: var(--pc-fg);
-  background: var(--pc-bg-raised);
-  border-color: var(--pc-line-strong);
-}
-.pc-panel .pc-menu-btn:disabled {
-  cursor: default;
-}
+/* column 6 — ACTIONS. It was a ⋯ menu; the buttons it hid are back on the row
+   (see refinement 5), so only the popup shell the action bar still uses
+   survives here. */
 .pc-panel .pc-rowmenu {
   position: absolute;
   top: 26px;
@@ -1684,32 +1658,6 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-radius: var(--pc-r-lg);
   box-shadow: 0 18px 38px rgba(0, 0, 0, 0.62);
 }
-.pc-panel .pc-menu-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font: 11px var(--pc-ui);
-  color: var(--pc-fg-2);
-  white-space: nowrap;
-}
-.pc-panel .pc-menu-row > input {
-  flex: 1;
-  min-width: 0;
-  background: var(--pc-bg-input);
-  border-color: var(--pc-line);
-}
-/* the old inline ✎ ↑ ↓ cluster now lives inside the menu, always visible */
-.pc-panel .pc-rowmenu .mrln-rowbtns {
-  margin: 0;
-  opacity: 1;
-  gap: 4px;
-}
-.pc-panel .pc-rowmenu .mrln-rowbtns .mrln-mini {
-  min-width: 26px;
-  min-height: 26px;
-  border-color: var(--pc-line-strong);
-}
-
 /* the table header the grid is aligned to */
 .pc-panel .pc-thead {
   display: grid;
@@ -1775,9 +1723,6 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   .pc-panel .pc-cell-wt {
     grid-area: wt;
   }
-  .pc-panel .pc-cell-menu {
-    grid-area: menu;
-  }
 }
 
 /* --- look-and-feel pass: the blocks above and below the table ------------
@@ -1803,32 +1748,37 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   padding-inline: 0;
 }
 
-/* b. Template bar — one raised row: name, badge, then right-aligned controls */
+/* b. Template bar — TEMPLATE is a heading over its own row of controls, not a
+   label sat beside them: the template name is the loudest thing in the block
+   and gets the full width, while the tier badge, ＋ and export ride the right
+   edge behind it. */
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 11px var(--pc-pad);
+  display: block;
+  padding: 9px var(--pc-pad) 11px;
   background: var(--pc-bg-raised);
   border-bottom: 1px solid var(--pc-line);
 }
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-field-name {
-  flex: 0 0 auto;
-  margin: 0;
+  display: block;
+  margin: 0 0 6px;
   font: 600 10px var(--pc-mono);
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--pc-fg-4);
+  color: var(--pc-fg-3);
+}
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-inline {
+  gap: 6px;
 }
 .pc-panel .mrln-tab-body > label.mrln-field:first-of-type select {
   flex: 1 1 auto;
   height: 28px;
   font: 600 14px var(--pc-ui);
   color: var(--pc-fg);
-  border-color: transparent;
 }
-.pc-panel .mrln-tab-body > label.mrln-field:first-of-type select:hover {
-  border-color: var(--pc-line-strong);
+/* the cluster right-aligns off the select even if the select ever stops
+   flexing — the badge, not the layout, decides where the group starts */
+.pc-panel .mrln-tab-body > label.mrln-field:first-of-type > .mrln-inline > .mrln-chip {
+  margin-left: auto;
 }
 
 /* c/d. Setup grid — 1px gutters ON a line-coloured ground, so the gap IS the
@@ -1839,33 +1789,42 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   gap: 1px;
   background: var(--pc-line);
   border-bottom: 1px solid var(--pc-line);
+  /* One width for every value in the grid, so six controls share one right
+     edge and the seed cluster is exactly as wide as the dropdowns above it.
+     Sized to the longest value ('negative prevails') and to 26px dice + 6px
+     gap + the number — those two agreeing is the whole point. Sized off
+     measured text: 'negative prevails' is 88px and a 10-digit master seed
+     (reroll caps at 0xffffffff) is 64px, both at their own weight. */
+  --pc-valw: 140px;
 }
 .pc-panel .mrln-grid2 > label.mrln-field,
 .pc-panel .mrln-grid2 > .mrln-field {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--pc-valw);
   align-items: center;
-  justify-content: space-between;
   gap: var(--pc-gap);
   min-height: 31px;
   padding: 0 var(--pc-pad);
   background: var(--pc-bg-panel);
 }
 .pc-panel .mrln-grid2 > .mrln-field > .mrln-field-name {
-  flex: 0 1 auto;
   margin: 0;
   font: 11px var(--pc-ui);
   color: var(--pc-fg-2);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .pc-panel .mrln-grid2 > .mrln-field > select,
 .pc-panel .mrln-grid2 > .mrln-field > .mrln-inline {
-  flex: 0 1 auto;
-  width: auto;
-  max-width: 62%;
+  width: 100%;
   min-width: 0;
-  justify-content: flex-end;
 }
-.pc-panel .mrln-grid2 > .mrln-field > select {
+/* Target profile's select is wrapped in a .mrln-inline (it shares its cell
+   with a note), so a direct-child selector missed it and 'standard' stayed
+   left-aligned while its five neighbours went right. Match both depths. */
+.pc-panel .mrln-grid2 > .mrln-field > select,
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > select {
   height: 26px;
   padding-right: 18px;
   font: 600 11.5px var(--pc-ui);
@@ -1873,17 +1832,25 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-align: right;
   text-align-last: right;
 }
-.pc-panel .mrln-grid2 > .mrln-field > select:hover {
+.pc-panel .mrln-grid2 > .mrln-field > select:hover,
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > select:hover {
   background-color: var(--pc-bg-raised);
 }
-/* the master-seed cell keeps its reroll button but stops stretching */
+/* The seed number carries the same 18px right inset the dropdowns reserve for
+   their caret, so digits and words land on one line rather than one being a
+   caret's width further out than the other. */
 .pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > input {
-  flex: 0 1 90px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 18px;
   text-align: right;
   font: 600 11.5px var(--pc-mono);
 }
 .pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > button {
   flex: 0 0 auto;
+  width: 26px;
+  min-width: 26px;
+  padding: 0;
 }
 
 /* e. The template-text disclosure: a quiet uppercase strip when closed. */
@@ -2051,16 +2018,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   color: var(--pc-fg);
 }
 
-/* The master-seed cell's reroll button escaped the grid cell. */
+/* The master-seed cell's reroll button escaped the grid cell. It is now held
+   by the shared value column above instead of a percentage cap — a cap that
+   resolved against the 134px track would have squeezed the number to 80px. */
 .pc-panel .mrln-grid2 > .mrln-field > .mrln-inline {
-  flex: 0 1 auto;
-  max-width: 60%;
+  max-width: 100%;
   overflow: hidden;
-}
-.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > button {
-  width: 26px;
-  min-width: 26px;
-  padding: 0;
 }
 
 /* The variant block is the design's group header: one line, not three. Its
@@ -2276,5 +2239,171 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 
 /* The CHOICES / NEGATIVE folds match the template-text strip. */
 .pc-panel .mrln-tab-body details.mrln-fold > summary {
+  color: var(--pc-fg-2);
+}
+
+/* --- look-and-feel refinement 5 ------------------------------------------ */
+
+/* A fold's own label was --pc-fg-4 on the panel ground: legible in a mock at
+   2x, barely readable on a real screen. Both the label and its aside move up
+   a step, and the disclosure triangle takes the accent green — it is the one
+   glyph in the strip that says 'this opens', so it should be the one that
+   catches the eye. */
+.pc-panel details.mrln-fold > summary {
+  color: var(--pc-fg-2);
+}
+.pc-panel details.mrln-fold > summary > .pc-summary-note {
+  color: var(--pc-fg-3);
+}
+.pc-panel details.mrln-fold > summary::before,
+.pc-panel .mrln-nest-branch > summary::before {
+  color: var(--pc-live);
+  font-size: 10px;
+}
+.pc-panel details.mrln-fold > summary:hover,
+.pc-panel .mrln-nest-branch > summary:hover {
+  color: var(--pc-fg);
+}
+
+/* Every dropdown gets a light resting box AND its caret at rest. Rule 3 takes
+   the chrome off controls until hover, which is right for inputs — a select is
+   the one control whose entire purpose is invisible until you click it, so it
+   is the one that has to advertise. The ground stays transparent, so a column
+   of them still reads as a table and not a stack of filled widgets. */
+.pc-panel select {
+  border-color: var(--pc-line);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--pc-fg-3) 50%),
+    linear-gradient(135deg, var(--pc-fg-3) 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) calc(50% + 1px),
+    calc(100% - 6px) calc(50% + 1px);
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
+}
+.pc-panel select:hover {
+  border-color: var(--pc-line-strong);
+}
+/* the row value field: the same box, over its own caret geometry from phase 2 */
+.pc-panel select.pc-field {
+  border-color: var(--pc-line);
+}
+
+/* THE OPEN LIST. A select's popup is painted by the browser from the select's
+   own background-color and color — and rule 3 made that background
+   transparent, which resolves to the white canvas. So every dropdown opened a
+   white list of near-white text: unreadable except for the one row under the
+   cursor. Declaring color-scheme makes the native widget follow the panel, and
+   the option colours are set outright so the list is ours in either theme. */
+.pc-panel {
+  color-scheme: dark;
+}
+:root:not(.dark-theme):not(:has(body.dark-theme)) .pc-panel {
+  color-scheme: light;
+}
+.pc-panel select option,
+.pc-panel select optgroup {
+  background-color: var(--pc-bg-panel);
+  color: var(--pc-fg);
+  font-weight: 400;
+}
+.pc-panel select optgroup {
+  color: var(--pc-fg-3);
+}
+
+/* The row's last column is ACTIONS, not a ⋯ that hides them. The design-pass
+   move of ✎ ↑ ↓ ✕ into a menu cost a click on the four things a composer does
+   most, so they come back onto the row under a header that names them — and
+   the value column gives up the width, since it was the widest thing on the
+   row and reads fine a little narrower. */
+.pc-panel .pc-row,
+.pc-panel .pc-thead {
+  /* 72px of seed, not 62: a 10-digit seed measures 58px at this size and the
+     field has 10px of padding, so 62 clipped the last digit off every held
+     draw. A number you cannot read is not a number. */
+  grid-template-columns: 26px 1fr 1fr 34px 72px 92px;
+}
+
+/* The master seed keeps its spinner (it is a number you nudge), so the field
+   reserves the ~15px the spinner takes instead of the 18px the dropdowns
+   reserve for their caret — which is why a 10-digit seed came out cut off. The
+   two insets land within a few pixels of each other, so digits and words still
+   share a right edge. */
+.pc-panel .mrln-grid2 > .mrln-field > .mrln-inline > input[type="number"] {
+  padding-right: 2px;
+}
+
+/* Under ~560px the two-up setup grid leaves a label no room next to a value
+   column sized for real content, so it goes one-up instead of ellipsing. */
+@container pcpanel (max-width: 560px) {
+  .pc-panel .mrln-grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+.pc-panel .pc-cell-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+/* always visible: an action you have to hover to discover is a hidden action */
+.pc-panel .pc-cell-actions .mrln-rowbtns {
+  margin: 0;
+  gap: 2px;
+  opacity: 1;
+}
+.pc-panel .pc-cell-actions .mrln-mini {
+  min-width: 21px;
+  min-height: 21px;
+  padding: 0;
+  font-size: 10.5px;
+  color: var(--pc-fg-3);
+  border-color: transparent;
+}
+.pc-panel .pc-cell-actions .mrln-mini:hover:not(:disabled) {
+  color: var(--pc-fg);
+  background: var(--pc-bg-raised);
+  border-color: var(--pc-line-strong);
+}
+.pc-panel .pc-cell-actions .mrln-mini:disabled {
+  opacity: 0.35;
+}
+.pc-panel .pc-thead > :nth-child(6) {
+  text-align: right;
+}
+
+/* The seed cell keeps click-to-pin / double-click-to-type. While it IS an
+   editor it reads as one, and the cell stops looking clickable so the two
+   states are never confused. */
+.pc-panel .pc-cell-seed[data-editing="true"] {
+  cursor: auto;
+}
+.pc-panel input.pc-seed-field::placeholder {
   color: var(--pc-fg-4);
+}
+
+/* The two narrow layouts follow the new template. */
+@container pcpanel (max-width: 620px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-thead {
+    grid-template-columns: 26px 1fr 1fr 34px 92px;
+  }
+  /* the header cell for the hidden seed column goes with it */
+  .pc-panel .pc-thead > :nth-child(5) {
+    display: none;
+  }
+  .pc-panel .pc-thead > :nth-child(6) {
+    text-align: right;
+  }
+}
+@container pcpanel (max-width: 460px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-row[data-level="top"] {
+    grid-template-columns: 26px 1fr 34px 92px;
+    grid-template-areas:
+      "state name wt actions"
+      "state value value value";
+  }
+  .pc-panel .pc-cell-actions {
+    grid-area: actions;
+  }
 }

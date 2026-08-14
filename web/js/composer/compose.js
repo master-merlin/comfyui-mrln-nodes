@@ -425,20 +425,31 @@ export function createCompose(hub) {
     return row.seed ? "held" : "random";
   }
 
-  function stateCell(row, resolved, onChange) {
+  const STATE_GLYPH = { random: "◆", held: "🔒", fixed: "🔒" };
+  const STATE_TITLE = {
+    random: "Random — click to hold this draw (freezes it on the seed it just used)",
+    held: "Held on a pinned seed — click to let it draw again",
+    fixed: "Fixed to one item — pick 'random' in the value list to unfix",
+  };
+
+  /** Repaint the glyph in place, so typing a seed does not need a re-render. */
+  function paintState(button, row) {
     const mode = rowMode(row);
+    button.dataset.mode = mode;
+    button.title = STATE_TITLE[mode];
+    button.textContent = STATE_GLYPH[mode];
+  }
+
+  function stateCell(row, resolved, onChange) {
     const button = el(
       "button",
       {
         class: "pc-state",
-        "data-mode": mode,
-        title:
-          mode === "random"
-            ? "Random — click to hold this draw (freezes it on the seed it just used)"
-            : mode === "held"
-              ? "Held on a pinned seed — click to let it draw again"
-              : "Fixed to one item — pick 'random' in the value list to unfix",
+        // Read the mode at CLICK time, not at build time: the seed field can
+        // change it under us (typing a seed turns random into held), and a
+        // captured mode would then run the wrong branch.
         onclick: () => {
+          const mode = rowMode(row);
           if (mode === "held") row.seed = "";
           else if (mode === "random") {
             const used = resolved?.seed_used;
@@ -455,9 +466,9 @@ export function createCompose(hub) {
           row.touched = true;
           onChange();
         },
-      },
-      mode === "random" ? "◆" : "🔒"
+      }
     );
+    paintState(button, row);
     return button;
   }
 
@@ -480,9 +491,60 @@ export function createCompose(hub) {
     );
   }
 
-  function seedCell(row, resolved, onChange) {
+  /**
+   * The seed cell: one click pins this draw, a double-click types a seed.
+   *
+   * The interaction is right; it was unreliable for two structural reasons,
+   * neither of them timing:
+   *  - the editor mounted INSIDE the cell whose own click handler pins, so the
+   *    click that put the caret in the field also armed the pin — and the seed
+   *    snapped back to auto under you;
+   *  - a live preview finishing calls renderNested(), which replaces nested
+   *    rows wholesale, so a nested row's editor vanished mid-typing.
+   * So the editing flag lives in state (the same shape as labelEdit), the cell
+   * comes back as an editor after any re-render and refocuses itself, and every
+   * pointer event inside the field stops before the pin handler sees it.
+   */
+  function seedCell(id, row, resolved, input, onChange) {
     const mode = rowMode(row);
-    const text = mode === "fixed" ? "fixed" : mode === "held" ? row.seed : "auto";
+    if (state.seedEdit.has(id)) {
+      input.classList.remove("mrln-narrow");
+      input.classList.add("pc-seed-field");
+      input.style.display = "";
+      input.placeholder = "auto";
+      input.title = "Seed for this draw — blank follows the master seed";
+      for (const type of ["mousedown", "click", "dblclick"]) {
+        input.addEventListener(type, (e) => e.stopPropagation());
+      }
+      const close = () => {
+        state.seedEdit.delete(id);
+        onChange();
+      };
+      input.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== "Escape") return;
+        e.preventDefault();
+        close();
+      });
+      // A re-render detaches the field and fires blur — closing on THAT would
+      // cancel editing every time the preview came back, which is the bug one
+      // level up. Only a blur that leaves the field in the document is a real
+      // one; the rebuilt cell refocuses instead.
+      input.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (input.isConnected) close();
+        }, 0);
+      });
+      requestAnimationFrame(() => {
+        if (!input.isConnected || document.activeElement === input) return;
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+      return el(
+        "span",
+        { class: "pc-cell-seed", "data-mode": mode, "data-editing": "true" },
+        input
+      );
+    }
     const cell = el(
       "span",
       {
@@ -494,9 +556,8 @@ export function createCompose(hub) {
             ? "This slot is fixed to an item, so no seed is involved"
             : "Click to pin this draw's seed · double-click to type one",
       },
-      String(text)
+      String(mode === "fixed" ? "fixed" : mode === "held" ? row.seed : "auto")
     );
-    if (mode === "fixed") return cell;
     // Click pins, double-click types. A click always precedes a double-click,
     // so the single-click action waits one interval and cancels if the second
     // click arrives — otherwise every attempt to type would first pin.
@@ -504,7 +565,11 @@ export function createCompose(hub) {
     cell.addEventListener("click", () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        if (mode === "held") row.seed = "";
+        // live, not captured: the value select can retire the seed after this
+        // cell was built
+        const now = rowMode(row);
+        if (now === "fixed") return;
+        if (now === "held") row.seed = "";
         else {
           const used = resolved?.seed_used;
           if (used === undefined || used === null) return;
@@ -516,55 +581,35 @@ export function createCompose(hub) {
     });
     cell.addEventListener("dblclick", () => {
       clearTimeout(timer);
-      const input = el("input", {
-        class: "pc-seed-input",
-        type: "text",
-        inputmode: "numeric",
-        value: row.seed ?? "",
-        title: "Seed for this slot — empty means it follows the master seed",
-      });
-      const commit = () => {
-        row.seed = input.value.replace(/\D/g, "");
-        row.touched = true;
-        onChange();
-      };
-      input.addEventListener("blur", commit);
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") commit();
-        if (e.key === "Escape") onChange();
-      });
-      cell.replaceChildren(input);
-      input.focus();
-      input.select();
+      if (rowMode(row) === "fixed") return;
+      state.seedEdit.add(id);
+      onChange();
+    });
+    cell.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      clearTimeout(timer);
+      if (rowMode(row) === "fixed") return;
+      state.seedEdit.add(id);
+      onChange();
     });
     return cell;
   }
 
-  /** The reserved ⋯ column. Reserved at every width so hover shifts nothing. */
-  function menuCell(...actions) {
-    const items = actions.filter(Boolean);
-    const menu = el("div", { class: "pc-rowmenu", style: "display:none" }, ...items);
-    const button = el(
-      "button",
-      {
-        class: "pc-menu-btn",
-        "aria-haspopup": "menu",
-        "aria-expanded": "false",
-        title: "Row actions",
-        onclick: (e) => {
-          e.stopPropagation();
-          const open = menu.style.display === "none";
-          for (const other of composeTab.querySelectorAll(".pc-rowmenu")) {
-            other.style.display = "none";
-          }
-          menu.style.display = open ? "" : "none";
-          button.setAttribute("aria-expanded", open ? "true" : "false");
-        },
-      },
-      "⋯"
-    );
-    if (!items.length) button.disabled = true;
-    return el("span", { class: "pc-cell-menu" }, button, menu);
+  /**
+   * Repaint one row's mode-dependent chrome in place. Called by the seed field
+   * (typing must not re-render — focus dies) and by the value select (picking a
+   * fixed item retires the seed), so the glyph, the row tint and the field's
+   * enabled state never disagree with the row they describe.
+   */
+  function paintRowMode(row, stateBtn, seedNode) {
+    const mode = rowMode(row);
+    if (stateBtn) paintState(stateBtn, row);
+    if (seedNode && seedNode.dataset.editing !== "true") {
+      seedNode.dataset.mode = mode;
+      seedNode.textContent = mode === "fixed" ? "fixed" : mode === "held" ? row.seed : "auto";
+    }
+    (stateBtn ?? seedNode)?.closest(".pc-row")?.setAttribute("data-state", mode);
   }
 
   function msButtons(id) {
@@ -746,7 +791,7 @@ export function createCompose(hub) {
           row.item = value;
           if (value !== "off") row.seed = "";
         }
-        seedInput.style.display = row.random ? "" : "none";
+        paintRowMode(row, stateBtn, seedNode);
         schedulePreview();
       },
     });
@@ -769,7 +814,6 @@ export function createCompose(hub) {
       placeholder: "seed",
       title: "Optional per-child seed",
       value: row.seed,
-      style: row.random ? "" : "display:none",
       oninput: (e) => {
         row.touched = true;
         row.seed = e.target.value.replace(/\D/g, "");
@@ -777,14 +821,10 @@ export function createCompose(hub) {
       },
     });
 
-    // The seed input is no longer a permanent column — the seed CELL owns
-    // pinning now (click) and typing (double-click). Kept in the DOM so the
-    // existing oninput path and its `row.touched` bookkeeping are untouched;
-    // it just lives in the row menu.
-    seedInput.style.display = "";
-    seedInput.title = "Seed for this child — empty follows the master seed";
     const redraw = () => renderNested();
     itemSelect.classList.add("pc-field");
+    const stateBtn = stateCell(row, child, redraw);
+    const seedNode = seedCell(child.id, row, child, seedInput, redraw);
     return el(
       "div",
       {
@@ -792,7 +832,7 @@ export function createCompose(hub) {
         "data-level": "nested",
         "data-state": rowMode(row),
       },
-      stateCell(row, child, redraw),
+      stateBtn,
       el(
         "span",
         { class: "pc-cell-name", title: `${child.id} → ${child.ref}` },
@@ -801,8 +841,10 @@ export function createCompose(hub) {
       ),
       el("span", { class: "pc-cell-value" }, itemSelect),
       weightCell(pool, row, child),
-      seedCell(row, child, redraw),
-      menuCell(el("label", { class: "pc-menu-row" }, "Seed", seedInput))
+      seedNode,
+      // a child draw has nothing to reorder or remove — the column stays
+      // reserved so nested rows keep the parent table's alignment
+      el("span", { class: "pc-cell-actions" })
     );
   }
 
@@ -1030,7 +1072,19 @@ export function createCompose(hub) {
         "div",
         { class: "mrln-grid2" },
         field("Target profile", profileWrap),
-        field("Master seed", el("div", { class: "mrln-inline" }, seedInput, reroll))
+        // dice FIRST: the number then ends on the same right edge as every
+        // other value in this grid. DOM order, not CSS `order` — a visual
+        // order that contradicts tab order is a trap for keyboard users.
+        //
+        // And a DIV, not the usual label: a <button> is a labelable element, so
+        // with the dice first the whole row became the dice's hit area and
+        // clicking anywhere on it rerolled the master seed.
+        el(
+          "div",
+          { class: "mrln-field" },
+          el("span", { class: "mrln-field-name" }, "Master seed"),
+          el("div", { class: "mrln-inline" }, reroll, seedInput)
+        )
       ),
       metaPromptBlock(),
       // The header the row grid aligns to. Same six-column template, so a
@@ -1044,7 +1098,7 @@ export function createCompose(hub) {
         el("span", {}, "Drawn value"),
         el("span", { title: "Draw weight of the drawn item" }, "Wt"),
         el("span", {}, "Seed"),
-        el("span", {}, "")
+        el("span", {}, "Actions")
       ),
       el("div", { class: "mrln-slot-list" }, orderedRows()),
       addSectionRow()
@@ -1053,10 +1107,9 @@ export function createCompose(hub) {
     const variables = state.rawData.variables ?? [];
     const triggerVar = variables.find((v) => v.name === "trigger");
     parts.push(
-      field(
-        "Trigger word {trigger}",
+      titled(
+        "Trigger",
         el("input", {
-          title: "{trigger} is replaced everywhere: template text, lead-ins and item texts",
           type: "text",
           value: state.trigger,
           placeholder: triggerVar?.default ?? "",
@@ -1064,13 +1117,15 @@ export function createCompose(hub) {
             state.trigger = e.target.value;
             schedulePreview();
           },
-        })
+        }),
+        "The template's {trigger} word — replaced everywhere: template text, "
+          + "lead-ins and item texts."
       )
     );
     const extraVars = variables.filter((v) => v.name !== "trigger");
     parts.push(
-      field(
-        `Variables (${extraVars.map((v) => v.name).join(", ") || "name=value"})`,
+      titled(
+        "Variables",
         autoArea(
           {
             placeholder: extraVars.map((v) => `${v.name}=${v.default ?? ""}`).join("\n"),
@@ -1080,7 +1135,10 @@ export function createCompose(hub) {
             },
           },
           state.variables
-        )
+        ),
+        `One name=value per line. This template declares: ${
+          extraVars.map((v) => v.name).join(", ") || "none"
+        }.`
       )
     );
 
@@ -1191,12 +1249,41 @@ export function createCompose(hub) {
           `label, prefix, suffix, negative, type · ${textSet} of 5 set`
         )
       ),
-      field("Label (display name)", labelInput),
-      field("Prefix", braceAssist(prefixArea, wrapRefOptions)),
-      field("Suffix", braceAssist(suffixArea, wrapRefOptions)),
-      field("Negative", negativeInput),
-      field("Type (classifiers)", typeInput)
+      // One word each. The label column is narrow by design, and a parenthetical
+      // there only ever renders as 'Label (displa…' — the explanation belongs in
+      // the tooltip, where it is not competing for 70px.
+      titled(
+        "Label",
+        labelInput,
+        "Display name — what the template picker and this tab show. The slug "
+          + "stays the file path."
+      ),
+      titled(
+        "Prefix",
+        braceAssist(prefixArea, wrapRefOptions),
+        "Text rendered before the first section. {slot-id} weaves a slot's drawn "
+          + "text inline."
+      ),
+      titled(
+        "Suffix",
+        braceAssist(suffixArea, wrapRefOptions),
+        "Text rendered after the last section. {slot-id} weaves inline here too."
+      ),
+      titled("Negative", negativeInput, "Template-level negative terms."),
+      titled(
+        "Type",
+        typeInput,
+        "Classifiers: filter the section picker and the random draw pools to "
+          + "matching + universal sections. Explicit picks are never restricted."
+      )
     );
+  }
+
+  /** field() with the explanation on the row, so the label can stay one word. */
+  function titled(name, control, title) {
+    const node = field(name, control);
+    node.title = title;
+    return node;
   }
 
   function orderedRows() {
@@ -1276,7 +1363,9 @@ export function createCompose(hub) {
         el("span", { class: "pc-cell-value" }, variantSelect),
         el("span", { class: "pc-cell-wt" }, ""),
         el("span", { class: "pc-cell-seed" }, ""),
-        menuCell(
+        el(
+          "span",
+          { class: "pc-cell-actions" },
           el(
             "span",
             { class: "mrln-rowbtns" },
@@ -1396,7 +1485,7 @@ export function createCompose(hub) {
           row.item = value;
           row.seed = "";
         }
-        seedInput.style.display = row.random ? "" : "none";
+        paintRowMode(row, stateBtn, seedNode);
         schedulePreview();
       },
     });
@@ -1442,7 +1531,6 @@ export function createCompose(hub) {
       placeholder: "seed",
       title: "Optional per-slot seed — decouples this slot from the master seed",
       value: row.seed,
-      style: row.random && !singleOnly ? "" : "display:none",
       oninput: (e) => {
         row.seed = e.target.value.replace(/\D/g, "");
         schedulePreview();
@@ -1581,11 +1669,9 @@ export function createCompose(hub) {
       renderComposeTab();
       schedulePreview();
     };
-    // The seed input moves off the row and into the row menu: the seed CELL is
-    // the affordance now (click pins, double-click types). Keeping the input
-    // itself alive preserves its oninput path verbatim.
-    seedInput.style.display = "";
     itemSelect.classList.add("pc-field");
+    const stateBtn = stateCell(row, resolved, redraw);
+    const seedNode = seedCell(slot.id, row, resolved, seedInput, redraw);
     const parts = [
       el(
         "div",
@@ -1594,7 +1680,7 @@ export function createCompose(hub) {
           "data-level": isVariantSlot ? "nested" : "top",
           "data-state": rowMode(row),
         },
-        stateCell(row, resolved, redraw),
+        stateBtn,
         el(
           "span",
           { class: "pc-cell-name", title: `${slot.id} → ${slot.ref}` },
@@ -1609,8 +1695,11 @@ export function createCompose(hub) {
         ),
         el("span", { class: "pc-cell-value" }, itemSelect),
         weightCell(pool, row, resolved),
-        seedCell(row, resolved, redraw),
-        menuCell(el("label", { class: "pc-menu-row" }, "Seed", seedInput), buttons)
+        seedNode,
+        // ✎ ↑ ↓ ✕ ride the row under an ACTIONS header instead of hiding in a
+        // ⋯ menu: they are the four things a composer does most, and a click
+        // to reveal a click is a click too many.
+        el("span", { class: "pc-cell-actions" }, buttons)
       ),
     ];
     if (state.labelEdit.has(slot.id)) {
