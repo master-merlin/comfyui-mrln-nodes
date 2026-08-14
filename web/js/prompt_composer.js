@@ -312,6 +312,38 @@ app.registerExtension({
     // closes every open dropdown, steals focus and discards edits. Instead
     // the panel DOM is built once and re-attached, keeping all state.
     let panelRoot = null;
+
+    // The sidebar is a percentage of the window, which lands near 360px on a
+    // common screen — and a six-column table with an editor disclosure open is
+    // dense there. So the panel asks the host for a wider FLOOR while it is
+    // the tab on screen, and gives it straight back when the sidebar shows
+    // something else: the host is shared with Queue, Node library and friends,
+    // and leaving a minimum behind on their behalf would be rude. Capped at a
+    // third of the window so a small screen is never taken over.
+    function claimPanelWidth(container, tries = 6) {
+      // render() can run BEFORE the frontend attaches its container, so the
+      // host is not reachable yet on the first frame — look again next frame
+      // rather than giving up silently.
+      const host = container.closest?.(".side-bar-panel");
+      if (!host) {
+        if (tries > 0) requestAnimationFrame(() => claimPanelWidth(container, tries - 1));
+        return;
+      }
+      if (host.dataset.mrlnWidened === "1") return;
+      const want = Math.round(Math.min(480, window.innerWidth * 0.34));
+      if (want <= host.getBoundingClientRect().width) return;
+      const previous = host.style.minWidth;
+      host.style.minWidth = `${want}px`;
+      host.dataset.mrlnWidened = "1";
+      const observer = new MutationObserver(() => {
+        if (host.isConnected && host.contains(panelRoot)) return;
+        host.style.minWidth = previous;
+        delete host.dataset.mrlnWidened;
+        observer.disconnect();
+      });
+      observer.observe(host, { childList: true, subtree: true });
+    }
+
     app.extensionManager.registerSidebarTab({
       id: "mrln-prompt-composer",
       icon: "pi pi-book",
@@ -321,11 +353,13 @@ app.registerExtension({
       render: (el) => {
         if (panelRoot) {
           if (!el.contains(panelRoot)) el.appendChild(panelRoot);
+          claimPanelWidth(el);
           return;
         }
         panelRoot = document.createElement("div");
         panelRoot.style.height = "100%";
         el.appendChild(panelRoot);
+        claimPanelWidth(el);
         createComposerPanel(panelRoot, {
           apiJson,
           toast,

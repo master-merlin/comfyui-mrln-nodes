@@ -1476,10 +1476,13 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .pc-row {
   display: grid;
-  grid-template-columns: 26px 1fr 1.15fr 34px 62px 28px;
+  grid-template-columns: 26px 1fr 1.15fr 40px 62px 28px;
   align-items: center;
   gap: var(--pc-gap);
-  padding: 0 12px;
+  /* ONE gutter for the whole panel: the rows used to sit at 12px while every
+     block above them sat at --pc-pad, so nothing quite lined up down the left
+     edge. */
+  padding: 0 var(--pc-pad);
   min-height: var(--pc-row);
   border-bottom: 1px solid var(--pc-line-row);
 }
@@ -1560,7 +1563,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .pc-cell-value {
   min-width: 0;
 }
-.pc-panel select.pc-field {
+.pc-panel .pc-field {
   width: 100%;
   height: 26px;
   min-height: 26px;
@@ -1584,12 +1587,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   background-size: 4px 4px;
   background-repeat: no-repeat;
 }
-.pc-panel select.pc-field:hover {
+.pc-panel .pc-field:hover {
   background-color: var(--pc-bg-raised);
   border-color: var(--pc-line-strong);
 }
-.pc-panel .pc-row[data-state="held"] select.pc-field,
-.pc-panel .pc-row[data-state="fixed"] select.pc-field {
+.pc-panel .pc-row[data-state="held"] .pc-field,
+.pc-panel .pc-row[data-state="fixed"] .pc-field {
   color: #e8c493;
   border-color: var(--pc-held-line);
   background-color: var(--pc-held-soft);
@@ -1601,7 +1604,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   font: 600 11px var(--pc-mono);
   color: var(--pc-fg-4);
 }
+/* An edited weight is boxed. The box used to fill the whole 34px cell, so the
+   digits sat hard against the column beside them; it shrinks to its content
+   with real padding now and centres in the column. */
 .pc-panel .pc-cell-wt[data-weighted="true"] {
+  justify-self: center;
+  padding: 0 6px;
   color: var(--pc-held);
   border: 1px solid var(--pc-held-line);
   border-radius: 4px;
@@ -1661,10 +1669,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 /* the table header the grid is aligned to */
 .pc-panel .pc-thead {
   display: grid;
-  grid-template-columns: 26px 1fr 1.15fr 34px 62px 28px;
+  grid-template-columns: 26px 1fr 1.15fr 40px 62px 28px;
   gap: var(--pc-gap);
   align-items: center;
-  padding: 0 12px;
+  padding: 0 var(--pc-pad);
   height: 28px;
   background: var(--pc-bg-app);
   border-bottom: 1px solid var(--pc-line);
@@ -1685,45 +1693,10 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   opacity: 0.45;
 }
 
-/* --- 4c: under 460px the grid stacks, value over label ------------------- */
-@container pcpanel (max-width: 620px) {
-  .pc-panel .pc-row,
-  .pc-panel .pc-thead {
-    grid-template-columns: 26px 1fr 1.15fr 34px 28px;
-  }
-  .pc-panel .pc-cell-seed,
-  .pc-panel .pc-thead > :nth-child(5) {
-    display: none;
-  }
-}
-@container pcpanel (max-width: 460px) {
-  .pc-panel .pc-thead {
-    display: none;
-  }
-  .pc-panel .pc-row,
-  .pc-panel .pc-row[data-level="top"] {
-    grid-template-columns: 26px 1fr 34px 28px;
-    grid-template-areas:
-      "state name wt menu"
-      "state value value value";
-    row-gap: 3px;
-    padding-block: 5px;
-    min-height: 0;
-  }
-  .pc-panel .pc-row > .pc-state {
-    grid-area: state;
-    align-self: start;
-  }
-  .pc-panel .pc-cell-name {
-    grid-area: name;
-  }
-  .pc-panel .pc-cell-value {
-    grid-area: value;
-  }
-  .pc-panel .pc-cell-wt {
-    grid-area: wt;
-  }
-}
+/* The narrow ladder lives in ONE place — refinement 5, at the end of the
+   sheet. It used to live here, and the later base rule that widened the ACTIONS
+   column silently outranked it: between 400 and 470 the seed CELLS were hidden
+   while their 72px track stayed, leaving a gap the table could not explain. */
 
 /* --- look-and-feel pass: the blocks above and below the table ------------
    Closing the gap to the designer's mock WITHOUT touching behaviour. Almost
@@ -1741,8 +1714,9 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-tab-body > * {
   padding-inline: var(--pc-pad);
 }
-/* the table and its header own their gutter, so exempt them */
-.pc-panel .mrln-tab-body > .pc-thead,
+/* The slot list and the setup grid run full-bleed and their own children pad
+   themselves. The header is NOT one of them: exempting it left the column
+   labels 14px inboard of the columns they name. */
 .pc-panel .mrln-tab-body > .mrln-slot-list,
 .pc-panel .mrln-tab-body > .mrln-grid2 {
   padding-inline: 0;
@@ -1973,11 +1947,11 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
    full --pc-line border made twelve rows read as twelve inputs again, which
    is the exact thing rule 3 exists to prevent. Transparent ground, hairline
    box; the full treatment still arrives on hover and focus. */
-.pc-panel select.pc-field {
+.pc-panel .pc-field {
   background-color: transparent;
   border-color: var(--pc-line-row);
 }
-.pc-panel .pc-row:hover select.pc-field {
+.pc-panel .pc-row:hover .pc-field {
   border-color: var(--pc-line-strong);
 }
 
@@ -2284,6 +2258,100 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel select:hover {
   border-color: var(--pc-line-strong);
 }
+/* A selected row is the keyboard's subject — E edits, ↑ ↓ move, Del removes.
+   Amber, and an inset outline so selecting never shifts the table by a pixel.
+   It reads differently from a HELD draw (which tints the value field and the
+   seed, not the row's edge). */
+.pc-panel .pc-row[data-selected="true"] {
+  outline: 1px solid var(--pc-held);
+  outline-offset: -1px;
+  background: var(--pc-held-soft);
+}
+.pc-panel .pc-row:focus-visible {
+  outline: 1px solid var(--pc-held);
+  outline-offset: -1px;
+  box-shadow: none;
+}
+
+/* The unsaved-changes warning leads with its state in amber; the sentence that
+   explains it stays a note. One flat grey line read like every other note in
+   the panel, which is what a warning must not do. */
+.pc-panel .mrln-modified .pc-flag {
+  color: var(--pc-held);
+  font-weight: 600;
+}
+
+/* The name cell has to give the NAME the room. Everything else riding in it —
+   handle, M/S, chips — is secondary, but they were all flex:0 1 auto against a
+   label that was too, so a narrow panel squeezed the label to 'C…' while
+   '@variant' kept its full width. A row whose name is one letter is a row you
+   cannot use. */
+.pc-panel .pc-cell-label {
+  flex: 1 1 auto;
+  min-width: 4.5em;
+}
+.pc-panel .pc-cell-chips {
+  min-width: 0;
+}
+@container pcpanel (max-width: 560px) {
+  /* the drag handle costs 14px of a column with none to spare, and ↑ ↓ in
+     ACTIONS reorder the same rows at any width */
+  .pc-panel .pc-row .mrln-drag {
+    display: none;
+  }
+}
+
+/* Everything a slot card holds BESIDES its row — the label editor, the
+   variant note, the nested tree — lines up on the panel's one gutter instead
+   of hugging the panel edge. */
+.pc-panel .mrln-slot > :not(.pc-row):not(.mrln-nest),
+.pc-panel .mrln-slot-list > .mrln-note {
+  padding-inline: var(--pc-pad);
+}
+
+/* The row's editor disclosure: label column left, control right, boxed. */
+.pc-panel .pc-slot-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-block: 8px 10px;
+  background: var(--pc-bg-app);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .pc-slot-edit > .mrln-field {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: start;
+  gap: var(--pc-gap);
+  margin: 0;
+}
+.pc-panel .pc-slot-edit > .mrln-field > .mrln-field-name {
+  margin: 0;
+  padding-top: 5px;
+  text-align: right;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-2);
+}
+.pc-panel .pc-slot-edit > .mrln-field > input[type="number"] {
+  width: 82px;
+  text-align: right;
+  font: 600 11.5px var(--pc-mono);
+}
+.pc-panel .pc-slot-edit > .mrln-note {
+  padding-left: 78px;
+  font-size: 10.5px;
+  color: var(--pc-fg-4);
+}
+
+/* Text fields carry the same resting box the dropdowns now do — the emphasis
+   field read as a bare number floating at the right of its row. The seed field
+   keeps its own treatment (it only exists while you are typing in it). */
+.pc-panel input[type="text"]:not(.pc-seed-field),
+.pc-panel input[type="number"]:not(.pc-seed-field),
+.pc-panel input[type="search"] {
+  border-color: var(--pc-line);
+}
+
 /* The search-scope toggle: a segmented control, so it reads as a control and
    the state you would switch TO is on screen rather than implied. */
 .pc-panel .pc-segmented {
@@ -2317,7 +2385,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* the row value field: the same box, over its own caret geometry from phase 2 */
-.pc-panel select.pc-field {
+.pc-panel .pc-field {
   border-color: var(--pc-line);
 }
 
@@ -2353,7 +2421,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   /* 72px of seed, not 62: a 10-digit seed measures 58px at this size and the
      field has 10px of padding, so 62 clipped the last digit off every held
      draw. A number you cannot read is not a number. */
-  grid-template-columns: 26px 1fr 1fr 34px 72px 92px;
+  grid-template-columns: 26px 1fr 1fr 40px 72px 92px;
 }
 
 /* The master seed keeps its spinner (it is a number you nudge), so the field
@@ -2414,12 +2482,192 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* The two narrow layouts follow the new template. */
+/* --- the value picker (design handoff, phase 3) --------------------------
+   The native list mixed two MODES with 200+ items, offered no search, covered
+   the row it belonged to, and was painted by the browser — so it was the one
+   control that could not follow the panel. This is ours: same tokens, same
+   type, same greens. The <select> stays behind it as the source of truth. */
+.pc-panel .pc-cell-value > .pc-field-native {
+  display: none;
+}
+.pc-panel .pc-trigger {
+  display: block;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pc-panel .pc-trigger[aria-expanded="true"] {
+  border-color: var(--pc-live);
+  box-shadow: 0 0 0 3px var(--pc-live-ring);
+}
+
+.pc-pick {
+  position: fixed;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  max-height: min(420px, 70vh);
+  padding: 0;
+  background: #17171a;
+  border: 1px solid var(--pc-line-strong);
+  border-radius: var(--pc-r-lg);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.66);
+  overflow: hidden;
+}
+.pc-pick .pc-pick-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-pick .pc-pick-icon {
+  font-size: 12px;
+  color: var(--pc-fg-3);
+}
+.pc-pick input.pc-pick-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 24px;
+  padding: 0 4px;
+  font: 12px var(--pc-mono);
+  color: var(--pc-fg);
+  background: transparent;
+  border-color: transparent;
+}
+.pc-pick input.pc-pick-search:hover,
+.pc-pick input.pc-pick-search:focus {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.pc-pick .pc-pick-count {
+  flex: 0 0 auto;
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-4);
+}
+.pc-pick .pc-pick-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.pc-pick .pc-pick-row {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 0 10px;
+  font: 12px var(--pc-mono);
+  color: var(--pc-fg-2);
+  cursor: pointer;
+}
+.pc-pick .pc-pick-row[aria-selected="true"] {
+  background: var(--pc-bg-row);
+  color: var(--pc-fg);
+}
+.pc-pick .pc-pick-row.pc-pick-current {
+  color: var(--pc-live);
+}
+.pc-pick .pc-pick-mode {
+  font-weight: 600;
+}
+.pc-pick .pc-pick-mode .pc-pick-name {
+  color: var(--pc-live);
+}
+.pc-pick .pc-pick-mark {
+  text-align: center;
+  font-size: 11px;
+  color: var(--pc-live);
+}
+.pc-pick .pc-pick-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pc-pick .pc-pick-side {
+  font-size: 10.5px;
+  color: var(--pc-fg-4);
+}
+.pc-pick .pc-pick-sep {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding: 6px 10px 4px;
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+  border-top: 1px solid var(--pc-line);
+}
+.pc-pick .pc-pick-empty {
+  padding: 10px;
+  font: 11px var(--pc-ui);
+  color: var(--pc-fg-3);
+}
+.pc-pick .pc-pick-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pc-gap);
+  padding: 7px 10px;
+  border-top: 1px solid var(--pc-line);
+}
+.pc-pick .pc-pick-foot-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 10.5px var(--pc-mono);
+  color: var(--pc-fg-4);
+}
+/* On a panel too narrow to float a 300px list, the same markup docks. */
+.pc-pick.pc-pick-sheet {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+  width: auto;
+  max-height: 60vh;
+  border-radius: var(--pc-r-lg) var(--pc-r-lg) 0 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pc-pick {
+    animation: pc-pick-in 110ms ease-out;
+  }
+  @keyframes pc-pick-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+}
+
+/* --- the narrow ladder, in ONE place and in order ------------------------
+   Every step is measured against real content, not guessed: the fixed columns
+   are 26+34+72+92, the gaps 40 and the gutter 28, so what is left is what name
+   and value share. '🎲 random' needs 70px of the value column, and a name cell
+   also carries M/S and its chips. */
+
+/* Below 620 the name takes the larger share — a section called 'Conditions'
+   has to stay readable long after a value stops needing its full width. */
 @container pcpanel (max-width: 620px) {
   .pc-panel .pc-row,
   .pc-panel .pc-thead {
-    grid-template-columns: 26px 1fr 1fr 34px 92px;
+    grid-template-columns: 26px 1.25fr 1fr 40px 72px 92px;
   }
-  /* the header cell for the hidden seed column goes with it */
+}
+/* Below 470 the seed goes: the six columns no longer leave the name a usable
+   share, and the seed is the one a composer reads least often. It used to go at
+   620, which meant a sidebar had to be enormous before the table was whole. */
+@container pcpanel (max-width: 470px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-thead {
+    grid-template-columns: 26px 1.25fr 1fr 40px 92px;
+  }
+  .pc-panel .pc-cell-seed,
   .pc-panel .pc-thead > :nth-child(5) {
     display: none;
   }
@@ -2427,10 +2675,42 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     text-align: right;
   }
 }
-@container pcpanel (max-width: 460px) {
+/* Below 400 the row stacks: value under name, everything else on the top line. */
+@container pcpanel (max-width: 400px) {
+  .pc-panel .pc-thead {
+    display: none;
+  }
   .pc-panel .pc-row,
   .pc-panel .pc-row[data-level="top"] {
-    grid-template-columns: 26px 1fr 34px 92px;
+    grid-template-columns: 26px 1fr 40px 92px;
+    grid-template-areas:
+      "state name wt actions"
+      "state value value value";
+    row-gap: 3px;
+    padding-block: 5px;
+    min-height: 0;
+  }
+  .pc-panel .pc-row > .pc-state {
+    grid-area: state;
+    align-self: start;
+  }
+  .pc-panel .pc-cell-name {
+    grid-area: name;
+  }
+  .pc-panel .pc-cell-value {
+    grid-area: value;
+  }
+  .pc-panel .pc-cell-wt {
+    grid-area: wt;
+  }
+  .pc-panel .pc-cell-actions {
+    grid-area: actions;
+  }
+}
+@container pcpanel (max-width: 400px) {
+  .pc-panel .pc-row,
+  .pc-panel .pc-row[data-level="top"] {
+    grid-template-columns: 26px 1fr 40px 92px;
     grid-template-areas:
       "state name wt actions"
       "state value value value";

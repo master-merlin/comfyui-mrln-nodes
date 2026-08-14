@@ -88,6 +88,7 @@ describe("composer module hygiene", () => {
       "image.js",
       "intake.js",
       "loras.js",
+      "picker.js",
       "section_editor.js",
       "settings.js",
       "state.js",

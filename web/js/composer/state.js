@@ -41,6 +41,7 @@ export function createState() {
     rows: new Map(), // slot id -> {random, seed, item}
     labelEdit: new Set(), // slot ids with the label editor open
     seedEdit: new Set(), // slot/child ids whose seed cell is being typed into
+    selectedRow: null, // slot id (or "@variant") the keyboard acts on
     muted: new Set(), // audition only: slot ids (or "@variant") muted in preview
     soloed: new Set(), // audition only: solo set — non-empty means ONLY these render
     lastPreview: null,

@@ -29,6 +29,7 @@ import {
   tierChip,
   validateRefs,
 } from "./dom.js";
+import { closePicker, openPicker, pickerIsOpen } from "./picker.js";
 
 // ---- "Optimize for …": the pure half (SPEC 5.3) -----------------------------
 // Reading order is a render-time function of the PROFILE (its block_order), so
@@ -203,10 +204,14 @@ export function createCompose(hub) {
 
   // Persistent element so markModified never re-renders (a re-render would
   // steal focus from the textarea the user is typing in).
+  // The state word carries the amber; the sentence explaining it stays quiet.
+  // As one grey line it read like every other note in the panel — which is
+  // exactly what an unsaved-work warning must not do.
   const modifiedNote = el(
     "div",
     { class: "mrln-note mrln-modified", style: "display:none" },
-    "● unsaved template changes — Save writes them to your user library"
+    el("span", { class: "pc-flag" }, "● unsaved template changes"),
+    " — Save writes them to your user library"
   );
 
   function markModified() {
@@ -431,6 +436,114 @@ export function createCompose(hub) {
     held: "Held on a pinned seed — click to let it draw again",
     fixed: "Fixed to one item — pick 'random' in the value list to unfix",
   };
+
+  // ---- row selection ------------------------------------------------------
+  // A selected row is the keyboard's subject: E edits, ↑/↓ move it, Del takes
+  // it out. The selection is an id in state, not a DOM flag, so it survives the
+  // re-render every one of those actions triggers.
+
+  function selectRow(id, node) {
+    state.selectedRow = id;
+    for (const other of composeTab.querySelectorAll('.pc-row[data-selected="true"]')) {
+      if (other !== node) other.removeAttribute("data-selected");
+    }
+    node?.setAttribute("data-selected", "true");
+  }
+
+  /** Put focus back on the selected row after an action rebuilt the table. */
+  function focusSelectedRow() {
+    composeTab.querySelector('.pc-row[data-selected="true"]')?.focus({ preventScroll: true });
+  }
+
+  /**
+   * Wire a row as selectable. `actions` supplies only what the row can do —
+   * the variant header has no editor and cannot be removed, so it passes just
+   * the move, and the keys it does not implement stay unbound rather than
+   * silently doing nothing.
+   */
+  function selectableRow(node, id, actions) {
+    node.tabIndex = 0;
+    if (state.selectedRow === id) node.dataset.selected = "true";
+    // mousedown, not click: a click on a control inside the row focuses THAT
+    // control, and the row still has to become the selection.
+    node.addEventListener("mousedown", () => selectRow(id, node));
+    node.addEventListener("focus", () => selectRow(id, node));
+    node.addEventListener("keydown", (e) => {
+      // Only when the ROW itself has focus. Inside a select or an input the
+      // arrows and letters belong to that control, and stealing them would
+      // make the table unusable with a keyboard.
+      if (e.target !== node) return;
+      if (e.key === "e" || e.key === "E") {
+        if (!actions.edit) return;
+        actions.edit();
+      } else if (e.key === "ArrowUp") {
+        actions.move?.(-1);
+      } else if (e.key === "ArrowDown") {
+        actions.move?.(1);
+      } else if (e.key === "Delete") {
+        if (!actions.remove) return;
+        actions.remove();
+      } else return;
+      e.preventDefault();
+      focusSelectedRow();
+    });
+    return node;
+  }
+
+  /**
+   * The DRAWN VALUE cell: our own popover over the row's <select>.
+   *
+   * The select is NOT replaced — it stays in the DOM, hidden, as the source of
+   * truth. Committing a pick writes select.value and dispatches `change`, so
+   * every handler that already hangs off it runs untouched; this only owns how
+   * the list looks and how the keyboard walks it. That is also why the native
+   * control is still there for anything (tests, ComfyUI, a screen reader) that
+   * reads the row's value out of the DOM.
+   */
+  function valueCell(select, pool, sectionRef) {
+    select.classList.add("pc-field-native");
+    const trigger = el("button", {
+      class: "pc-field pc-trigger",
+      "aria-haspopup": "listbox",
+      "aria-expanded": "false",
+      onclick: (e) => {
+        e.stopPropagation();
+        if (pickerIsOpen()) {
+          closePicker();
+          return;
+        }
+        trigger.setAttribute("aria-expanded", "true");
+        const node = openPicker({
+          select,
+          pool,
+          anchor: trigger,
+          sectionRef,
+          onEditSection: sectionRef
+            ? async () => {
+                if (!confirmReplaceEditor()) return;
+                switchTab("library");
+                await openSectionEditor(sectionRef);
+                editorBox.scrollIntoView({ block: "nearest" });
+              }
+            : null,
+        });
+        // the popover owns its own teardown; the trigger only mirrors it
+        new MutationObserver((changes, observer) => {
+          if (node.isConnected) return;
+          trigger.setAttribute("aria-expanded", "false");
+          observer.disconnect();
+        }).observe(document.body, { childList: true });
+      },
+    });
+    const paint = () => {
+      const option = select.selectedOptions[0];
+      trigger.textContent = option ? option.textContent : select.value;
+      trigger.title = option?.title || "";
+    };
+    paint();
+    select.addEventListener("change", paint);
+    return el("span", { class: "pc-cell-value" }, select, trigger);
+  }
 
   /** Repaint the glyph in place, so typing a seed does not need a re-render. */
   function paintState(button, row) {
@@ -839,7 +952,7 @@ export function createCompose(hub) {
         child.id.split(".").pop(),
         child.omitted ? el("span", { class: "mrln-chip" }, "muted/empty") : null
       ),
-      el("span", { class: "pc-cell-value" }, itemSelect),
+      valueCell(itemSelect, pool, child.ref),
       weightCell(pool, row, child),
       seedNode,
       // a child draw has nothing to reorder or remove — the column stays
@@ -1348,10 +1461,18 @@ export function createCompose(hub) {
       { class: `mrln-slot mrln-variant-head${blockDimmed ? " mrln-muted" : ""}` },
       // Same grid as every other row — this is the design's group header, and
       // a three-line card here was the last thing breaking the table's rhythm.
-      el(
-        "div",
-        { class: "pc-row", "data-level": "top", "data-state": "random" },
-        el("span", { class: "pc-dot", title: "This block draws a variant" }),
+      // Selectable for ↑/↓ only: the block has no label of its own to edit and
+      // is not removable from here.
+      selectableRow(
+        el(
+          "div",
+          {
+            class: "pc-row",
+            "data-level": "top",
+            "data-state": "random",
+            title: "Selected: ↑ ↓ move the whole variant block",
+          },
+          el("span", { class: "pc-dot", title: "This block draws a variant" }),
         el(
           "span",
           { class: "pc-cell-name" },
@@ -1363,26 +1484,29 @@ export function createCompose(hub) {
         el("span", { class: "pc-cell-value" }, variantSelect),
         el("span", { class: "pc-cell-wt" }, ""),
         el("span", { class: "pc-cell-seed" }, ""),
-        el(
-          "span",
-          { class: "pc-cell-actions" },
           el(
             "span",
-            { class: "mrln-rowbtns" },
-            smallBtn(
-              "Move variant block up",
-              "↑",
-              () => moveOrder(orderIndex, -1),
-              orderIndex === 0
-            ),
-            smallBtn(
-              "Move variant block down",
-              "↓",
-              () => moveOrder(orderIndex, 1),
-              orderIndex === state.orderIds.length - 1
+            { class: "pc-cell-actions" },
+            el(
+              "span",
+              { class: "mrln-rowbtns" },
+              smallBtn(
+                "Move variant block up (↑)",
+                "↑",
+                () => moveOrder(orderIndex, -1),
+                orderIndex === 0
+              ),
+              smallBtn(
+                "Move variant block down (↓)",
+                "↓",
+                () => moveOrder(orderIndex, 1),
+                orderIndex === state.orderIds.length - 1
+              )
             )
           )
-        )
+        ),
+        "@variant",
+        { move: (delta) => moveOrder(orderIndex, delta) }
       )
     );
     attachDrag(card, handle, "order", orderIndex, (from, to) =>
@@ -1604,59 +1728,48 @@ export function createCompose(hub) {
       )
     );
 
+    // One implementation per action, shared by the buttons and the keyboard —
+    // a shortcut that drifts from the button it mirrors is worse than no
+    // shortcut.
+    const toggleLabelEdit = () => {
+      if (state.labelEdit.has(slot.id)) state.labelEdit.delete(slot.id);
+      else state.labelEdit.add(slot.id);
+      renderComposeTab();
+    };
+    const moveRow = (delta) => {
+      if (!isVariantSlot) {
+        moveOrder(orderIndex, delta);
+        return;
+      }
+      const target = index + delta;
+      if (target < 0 || target >= container.length) return;
+      [container[target], container[index]] = [container[index], container[target]];
+      markModified();
+      renderComposeTab();
+      schedulePreview();
+    };
+    const firstRow = isVariantSlot ? index === 0 : orderIndex === 0;
+    const lastRow = isVariantSlot
+      ? index === container.length - 1
+      : orderIndex === state.orderIds.length - 1;
+
     const buttons = el(
       "span",
       { class: "mrln-rowbtns" },
-      smallBtn("Edit the lead-in text rendered before this section", "✎", () => {
-        if (state.labelEdit.has(slot.id)) state.labelEdit.delete(slot.id);
-        else state.labelEdit.add(slot.id);
-        renderComposeTab();
-      }),
-      isVariantSlot
-        ? [
-            smallBtn(
-              "Move up within the variant",
-              "↑",
-              () => {
-                if (index > 0) {
-                  [container[index - 1], container[index]] = [
-                    container[index],
-                    container[index - 1],
-                  ];
-                  markModified();
-                  renderComposeTab();
-                  schedulePreview();
-                }
-              },
-              index === 0
-            ),
-            smallBtn(
-              "Move down within the variant",
-              "↓",
-              () => {
-                if (index < container.length - 1) {
-                  [container[index + 1], container[index]] = [
-                    container[index],
-                    container[index + 1],
-                  ];
-                  markModified();
-                  renderComposeTab();
-                  schedulePreview();
-                }
-              },
-              index === container.length - 1
-            ),
-          ]
-        : [
-            smallBtn("Move up", "↑", () => moveOrder(orderIndex, -1), orderIndex === 0),
-            smallBtn(
-              "Move down",
-              "↓",
-              () => moveOrder(orderIndex, 1),
-              orderIndex === state.orderIds.length - 1
-            ),
-          ],
-      smallBtn("Remove this section from the template", "✕", () =>
+      smallBtn("Edit the lead-in text rendered before this section (E)", "✎", toggleLabelEdit),
+      smallBtn(
+        isVariantSlot ? "Move up within the variant (↑)" : "Move up (↑)",
+        "↑",
+        () => moveRow(-1),
+        firstRow
+      ),
+      smallBtn(
+        isVariantSlot ? "Move down within the variant (↓)" : "Move down (↓)",
+        "↓",
+        () => moveRow(1),
+        lastRow
+      ),
+      smallBtn("Remove this section from the template (Del)", "✕", () =>
         removeSlot(container, index, slot.id, isVariantSlot)
       )
     );
@@ -1673,14 +1786,16 @@ export function createCompose(hub) {
     const stateBtn = stateCell(row, resolved, redraw);
     const seedNode = seedCell(slot.id, row, resolved, seedInput, redraw);
     const parts = [
-      el(
-        "div",
-        {
-          class: "pc-row",
-          "data-level": isVariantSlot ? "nested" : "top",
-          "data-state": rowMode(row),
-        },
-        stateBtn,
+      selectableRow(
+        el(
+          "div",
+          {
+            class: "pc-row",
+            "data-level": isVariantSlot ? "nested" : "top",
+            "data-state": rowMode(row),
+            title: "Selected: E edits the label, ↑ ↓ move it, Del removes it",
+          },
+          stateBtn,
         el(
           "span",
           { class: "pc-cell-name", title: `${slot.id} → ${slot.ref}` },
@@ -1693,66 +1808,77 @@ export function createCompose(hub) {
           el("span", { class: "pc-cell-label" }, labelText),
           el("span", { class: "pc-cell-chips" }, chips)
         ),
-        el("span", { class: "pc-cell-value" }, itemSelect),
-        weightCell(pool, row, resolved),
-        seedNode,
-        // ✎ ↑ ↓ ✕ ride the row under an ACTIONS header instead of hiding in a
-        // ⋯ menu: they are the four things a composer does most, and a click
-        // to reveal a click is a click too many.
-        el("span", { class: "pc-cell-actions" }, buttons)
+          valueCell(itemSelect, pool, slot.ref),
+          weightCell(pool, row, resolved),
+          seedNode,
+          // ✎ ↑ ↓ ✕ ride the row under an ACTIONS header instead of hiding in
+          // a ⋯ menu: they are the four things a composer does most, and a
+          // click to reveal a click is a click too many.
+          el("span", { class: "pc-cell-actions" }, buttons)
+        ),
+        slot.id,
+        {
+          edit: toggleLabelEdit,
+          move: moveRow,
+          remove: () => removeSlot(container, index, slot.id, isVariantSlot),
+        }
       ),
     ];
     if (state.labelEdit.has(slot.id)) {
+      // One block, and every field says what it is. The lead-in used to open as
+      // a bare textarea holding the row's name — nothing on screen said THAT
+      // text was what you were editing.
       parts.push(
-        autoArea(
-          {
-            placeholder: "Lead-in text rendered before this section ({trigger} works here; empty = section label)",
-            oninput: (e) => {
-              slot.label = e.target.value;
-              markModified();
-              schedulePreview();
-            },
-          },
-          slot.label ?? ""
-        ),
         el(
           "div",
-          { class: "mrln-inline" },
-          el(
-            "span",
-            {
-              class: "mrln-field-name",
-              title: "Wraps the drawn text as (text:weight) in the prompt — this "
-                + "template's value, independent of any weights inside item texts",
-            },
-            "Emphasis"
+          { class: "pc-slot-edit" },
+          titled(
+            "Label",
+            autoArea(
+              {
+                placeholder: "empty = the section's own label",
+                oninput: (e) => {
+                  slot.label = e.target.value;
+                  markModified();
+                  schedulePreview();
+                },
+              },
+              slot.label ?? ""
+            ),
+            "The name shown on this row AND the lead-in rendered before the "
+              + "section's drawn text. {trigger} works here; empty falls back to "
+              + "the section's own label."
           ),
-          el("input", {
-            class: "mrln-narrow",
-            type: "number",
-            step: "0.05",
-            min: "0.1",
-            max: "3",
-            placeholder: "1",
-            value: slot.emphasis ?? "",
-            oninput: (e) => {
-              const value = parseFloat(e.target.value);
-              if (Number.isNaN(value) || value === 1) delete slot.emphasis;
-              else slot.emphasis = value;
-              markModified();
-              schedulePreview();
+          titled(
+            "Emphasis",
+            el("input", {
+              type: "number",
+              step: "0.05",
+              min: "0.1",
+              max: "3",
+              placeholder: "1",
+              value: slot.emphasis ?? "",
+              oninput: (e) => {
+                const value = parseFloat(e.target.value);
+                if (Number.isNaN(value) || value === 1) delete slot.emphasis;
+                else slot.emphasis = value;
+                markModified();
+                schedulePreview();
+              },
+            }),
+            "Wraps the drawn text as (text:weight) in the prompt — this "
+              + "template's value, independent of any weights inside item texts"
+          ),
+          el(
+            "div",
+            {
+              class: "mrln-note",
+              title: "Put this placeholder into the template prefix/suffix and the "
+                + "drawn text renders inside that sentence — the slot then leaves "
+                + "the block list.",
             },
-          })
-        ),
-        el(
-          "div",
-          {
-            class: "mrln-note",
-            title: "Put this placeholder into the template prefix/suffix and the "
-              + "drawn text renders inside that sentence — the slot then leaves "
-              + "the block list.",
-          },
-          `Weave inline from prefix/suffix with {${slot.id}}`
+            `Weave inline from prefix/suffix with {${slot.id}}`
+          )
         )
       );
     }
