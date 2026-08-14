@@ -376,9 +376,11 @@ def test_profile_widget_position_and_lists_factory_profiles(node_env):
     inputs = node_env.INPUT_TYPES()
     all_names = [*inputs["required"], *inputs.get("optional", {})]
     # Ruling D2 (SPEC §1) RETIRED "profile stays last": the real rule it stood
-    # in for is append-only, so 'profile' keeps its INDEX while later widgets
-    # append after it. test_protocol_nodes.py owns the full frozen order.
-    assert all_names.index("profile") == 9
+    # in for is append-only. The order was re-cut once before shipping (see
+    # test_protocol_nodes.FROZEN_ORDER, which owns the full list) — what this
+    # test still guards is that profile sits with the OUTPUT-shaping widgets it
+    # presets, not that it holds one particular index forever.
+    assert all_names.index("profile") > all_names.index("format")
     options = inputs["optional"]["profile"][0]
     assert options[0] == "standard"
     # one EXPLICIT entry per model family — users must not need to know

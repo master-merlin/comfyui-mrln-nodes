@@ -456,6 +456,19 @@ class PromptTemplate:
                         "appear after 'Refresh node definitions'.",
                     },
                 ),
+                "template_names": (
+                    TEMPLATE_NAME_MODES,
+                    {
+                        "default": TEMPLATE_NAME_MODES[0],
+                        "tooltip": "How the template widget above names templates. 'slug' is "
+                        "the file path — the stable identifier, and what a shared workflow "
+                        "should carry. 'label' lets the widget hold the human name instead "
+                        "(the Composer's Apply to node writes that form), which reads better "
+                        "but breaks if the label is edited or a second template takes it. "
+                        "Either way a value that IS a known slug is read as one, so nothing "
+                        "already saved changes meaning.",
+                    },
+                ),
                 "trigger": (
                     "STRING",
                     {
@@ -510,15 +523,6 @@ class PromptTemplate:
                         '{"prompt": ...}. Negative output is always a plain string.',
                     },
                 ),
-                "conflict_policy": (
-                    list(pl.CONFLICT_POLICIES),
-                    {
-                        "tooltip": "When a negative term also appears in the rendered prompt: "
-                        "'negative prevails' keeps it in the negative output, 'positive "
-                        "prevails' drops it (a drawn section explicitly wants the term). "
-                        "Conflicts are always listed in the choices report.",
-                    },
-                ),
                 "text_length": (
                     ["template default", *pl.TEXT_LENGTHS],
                     {
@@ -526,6 +530,15 @@ class PromptTemplate:
                         "compact variants for tight tokenizers (e.g. SDXL). Items without "
                         "a short text fall back to their long text. Draws are identical "
                         "either way.",
+                    },
+                ),
+                "conflict_policy": (
+                    list(pl.CONFLICT_POLICIES),
+                    {
+                        "tooltip": "When a negative term also appears in the rendered prompt: "
+                        "'negative prevails' keeps it in the negative output, 'positive "
+                        "prevails' drops it (a drawn section explicitly wants the term). "
+                        "Conflicts are always listed in the choices report.",
                     },
                 ),
             },
@@ -591,19 +604,6 @@ class PromptTemplate:
                 # LAST, and it has to stay last: widgets_values is positional,
                 # so a new widget may only ever go on the end or every saved
                 # workflow shifts by one.
-                "template_names": (
-                    TEMPLATE_NAME_MODES,
-                    {
-                        "default": TEMPLATE_NAME_MODES[0],
-                        "tooltip": "How the template widget above names templates. 'slug' is "
-                        "the file path — the stable identifier, and what a shared workflow "
-                        "should carry. 'label' lets the widget hold the human name instead "
-                        "(the Composer's Apply to node writes that form), which reads better "
-                        "but breaks if the label is edited or a second template takes it. "
-                        "Either way a value that IS a known slug is read as one, so nothing "
-                        "already saved changes meaning.",
-                    },
-                ),
             },
         }
 

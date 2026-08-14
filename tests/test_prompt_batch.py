@@ -171,21 +171,16 @@ def test_batch_widgets_append_after_profile(classes):
     inputs = classes["MRLN_PromptTemplate"].INPUT_TYPES()
     assert list(inputs["required"]) == [
         "template",
+        "template_names",
         "trigger",
         "selection",
         "selection_mode",
         "seed",
         "format",
-        "conflict_policy",
         "text_length",
+        "conflict_policy",
     ]
-    assert list(inputs["optional"]) == [
-        "variables",
-        "profile",
-        "batch_count",
-        "batch_mode",
-        "template_names",
-    ]
+    assert list(inputs["optional"]) == ["variables", "profile", "batch_count", "batch_mode"]
     assert list(classes["MRLN_PromptTemplate"].RETURN_NAMES) == [
         "prompt",
         "negative",

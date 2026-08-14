@@ -1938,16 +1938,15 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* f. Description line — its own quiet strip, two lines then clamp. */
+/* The description is the template's own statement of what it makes — clamping
+   it to two lines cut that sentence mid-thought, and the panel has room for
+   the two or three lines these actually run to. */
 .pc-panel .mrln-tab-body > .mrln-note.pc-desc {
   padding: 8px var(--pc-pad);
   background: var(--pc-bg-input);
   border-bottom: 1px solid var(--pc-line);
   font: 11.5px/1.55 var(--pc-ui);
-  color: #83838d;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: var(--pc-fg-2);
 }
 
 /* g. The variant block reads as the design's group header. */
@@ -2826,6 +2825,12 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   gap: var(--pc-gap);
 }
 
+/* The first fold after the live preview closes that block from above — the
+   rest of the folds get their separator from the one before them. */
+.pc-panel details.mrln-fold.pc-fold-top {
+  border-top: 1px solid var(--pc-line);
+}
+
 /* CHOICES DRAWN: id · drawn item · state pill, one line each. It was a
    preformatted paragraph, which is the right shape for the node's report and
    the wrong one for reading down a column. */
@@ -2948,6 +2953,17 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   text-transform: uppercase;
   color: var(--pc-fg-4);
   border-top: 1px solid var(--pc-line);
+}
+/* the source select's optgroups: the folders the library is organised by */
+.pc-pick .pc-pick-group {
+  padding: 8px 10px 3px 32px;
+  font: 600 9.5px var(--pc-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pc-fg-4);
+}
+.pc-pick .pc-pick-group:first-child {
+  padding-top: 2px;
 }
 .pc-pick .pc-pick-empty {
   padding: 10px;

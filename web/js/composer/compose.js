@@ -598,6 +598,7 @@ export function createCompose(hub) {
           itemsLabel: extra.itemsLabel,
           sideLabel: extra.sideLabel,
           sideOf: extra.sideOf,
+          minWidth: extra.minWidth,
           onEditSection: sectionRef
             ? async () => {
                 if (!confirmReplaceEditor()) return;
@@ -1166,6 +1167,8 @@ export function createCompose(hub) {
             itemsLabel: "Templates",
             sideLabel: "slug",
             sideOf: (entry) => entry.value,
+            // a row here carries a name AND a slug; no trigger is that wide
+            minWidth: 460,
           }),
           el(
             "div",
@@ -2562,7 +2565,10 @@ export function createCompose(hub) {
     return el(
       "details",
       {
-        class: "mrln-fold",
+        // pc-fold-top: the folds carry their rule as a border-BOTTOM, so the
+        // first one after the preview had nothing above it — NEGATIVE gets its
+        // line from this fold's bottom, and this one needs its own.
+        class: "mrln-fold pc-fold-top",
         open: state.choicesOpen ? "" : null,
         ontoggle: (e) => {
           state.choicesOpen = e.target.open;

@@ -47,6 +47,7 @@ export function openPicker(options) {
   // top-level lines and a multi-line parameter list reads as loose statements.
   const { select, pool, anchor, onEditSection, sectionRef, subset } = options;
   const { itemsLabel = "Items", sideLabel = "weight", sideOf = null } = options;
+  const minWidth = Number(options.minWidth) || 300;
   closePicker();
 
   const weights = new Map();
@@ -56,6 +57,9 @@ export function openPicker(options) {
     value: option.value,
     label: option.textContent,
     title: option.title,
+    // the source select's <optgroup> is the only structure a 75-entry list
+    // has; flattening it threw away the folders the library is organised by
+    group: option.parentElement?.tagName === "OPTGROUP" ? option.parentElement.label : "",
     mode: option.value === "random" || option.value === "off",
   }));
   const modes = all.filter((entry) => entry.mode);
@@ -258,9 +262,16 @@ export function openPicker(options) {
     if (!shown.length) {
       children.push(el("div", { class: "pc-pick-empty" }, `nothing matches “${query}”`));
     }
+    let group = null;
     for (const entry of shown) {
+      // a group header appears only when its group still HAS a match, which
+      // falls out of emitting on change while walking the filtered list
+      if (entry.group && entry.group !== group) {
+        group = entry.group;
+        children.push(el("div", { class: "pc-pick-group" }, group));
+      }
       const row = entryRow(entry);
-      rows.push(row);
+      rows.push(row); // headers stay OUT of rows: the keyboard walks values
       children.push(row);
     }
     list.replaceChildren(...children);
@@ -270,22 +281,27 @@ export function openPicker(options) {
     paintActive();
   }
 
+  // .filter(Boolean), and it is load-bearing: replaceChildren() takes Nodes OR
+  // STRINGS, so a null child is not skipped — it is stringified, and the
+  // footer printed the word "null".
   footer.replaceChildren(
-    el("span", { class: "pc-pick-foot-note" }, sectionRef ?? ""),
-    onEditSection
-      ? el(
-          "button",
-          {
-            class: "mrln-btn mrln-mini",
-            onmousedown: (e) => {
-              e.preventDefault();
-              closePicker();
-              onEditSection();
+    ...[
+      el("span", { class: "pc-pick-foot-note" }, sectionRef ?? ""),
+      onEditSection
+        ? el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
+              onmousedown: (e) => {
+                e.preventDefault();
+                closePicker();
+                onEditSection();
+              },
             },
-          },
-          "Edit section ↗"
-        )
-      : null
+            "Edit section ↗"
+          )
+        : null,
+    ].filter(Boolean)
   );
 
   // The mouse moves the same cursor the keys do — otherwise hovering one row
@@ -337,7 +353,7 @@ export function openPicker(options) {
 
   render();
   document.body.appendChild(node);
-  place(node, anchor);
+  place(node, anchor, minWidth, contentWidth(node, all, sideOf));
 
   const onOutside = (e) => {
     if (!node.contains(e.target) && e.target !== anchor) closePicker();
@@ -362,7 +378,33 @@ export function openPicker(options) {
 
 /** Anchor below the field, flip above when the room is not there, dock as a
  *  bottom sheet on a panel too narrow for a floating list. */
-function place(node, anchor) {
+/**
+ * The width the widest row actually needs.
+ *
+ * Measured with a canvas, not by letting the box size itself: the list is a
+ * scroll container, so its content does NOT propagate a max-content width to
+ * the popover — asking the layout engine returned the trigger's width and the
+ * longest names kept ellipsing.
+ */
+function contentWidth(node, entries, sideOf) {
+  const context = document.createElement("canvas").getContext("2d");
+  if (!context) return 0;
+  const mono = getComputedStyle(node).getPropertyValue("--pc-mono").trim() || "monospace";
+  let widest = 0;
+  for (const entry of entries) {
+    context.font = `${entry.mode ? "600 " : ""}12px ${mono}`;
+    const name = context.measureText(entry.mode ? entry.value : entry.label).width;
+    context.font = `10.5px ${mono}`;
+    const side = context.measureText(sideOf ? String(sideOf(entry) ?? "") : "×99").width;
+    widest = Math.max(widest, name + side);
+  }
+  // 22px mark column + two 6px gaps + 20px of padding + the scrollbar, plus a
+  // few px because a proportional face measured at one size still renders a
+  // hair wider than the sum of its glyph advances
+  return Math.ceil(widest) + 78;
+}
+
+function place(node, anchor, minWidth = 300, contentW = 0) {
   const rect = anchor.getBoundingClientRect();
   const panel = anchor.closest(".pc-panel");
   const panelWidth = panel ? panel.getBoundingClientRect().width : window.innerWidth;
@@ -370,7 +412,16 @@ function place(node, anchor) {
     node.classList.add("pc-pick-sheet");
     return;
   }
-  const width = Math.min(Math.max(rect.width, 300), window.innerWidth - 16);
+  // A popover may be WIDER than the control it hangs off — the template list
+  // carries a name AND a slug per row, which no trigger is wide enough for. So
+  // it sizes to its own content: measure at max-content, then clamp between the
+  // trigger's width and what the window can hold. The slack covers the list's
+  // scrollbar, which is inside the measured box and would otherwise eat the
+  // last few characters of the longest row.
+  const width = Math.min(
+    Math.max(rect.width, minWidth, contentW),
+    Math.min(720, window.innerWidth - 16)
+  );
   node.style.width = `${width}px`;
   const height = node.getBoundingClientRect().height;
   const below = window.innerHeight - rect.bottom;

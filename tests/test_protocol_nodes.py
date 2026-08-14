@@ -221,16 +221,21 @@ FROZEN_ORDER = {
         "optional": [],
         "outputs": ["text", "negative", "choice"],
     },
+    # RE-CUT ONCE, before shipping, on the author's explicit call: the widgets
+    # now read in the order the work happens — what to render, what goes in,
+    # how it draws, what comes out — instead of the order they were added in.
+    # From here it is append-only again.
     "MRLN_PromptTemplate": {
         "required": [
-            "template",
-            "trigger",
+            "template",  # what
+            "template_names",  # …and how the widget above names it
+            "trigger",  # what goes in
             "selection",
             "selection_mode",
-            "seed",
-            "format",
-            "conflict_policy",
+            "seed",  # how it draws
+            "format",  # what comes out
             "text_length",
+            "conflict_policy",
         ],
         "optional": ["variables", "profile", "batch_count", "batch_mode"],
         "outputs": ["prompt", "negative", "choices", "loras", "llm"],
