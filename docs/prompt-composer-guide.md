@@ -402,7 +402,7 @@ template can read differently for one target without a second copy on disk.
 
 ## De-compose
 
-<img src="images/06-decompose.png" width="900" alt="The De-compose tab">
+<img src="images/06-decompose.png" width="885" alt="The De-compose tab">
 
 The other direction: start from a prompt or an image and end with a template.
 
