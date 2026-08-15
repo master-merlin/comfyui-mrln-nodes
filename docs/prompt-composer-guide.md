@@ -636,8 +636,8 @@ pictures of the renders you just cleared should not outlive the records.
 
 Each setting is one row: what it is on the left, the controls on the right, and
 the long explanation behind **What this does** rather than sitting between the
-inputs. Everything is on one page — **LLM · Keys · History** at the top jumps to
-a group rather than hiding the other two.
+inputs — so the tab reads as a list of settings instead of documentation with
+inputs in it.
 
 - **Civitai API key** — stored server-side in your user tier, never echoed back
   and never written into a workflow. Everything that talks to Civitai goes

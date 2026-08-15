@@ -21,7 +21,6 @@
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
 import { armDestructive, busy, el, mount } from "./dom.js";
-import { writeSettingsTab } from "./state.js";
 
 // ---- pure logic (exported for tests) ---------------------------------------
 
@@ -590,28 +589,11 @@ export function createSettings(hub) {
     };
     const box = (...rows) => el("div", { class: "pc-set-box" }, ...rows.flat().filter(Boolean));
 
-    // The strip JUMPS, it does not filter. All three groups fit on one page,
-    // and hiding two thirds of a short tab to save a scroll costs more than it
-    // saves — you would have to remember which third a setting lives in.
-    const anchors = new Map();
-    const subTab = (name, text) =>
-      el(
-        "button",
-        {
-          class: "mrln-btn pc-seg",
-          "aria-pressed": String(state.settingsTab === name),
-          title: `Jump to ${text}`,
-          onclick: (e) => {
-            state.settingsTab = name;
-            writeSettingsTab(name);
-            for (const seg of e.currentTarget.parentElement.children) {
-              seg.setAttribute("aria-pressed", String(seg === e.currentTarget));
-            }
-            anchors.get(name)?.scrollIntoView({ block: "start", behavior: "smooth" });
-          },
-        },
-        text
-      );
+    // No group strip. It was drawn in the mock beside a page that showed every
+    // group anyway, so once all three stayed on one page it had nothing left
+    // to do: as a filter it hid two thirds of a short tab, and as a jump it
+    // scrolled to something already on screen. A control that cannot change
+    // what you see is worse than no control.
 
     const groups = {
       llm: () => [
@@ -695,28 +677,16 @@ export function createSettings(hub) {
     };
 
     const paint = () => {
-      // every group, in one page — the strip above only moves you to one
-      const rendered = [];
-      for (const name of ["llm", "keys", "history"]) {
-        const rows = groups[name]();
-        anchors.set(name, rows[0]);
-        rendered.push(...rows);
-      }
       mount(
         settingsTab,
         el(
           "div",
           { class: "pc-set-head" },
-          el("span", { class: "pc-set-title" }, "Settings"),
-          el(
-            "div",
-            { class: "pc-segmented" },
-            subTab("llm", "LLM"),
-            subTab("keys", "Keys"),
-            subTab("history", "History")
-          )
+          el("span", { class: "pc-set-title" }, "Settings")
         ),
-        ...rendered
+        ...groups.llm(),
+        ...groups.keys(),
+        ...groups.history()
       );
     };
     paint();
