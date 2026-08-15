@@ -383,23 +383,56 @@ describe("restore payload", () => {
 });
 
 describe("retention state", () => {
-  test("the payload's two settings are read under their settings.json names", () => {
+  test("the payload's settings are read under their settings.json names", () => {
     assert.deepEqual(retentionSettings(page([])), {
       history_enabled: true,
       history_months: 12,
+      history_thumbs: true,
+      history_thumb_px: null,
     });
     assert.deepEqual(
-      retentionSettings({ history_enabled: false, history_months: 3 }),
-      { history_enabled: false, history_months: 3 }
+      retentionSettings({
+        history_enabled: false,
+        history_months: 3,
+        history_thumbs: false,
+        history_thumb_px: 96,
+      }),
+      {
+        history_enabled: false,
+        history_months: 3,
+        history_thumbs: false,
+        history_thumb_px: 96,
+      }
     );
+  });
+
+  test("a field this function forgets never reaches the panel at all", () => {
+    // THE bug this shape caused: it is a WHITELIST, so history_thumbs and
+    // history_thumb_px were silently dropped on their way to the tab. The
+    // tiles kept their browser-cached size because px never reached the URL,
+    // and the opt-out only appeared to work because the server 404s each row.
+    const served = {
+      history_enabled: true,
+      history_months: 12,
+      history_thumbs: false,
+      history_thumb_px: 96,
+    };
+    const seen = retentionSettings(served);
+    for (const key of Object.keys(served)) {
+      assert.ok(key in seen, `the server sends ${key} and retentionSettings drops it`);
+    }
   });
 
   test("an answer without the settings defaults to ON (history.py's own default)", () => {
     assert.deepEqual(retentionSettings({}), {
       history_enabled: true,
       history_months: DEFAULT_HISTORY_MONTHS,
+      history_thumbs: true,
+      history_thumb_px: null,
     });
     assert.equal(retentionSettings(undefined).history_enabled, true);
+    // an older server that never sends a size must not put "px=null" in a URL
+    assert.equal(retentionSettings({}).history_thumb_px, null);
   });
 
   test("nonsense months fall back instead of rendering NaN", () => {
@@ -435,7 +468,12 @@ describe("keyset paging", () => {
     assert.equal(landed.loading, false);
     assert.equal(landed.error, null);
     assert.equal(landed.records.length, 1);
-    assert.deepEqual(landed.settings, { history_enabled: true, history_months: 12 });
+    assert.deepEqual(landed.settings, {
+      history_enabled: true,
+      history_months: 12,
+      history_thumbs: true,
+      history_thumb_px: null,
+    });
   });
 
   test("stack length IS the page number and answers 'can I go back'", () => {

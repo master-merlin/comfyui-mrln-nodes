@@ -198,11 +198,20 @@ export function restorePayload(record) {
 export function retentionSettings(body) {
   const enabled = body?.history_enabled;
   const months = Number(body?.history_months ?? DEFAULT_HISTORY_MONTHS);
+  const thumbs = body?.history_thumbs;
+  const px = Number(body?.history_thumb_px);
   return {
     // absent means "an answer that predates the setting" — history.py's own
     // default is ON, so absence must not read as OFF
     history_enabled: enabled === undefined || enabled === null ? true : enabled !== false,
     history_months: Number.isFinite(months) ? Math.max(0, Math.floor(months)) : DEFAULT_HISTORY_MONTHS,
+    // Same defaulting rule, same reason. This is a WHITELIST — a field the
+    // server sends and this function forgets never reaches the panel at all,
+    // which is exactly what happened to both of these: the tiles kept their
+    // browser-cached size because px never made it into the URL, and the
+    // opt-out only worked because the server 404s each row separately.
+    history_thumbs: thumbs === undefined || thumbs === null ? true : thumbs !== false,
+    history_thumb_px: Number.isFinite(px) && px > 0 ? Math.floor(px) : null,
   };
 }
 
