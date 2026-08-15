@@ -88,18 +88,41 @@ fine place for it. That is the wish.
 
 ## Install
 
-Until the pack is on the [Comfy Registry](https://registry.comfy.org), install manually:
+Published on the Comfy Registry as
+**[comfyui-mrln-nodes](https://registry.comfy.org/publishers/master-merlin/nodes/comfyui-mrln-nodes)**
+(publisher `master-merlin`). Pick whichever route you already use — all three
+end up with the same pack in `ComfyUI/custom_nodes/`.
+
+**ComfyUI Manager** — the usual way, no terminal:
+
+1. Open ComfyUI → **Manager** → **Custom Nodes Manager**
+2. Search for **MRLN** and install **MRLN Nodes**
+3. Restart ComfyUI
+
+**comfy-cli** — if you manage installs from a terminal:
+
+```bash
+comfy node install comfyui-mrln-nodes
+```
+
+**Manually** — always works, and the one to use if you want to track `main`:
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone <repo-url> ComfyUI-MRLN-Nodes
+git clone https://github.com/master-merlin/comfyui-mrln-nodes ComfyUI-MRLN-Nodes
 ```
 
-Restart ComfyUI afterwards. No extra Python dependencies are required: the
-prompt engine and the nodes are pure standard library, and the two features
-that read image files (dropping a generated image on the Composer, and
-thumbnails) use Pillow and PyYAML — which ComfyUI itself ships — through soft
-imports that disable just those features if the libraries are ever absent.
+Restart ComfyUI afterwards, either way.
+
+**No extra Python dependencies are required.** `requirements.txt` is empty on
+purpose: the prompt engine and the nodes are pure standard library, and the
+features that read image files (dropping a generated image on the Composer,
+thumbnails, wildcard imports) use Pillow and PyYAML — which ComfyUI itself
+ships — through soft imports that disable just those features if the libraries
+are ever absent. Nothing here can break an existing environment.
+
+To update a manual install, `git pull` in that folder and restart; Manager and
+comfy-cli handle their own updates.
 
 ## Nodes
 
