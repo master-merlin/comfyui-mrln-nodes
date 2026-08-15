@@ -370,6 +370,39 @@ def _cache_path(lib, key):
     return Path(root) / "thumbs" / _CACHE_DIR / f"{digest}.webp"
 
 
+def _source_for(lib, key):
+    """The indexed render for `key`, looking once if we have not looked yet.
+
+    The lazy refresh lives HERE rather than in thumb_bytes because the
+    conditional answer needs the source before any encoding happens — asking
+    for the mtime first would otherwise always miss on the very first request,
+    which is the one that matters."""
+    if not key:
+        return None
+    source = _load_index(lib)["entries"].get(key)
+    if source is None:
+        source = refresh_index(lib)["entries"].get(key)
+    return source
+
+
+def source_mtime(lib, template, seed):
+    """When the render this row is matched to was last written, or None.
+
+    The tile's identity is the SOURCE's identity: re-rendering the same
+    template and seed writes a different picture under the same key, and the
+    URL cannot tell them apart. This is what lets the answer be conditional
+    instead of cached blind for a day."""
+    source = _source_for(lib, record_key(template, seed))
+    if source is None:
+        return None
+    try:
+        from pathlib import Path
+
+        return Path(source).stat().st_mtime
+    except OSError:
+        return None
+
+
 def thumb_bytes(lib, template, seed):
     """The mini thumbnail for one history row, or None. Never raises."""
     key = record_key(template, seed)
@@ -381,12 +414,7 @@ def thumb_bytes(lib, template, seed):
             return cached.read_bytes()
         except OSError:
             pass
-    index = _load_index(lib)
-    source = index["entries"].get(key)
-    if source is None:
-        # not indexed yet: this is the call that goes looking
-        index = refresh_index(lib)
-        source = index["entries"].get(key)
+    source = _source_for(lib, key)  # looks once if we have not looked yet
     if source is None:
         return None
     try:
@@ -423,16 +451,26 @@ def handle_history_thumb(lib, payload):
     seed = payload.get("seed")
     if not template or seed is None:
         raise ApiError("both 'template' and 'seed' are required")
+    # CONDITIONAL, not cached blind. This used to answer max-age=86400 on the
+    # reasoning that "the render behind a history line never changes" — which
+    # is wrong in the one case that matters: the URL is (template, seed), and
+    # re-rendering that same pair writes a DIFFERENT picture under the same
+    # URL. The browser would then show the old one for a day, and deleting the
+    # record server-side could not reach it either. Now the answer carries the
+    # SOURCE render's mtime, so a changed render is a changed answer and an
+    # unchanged one costs a 304 with no body and no re-encode.
+    from .thumbs import _http_date, _not_modified
+
+    mtime = source_mtime(lib, template, seed)
+    headers = {"Cache-Control": "private, no-cache"}
+    if mtime is not None:
+        headers["Last-Modified"] = _http_date(mtime)
+        if _not_modified(payload.get("if_modified_since"), mtime):
+            return 304, BinaryBody(headers=headers)
     data = thumb_bytes(lib, template, seed)
     if not data:
         return 404, {"error": "no image found for this render", "remediation": ""}
-    return 200, BinaryBody(
-        data,
-        content_type="image/webp",
-        # the render behind a history line never changes, so let the browser
-        # keep it: a scroll back through a thousand rows must not refetch
-        headers={"Cache-Control": "private, max-age=86400"},
-    )
+    return 200, BinaryBody(data, content_type="image/webp", headers=headers)
 
 
 def forget_thumb(lib, template, seed):

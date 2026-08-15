@@ -361,9 +361,48 @@ def test_the_route_answers_bytes_and_a_cache_header(lib, tmp_path, monkeypatch):
     )
     assert status == 200
     assert body.content_type == "image/webp"
-    assert "max-age" in body.headers.get("Cache-Control", ""), (
-        "without a cache header a scroll back through a thousand rows refetches every tile"
+    # Revalidated, not cached blind: the tile must survive a scroll back
+    # through a thousand rows without re-encoding (that is what the 304 is
+    # for) AND without outliving the render it is a picture of.
+    assert body.headers.get("Last-Modified"), "nothing for the client to revalidate against"
+    assert "no-cache" in body.headers.get("Cache-Control", "")
+
+
+def test_a_re_render_is_not_served_from_yesterday(lib, tmp_path, monkeypatch):
+    """THE stale-tile case. The URL is (template, seed) — so re-rendering that
+    same pair writes a DIFFERENT picture under the SAME URL. Answering with a
+    day of max-age meant the viewer kept the old one, and clearing the server's
+    copy could not reach it. The answer has to be conditional on the source."""
+    import os
+
+    root = write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=51)})
+    status, body = histthumbs.handle_history_thumb(
+        lib, {"template": "animal/documentary", "seed": "51"}
     )
+    assert status == 200
+    stamp = body.headers.get("Last-Modified")
+    assert stamp, "no Last-Modified, so the client has nothing to revalidate against"
+    assert "no-cache" in body.headers.get("Cache-Control", ""), (
+        "a blind max-age here is exactly what served the stale tile"
+    )
+
+    # unchanged render: the same stamp must come back as a bodiless 304
+    status, body = histthumbs.handle_history_thumb(
+        lib, {"template": "animal/documentary", "seed": "51", "if_modified_since": stamp}
+    )
+    assert status == 304 and not body.body
+
+    # the render is replaced (same template, same seed, new picture): the
+    # client's stamp must no longer satisfy it
+    histthumbs.forget_index_memo()
+    target = root / "MRLN" / "a.png"
+    target.write_bytes(comfy_png(seed=51))
+    future = target.stat().st_mtime + 120
+    os.utime(target, (future, future))
+    status, body = histthumbs.handle_history_thumb(
+        lib, {"template": "animal/documentary", "seed": "51", "if_modified_since": stamp}
+    )
+    assert status == 200, "a re-rendered image was served as unchanged"
 
 
 def test_the_route_404s_for_a_render_with_no_image(lib, tmp_path, monkeypatch):
