@@ -618,14 +618,30 @@ worse than none:
 A row whose image was deleted, moved, or never saved simply shows no tile.
 Turn the whole thing off with **Show thumbnails** in Settings.
 
+### Restore, or apply straight to the node
+
+**↩ restore** loads the render back into Compose. **⇥ apply** does that *and*
+writes it to the Prompt Template node in one go — the two-step you would
+otherwise do by hand, and usually what you want: the render you are looking at
+is the one you want back in the graph.
+
+Apply here is the *same* Apply the Compose tab runs, so it inherits the same
+guarantees — your state is saved to the user library **before** the widgets are
+written, and the writes are verified afterwards. It is automatic with one Prompt
+node in the graph; with more than one, select the target node first.
+
 ### Removing records
 
 **✕ delete** on a row removes that one record and the thumbnail cached for it.
-It arms first, like every destructive action here, so it takes two clicks. The
-rendered image on disk is **not** touched — only the history line and the small
-cached tile.
+On a batch, **✕ delete N** removes all N — the button says the number, because a
+delete on a collapsed group that quietly took 64 records is not something an
+arming step alone makes fair. Both arm first, so both take two clicks, and the
+whole batch goes in a single rewrite rather than 64 of them.
 
-**Clear history** removes every month file, and now the cached tiles with them:
+The rendered images on disk are **not** touched — only the history lines and the
+small cached tiles.
+
+**Clear history** removes every month file, and the cached tiles with them:
 pictures of the renders you just cleared should not outlive the records.
 
 ---

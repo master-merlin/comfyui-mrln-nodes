@@ -219,6 +219,27 @@ def history_read(lib, limit=100, before=None):
     return out
 
 
+def history_delete_many(lib, stamps):
+    """Remove every record whose ts is in `stamps`. Returns how many went.
+
+    One pass per month file, not one rewrite per record: a 64-item batch would
+    otherwise read, filter and replace the same file 64 times, and a crash
+    halfway would leave the batch half deleted with no way to tell which half.
+    """
+    wanted = {str(t) for t in (stamps or ()) if str(t or "")}
+    if not wanted:
+        return 0
+    by_month = {}
+    for stamp in wanted:
+        month = _month_of(stamp)
+        if month:
+            by_month.setdefault(month, set()).add(stamp)
+    removed = 0
+    for month, group in by_month.items():
+        removed += _rewrite_month(lib, month, group)
+    return removed
+
+
 def history_delete(lib, ts):
     """Remove the ONE record stamped `ts`. Returns True when a line went.
 
@@ -227,28 +248,35 @@ def history_delete(lib, ts):
     lines can share one. That makes it the row's identity, so deleting by it
     cannot take a neighbour with it.
 
-    Rewrites the month file through the same sibling-tmp + os.replace the rest
-    of this pack writes with: a crash mid-rewrite must never truncate a history
-    file. Under the append lock, so a render landing at the same moment cannot
-    interleave with the rewrite and lose its own line."""
+    One record is the one-element case of history_delete_many, and shares its
+    rewrite so there is a single implementation to get right."""
+    stamp = str(ts or "")
+    if not stamp:
+        return False
+    return history_delete_many(lib, [stamp]) == 1
+
+
+def _rewrite_month(lib, month, stamps):
+    """Drop `stamps` from one month file. Returns how many lines went.
+
+    Rewrites through the same sibling-tmp + os.replace the rest of this pack
+    writes with: a crash mid-rewrite must never truncate a history file. Under
+    the append lock, so a render landing at the same moment cannot interleave
+    with the rewrite and lose its own line."""
     import os
 
-    wanted = str(ts or "")
-    if not wanted:
-        return False
-    month = _month_of(wanted)
     directory = _history_dir(lib)
-    if month is None or directory is None:
-        return False
+    if directory is None:
+        return 0
     path = directory / f"render-{month}.jsonl"
     if not path.is_file():
-        return False
+        return 0
     with _APPEND_LOCK:
         try:
             lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
         except OSError as exc:
             _log.warning("could not read %s: %s", path, exc)
-            return False
+            return 0
         kept, dropped = [], 0
         for line in lines:
             if not line.strip():
@@ -258,12 +286,12 @@ def history_delete(lib, ts):
             except ValueError:
                 kept.append(line)  # garbage stays; this is a delete, not a repair
                 continue
-            if isinstance(record, dict) and str(record.get("ts") or "") == wanted:
+            if isinstance(record, dict) and str(record.get("ts") or "") in stamps:
                 dropped += 1
                 continue
             kept.append(line)
         if not dropped:
-            return False
+            return 0
         try:
             tmp = path.with_suffix(".jsonl.tmp")
             tmp.write_text("".join(f"{line}\n" for line in kept), encoding="utf-8")
@@ -273,8 +301,8 @@ def history_delete(lib, ts):
                 path.unlink(missing_ok=True)
         except OSError as exc:
             _log.warning("could not rewrite %s: %s", path, exc)
-            return False
-    return True
+            return 0
+    return dropped
 
 
 def history_prune(lib, keep_months):

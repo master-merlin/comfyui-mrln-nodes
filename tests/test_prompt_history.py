@@ -425,7 +425,10 @@ def test_handle_history_delete_removes_exactly_one_row(lib):
     assert len(before) == 3
     target = before[1]  # the middle one, so a neighbour on each side
     body = ok(history.handle_history_delete(lib, {"ts": target["ts"], "confirm": True}))
-    assert body["ok"] is True and body["ts"] == target["ts"]
+    # `ts` echoes back as a LIST whether one stamp was sent or many — the
+    # endpoint deletes a batch in one rewrite, and one client shape beats two
+    assert body["ok"] is True and body["ts"] == [target["ts"]]
+    assert body["removed"] == 1
     after = store.history_read(lib)
     assert [r["ts"] for r in after] == [before[0]["ts"], before[2]["ts"]]
     assert len(after) == 2
@@ -445,6 +448,50 @@ def test_deleting_the_last_row_of_a_month_removes_the_file(lib):
     assert store.history_files(lib)
     assert store.history_delete(lib, "2026-07-05T10:00:00.000000") is True
     assert store.history_files(lib) == [], "an emptied month file is noise in the listing"
+
+
+def test_a_batch_is_deleted_in_one_rewrite(lib):
+    """A 64-item batch must not read, filter and replace the same file 64
+    times — and a crash halfway through that would leave the batch half
+    deleted with no way to tell which half."""
+    history.record_renders(lib, [sample_record(seed=i) for i in range(6)])
+    rows = store.history_read(lib)
+    doomed = [r["ts"] for r in rows[1:4]]  # three of six, neighbours on each side
+    rewrites = []
+    real = store._rewrite_month
+    try:
+        store._rewrite_month = lambda *a, **k: (rewrites.append(1), real(*a, **k))[1]
+        body = ok(history.handle_history_delete(lib, {"ts": doomed, "confirm": True}))
+    finally:
+        store._rewrite_month = real
+    assert body["removed"] == 3
+    assert len(rewrites) == 1, f"deleting 3 records rewrote the month file {len(rewrites)} times"
+    left = [r["ts"] for r in store.history_read(lib)]
+    assert len(left) == 3 and not set(left) & set(doomed)
+
+
+def test_deleting_a_batch_drops_every_tile_it_names(lib, monkeypatch):
+    """The rows go, so their pictures go — all of them, not just the first."""
+    from mrln.promptapi import histthumbs
+
+    forgotten = []
+    monkeypatch.setattr(
+        histthumbs, "forget_thumb", lambda _lib, t, s: (forgotten.append((t, s)), True)[1]
+    )
+    history.record_renders(lib, [sample_record(seed=1), sample_record(seed=2)])
+    stamps = [r["ts"] for r in store.history_read(lib)]
+    body = ok(
+        history.handle_history_delete(
+            lib,
+            {
+                "ts": stamps,
+                "confirm": True,
+                "thumbs": [{"template": "basic", "seed": 1}, {"template": "basic", "seed": 2}],
+            },
+        )
+    )
+    assert body["thumbs_removed"] == 2
+    assert forgotten == [("basic", 1), ("basic", 2)]
 
 
 def test_a_malformed_line_survives_a_delete(lib):

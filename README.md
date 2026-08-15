@@ -419,7 +419,12 @@ workflow and the recipient rebuilds your renders end to end.
 **History.** Every render the Prompt Template node makes is recorded as one
 line — newest first, with restore (template, profile, seed, mode, selection,
 variables, format, length and conflict policy, all nine, so it reproduces
-rather than approximates) and copy-prompt. A batch collapses to one row.
+rather than approximates) and copy-prompt — or **apply**, which restores it and
+writes it straight to the node in one click. Each row carries a mini thumbnail
+of the render it produced, matched automatically (ComfyUI writes the template
+and seed into every PNG it saves, which is the pair the history line already
+records — nothing to wire). A batch collapses to one row, and can be deleted as
+one; a single row can be deleted on its own.
 Recording and retention are settings, clearing is a two-step confirm, and a
 failed history write can never break a render that already succeeded.
 

@@ -292,6 +292,7 @@ export function createHistory(hub) {
   const applyKvToRows = (...a) => hub.applyKvToRows(...a);
   const confirmDiscardEdits = (...a) => hub.confirmDiscardEdits(...a);
   const rebuildForProfile = (...a) => hub.rebuildForProfile(...a);
+  const applyToNode = (...a) => hub.applyToNode(...a);
   const renderComposeTab = (...a) => hub.renderComposeTab(...a);
   const schedulePreview = (...a) => hub.schedulePreview(...a);
   const selectTemplate = (...a) => hub.selectTemplate(...a);
@@ -357,11 +358,11 @@ export function createHistory(hub) {
     const payload = restorePayload(record);
     if (!payload.template) {
       ctx.toast("error", "Nothing to restore", "this record does not name a template");
-      return;
+      return false;
     }
     // selectTemplate reloads the template FROM DISK — the same discard guard
     // Load-from-node uses, or unsaved edits vanish on a misclick.
-    if (!confirmDiscardEdits("history-restore")) return;
+    if (!confirmDiscardEdits("history-restore")) return false;
     if (!(await selectTemplate(payload.template))) {
       ctx.toast(
         "error",
@@ -370,7 +371,7 @@ export function createHistory(hub) {
           + "since that render. The Compose tab shows the error and a Retry."
       );
       switchTab("compose"); // that banner is in the compose body, not here
-      return;
+      return false;
     }
     state.seed = payload.seed;
     state.mode = payload.mode;
@@ -406,6 +407,19 @@ export function createHistory(hub) {
       "Restored from history",
       `${payload.template} · seed ${payload.seed} · ${formatStamp(record?.ts).full}`
     );
+    return true;
+  }
+
+  /** Restore, then write it straight to the node — the two-step you would
+   *  otherwise do by hand, and the reason History exists at all: the render
+   *  you are looking at is usually the one you want back in the graph.
+   *
+   *  Goes through compose's own applyToNode so it inherits the hardened path:
+   *  the state is persisted to the user library BEFORE the widgets are
+   *  written, and the writes are verified afterwards. */
+  async function restoreAndApply(record) {
+    if (!(await restore(record))) return; // its own toast named the cause
+    await applyToNode();
   }
 
   function copyViaSelection(text) {
@@ -576,6 +590,19 @@ export function createHistory(hub) {
             "button",
             {
               class: "mrln-btn mrln-mini",
+              title:
+                "Restore it AND write it straight to the Prompt Template node — the "
+                + "same Apply the Compose tab does, so it saves to your user library "
+                + "first. Automatic with one Prompt node in the graph; with more than "
+                + "one, select the target node first.",
+              onclick: (e) => busy(e.currentTarget, () => restoreAndApply(row.record)),
+            },
+            "⇥ apply"
+          ),
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini",
               title: "Copy the positive prompt to the clipboard",
               onclick: (e) => busy(e.currentTarget, () => copyPrompt(row)),
             },
@@ -593,7 +620,7 @@ export function createHistory(hub) {
                 // runs, which is on the NEXT click
                 const button = e.currentTarget;
                 armDestructive(button, "Delete this record?", () =>
-                  busy(button, () => removeRecord(row))
+                  busy(button, () => removeRecords(row, `${row.time} ${row.template}`))
                 );
               },
             },
@@ -604,22 +631,28 @@ export function createHistory(hub) {
     );
   }
 
-  /** Drop one row: server first, then the list, so a failure changes nothing. */
-  async function removeRecord(row) {
+  /** Drop one row, or every row of a batch. Server first, then the list, so a
+   *  failure changes nothing on screen. */
+  async function removeRecords(rows, what) {
+    const list = [].concat(rows);
     try {
       await ctx.apiJson("/mrln/prompt/history-delete", {
         method: "POST",
-        // template and seed ride along so the server can drop the tile keyed
-        // by them; ts alone identifies the record
-        body: { ts: row.ts, template: row.template, seed: row.seed, confirm: true },
+        // the stamps identify the records; the template/seed pairs are what
+        // the server needs to drop the tile cached for each one
+        body: {
+          ts: list.map((r) => r.ts),
+          thumbs: list.map((r) => ({ template: r.template, seed: r.seed })),
+          confirm: true,
+        },
       });
     } catch (err) {
-      ctx.toast("error", "Record not deleted", err.message);
+      ctx.toast("error", list.length > 1 ? "Batch not deleted" : "Record not deleted", err.message);
       return;
     }
-    ctx.toast("success", "Record deleted", `${row.time} ${row.template}`);
-    // reload the page we are on rather than splicing the row out: the page is
-    // keyset-paged, so removing one record changes what the page contains
+    ctx.toast("success", list.length > 1 ? "Batch deleted" : "Record deleted", what);
+    // reload the page we are on rather than splicing rows out: the page is
+    // keyset-paged, so removing records changes what the page contains
     await loadPage(currentPageRequest(state.history));
   }
 
@@ -652,7 +685,33 @@ export function createHistory(hub) {
           { class: "mrln-chip", title: `one queue click, batch mode '${group.batch.kind}'` },
           `${group.rows.length} of ${group.batch.total} items`
         ),
-        el("span", { class: "mrln-chip" }, seedSummary(group.rows))
+        el("span", { class: "mrln-chip" }, seedSummary(group.rows)),
+        // Deleting a batch takes every row it holds, so the button SAYS how
+        // many — "delete" on a collapsed group that quietly removes 64 records
+        // is the kind of surprise an arming step alone does not cover.
+        el(
+          "button",
+          {
+            class: "mrln-btn mrln-mini mrln-history-drop",
+            title:
+              `Delete all ${group.rows.length} record(s) of this batch, and the `
+              + "thumbnails cached for them. The rendered images are not touched. "
+              + "Unrecoverable — click twice.",
+            onclick: (e) => {
+              // a <summary> click toggles the <details>; this button is inside
+              // one, so its click must not also open/close the group
+              e.preventDefault();
+              e.stopPropagation();
+              const button = e.currentTarget;
+              armDestructive(button, `Delete all ${group.rows.length}?`, () =>
+                busy(button, () =>
+                  removeRecords(group.rows, `${group.rows.length} records · ${head.template}`)
+                )
+              );
+            },
+          },
+          `✕ delete ${group.rows.length}`
+        )
       ),
       el("div", { class: "mrln-slot-list mrln-history-items" }, ...group.rows.map(rowCard))
     );

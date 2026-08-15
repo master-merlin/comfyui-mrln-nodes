@@ -3157,6 +3157,11 @@ export function createCompose(hub) {
   }
 
   return {
+    // exported so the History tab's Apply can go through the SAME hardened
+    // path the Compose button uses — persist to the library first, write the
+    // widgets, then verify they landed. A second implementation over there
+    // would be a second thing to keep correct.
+    applyToNode,
     markModified,
     renderComposeTab,
     renderNested,

@@ -32,7 +32,7 @@ from datetime import datetime, timedelta
 from .. import promptlib as pl
 from ..pack import logger
 from ..promptlib import store
-from .core import _guarded, _require_str
+from .core import ApiError, _guarded, _require_str
 from .settings import _read_settings
 
 # settings.json keys (user tier). Flat, like `civitai_api_key`: these are two
@@ -327,8 +327,11 @@ def _clear_thumbs(lib):
 
 @_guarded
 def handle_history_delete(lib, payload):
-    """POST /mrln/prompt/history-delete {"ts": "...", "confirm": true} — drop
-    ONE record and the thumbnail cached for it.
+    """POST /mrln/prompt/history-delete — drop one record, or a whole batch,
+    plus the thumbnail(s) cached for them.
+
+        {"ts": "…", "confirm": true}                  one row
+        {"ts": ["…", "…"], "confirm": true}           a batch, in one rewrite
 
     Keyed on `ts` because record_renders guarantees it unique to the
     microsecond, so a delete can never take a neighbouring row with it.
@@ -339,19 +342,36 @@ def handle_history_delete(lib, payload):
             "error": "deleting a history record needs an explicit confirmation",
             "remediation": 'POST {"ts": "...", "confirm": true} as JSON',
         }
-    stamp = _require_str(payload, "ts")
-    if not store.history_delete(lib, stamp):
+    raw = payload.get("ts")
+    if isinstance(raw, list):
+        stamps = [str(t).strip() for t in raw if str(t or "").strip()]
+        if not stamps:
+            raise ApiError("'ts' was an empty list — name the records to delete")
+    else:
+        stamps = [_require_str(payload, "ts")]
+    removed = store.history_delete_many(lib, stamps)
+    if not removed:
         return 404, {
-            "error": f"no history record stamped '{stamp}'",
-            "remediation": "reload the History tab — it may already be gone",
+            "error": (
+                f"no history record stamped '{stamps[0]}'"
+                if len(stamps) == 1
+                else f"none of those {len(stamps)} records are in the history"
+            ),
+            "remediation": "reload the History tab — they may already be gone",
         }
-    # the row is gone, so its tile should be too. Best effort: a tile that
-    # outlives its record is a wasted kilobyte, not a broken delete.
-    thumb_gone = False
+    # the rows are gone, so their tiles should be too. Best effort: a tile that
+    # outlives its record is a wasted kilobyte, not a broken delete. A batch
+    # names one template and one seed per item, so the client sends the pairs.
+    thumbs = 0
     try:
         from .histthumbs import forget_thumb
 
-        thumb_gone = forget_thumb(lib, payload.get("template"), payload.get("seed"))
+        pairs = payload.get("thumbs")
+        if not isinstance(pairs, list):
+            pairs = [{"template": payload.get("template"), "seed": payload.get("seed")}]
+        for pair in pairs:
+            if isinstance(pair, dict) and forget_thumb(lib, pair.get("template"), pair.get("seed")):
+                thumbs += 1
     except Exception as exc:
-        logger.debug("MRLN prompt: thumbnail for %s not dropped (%s)", stamp, exc)
-    return 200, {"ok": True, "ts": stamp, "thumb_removed": thumb_gone}
+        logger.debug("MRLN prompt: thumbnail(s) for %s not dropped (%s)", stamps[0], exc)
+    return 200, {"ok": True, "removed": removed, "ts": stamps, "thumbs_removed": thumbs}
