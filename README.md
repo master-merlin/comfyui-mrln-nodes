@@ -1,5 +1,7 @@
 # ComfyUI-MRLN-Nodes
 
+<img src="docs/images/hero.webp" width="100%" alt="Thirty renders from the shipped factory templates — portraits, vehicles, wildlife, product, landscape, fantasy, card art and more">
+
 A multi-domain collection of custom nodes for [ComfyUI](https://github.com/comfyanonymous/ComfyUI).
 
 > **Status: first release.** The prompt domain ships complete — engine, factory
