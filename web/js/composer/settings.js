@@ -21,6 +21,7 @@
 // HARD RULE for this file: ZERO top-level side effects (ComfyUI auto-imports
 // every .js under WEB_DIRECTORY — see composer/util.js).
 import { armDestructive, busy, el, mount } from "./dom.js";
+import { writeSettingsTab } from "./state.js";
 
 // ---- pure logic (exported for tests) ---------------------------------------
 
@@ -151,21 +152,25 @@ export function createSettings(hub) {
     // Mirror of llm.allow_remote. Read by the backend rows (a red line caused
     // by the gate has to say so) and written only by a successful save.
     let allowRemote = false;
-    const bad = (node, text) => {
+    // State rides a CLASS now, not an inline colour: the status line in the
+    // new layout carries a dot whose colour IS the state, and an inline
+    // colour on the text would leave the dot saying something else.
+    const paintStatus = (node, text, tone) => {
       node.textContent = text;
-      node.style.color = "var(--mrln-error-soft)";
+      node.style.color = "";
+      node.classList.toggle("pc-bad", tone === "bad");
+      node.classList.toggle("pc-ok", tone === "ok");
     };
-    const good = (node, text) => {
-      node.textContent = text;
-      node.style.color = "var(--mrln-accent-soft)";
-    };
+    const bad = (node, text) => paintStatus(node, text, "bad");
+    const good = (node, text) => paintStatus(node, text, "ok");
+    const plain = (node, text) => paintStatus(node, text, "");
     const backendRow = (label, key, provider) => {
       const urlInput = el("input", {
         type: "text",
         placeholder: `${label} URL`,
         title: `${label} endpoint used by the Prompt Enhance (MRLN) node`,
       });
-      const rowStatus = el("span", { class: "mrln-note" }, "checking…");
+      const rowStatus = el("span", { class: "mrln-note pc-set-status" }, "checking…");
       // Off means OFF: not probed on open, not probed by Validate, and refused
       // by the node with a message naming this switch. A backend that still
       // answers when it is switched off would make the switch a lie.
@@ -180,7 +185,7 @@ export function createSettings(hub) {
       // otherwise keep showing the refusal the user just fixed.
       const check = async (persist = false, force = persist) => {
         if (persist && !settingsLoaded) {
-          bad(rowStatus, "✗ stored settings could not be read — not saving");
+          bad(rowStatus, "stored settings could not be read — not saving");
           ctx.toast(
             "error",
             "Settings unavailable",
@@ -190,13 +195,11 @@ export function createSettings(hub) {
           return;
         }
         if (!enabled.checked) {
-          rowStatus.style.color = "";
-          rowStatus.textContent = "switched off — not contacted";
+          plain(rowStatus, "switched off — not contacted");
           rowStatus.title = "";
           return;
         }
-        rowStatus.textContent = "…";
-        rowStatus.style.color = "";
+        plain(rowStatus, "…");
         try {
           if (persist) {
             await ctx.apiJson("/mrln/prompt/save-settings", {
@@ -213,7 +216,7 @@ export function createSettings(hub) {
           if (entry.error) throw new Error(entry.error);
           good(
             rowStatus,
-            `✓ ${entry.models.length} model(s): ${entry.models
+            `${entry.models.length} models · ${entry.models
               .slice(0, 3)
               .join(", ")}${entry.models.length > 3 ? ", …" : ""}`
           );
@@ -222,7 +225,7 @@ export function createSettings(hub) {
           // the gate's refusal is the one error that names a control — keep
           // the remediation instead of dropping it on the floor
           const hint = backendFailureHint(err.message, err.remediation, allowRemote);
-          bad(rowStatus, `✗ ${err.message}${hint}`);
+          bad(rowStatus, `${err.message}${hint}`);
           rowStatus.title = "";
         }
       };
@@ -266,9 +269,14 @@ export function createSettings(hub) {
       // port and on a placeholder you only see while the field is empty —
       // which, once there were two rows and a checkbox each, told you nothing
       // about what the checkbox switches off.
+      // The mock draws this as url + Validate and nothing else. The name and
+      // the use-switch stay: the row telling you WHICH backend it is was a
+      // deliberate fix (the port was the only clue, and it told you nothing),
+      // and the switch is a real server flag — a backend you do not run must
+      // be contactable-never, not just wrong.
       const row = el(
         "label",
-        { class: "mrln-inline mrln-backend-row" },
+        { class: "pc-set-backend" },
         enabled,
         el("span", { class: "mrln-backend-name" }, label),
         urlInput,
@@ -285,7 +293,7 @@ export function createSettings(hub) {
     // site, which is why a URL stored before the gate existed is still echoed
     // back here (the user has to SEE it to fix it) while being refused in use.
     const remoteChip = el("span", { class: "mrln-chip" }, "checking…");
-    const remoteBtn = el("button", { class: "mrln-btn", disabled: "" }, "Allow remote backends…");
+    const remoteBtn = el("button", { class: "mrln-btn mrln-mini", disabled: "" }, "Allow…");
     const setAllowRemote = async (next) => {
       const payload = allowRemotePayload({ settingsLoaded, next });
       if (!payload.ok) {
@@ -320,13 +328,13 @@ export function createSettings(hub) {
       if (!settingsLoaded) {
         remoteChip.className = "mrln-chip";
         remoteChip.textContent = "unknown";
-        remoteBtn.textContent = "Allow remote backends…";
+        remoteBtn.textContent = "Allow…";
         remoteBtn.title = "the stored settings could not be read — nothing can be changed here";
         return;
       }
       remoteChip.className = `mrln-chip ${allowRemote ? "mrln-gate-open" : "mrln-gate-closed"}`;
       remoteChip.textContent = allowRemote ? "remote allowed" : "loopback only";
-      remoteBtn.textContent = allowRemote ? "Restrict to this machine" : "Allow remote backends…";
+      remoteBtn.textContent = allowRemote ? "Restrict…" : "Allow…";
       remoteBtn.title = allowRemote
         ? "go back to the default: only localhost / 127.0.0.1 / ::1 may be fetched"
         : "allow LLM backends on other machines — only enable on trusted networks";
@@ -361,7 +369,7 @@ export function createSettings(hub) {
         + "it saves, which is the same pair the history line records, so "
         + "nothing needs wiring. Rows whose image is gone simply show none.",
     });
-    const historyStatus = el("span", { class: "mrln-note" }, "checking…");
+    const historyStatus = el("span", { class: "mrln-note pc-set-status" }, "checking…");
     const historySave = el("button", { class: "mrln-btn", disabled: "" }, "Save");
     const applyHistory = (body) => {
       // the server echoes both values back on GET and on save — render what it
@@ -369,10 +377,9 @@ export function createSettings(hub) {
       historyEnabled.checked = body.history_enabled !== false;
       historyThumbs.checked = body.history_thumbs !== false;
       monthsInput.value = String(body.history_months ?? "");
-      historyStatus.style.color = "";
-      historyStatus.textContent = describeHistory(
-        historyEnabled.checked,
-        Number(monthsInput.value)
+      plain(
+        historyStatus,
+        describeHistory(historyEnabled.checked, Number(monthsInput.value))
       );
     };
     const saveHistory = async () => {
@@ -383,7 +390,7 @@ export function createSettings(hub) {
         thumbs: historyThumbs.checked,
       });
       if (!payload.ok) {
-        bad(historyStatus, `✗ ${payload.error}`);
+        bad(historyStatus, payload.error);
         ctx.toast("error", "History settings not saved", payload.error);
         return;
       }
@@ -399,7 +406,7 @@ export function createSettings(hub) {
           describeHistory(body.history_enabled !== false, Number(body.history_months ?? 0))
         );
       } catch (err) {
-        bad(historyStatus, `✗ ${err.message}`);
+        bad(historyStatus, err.message);
         ctx.toast("error", "History settings not saved", err.message);
       }
     };
@@ -412,11 +419,30 @@ export function createSettings(hub) {
         autocomplete: "off",
         placeholder: `${label} API key`,
       });
-      const mark = el("span", { class: "mrln-note" }, "");
+      // A chip, not a sentence: four of these stack, and "whether a key is
+      // stored" is a state with two values — the same vocabulary the rest of
+      // the panel uses for a state.
+      const chip = el("span", { class: "mrln-chip" }, "no key");
+      const clearBtn = el(
+        "button",
+        {
+          // one click away from Save, and a cleared key can only be recovered
+          // from the provider's dashboard — arm it like every other
+          // irreversible action in the panel
+          class: "mrln-btn mrln-mini",
+          onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => push("")),
+        },
+        "Clear"
+      );
       const setMark = (isSet) => {
-        mark.textContent = isSet ? "✓ key stored" : "no key";
-        mark.style.color = isSet ? "var(--mrln-accent-soft)" : "";
+        chip.textContent = isSet ? "saved" : "no key";
+        chip.classList.toggle("mrln-user", !!isSet); // the panel's "yours" green
+        // Clear only exists when there IS something to clear. It used to sit
+        // beside Save on every row, one slip away from a trip to a provider
+        // dashboard, including on the rows that held nothing at all.
+        clearBtn.style.display = isSet ? "" : "none";
       };
+      setMark(false);
       const push = async (value) => {
         try {
           const body = await ctx.apiJson("/mrln/prompt/save-settings", {
@@ -434,13 +460,14 @@ export function createSettings(hub) {
       };
       const row = el(
         "div",
-        { class: "mrln-inline" },
+        { class: "pc-set-key" },
         el("span", { class: "mrln-cloud-label" }, label),
         input,
+        chip,
         el(
           "button",
           {
-            class: "mrln-btn",
+            class: "mrln-btn mrln-mini",
             onclick: (e) =>
               busy(e.currentTarget, async () => {
                 if (input.value.trim()) await push(input.value.trim());
@@ -448,18 +475,7 @@ export function createSettings(hub) {
           },
           "Save"
         ),
-        el(
-          "button",
-          {
-            // one click away from Save, and a cleared key can only be recovered
-            // from the provider's dashboard — arm it like every other
-            // irreversible action in the panel
-            class: "mrln-btn",
-            onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => push("")),
-          },
-          "Clear"
-        ),
-        mark
+        clearBtn
       );
       return { row, setMark };
     };
@@ -489,7 +505,7 @@ export function createSettings(hub) {
       } catch (err) {
         settingsLoaded = false;
         status.textContent = "settings unavailable — nothing shown here is what is stored";
-        bad(historyStatus, "✗ unavailable");
+        bad(historyStatus, "unavailable");
         ctx.toast("error", "Cannot read Composer settings", err.message);
       }
       // the two controls that must never save a value they did not read
@@ -518,117 +534,192 @@ export function createSettings(hub) {
         ctx.toast("error", "Settings save failed", err.message);
       }
     };
-    mount(settingsTab, 
-      el("div", { class: "mrln-tree-head" }, "Civitai"),
-      el(
-        "div",
-        { class: "mrln-note" },
-        "Used by LoRA blocks to look up trigger words + AIR tags by file hash. "
-          + "The key is stored server-side in your user tier and never echoed back."
-      ),
-      el(
-        "div",
-        { class: "mrln-inline" },
-        keyInput,
-        el(
+    const civitaiSave = el(
+      "button",
+      {
+        class: "mrln-btn mrln-mini",
+        onclick: (e) =>
+          busy(e.currentTarget, async () => {
+            if (keyInput.value.trim()) await save(false);
+          }),
+      },
+      "Save key"
+    );
+    const civitaiClear = el(
+      "button",
+      {
+        // never echoed back, so a misclick next to 'Save key' costs a trip to
+        // the Civitai dashboard — armed like every other irreversible action
+        class: "mrln-btn mrln-mini",
+        onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => save(true)),
+      },
+      "Clear"
+    );
+
+    // ---- the layout --------------------------------------------------------
+    // One row per setting: what it is on the left, the controls on the right,
+    // and the long "why" behind a toggle instead of between the inputs.
+    const setRow = (title, blurb, controls, prose) => {
+      const body = el("div", { class: "pc-set-row" });
+      const label = el("div", { class: "pc-set-label" }, el("b", {}, title));
+      const note = el("div", { class: "mrln-note" }, blurb ? `${blurb} ` : "");
+      let open = false;
+      if (prose) {
+        const panel = el("div", { class: "mrln-note pc-set-prose" }, prose);
+        panel.style.display = "none";
+        const toggle = el(
           "button",
           {
-            class: "mrln-btn",
-            onclick: (e) =>
-              busy(e.currentTarget, async () => {
-                if (keyInput.value.trim()) await save(false);
-              }),
+            class: "pc-set-more",
+            onclick: () => {
+              open = !open;
+              panel.style.display = open ? "" : "none";
+              toggle.textContent = open ? "Less" : "What this does";
+            },
           },
-          "Save key"
+          "What this does"
+        );
+        note.append(toggle);
+        label.append(note);
+        body.append(label, controls, panel);
+      } else {
+        if (blurb) label.append(note);
+        body.append(label, controls);
+      }
+      return body;
+    };
+    const box = (...rows) => el("div", { class: "pc-set-box" }, ...rows.flat().filter(Boolean));
+
+    // The strip JUMPS, it does not filter. All three groups fit on one page,
+    // and hiding two thirds of a short tab to save a scroll costs more than it
+    // saves — you would have to remember which third a setting lives in.
+    const anchors = new Map();
+    const subTab = (name, text) =>
+      el(
+        "button",
+        {
+          class: "mrln-btn pc-seg",
+          "aria-pressed": String(state.settingsTab === name),
+          title: `Jump to ${text}`,
+          onclick: (e) => {
+            state.settingsTab = name;
+            writeSettingsTab(name);
+            for (const seg of e.currentTarget.parentElement.children) {
+              seg.setAttribute("aria-pressed", String(seg === e.currentTarget));
+            }
+            anchors.get(name)?.scrollIntoView({ block: "start", behavior: "smooth" });
+          },
+        },
+        text
+      );
+
+    const groups = {
+      llm: () => [
+        setRow(
+          "Local LLM backends",
+          "Checked on open.",
+          box(
+            ollama.row,
+            ollama.rowStatus,
+            lmstudio.row,
+            lmstudio.rowStatus,
+            el("div", { class: "pc-set-gate" }, remoteChip, el("span", { class: "mrln-note" },
+              "safe default — remote URLs stay off until you allow them"), remoteBtn)
+          ),
+          "Used by the Prompt Enhance (MRLN) node — checked automatically on open; "
+            + "Validate saves an edited URL and re-checks. The model list feeds the "
+            + "node's dropdown. Clear the checkbox for a backend you do not run: it is "
+            + "then never contacted — no check on open, no wait for a timeout — and the "
+            + "node refuses it by name instead.\n\n"
+            + "Remote backends are off by default, and the default is the safe one: "
+            + "ComfyUI itself makes the request to the URL above, so only this machine "
+            + "(localhost, 127.0.0.1, ::1) is fetched — a URL pointing anywhere else "
+            + "would turn this box into a probe for whatever address is in that field. "
+            + "Turn it on only for an Ollama / LM Studio you run yourself on a network "
+            + "you trust; it covers both URLs above, stays on until you turn it off, and "
+            + "is re-checked every single time a backend is used. Turning it back off "
+            + "leaves a stored remote URL visible above — on purpose, so you can see and "
+            + "fix it — and refuses it from then on."
         ),
-        el(
-          "button",
-          {
-            // same reasoning as the cloud keys: never echoed back, so a
-            // misclick next to 'Save key' costs a trip to the dashboard
-            class: "mrln-btn",
-            onclick: (e) => armDestructive(e.currentTarget, "Really clear?", () => save(true)),
-          },
-          "Clear"
-        )
-      ),
-      status,
-      el("hr", { class: "mrln-sep" }),
-      el("div", { class: "mrln-tree-head" }, "Local LLM backends"),
-      el(
-        "div",
-        { class: "mrln-note" },
-        "Used by the Prompt Enhance (MRLN) node — checked automatically on "
-          + "open; Validate saves an edited URL and re-checks. The model list "
-          + "feeds the node's dropdown. Clear the checkbox for a backend you do "
-          + "not run: it is then never contacted — no check on open, no wait for "
-          + "a timeout — and the node refuses it by name instead."
-      ),
-      ollama.row,
-      ollama.rowStatus,
-      lmstudio.row,
-      lmstudio.rowStatus,
-      el(
-        "div",
-        { class: "mrln-gate" },
-        el("div", { class: "mrln-inline" }, remoteChip, remoteBtn),
+      ],
+      keys: () => [
+        setRow(
+          "Civitai",
+          "Trigger words and AIR tags by file hash.",
+          box(el("div", { class: "pc-set-key" }, keyInput, civitaiSave, civitaiClear), status),
+          "Used by LoRA blocks to look up trigger words + AIR tags by file hash. The key "
+            + "is stored server-side in your user tier and never echoed back."
+        ),
+        setRow(
+          "Cloud API keys",
+          "Stored server-side, never echoed back.",
+          box(clouds.map(([, cloud]) => cloud.row)),
+          "Unlock the cloud backends of Prompt Enhance and the LLM de-composer. Keys are "
+            + "stored server-side in your user tier, never echoed back and never in a node "
+            + "widget (widget values persist into workflow PNGs)."
+        ),
+      ],
+      history: () => [
+        setRow(
+          "Render history",
+          "Recording governs what is written, not what is kept.",
+          box(
+            el(
+              "div",
+              { class: "pc-set-history" },
+              el("label", { class: "mrln-check" }, historyEnabled, el("span", {}, "Record renders")),
+              el(
+                "label",
+                { class: "mrln-check" },
+                el("span", {}, "keep"),
+                monthsInput,
+                el("span", {}, "months")
+              ),
+              el("label", { class: "mrln-check" }, historyThumbs, el("span", {}, "Show thumbnails")),
+              historySave,
+              historyStatus
+            )
+          ),
+          "The Prompt Template node appends one line per render to a month file in your "
+            + "user library; the History tab reads them back.\n\n"
+            + "Recording governs what is WRITTEN, not what is kept: switching it off stops "
+            + "new lines and deletes nothing — the old records stay until they age out, or "
+            + "until you use Clear history in the History tab. Retention is applied when "
+            + "ComfyUI starts, keeps the newest N month files regardless of the switch "
+            + "above, and 0 keeps everything forever.\n\n"
+            + "Show thumbnails puts each row's render beside it. The image is found "
+            + "automatically — ComfyUI writes the template and seed into every PNG it "
+            + "saves, the same pair the history line records — so nothing needs wiring."
+        ),
+      ],
+    };
+
+    const paint = () => {
+      // every group, in one page — the strip above only moves you to one
+      const rendered = [];
+      for (const name of ["llm", "keys", "history"]) {
+        const rows = groups[name]();
+        anchors.set(name, rows[0]);
+        rendered.push(...rows);
+      }
+      mount(
+        settingsTab,
         el(
           "div",
-          { class: "mrln-note" },
-          "Off by default, and the default is the safe one: ComfyUI itself makes "
-            + "the request to the URL above, so only this machine (localhost, "
-            + "127.0.0.1, ::1) is fetched — a URL pointing anywhere else would turn "
-            + "this box into a probe for whatever address is in that field. Turn it "
-            + "on only for an Ollama / LM Studio you run yourself on a network you "
-            + "trust; it covers both URLs above, stays on until you turn it off, and "
-            + "is re-checked every single time a backend is used. Turning it back "
-            + "off leaves a stored remote URL visible above — on purpose, so you can "
-            + "see and fix it — and refuses it from then on."
-        )
-      ),
-      el("hr", { class: "mrln-sep" }),
-      el("div", { class: "mrln-tree-head" }, "Cloud LLM API keys"),
-      el(
-        "div",
-        { class: "mrln-note" },
-        "Unlock the cloud backends of Prompt Enhance and the LLM de-composer. "
-          + "Keys are stored server-side in your user tier, never echoed back "
-          + "and never in a node widget (widgets persist into workflow PNGs)."
-      ),
-      ...clouds.flatMap(([, cloud]) => [cloud.row]),
-      el("hr", { class: "mrln-sep" }),
-      el("div", { class: "mrln-tree-head" }, "Render history"),
-      el(
-        "div",
-        { class: "mrln-note" },
-        "The Prompt Template node appends one line per render to a month file in "
-          + "your user library; the History tab reads them back."
-      ),
-      el(
-        "div",
-        { class: "mrln-inline" },
-        el("label", { class: "mrln-check" }, historyEnabled, el("span", {}, "Record renders")),
-        el(
-          "label",
-          { class: "mrln-check" },
-          el("span", {}, "keep"),
-          monthsInput,
-          el("span", {}, "months")
+          { class: "pc-set-head" },
+          el("span", { class: "pc-set-title" }, "Settings"),
+          el(
+            "div",
+            { class: "pc-segmented" },
+            subTab("llm", "LLM"),
+            subTab("keys", "Keys"),
+            subTab("history", "History")
+          )
         ),
-        el("label", { class: "mrln-check" }, historyThumbs, el("span", {}, "Show thumbnails")),
-        historySave,
-        historyStatus
-      ),
-      el(
-        "div",
-        { class: "mrln-note" },
-        "Recording governs what is WRITTEN, not what is kept: switching it off "
-          + "stops new lines and deletes nothing — the old records stay until they "
-          + "age out, or until you use Clear history in the History tab. Retention "
-          + "is applied when ComfyUI starts, keeps the newest N month files "
-          + "regardless of the switch above, and 0 keeps everything forever."
-      )
-    );
+        ...rendered
+      );
+    };
+    paint();
   }
 
   return { renderSettingsTab };

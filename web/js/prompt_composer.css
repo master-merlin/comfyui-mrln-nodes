@@ -2791,30 +2791,27 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 
 /* A backend switched off keeps its row readable but says it is out of play.
-   The flex rules are load-bearing: .mrln-inline gives every child flex:1, so
-   the new checkbox stretched to half the row and shoved the URL across it. */
-.pc-panel .mrln-backend-row {
-  gap: 8px;
-}
-.pc-panel .mrln-backend-row > input[type="checkbox"],
-.pc-panel .mrln-backend-row > button {
+   Retargeted from .mrln-backend-row when the row became .pc-set-backend in
+   the Settings redesign — the class went and took this whole block's effect
+   with it, so an off backend stopped dimming and only the disabled controls
+   said so. */
+.pc-panel .pc-set-backend > input[type="checkbox"],
+.pc-panel .pc-set-backend > button {
   flex: 0 0 auto;
 }
-.pc-panel .mrln-backend-row > .mrln-backend-name {
-  flex: 0 0 76px;
-  font: 12px var(--pc-ui);
-  color: var(--pc-fg-2);
-}
-.pc-panel .mrln-backend-row.mrln-off > .mrln-backend-name {
+.pc-panel .pc-set-backend.mrln-off > .mrln-backend-name,
+.pc-panel .pc-set-backend.mrln-off > input[type="text"] {
   color: var(--pc-fg-4);
 }
-.pc-panel .mrln-backend-row > input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.pc-panel .mrln-backend-row.mrln-off > input[type="text"] {
-  color: var(--pc-fg-4);
+.pc-panel .pc-set-backend.mrln-off > input[type="text"] {
   border-style: dashed;
+}
+
+/* Checkboxes take the panel's accent instead of the browser's blue — it is
+   the one control that was still painting itself in a colour from outside
+   the token set, and 'on' here means the same green 'on' means everywhere. */
+.pc-panel input[type="checkbox"] {
+  accent-color: var(--pc-live);
 }
 
 /* --- the value picker (design handoff, phase 3) --------------------------
@@ -3661,4 +3658,206 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 }
 .pc-panel .mrln-slot .mrln-btn.mrln-s-on {
   background: rgba(221, 204, 85, 0.16);
+}
+
+/* ===========================================================================
+   SETTINGS — the designer's layout: a titled header carrying the group
+   switch, then rows of "what this is" on the left and the controls on the
+   right. The tab used to be one long scroll of four stacked blocks, so the
+   thing you came for was always past two things you did not.
+
+   The left column is the label AND its reasoning; the long paragraphs that
+   used to sit between the controls now hide behind a 'What this does' toggle,
+   so the page reads as a list of settings rather than as documentation with
+   inputs in it.
+   ========================================================================= */
+
+.pc-panel .pc-set-head {
+  display: flex;
+  align-items: center;
+  gap: var(--pc-gap);
+  padding: 10px var(--pc-pad) 11px;
+  background: var(--pc-bg-raised);
+  border-bottom: 1px solid var(--pc-line);
+}
+.pc-panel .pc-set-head > .pc-set-title {
+  flex: 1 1 auto;
+  font: 600 12.5px var(--pc-ui);
+  color: var(--pc-fg);
+}
+
+/* one settings row: label column, controls column */
+.pc-panel .pc-set-row {
+  display: grid;
+  grid-template-columns: 185px minmax(0, 1fr);
+  gap: var(--pc-gap);
+  align-items: start;
+  padding: 13px var(--pc-pad);
+  border-bottom: 1px solid var(--pc-line);
+}
+@container pcpanel (max-width: 620px) {
+  /* the label column stops being a column and becomes a heading */
+  .pc-panel .pc-set-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+}
+.pc-panel .pc-set-label {
+  min-width: 0;
+}
+.pc-panel .pc-set-label > b {
+  display: block;
+  font: 600 11.5px var(--pc-ui);
+  color: var(--pc-fg);
+}
+.pc-panel .pc-set-label > .mrln-note {
+  margin-top: 3px;
+}
+/* the inline 'What this does' / 'More' toggle: a link, not a button box */
+.pc-panel button.pc-set-more {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--pc-live);
+  cursor: pointer;
+  text-decoration: none;
+}
+.pc-panel button.pc-set-more:hover {
+  color: var(--pc-live-hi);
+  text-decoration: underline;
+}
+.pc-panel .pc-set-prose {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--pc-bg-app);
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-sm);
+}
+
+/* the controls column: a bordered box whose rows separate with hairlines */
+.pc-panel .pc-set-box {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--pc-line);
+  border-radius: var(--pc-r-sm);
+  overflow: hidden;
+}
+.pc-panel .pc-set-box > * {
+  padding: 8px 10px;
+}
+.pc-panel .pc-set-box > * + * {
+  border-top: 1px solid var(--pc-line-row);
+}
+/* a status line belongs to the control above it, not beside it */
+.pc-panel .pc-set-box > .pc-set-status {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* a backend row: [use] [name] [url ................] [Validate] */
+.pc-panel .pc-set-backend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.pc-panel .pc-set-backend > input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--pc-mono);
+  font-size: 11px;
+}
+.pc-panel .pc-set-backend > .mrln-backend-name {
+  flex: 0 0 62px;
+  font-size: 11px;
+  color: var(--pc-fg-2);
+}
+.pc-panel .pc-set-backend > .mrln-btn {
+  flex: 0 0 auto;
+}
+
+/* status dot + text, the mock's reading order: state first, detail after */
+.pc-panel .pc-set-status {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font: 10.5px var(--pc-ui);
+  color: var(--pc-fg-3);
+}
+.pc-panel .pc-set-status::before {
+  content: "●";
+  flex: 0 0 auto;
+  font-size: 8px;
+  line-height: 1.5;
+  color: var(--pc-fg-4);
+}
+.pc-panel .pc-set-status.pc-ok::before {
+  color: var(--pc-live);
+}
+.pc-panel .pc-set-status.pc-bad::before {
+  color: var(--pc-bad);
+}
+.pc-panel .pc-set-status.pc-ok {
+  color: var(--pc-fg-2);
+}
+
+/* a cloud-key row: [provider] [••••••] [chip] [Save] [Clear when there is one] */
+.pc-panel .pc-set-key {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.pc-panel .pc-set-key > .mrln-cloud-label {
+  flex: 0 0 82px;
+  font-size: 11px;
+  color: var(--pc-live);
+}
+.pc-panel .pc-set-key > input {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* spaces the masking dots into the mock's row of bullets — but a password
+     field renders its PLACEHOLDER as ordinary text, and the same tracking
+     turned that into "A n t h r o p i c   A P I   k e y" */
+  letter-spacing: 0.18em;
+}
+.pc-panel .pc-set-key > input::placeholder {
+  letter-spacing: normal;
+}
+.pc-panel .pc-set-key > .mrln-chip {
+  flex: 0 0 auto;
+}
+
+/* the loopback gate reads as one sentence with its action at the end */
+.pc-panel .pc-set-gate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.pc-panel .pc-set-gate > .mrln-note {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* the history row: switches left, the state it produces hard right */
+.pc-panel .pc-set-history {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+.pc-panel .pc-set-history > .mrln-note {
+  margin-left: auto;
+  text-align: right;
+}
+.pc-panel .pc-set-history input.mrln-months {
+  width: 58px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }

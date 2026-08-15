@@ -66,6 +66,30 @@ export function writeTierPref(view) {
   }
 }
 
+// Which group of Settings the strip is pointing at. All three are on ONE
+// page — the tab is short enough that hiding two thirds of it to save a
+// scroll would cost more than it saves — so this is a JUMP, not a filter, and
+// it is persisted only so the strip agrees with itself across a reopen.
+export const SETTINGS_TAB_KEY = "mrln.composer.settingsTab";
+export const SETTINGS_TABS = ["llm", "keys", "history"];
+
+export function readSettingsTab() {
+  try {
+    const value = window.localStorage.getItem(SETTINGS_TAB_KEY);
+    return SETTINGS_TABS.includes(value) ? value : "llm";
+  } catch {
+    return "llm";
+  }
+}
+
+export function writeSettingsTab(name) {
+  try {
+    window.localStorage.setItem(SETTINGS_TAB_KEY, SETTINGS_TABS.includes(name) ? name : "llm");
+  } catch {
+    /* see writeGridPref */
+  }
+}
+
 /** The panel's single state object — created once, shared by every module. */
 export function createState() {
   const state = {
@@ -128,6 +152,7 @@ export function createState() {
     grid: readGridPref(),
     // Library tab tier view: "all" | "factory" | "user", also remembered
     libTier: readTierPref(),
+    settingsTab: readSettingsTab(), // which Settings group is showing
     thumbEpoch: 0,
     libGroups: new Set(), // Library tab: expanded top-level slug groups
     nestOpen: new Set(), // nested-draw branches the user explicitly opened/closed
