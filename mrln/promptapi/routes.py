@@ -12,7 +12,12 @@ from ..pack import logger
 from .civitai import handle_import_civitai_wildcards
 from .core import MAX_BODY_BYTES
 from .decompose import handle_decompose
-from .history import handle_history, handle_history_clear, prune_history
+from .history import (
+    handle_history,
+    handle_history_clear,
+    handle_history_delete,
+    prune_history,
+)
 from .histthumbs import handle_history_thumb
 from .importers import handle_import_styles, handle_import_wildcards
 from .intake import handle_extract_apply, handle_extract_image
@@ -92,6 +97,8 @@ ROUTES = (
     # clearing is destructive, so it takes JSON true like every other start
     # flag here — a query string can never trigger it
     ("post", "/mrln/prompt/history-clear", handle_history_clear, True),
+    # and the same rule for dropping ONE row, keyed on its unique ts
+    ("post", "/mrln/prompt/history-delete", handle_history_delete, True),
 )
 
 
@@ -144,6 +151,20 @@ def _warm_library_caches():
         # user's current intent; it is independent of history_enabled, which
         # governs what is WRITTEN, not what is kept.
         prune_history(lib)
+        # Prime the history-thumbnail index on the same thread. Without it the
+        # first History open pays for the first walk of the output folder while
+        # 25 tiles wait on it, which is exactly how it felt: they trickled in.
+        # Bounded like every other scan, and failure here costs a thumbnail.
+        try:
+            from .histthumbs import index_stats, refresh_index
+
+            refresh_index(lib, force=True)
+            logger.info(
+                "MRLN prompt: history thumbnails indexed (%d render(s) matched)",
+                index_stats(lib)["indexed"],
+            )
+        except Exception:
+            logger.debug("MRLN prompt: history thumbnail index skipped", exc_info=True)
     except Exception:
         logger.debug("MRLN prompt library warm-up skipped", exc_info=True)
 

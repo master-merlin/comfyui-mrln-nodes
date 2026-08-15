@@ -915,6 +915,32 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-radius: 3px;
   background: var(--comfy-input-bg, #222);
 }
+/* waiting on a render that has not been written yet: hold the space so the
+   row does not jump when the picture arrives */
+.mrln-history-thumb-waiting {
+  opacity: 0.35;
+}
+/* Hover shows the tile at the size it is actually STORED — 64px, so this is
+   the file at its native resolution rather than an upscale of the 34px view.
+   A transform is what makes it free: it paints outside the row without
+   taking any layout space, so no neighbouring row moves. */
+.mrln-history-thumb {
+  transition:
+    transform 90ms ease,
+    box-shadow 90ms ease;
+}
+.mrln-history-thumb:hover {
+  transform: scale(1.88); /* 34 -> 64 */
+  transform-origin: left center;
+  position: relative;
+  z-index: 6;
+  box-shadow: 0 6px 18px var(--pc-shadow-pop);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mrln-history-thumb {
+    transition: none;
+  }
+}
 .mrln-history-body {
   display: flex;
   flex-direction: column;
@@ -3360,6 +3386,29 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
 .pc-panel .mrln-history-items {
   border-left-color: var(--pc-line);
 }
+/* A history row is a .mrln-slot, and the rule above ('slot children take the
+   gutter so text does not hug the panel edge') therefore applied to the
+   thumbnail too. With border-box that turned a 34px tile into 14 + 6 + 14 —
+   six pixels of picture, which is exactly what a sliver looks like.
+   The ROW owns the gutter now and its two children take none, so the tile's
+   left edge lines up with the date label above it instead of hanging off the
+   panel edge. */
+.pc-panel .mrln-history-row {
+  padding-inline: var(--pc-pad);
+  /* .pc-panel .mrln-slot zeroes the gap for every slot, and it outscores the
+     base rule for this row — so the tile ended up touching the timestamp. */
+  gap: 9px;
+}
+/* .mrln-slot is repeated here on purpose: the rule being undone scores
+   (0,4,0) because each :not() counts as a class, so a three-class selector
+   loses to it silently — the same specificity trap that once made every
+   button in this panel ignore the design system. Matching (0,4,0) and
+   sitting later in the file is what makes this win. */
+.pc-panel .mrln-slot.mrln-history-row > .mrln-history-thumb,
+.pc-panel .mrln-slot.mrln-history-row > .mrln-history-body {
+  padding-inline: 0;
+}
+
 /* the action row above the list: its own breathing room, and its buttons on
    the right edge like every other action bar in the panel */
 .pc-panel .mrln-history-actions {

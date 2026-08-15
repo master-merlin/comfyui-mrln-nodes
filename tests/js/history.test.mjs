@@ -23,6 +23,7 @@ import {
   EXCERPT_MAX,
   batchOf,
   excerpt,
+  currentPageRequest,
   firstPageRequest,
   formatStamp,
   groupRows,
@@ -443,6 +444,26 @@ describe("keyset paging", () => {
     assert.equal(pageNumber({ stack: ["", "T1"] }), 2);
     assert.equal(hasPreviousPage({ stack: [""] }), false);
     assert.equal(hasPreviousPage({ stack: ["", "T1"] }), true);
+  });
+
+  test("deleting a row re-fetches THIS page, not page 1", () => {
+    // A keyset page is defined by the cursor that fetched it, and pageLanded
+    // pushes that cursor onto the stack — so popping it reproduces the exact
+    // request. Falling back to page 1 would throw someone deleting a row on
+    // page 7 back to the top of the list.
+    assert.deepEqual(currentPageRequest({ stack: [""] }), { stack: [], before: "" });
+    assert.deepEqual(currentPageRequest({ stack: ["", "T1"] }), { stack: [""], before: "T1" });
+    assert.deepEqual(currentPageRequest({ stack: ["", "T1", "T2"] }), {
+      stack: ["", "T1"],
+      before: "T2",
+    });
+    // and it round-trips: re-landing the reproduced request restores the stack
+    const history = { stack: ["", "T1", "T2"] };
+    const again = pageLanded(currentPageRequest(history), page([record()]));
+    assert.deepEqual(again.stack, history.stack);
+    // an empty/absent history must not throw
+    assert.deepEqual(currentPageRequest({}), { stack: [], before: "" });
+    assert.deepEqual(currentPageRequest(), { stack: [], before: "" });
   });
 
   test("the cursor alone answers 'is there an older page'", () => {

@@ -34,4 +34,14 @@ Thumbs.db
 *.log
 /user_data/
 .playwright-mcp/
-phase1-compose.png
+# Screenshot leftovers. Every image this repo actually ships lives under
+# docs/images/ or mrln/data/prompt/thumbs/ — NOTHING legitimate is written to
+# the root, so anything that lands here is a stray from a UI-verification run.
+# This used to be one bespoke line naming one leftover file, which is how
+# mute.png got committed anyway. Anchored to the root with a leading slash, so
+# it cannot swallow a real thumbnail deeper in the tree.
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/*.gif

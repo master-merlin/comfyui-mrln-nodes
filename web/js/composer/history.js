@@ -261,6 +261,17 @@ export function pageLanded(request, body) {
   };
 }
 
+export function currentPageRequest(history) {
+  // pageLanded pushes the cursor that fetched the visible page onto `stack`,
+  // so popping it reproduces that exact request. Deleting one record shifts
+  // what a keyset page contains, so the page has to be re-fetched rather than
+  // patched in place — and re-fetching THIS page keeps the user where they
+  // were instead of throwing them back to page 1.
+  const stack = [...(history?.stack ?? [])];
+  const before = stack.pop() ?? "";
+  return { stack, before: String(before) };
+}
+
 export function pageNumber(history) {
   return Math.max(1, (history?.stack ?? []).length);
 }
@@ -484,6 +495,12 @@ export function createHistory(hub) {
    * The server answers 404 for a render whose image is not on disk (or was
    * never saved), which is a NORMAL answer — onerror removes the tile so the
    * row closes up instead of showing a broken-image glyph. */
+  // A row younger than this is one whose image may still be on its way: the
+  // history line is written while the prompt is composed, and the sampler
+  // writes the PNG afterwards, so the first fetch can legitimately 404.
+  const FRESH_MS = 20 * 60 * 1000;
+  const RETRY_MS = [4000, 12000, 30000];
+
   function rowThumb(row) {
     if (!thumbsEnabled()) return null;
     const src =
@@ -491,15 +508,35 @@ export function createHistory(hub) {
       + encodeURIComponent(row.template)
       + "&seed="
       + encodeURIComponent(String(row.seed));
-    return el("img", {
+    const started = Date.parse(row.ts);
+    let attempt = 0;
+    const img = el("img", {
       class: "mrln-history-thumb",
       src,
       loading: "lazy",
       decoding: "async",
       alt: "",
       title: "The render this prompt produced",
-      onerror: (e) => e.currentTarget.remove(),
+      onerror: (e) => {
+        const tile = e.currentTarget;
+        // A row from last week that has no image never will; drop it and stop.
+        // A row from a minute ago is probably still rendering, so come back —
+        // three times, widening, then give up for good.
+        const fresh = Number.isFinite(started) && Date.now() - started < FRESH_MS;
+        if (!fresh || attempt >= RETRY_MS.length) {
+          tile.remove();
+          return;
+        }
+        const wait = RETRY_MS[attempt++];
+        tile.classList.add("mrln-history-thumb-waiting");
+        setTimeout(() => {
+          if (!tile.isConnected) return; // the tab re-rendered under us
+          tile.classList.remove("mrln-history-thumb-waiting");
+          tile.src = `${src}&retry=${attempt}`; // a new URL, or the 404 is reused
+        }, wait);
+      },
     });
+    return img;
   }
 
   function rowCard(row) {
@@ -543,10 +580,47 @@ export function createHistory(hub) {
               onclick: (e) => busy(e.currentTarget, () => copyPrompt(row)),
             },
             "⧉ copy prompt"
+          ),
+          el(
+            "button",
+            {
+              class: "mrln-btn mrln-mini mrln-history-drop",
+              title:
+                "Delete this one record, and the thumbnail cached for it. The "
+                + "rendered image itself is not touched. Unrecoverable — click twice.",
+              onclick: (e) => {
+                // capture: currentTarget is null by the time the armed action
+                // runs, which is on the NEXT click
+                const button = e.currentTarget;
+                armDestructive(button, "Delete this record?", () =>
+                  busy(button, () => removeRecord(row))
+                );
+              },
+            },
+            "✕ delete"
           )
         )
       )
     );
+  }
+
+  /** Drop one row: server first, then the list, so a failure changes nothing. */
+  async function removeRecord(row) {
+    try {
+      await ctx.apiJson("/mrln/prompt/history-delete", {
+        method: "POST",
+        // template and seed ride along so the server can drop the tile keyed
+        // by them; ts alone identifies the record
+        body: { ts: row.ts, template: row.template, seed: row.seed, confirm: true },
+      });
+    } catch (err) {
+      ctx.toast("error", "Record not deleted", err.message);
+      return;
+    }
+    ctx.toast("success", "Record deleted", `${row.time} ${row.template}`);
+    // reload the page we are on rather than splicing the row out: the page is
+    // keyset-paged, so removing one record changes what the page contains
+    await loadPage(currentPageRequest(state.history));
   }
 
   function batchCard(group) {

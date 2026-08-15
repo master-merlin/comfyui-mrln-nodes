@@ -403,6 +403,63 @@ def test_handle_history_clear_removes_every_month_file(lib):
 
 
 # ---------------------------------------------------------------------------
+# deleting ONE record
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("payload", [{}, {"ts": "x"}, {"ts": "x", "confirm": "true"}])
+def test_handle_history_delete_refuses_without_json_true(lib, payload):
+    history.record_renders(lib, [sample_record()])
+    status, _body = history.handle_history_delete(lib, payload)
+    assert status == 400
+    assert len(store.history_read(lib)) == 1  # nothing was touched
+
+
+def test_handle_history_delete_removes_exactly_one_row(lib):
+    """ts is unique to the microsecond by construction, so it is the row's
+    identity — deleting by it must never take a neighbour with it."""
+    history.record_renders(
+        lib, [sample_record(seed=1), sample_record(seed=2), sample_record(seed=3)]
+    )
+    before = store.history_read(lib)
+    assert len(before) == 3
+    target = before[1]  # the middle one, so a neighbour on each side
+    body = ok(history.handle_history_delete(lib, {"ts": target["ts"], "confirm": True}))
+    assert body["ok"] is True and body["ts"] == target["ts"]
+    after = store.history_read(lib)
+    assert [r["ts"] for r in after] == [before[0]["ts"], before[2]["ts"]]
+    assert len(after) == 2
+
+
+def test_handle_history_delete_404s_for_a_row_that_is_not_there(lib):
+    history.record_renders(lib, [sample_record()])
+    status, _body = history.handle_history_delete(
+        lib, {"ts": "2026-01-01T00:00:00.000000", "confirm": True}
+    )
+    assert status == 404
+    assert len(store.history_read(lib)) == 1
+
+
+def test_deleting_the_last_row_of_a_month_removes_the_file(lib):
+    store.history_append(lib, sample_record() | {"ts": "2026-07-05T10:00:00.000000"})
+    assert store.history_files(lib)
+    assert store.history_delete(lib, "2026-07-05T10:00:00.000000") is True
+    assert store.history_files(lib) == [], "an emptied month file is noise in the listing"
+
+
+def test_a_malformed_line_survives_a_delete(lib):
+    """A delete is not a repair: a hand-edited or half-written line beside the
+    target has to still be there afterwards."""
+    history.record_renders(lib, [sample_record()])
+    target = store.history_read(lib)[0]["ts"]
+    path = store.history_files(lib)[0]
+    with open(path, "a", encoding="utf-8") as fh:
+        fh.write("{not json at all\n")
+    assert store.history_delete(lib, target) is True
+    assert "{not json at all" in path.read_text(encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
 # the node side
 # ---------------------------------------------------------------------------
 

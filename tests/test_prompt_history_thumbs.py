@@ -32,6 +32,16 @@ def lib(tmp_path):
     return build_library(tmp_path)
 
 
+@pytest.fixture(autouse=True)
+def _fresh_memo():
+    """The index and the scan cooldown live in the process, so without this a
+    test would inherit the previous test's folder — and pass for the wrong
+    reason, which is the failure mode this whole file exists to avoid."""
+    histthumbs.forget_index_memo()
+    yield
+    histthumbs.forget_index_memo()
+
+
 def comfy_png(
     template="animal/documentary", seed=730198984095416, *, linked_seed=False, chunk=True
 ):
@@ -220,7 +230,55 @@ def test_a_deleted_render_stops_producing_a_thumbnail(lib, tmp_path, monkeypatch
 # -- cost: the reason this is usable with thousands of records ----------------
 
 
+def test_a_page_of_misses_walks_the_folder_once(lib, tmp_path, monkeypatch):
+    """THE performance defect, as reported: tiles trickled in one at a time.
+
+    A History page asks for ~25 tiles at once. Every miss used to trigger its
+    own full walk of the output folder, so opening the tab queued 25 walks and
+    the pictures arrived over many seconds. One walk has to serve them all."""
+    histthumbs.forget_index_memo()
+    write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=900)})
+    walks = []
+    real = histthumbs._candidates
+    monkeypatch.setattr(
+        histthumbs, "_candidates", lambda *a, **k: (walks.append(1), real(*a, **k))[1]
+    )
+    # 25 rows, none of which is in the index
+    for i in range(25):
+        histthumbs.thumb_bytes(lib, "animal/documentary", 10_000 + i)
+    assert len(walks) == 1, f"one page of misses walked the output folder {len(walks)} times"
+
+
+def test_the_cooldown_still_lets_a_new_render_be_found(lib, tmp_path, monkeypatch):
+    """Rate limiting must not mean 'never look again' — a render made after
+    the last walk has to turn up on the next one."""
+    histthumbs.forget_index_memo()
+    root = write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=901)})
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 901)
+    (root / "MRLN" / "b.png").write_bytes(comfy_png(seed=902))
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 902) is None, (
+        "inside the cooldown a miss should answer immediately, not walk again"
+    )
+    monkeypatch.setattr(histthumbs, "_SCAN_COOLDOWN", 0.0)  # time passes
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 902), (
+        "after the cooldown the new render must be found"
+    )
+
+
+def test_the_index_is_held_in_memory_between_calls(lib, tmp_path, monkeypatch):
+    histthumbs.forget_index_memo()
+    write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=903)})
+    histthumbs.refresh_index(lib, force=True)
+    reads = []
+    real = histthumbs._read_index_file
+    monkeypatch.setattr(histthumbs, "_read_index_file", lambda x: (reads.append(1), real(x))[1])
+    for _ in range(10):
+        histthumbs.thumb_bytes(lib, "animal/documentary", 903)
+    assert not reads, "the index file was re-read per row instead of held in memory"
+
+
 def test_the_index_is_written_once_and_reused(lib, tmp_path, monkeypatch):
+    histthumbs.forget_index_memo()
     write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=11)})
     histthumbs.refresh_index(lib)
     index_file = histthumbs._index_path(lib)
@@ -250,6 +308,47 @@ def test_a_scan_is_bounded_per_call(lib, tmp_path, monkeypatch):
     monkeypatch.setattr(histthumbs, "SCAN_BUDGET", 4)
     index = histthumbs.refresh_index(lib, budget=4)
     assert len(index["entries"]) <= 4, "the budget was ignored"
+
+
+# -- a tile never outlives the record it belonged to --------------------------
+
+
+def test_clearing_the_history_clears_the_tiles(lib, tmp_path, monkeypatch):
+    """Otherwise 'Clear history' leaves a folder of pictures of the very
+    renders the user just asked to be rid of."""
+    from mrln.promptapi import history as history_api
+
+    write_output(monkeypatch, tmp_path, {"MRLN/a.png": comfy_png(seed=61)})
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 61)
+    cached = histthumbs._cache_path(lib, histthumbs.record_key("animal/documentary", 61))
+    assert cached.is_file()
+
+    status, body = history_api.handle_history_clear(lib, {"confirm": True})
+    assert status == 200
+    assert not cached.is_file(), "a cached tile survived Clear history"
+    assert not histthumbs._index_path(lib).is_file(), "the index survived Clear history"
+    assert body["thumbs_removed"] >= 1
+
+
+def test_deleting_one_record_drops_only_its_tile(lib, tmp_path, monkeypatch):
+    write_output(
+        monkeypatch,
+        tmp_path,
+        {"MRLN/a.png": comfy_png(seed=71), "MRLN/b.png": comfy_png(seed=72)},
+    )
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 71)
+    assert histthumbs.thumb_bytes(lib, "animal/documentary", 72)
+    keep = histthumbs._cache_path(lib, histthumbs.record_key("animal/documentary", 72))
+
+    assert histthumbs.forget_thumb(lib, "animal/documentary", 71) is True
+    gone = histthumbs._cache_path(lib, histthumbs.record_key("animal/documentary", 71))
+    assert not gone.is_file()
+    assert keep.is_file(), "deleting one row took another row's tile with it"
+
+
+def test_forgetting_a_tile_that_was_never_cached_is_not_an_error(lib):
+    assert histthumbs.forget_thumb(lib, "animal/documentary", 999) is False
+    assert histthumbs.forget_thumb(lib, "", 1) is False
 
 
 # -- the route ----------------------------------------------------------------

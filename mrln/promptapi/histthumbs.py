@@ -68,6 +68,18 @@ _CACHE_DIR = "history"
 # the write is atomic, and the loser costs one duplicated scan — a lock here
 # would serialise every row behind the slowest one for no correctness gain.
 
+# The index, in the process, keyed by user root. A History page asks for ~25
+# tiles at once; without this each one re-read the index file and walked the
+# whole output folder, and the tiles trickled in over many seconds instead of
+# appearing together.
+_INDEX_MEMO: dict = {}
+# When each root was last walked (monotonic seconds). A MISS is not a reason
+# to walk again immediately: with 25 unmatched rows that is 25 full walks. One
+# walk covers them all, and anything still missing is missing because it is
+# not there yet — a render whose image the sampler has not written.
+_LAST_SCAN: dict = {}
+_SCAN_COOLDOWN = 8.0
+
 
 def _output_root():
     """ComfyUI's output directory, or None outside ComfyUI (pytest, headless).
@@ -98,20 +110,23 @@ def _index_path(lib):
     return Path(root) / "history" / _INDEX_NAME
 
 
-def _load_index(lib):
+def _blank_index():
+    return {"version": _INDEX_VERSION, "entries": {}, "newest_ns": 0, "oldest_ns": 0}
+
+
+def _read_index_file(lib):
     path = _index_path(lib)
-    blank = {"version": _INDEX_VERSION, "entries": {}, "newest_ns": 0, "oldest_ns": 0}
     if path is None or not path.is_file():
-        return blank
+        return _blank_index()
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except Exception:
-        return blank
+        return _blank_index()
     if not isinstance(data, dict) or data.get("version") != _INDEX_VERSION:
-        return blank
+        return _blank_index()
     entries = data.get("entries")
     if not isinstance(entries, dict):
-        return blank
+        return _blank_index()
     return {
         "version": _INDEX_VERSION,
         "entries": {str(k): str(v) for k, v in entries.items()},
@@ -120,7 +135,24 @@ def _load_index(lib):
     }
 
 
+def _load_index(lib):
+    """The index, from memory when we already have it.
+
+    Held in the process, not re-read per call: a History page asks for ~25
+    tiles at once and each one used to re-read this file AND walk the whole
+    output folder. That is the difference between the tiles appearing at once
+    and trickling in one by one, which is exactly how it behaved."""
+    key = str(getattr(lib, "user_root", "") or "")
+    hit = _INDEX_MEMO.get(key)
+    if hit is not None:
+        return hit
+    index = _read_index_file(lib)
+    _INDEX_MEMO[key] = index
+    return index
+
+
 def _save_index(lib, index):
+    _INDEX_MEMO[str(getattr(lib, "user_root", "") or "")] = index
     path = _index_path(lib)
     if path is None:
         return
@@ -129,6 +161,13 @@ def _save_index(lib, index):
         _write_bytes_atomic(path, json.dumps(index).encode("utf-8"))
     except Exception as exc:  # an unwritable index costs a rescan, nothing more
         _log.debug("MRLN prompt: history thumb index not saved (%s)", exc)
+
+
+def forget_index_memo():
+    """Drop the in-process copy. For tests, and for anything that edits the
+    index behind this module's back."""
+    _INDEX_MEMO.clear()
+    _LAST_SCAN.clear()
 
 
 def record_key(template, seed):
@@ -281,12 +320,22 @@ def _candidates(root, index, budget):
     return picked
 
 
-def refresh_index(lib, *, budget=SCAN_BUDGET):
-    """Index a bounded slice of the output folder. Returns the index."""
+def refresh_index(lib, *, budget=SCAN_BUDGET, force=False):
+    """Index a bounded slice of the output folder. Returns the index.
+
+    Rate-limited per root: a page of misses must cost ONE walk, not one per
+    row. `force` is for the boot warm-up, which wants the first walk to happen
+    whether or not anything has asked yet."""
     index = _load_index(lib)
     root = _output_root()
     if root is None:
         return index
+    key = str(getattr(lib, "user_root", "") or "")
+    now = time.monotonic()
+    last = _LAST_SCAN.get(key)
+    if not force and last is not None and now - last < _SCAN_COOLDOWN:
+        return index
+    _LAST_SCAN[key] = now
     picked = _candidates(root, index, budget)
     if not picked:
         return index
@@ -380,15 +429,38 @@ def handle_history_thumb(lib, payload):
     )
 
 
+def forget_thumb(lib, template, seed):
+    """Drop ONE cached tile — the row it belonged to has been deleted.
+
+    The tile is keyed by template+seed, which a re-render of the same pair
+    shares. Deleting it is still right: it costs one re-encode to the row that
+    still wants it, and leaving it would keep a picture cached for a record
+    the user asked to be rid of."""
+    key = record_key(template, seed)
+    if not key:
+        return False
+    path = _cache_path(lib, key)
+    if path is None or not path.is_file():
+        return False
+    with contextlib.suppress(OSError):
+        path.unlink()
+        return True
+    return False
+
+
 def clear_thumb_cache(lib):
-    """Drop cached webps and the index. Used when history is cleared, so a
-    stale tile can never outlive the record it belonged to."""
+    """Drop every cached webp, the index, and the in-process copy of it.
+
+    Called when the history is cleared: a tile must never outlive the record
+    it belonged to. The index goes too — it is a memo of the output folder, so
+    rebuilding it costs one walk and there is nothing left to look at until
+    the next render anyway."""
     removed = 0
-    for path in (_index_path(lib), None):
-        if path is not None and path.is_file():
-            with contextlib.suppress(OSError):
-                path.unlink()
-                removed += 1
+    index_file = _index_path(lib)
+    if index_file is not None and index_file.is_file():
+        with contextlib.suppress(OSError):
+            index_file.unlink()
+            removed += 1
     root = getattr(lib, "user_root", None)
     if root:
         from pathlib import Path
@@ -399,6 +471,8 @@ def clear_thumb_cache(lib):
                 with contextlib.suppress(OSError):
                     path.unlink()
                     removed += 1
+    # the in-process copy would otherwise hand the deleted index straight back
+    forget_index_memo()
     return removed
 
 

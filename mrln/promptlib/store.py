@@ -219,6 +219,64 @@ def history_read(lib, limit=100, before=None):
     return out
 
 
+def history_delete(lib, ts):
+    """Remove the ONE record stamped `ts`. Returns True when a line went.
+
+    `ts` is unique per record by construction — record_renders stamps
+    microsecond precision and adds +1µs per batch item precisely so no two
+    lines can share one. That makes it the row's identity, so deleting by it
+    cannot take a neighbour with it.
+
+    Rewrites the month file through the same sibling-tmp + os.replace the rest
+    of this pack writes with: a crash mid-rewrite must never truncate a history
+    file. Under the append lock, so a render landing at the same moment cannot
+    interleave with the rewrite and lose its own line."""
+    import os
+
+    wanted = str(ts or "")
+    if not wanted:
+        return False
+    month = _month_of(wanted)
+    directory = _history_dir(lib)
+    if month is None or directory is None:
+        return False
+    path = directory / f"render-{month}.jsonl"
+    if not path.is_file():
+        return False
+    with _APPEND_LOCK:
+        try:
+            lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError as exc:
+            _log.warning("could not read %s: %s", path, exc)
+            return False
+        kept, dropped = [], 0
+        for line in lines:
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except ValueError:
+                kept.append(line)  # garbage stays; this is a delete, not a repair
+                continue
+            if isinstance(record, dict) and str(record.get("ts") or "") == wanted:
+                dropped += 1
+                continue
+            kept.append(line)
+        if not dropped:
+            return False
+        try:
+            tmp = path.with_suffix(".jsonl.tmp")
+            tmp.write_text("".join(f"{line}\n" for line in kept), encoding="utf-8")
+            os.replace(tmp, path)
+            # an emptied month file is noise in the listing
+            if not kept:
+                path.unlink(missing_ok=True)
+        except OSError as exc:
+            _log.warning("could not rewrite %s: %s", path, exc)
+            return False
+    return True
+
+
 def history_prune(lib, keep_months):
     """Keep the `keep_months` newest month files, delete the rest.
 

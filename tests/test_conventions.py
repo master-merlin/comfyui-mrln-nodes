@@ -66,3 +66,27 @@ def test_frontend_uses_only_public_comfyui_apis():
     assert not offences, "frontend uses a deprecated/internal ComfyUI API:\n  " + "\n  ".join(
         offences
     )
+
+
+def test_the_repo_root_carries_no_stray_images():
+    """A screenshot taken while verifying the UI must never land in the repo.
+
+    This exists because it already happened: mute.png was written to the root
+    during a UI check and went into a commit, and phase1-compose.png was
+    "handled" by adding a .gitignore line naming that one file — which is
+    exactly why the next one still got through. Every image this pack ships
+    lives under docs/images/ or mrln/data/prompt/thumbs/; the root is for
+    source, so anything image-shaped here is a leftover.
+
+    Screenshots belong in the session scratchpad, outside the repo entirely.
+    """
+    import pathlib
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    suffixes = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"}
+    strays = sorted(p.name for p in root.glob("*") if p.is_file() and p.suffix.lower() in suffixes)
+    assert not strays, (
+        "image file(s) left in the repo root: "
+        + ", ".join(strays)
+        + " — write screenshots to the scratchpad directory, not the working tree"
+    )

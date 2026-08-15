@@ -597,8 +597,13 @@ image therefore identifies itself, and the panel simply looks for the one whose
 template and seed match the row. A useful side effect: it works on renders that
 are already on your disk, including ones made long before this feature existed.
 
+**Hover a tile to see it bigger.** Tiles are stored at 64 px and shown at 34,
+so hovering shows the file at its own resolution rather than an upscale. It
+grows over the rows around it without moving them.
+
 What it costs is deliberately close to nothing: the tiles load only as rows
-scroll into view, the match index is built a little at a time and stored, and
+scroll into view, the match index is built a little at a time and stored (and
+primed once when ComfyUI starts, so the first visit is not the slow one), and
 each tile is a ~1 KB webp cached after the first look.
 
 Two cases show no thumbnail, on purpose — a wrong picture next to a prompt is
@@ -613,11 +618,21 @@ worse than none:
 A row whose image was deleted, moved, or never saved simply shows no tile.
 Turn the whole thing off with **Show thumbnails** in Settings.
 
+### Removing records
+
+**✕ delete** on a row removes that one record and the thumbnail cached for it.
+It arms first, like every destructive action here, so it takes two clicks. The
+rendered image on disk is **not** touched — only the history line and the small
+cached tile.
+
+**Clear history** removes every month file, and now the cached tiles with them:
+pictures of the renders you just cleared should not outlive the records.
+
 ---
 
 ## Settings
 
-<img src="images/11-settings.png" width="900" alt="The Settings tab">
+<img src="images/11-settings.png" width="885" alt="The Settings tab">
 
 - **Civitai API key** — stored server-side in your user tier, never echoed back
   and never written into a workflow. Everything that talks to Civitai goes

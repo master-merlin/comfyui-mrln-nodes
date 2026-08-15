@@ -32,7 +32,7 @@ from datetime import datetime, timedelta
 from .. import promptlib as pl
 from ..pack import logger
 from ..promptlib import store
-from .core import _guarded
+from .core import _guarded, _require_str
 from .settings import _read_settings
 
 # settings.json keys (user tier). Flat, like `civitai_api_key`: these are two
@@ -301,9 +301,57 @@ def handle_history_clear(lib, payload):
             removed.append(path.name)
         except OSError as exc:
             failed.append(f"{path.name}: {exc}")
+    # The tiles are derived from the records; leaving them would keep pictures
+    # of renders the user just asked to be rid of, and the index with them.
+    thumbs_removed = _clear_thumbs(lib)
     return 200, {
         "ok": not failed,
         "removed": removed,
         "count": len(removed),
         "failed": failed,
+        "thumbs_removed": thumbs_removed,
     }
+
+
+def _clear_thumbs(lib):
+    """Never raises: history is cleared either way, and a stuck tile is
+    cosmetic next to that."""
+    try:
+        from .histthumbs import clear_thumb_cache
+
+        return clear_thumb_cache(lib)
+    except Exception as exc:
+        logger.warning("MRLN prompt: history thumbnails not cleared (%s)", exc)
+        return 0
+
+
+@_guarded
+def handle_history_delete(lib, payload):
+    """POST /mrln/prompt/history-delete {"ts": "...", "confirm": true} — drop
+    ONE record and the thumbnail cached for it.
+
+    Keyed on `ts` because record_renders guarantees it unique to the
+    microsecond, so a delete can never take a neighbouring row with it.
+    Confirmation is required for the same reason clearing needs it: this is
+    unrecoverable, and a GET query value must never be able to trigger it."""
+    if payload.get("confirm") is not True:
+        return 400, {
+            "error": "deleting a history record needs an explicit confirmation",
+            "remediation": 'POST {"ts": "...", "confirm": true} as JSON',
+        }
+    stamp = _require_str(payload, "ts")
+    if not store.history_delete(lib, stamp):
+        return 404, {
+            "error": f"no history record stamped '{stamp}'",
+            "remediation": "reload the History tab — it may already be gone",
+        }
+    # the row is gone, so its tile should be too. Best effort: a tile that
+    # outlives its record is a wasted kilobyte, not a broken delete.
+    thumb_gone = False
+    try:
+        from .histthumbs import forget_thumb
+
+        thumb_gone = forget_thumb(lib, payload.get("template"), payload.get("seed"))
+    except Exception as exc:
+        logger.debug("MRLN prompt: thumbnail for %s not dropped (%s)", stamp, exc)
+    return 200, {"ok": True, "ts": stamp, "thumb_removed": thumb_gone}
