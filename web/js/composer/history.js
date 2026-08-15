@@ -517,11 +517,17 @@ export function createHistory(hub) {
 
   function rowThumb(row) {
     if (!thumbsEnabled()) return null;
+    // The size the server encodes at rides in the URL. The tile for a given
+    // render never changes, so it is served with a day's max-age — which means
+    // that without this, raising the encode size would keep showing the old
+    // smaller tile for a day on every machine that already had one.
+    const px = state.history.settings?.history_thumb_px;
     const src =
       "/mrln/prompt/history-thumb?template="
       + encodeURIComponent(row.template)
       + "&seed="
-      + encodeURIComponent(String(row.seed));
+      + encodeURIComponent(String(row.seed))
+      + (px ? `&px=${encodeURIComponent(String(px))}` : "");
     const started = Date.parse(row.ts);
     let attempt = 0;
     const img = el("img", {

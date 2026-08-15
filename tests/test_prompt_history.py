@@ -200,14 +200,38 @@ def test_the_spec_field_list_alone_cannot_restore_a_render(lib):
 
 
 def test_history_settings_defaults(lib):
+    from mrln.promptapi.histthumbs import THUMB_MAX_SIDE
+
     assert history.history_settings({}) == {
         "history_enabled": True,
         "history_months": 12,
         # opt-OUT: a row's mini thumbnail costs nothing until the row is
         # scrolled into view, and it is the fastest way to find a prompt again
         "history_thumbs": True,
+        # not a setting — the encode size, so the panel can put it in the tile
+        # URL and a size change cannot be masked by a day-long browser cache
+        "history_thumb_px": THUMB_MAX_SIDE,
     }
     assert history.history_months({}) == history.DEFAULT_HISTORY_MONTHS
+
+
+def test_the_thumb_size_travels_so_a_size_change_busts_the_cache(lib):
+    """The tile URL is (template, seed) and the response says max-age=86400.
+    Raising THUMB_MAX_SIDE therefore has to change the URL, or every machine
+    that already has a tile keeps the smaller one for a day."""
+    from mrln.promptapi import histthumbs
+
+    assert history.history_settings({})["history_thumb_px"] == histthumbs.THUMB_MAX_SIDE
+    # and the cache key on disk moves with it, so the server does not serve a
+    # stale file either
+    key = histthumbs.record_key("a/b", 1)
+    before = histthumbs._cache_path(lib, key)
+    original = histthumbs.THUMB_MAX_SIDE
+    try:
+        histthumbs.THUMB_MAX_SIDE = original * 2
+        assert histthumbs._cache_path(lib, key) != before
+    finally:
+        histthumbs.THUMB_MAX_SIDE = original
 
 
 @pytest.mark.parametrize(

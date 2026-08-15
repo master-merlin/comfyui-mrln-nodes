@@ -122,11 +122,20 @@ def history_thumbs(settings):
 
 def history_settings(settings):
     """The knobs, under their settings.json names — one shape for the
-    settings endpoint, the history endpoint and the panel."""
+    settings endpoint, the history endpoint and the panel.
+
+    `history_thumb_px` is not a setting, it is the size the server encodes at,
+    and it rides here so the panel can put it in the tile URL. Without that the
+    URL for a given render never changes, and the tiles are served
+    `max-age=86400` — so raising the encode size would keep showing yesterday's
+    smaller tile for a day, on exactly the machines that already had one."""
+    from .histthumbs import THUMB_MAX_SIDE
+
     return {
         "history_enabled": history_enabled(settings),
         "history_months": history_months(settings),
         "history_thumbs": history_thumbs(settings),
+        "history_thumb_px": THUMB_MAX_SIDE,
     }
 
 

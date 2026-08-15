@@ -144,7 +144,15 @@ describe("a history thumbnail keeps its whole box", () => {
     assert.match(rule.body, /transform:\s*scale\(/, "magnified by something that reflows");
     assert.doesNotMatch(rule.body, /(^|;)\s*(width|height)\s*:/, "hover changes layout size");
     const scale = Number(/scale\(([\d.]+)\)/.exec(rule.body)?.[1]);
-    const stored = 64;
+    // Read the size the SERVER stores rather than repeating it here: the two
+    // are one decision in two files, and a number copied into a test is a
+    // number that goes stale the first time the real one changes.
+    const py = readFileSync(
+      fileURLToPath(new URL("../../mrln/promptapi/histthumbs.py", import.meta.url)),
+      "utf8"
+    );
+    const stored = Number(/^THUMB_MAX_SIDE\s*=\s*(\d+)/m.exec(py)?.[1]);
+    assert.ok(stored > 0, "could not read THUMB_MAX_SIDE out of histthumbs.py");
     const shown = Number(/width:\s*(\d+)px/.exec(
       rules().find((r) => r.selectors.some((s) => /\.mrln-history-thumb$/.test(s)))?.body ?? ""
     )?.[1]);

@@ -930,7 +930,7 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
     box-shadow 90ms ease;
 }
 .mrln-history-thumb:hover {
-  transform: scale(1.88); /* 34 -> 64 */
+  transform: scale(2.82); /* 34 -> 96, the size histthumbs.py stores */
   transform-origin: left center;
   position: relative;
   z-index: 6;

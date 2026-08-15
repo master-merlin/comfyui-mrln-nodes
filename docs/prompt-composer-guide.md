@@ -597,7 +597,7 @@ image therefore identifies itself, and the panel simply looks for the one whose
 template and seed match the row. A useful side effect: it works on renders that
 are already on your disk, including ones made long before this feature existed.
 
-**Hover a tile to see it bigger.** Tiles are stored at 64 px and shown at 34,
+**Hover a tile to see it bigger.** Tiles are stored at 96 px and shown at 34,
 so hovering shows the file at its own resolution rather than an upscale. It
 grows over the rows around it without moving them.
 

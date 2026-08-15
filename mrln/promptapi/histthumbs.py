@@ -47,9 +47,12 @@ from .thumbs import BinaryBody, _write_bytes_atomic, encode_thumb
 
 _log = logging.getLogger(__name__)
 
-# Small on purpose. The row shows it at ~28 px; 64 keeps it crisp on a hidpi
-# screen and still lands around 1-2 KB per file.
-THUMB_MAX_SIDE = 64
+# Small on purpose, but not so small that the tile stops being useful: the row
+# shows it at 34 px and hover shows it at this size, and at 64 there was not
+# enough of the picture left to recognise the render by. Still only a few KB.
+# The cache key includes this number, so changing it regenerates rather than
+# serving yesterday's smaller tile scaled up.
+THUMB_MAX_SIDE = 96
 THUMB_QUALITY = 70
 
 IMAGE_SUFFIXES = (".png", ".webp", ".jpg", ".jpeg")
@@ -360,7 +363,10 @@ def _cache_path(lib, key):
         return None
     from pathlib import Path
 
-    digest = hashlib.sha256(key.encode("utf-8")).hexdigest()[:24]
+    # THE SIZE IS PART OF THE KEY. Without it, raising THUMB_MAX_SIDE would
+    # keep serving every tile already cached at the old size, and the change
+    # would appear to do nothing except on renders nobody had looked at yet.
+    digest = hashlib.sha256(f"{key}@{THUMB_MAX_SIDE}".encode()).hexdigest()[:24]
     return Path(root) / "thumbs" / _CACHE_DIR / f"{digest}.webp"
 
 
