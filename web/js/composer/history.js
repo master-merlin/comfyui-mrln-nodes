@@ -639,7 +639,12 @@ export function createHistory(hub) {
       },
       el(
         "summary",
-        { class: "mrln-history-line" },
+        { class: "mrln-history-line mrln-history-batch-line" },
+        // A COLLAPSED batch is exactly the row you want to recognise by its
+        // picture, so the summary carries one too. The head row is the batch's
+        // first item, whose seed is the node's base seed — the one the saved
+        // graph records — so this is the item that can actually be matched.
+        rowThumb(head),
         el("span", { class: "mrln-history-time", title: head.ts }, head.time || "—"),
         el("span", { class: "mrln-history-template", title: head.template }, head.template),
         el(

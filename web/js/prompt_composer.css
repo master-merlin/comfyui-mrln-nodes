@@ -3409,6 +3409,17 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   padding-inline: 0;
 }
 
+/* The batch summary carries a tile too, and its line is a flex row of text —
+   so the tile needs the same fixed box it gets on an ordinary row, and the
+   line needs room for it. The disclosure marker already sits left of it. */
+.pc-panel .mrln-history-batch-line {
+  gap: 7px;
+}
+.pc-panel .mrln-history-batch-line > .mrln-history-thumb {
+  padding-inline: 0;
+  margin-block: 2px;
+}
+
 /* the action row above the list: its own breathing room, and its buttons on
    the right edge like every other action bar in the panel */
 .pc-panel .mrln-history-actions {
