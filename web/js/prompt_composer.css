@@ -3368,6 +3368,55 @@ details.mrln-fold > summary { cursor: pointer; opacity: 0.8; margin: 2px 0; font
   border-left-color: var(--pc-live);
 }
 
+/* The LoRA drill-down picker, brought onto the same vocabulary as the section
+   picker (.pc-pick) it sits next to. It was the last popover still wearing
+   the legacy metrics — 3px rows of 11px system text — and, more to the point,
+   still painting its folder rows --mrln-accent-soft, a colour from before the
+   token set. Two pickers a few pixels apart should not look like two
+   different products. */
+.pc-panel .mrln-brace-menu .mrln-brace-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 0 10px;
+  font: 12px var(--pc-mono);
+  color: var(--pc-fg-2);
+}
+.pc-panel .mrln-brace-menu .mrln-brace-item:hover {
+  background: var(--pc-bg-row);
+  color: var(--pc-fg);
+}
+/* a folder is a place you go, not a value you pick — same green the panel
+   uses for every other "this does something" glyph */
+.pc-panel .mrln-brace-item.mrln-lora-dir {
+  font-weight: 400;
+  color: var(--pc-live);
+}
+.pc-panel .mrln-brace-item.mrln-lora-dir:hover {
+  color: var(--pc-live-hi);
+}
+.pc-panel .mrln-brace-item.mrln-lora-sel {
+  color: var(--pc-fg);
+}
+/* the trigger reads as the value it holds, like every other field */
+.pc-panel button.mrln-lora-current {
+  min-height: var(--pc-control);
+  padding: 0 8px;
+  font: 12px var(--pc-mono);
+  color: var(--pc-fg-value);
+  text-align: left;
+  border-color: var(--pc-line);
+}
+.pc-panel button.mrln-lora-current:hover {
+  border-color: var(--pc-line-strong);
+  background: var(--pc-bg-raised);
+}
+.pc-panel .mrln-lora-menu {
+  max-height: min(320px, 60vh);
+  padding: 4px 0;
+}
+
 /* boxed groups: the remote-backend gate, the missing-LoRA banner, a history
    batch — all boxes drawn on the panel, so all one border token */
 .pc-panel .mrln-gate,
