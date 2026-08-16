@@ -8,6 +8,7 @@ Renamed slugs never just die: `aliases.json` at each tier root maps old slug
 aliases for every renamed slug so existing user templates keep loading.
 """
 
+import contextlib
 import hashlib
 import json
 import logging
@@ -63,6 +64,21 @@ def validate_slug(slug):
 # (path, mtime) instead would leave one dead parsed object behind per file
 # edit, and nothing ever evicts them in a long-running ComfyUI session.
 _PARSE_CACHE: dict = {}
+
+
+def forget_parsed(path):
+    """Evict one file's parse-cache generation. The cache above validates by
+    mtime alone, so two writes to the same file inside a single filesystem
+    tick (~1 ms on this NTFS host, coarser on some Linux filesystems) would
+    serve the FIRST parse for the second write. Every writer in this pack
+    knows the exact path it just touched, so eviction is exact rather than a
+    heuristic — and the shared cache keeps its value for everyone else.
+    Both the plain and the resolved spelling are dropped: writers resolve
+    their target, `_scan` does not."""
+    p = Path(path)
+    _PARSE_CACHE.pop(str(p), None)
+    with contextlib.suppress(OSError):  # unresolvable path: the plain key was all there was
+        _PARSE_CACHE.pop(str(p.resolve()), None)
 
 
 @dataclass(frozen=True)
@@ -413,6 +429,9 @@ class Library:
         tmp = target.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         os.replace(tmp, target)
+        # The UNRESOLVED spelling is what `_scan` caches under; forget_parsed
+        # drops the resolved one too.
+        forget_parsed(self.user_root / kind / f"{slug}.json")
         self.invalidate()
         return target
 
@@ -429,6 +448,7 @@ class Library:
             user_slugs = [s for s, e in self._scan(kind).items() if e.tier == "user"]
             raise not_found(slug, user_slugs)
         path.unlink()
+        forget_parsed(path)
         self.invalidate()
         entry = self._scan(kind).get(slug)
         return entry is not None and entry.tier == "factory"

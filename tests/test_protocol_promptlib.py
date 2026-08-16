@@ -8,6 +8,7 @@ import dataclasses
 import inspect
 import json
 import logging
+import os
 from importlib import import_module
 
 import pytest
@@ -475,9 +476,50 @@ def test_parse_cache_keeps_exactly_one_entry_per_file(tmp_path):
         target.write_text(
             json.dumps({"items": [{"name": "red", "text": f"R{i}"}]}), encoding="utf-8"
         )
+        # Written out of band, behind the library's back. The cache validates
+        # by mtime alone, and five writes land inside one filesystem tick, so
+        # without this the loop reads generation 0 five times (R14). The
+        # pack's own writers call forget_parsed for you — see below.
+        liblib.forget_parsed(target)
         lib.invalidate()
         assert lib.load_section("color").items[0].text == f"R{i}"
     assert sum(1 for key in liblib._PARSE_CACHE if key == path) == 1
+
+
+def test_two_saves_sharing_one_mtime_do_not_serve_the_first_parse(tmp_path):
+    """R14: the parse cache validates by mtime ALONE, and mtime granularity
+    is coarse (measured on this host: 200 in-place writes → 40 distinct
+    mtimes). A Composer user saving the same section twice inside one tick
+    read the earlier parse back. Only the writer knows a file changed when
+    the clock does not, so save_user evicts the path it wrote.
+
+    The collision is forced with os.utime instead of raced for: it depends on
+    the filesystem's clock, so a timing-based version of this test would pass
+    vacuously on NTFS and only fail on CI."""
+    lib = _lib(tmp_path, {"color": {"items": [{"name": "red", "text": "R"}]}})
+    target = tmp_path / "user" / "sections" / "color.json"
+    frozen = 1_700_000_000_000_000_000
+    for i in range(3):
+        lib.save_user("sections", "color", {"items": [{"name": "red", "text": f"R{i}"}]})
+        os.utime(target, ns=(frozen, frozen))  # every save claims the same instant
+        lib.invalidate()
+        assert lib.load_section("color").items[0].text == f"R{i}"
+
+
+def test_deleting_a_user_file_drops_its_parse_cache_entry(tmp_path):
+    """The other half of R14: an unlinked file left its parsed object in the
+    module-level cache for the life of the ComfyUI process, and a re-save
+    landing on the same mtime would have served it."""
+    lib = _lib(tmp_path, {"color": {"items": [{"name": "red", "text": "factory"}]}})
+    lib.save_user("sections", "color", {"items": [{"name": "red", "text": "user"}]})
+    lib.invalidate()
+    assert lib.load_section("color").items[0].text == "user"
+    key = str((tmp_path / "user" / "sections" / "color.json").resolve())
+    assert key in liblib._PARSE_CACHE
+    lib.delete_user("sections", "color")
+    assert key not in liblib._PARSE_CACHE
+    lib.invalidate()
+    assert lib.load_section("color").items[0].text == "factory"
 
 
 def test_scan_skips_a_file_that_vanishes_between_rglob_and_stat(tmp_path, monkeypatch):

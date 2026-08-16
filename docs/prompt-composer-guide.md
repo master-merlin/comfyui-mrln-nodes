@@ -33,11 +33,11 @@ Concretely, and all of it without leaving the panel:
 - **Share a template as one file** — the bundle carries the sections it needs
   and resolvable links to the LoRAs, so someone else can rebuild your renders
 
-The rest of this guide is the five tabs in the order you meet them, the three
-nodes they drive, and then the two things that are hard to discover on your
+The rest of this guide is the five tabs in the order you meet them, the four
+nodes of the domain, and then the two things that are hard to discover on your
 own — **nested draws** and **combine sections**.
 
-- [The three nodes](#the-three-nodes)
+- [The four nodes](#the-four-nodes)
 - [Compose](#compose)
   - [The template bar](#the-template-bar)
   - [The setup grid](#the-setup-grid)
@@ -62,10 +62,11 @@ own — **nested draws** and **combine sections**.
 
 ---
 
-## The three nodes
+## The four nodes
 
-The panel drives one node, but the domain ships three, and the full picture is
-what the three do *together*: one composes, one rewrites, one loads weights.
+The panel drives one node, but the domain ships four, and the full picture is
+what they do *together*: one composes, one draws a single section, one
+rewrites, one loads weights.
 
 ```
                     ┌──────────────────────────┐
@@ -82,6 +83,11 @@ what the three do *together*: one composes, one rewrites, one loads weights.
                               ┌────────────────────┐
           MODEL / CLIP ──────►│ LoRA Apply (MRLN)  │──► MODEL / CLIP + report
                               └────────────────────┘
+
+        stands alone, for prompts you wrote yourself:
+                              ┌────────────────────────┐
+                              │ Prompt Section (MRLN)  │──► text / negative / choice
+                              └────────────────────────┘
 ```
 
 Wire only what you need: `prompt` alone is a complete workflow. Everything
@@ -117,6 +123,32 @@ Outputs are grouped by what you wire them to: **`prompt`**, **`llm`**,
 | `negative` | your negative conditioning | the template's negatives plus anything a drawn item added |
 | `choices` | a Show Text | every slot and what it drew — the fastest way to learn why a prompt looks the way it does, and where stale-pick warnings appear |
 | `gen_info` | a Show Text / metadata | template, seed, mode and profile for the render |
+
+### Prompt Section (MRLN) — one section, on its own
+
+The Composer panel does not drive this node, and that is the point: it is for
+prompts **you** wrote, when you want one element of them to come from the
+library. Point it at a section, pick an item or leave it on `🎲 random`, and
+wire `text` into whatever combine node you already use.
+
+| Widget | What it does |
+| --- | --- |
+| `section` | a section, or a **folder scope** like `location` — a folder means the union of every section beneath it |
+| `item` | listed as `section-path/item-name`, searchable; `🎲 random` draws with the seed |
+| `seed` | same section + same seed always draws the same item |
+| `allow_empty` | lets a random draw come up empty, for add-ons that should sometimes not appear |
+
+Outputs are `text`, `negative` (the item's negative plus the section's) and
+`choice` (the name that was drawn — wire it to a Show Text and you can see
+what you got).
+
+It is deliberately **stricter than the template node**: if you name an item
+and that item is no longer in the library, this node raises instead of quietly
+drawing a different one. A workflow that names a specific item is making a
+promise about the render, so a broken promise should stop the queue rather
+than change the picture behind your back. Control tokens still work from the
+API (`off`, `random@<seed>`), so a submitted workflow can override the widget
+without editing the graph.
 
 ### Prompt Enhance (MRLN) — the rewrite
 

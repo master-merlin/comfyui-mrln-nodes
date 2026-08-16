@@ -16,7 +16,7 @@ thumbnail. Per-slot fixed-or-random draws on a deterministic seed, nested
 draws, LoRA loading, an optional LLM pass, and a sidebar panel to drive it.
 
 - 📖 **[Prompt Composer user guide](docs/prompt-composer-guide.md)** — what you
-  can do with it, the panel tab by tab with screenshots, all three nodes
+  can do with it, the panel tab by tab with screenshots, all four nodes
   (compose → LLM rewrite → LoRA load), recipes for the common tasks, and how to
   build a template with **nested draws** and a **combine** section. Start here
   if you want to *use* the pack.
@@ -90,10 +90,31 @@ fine place for it. That is the wish.
 
 Published on the Comfy Registry as
 **[comfyui-mrln-nodes](https://registry.comfy.org/publishers/master-merlin/nodes/comfyui-mrln-nodes)**
-(publisher `master-merlin`). Pick whichever route you already use — all three
-end up with the same pack in `ComfyUI/custom_nodes/`.
+(publisher `master-merlin`).
 
-**ComfyUI Manager** — the usual way, no terminal:
+> **Use the manual install for now — ComfyUI Manager cannot find this pack
+> yet.** The registry's automated scan flagged v0.1.1 on six `severity: info`
+> pattern matches (the `urllib.request` calls behind the Civitai lookup, the
+> LLM backend and preview images — see [SECURITY.md](SECURITY.md) for every
+> one of them). While a pack's only version is flagged, the registry reports
+> no latest version and the pack is absent from search, so **Manager and
+> `comfy node install` return nothing**. A manual install is unaffected and
+> gives you exactly the same code. Manual review requested:
+> [Comfy-Org/registry-backend#197](https://github.com/Comfy-Org/registry-backend/issues/197)
+> — this note comes out the moment it clears.
+
+**Manually** — works today, and the one to use if you want to track `main`:
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/master-merlin/comfyui-mrln-nodes ComfyUI-MRLN-Nodes
+```
+
+Restart ComfyUI afterwards.
+
+Once the version clears review, either of these will also work:
+
+**ComfyUI Manager** — no terminal:
 
 1. Open ComfyUI → **Manager** → **Custom Nodes Manager**
 2. Search for **MRLN** and install **MRLN Nodes**
@@ -104,15 +125,6 @@ end up with the same pack in `ComfyUI/custom_nodes/`.
 ```bash
 comfy node install comfyui-mrln-nodes
 ```
-
-**Manually** — always works, and the one to use if you want to track `main`:
-
-```bash
-cd ComfyUI/custom_nodes
-git clone https://github.com/master-merlin/comfyui-mrln-nodes ComfyUI-MRLN-Nodes
-```
-
-Restart ComfyUI afterwards, either way.
 
 **No extra Python dependencies are required.** `requirements.txt` is empty on
 purpose: the prompt engine and the nodes are pure standard library, and the
