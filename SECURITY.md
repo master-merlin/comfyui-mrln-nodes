@@ -60,8 +60,10 @@ time, and the rule that a failed request never echoes the response body back.
 ## Secrets
 
 - API keys are stored **server-side only**, in your user tier
-  (`settings.json`), never in a node widget — widget values persist into
-  saved workflow PNGs and would travel with any image you share.
+  (`<ComfyUI>/user/mrln/settings.json`; before 0.1.2, inside `prompt/` —
+  the old file is read until your first save and then left alone, never
+  deleted), never in a node widget — widget values persist into saved
+  workflow PNGs and would travel with any image you share.
 - No endpoint ever echoes a key. `GET /mrln/prompt/settings` returns
   `*_set` booleans and nothing else.
 - The Civitai key travels as a request **header**, not in the URL, so it

@@ -218,7 +218,9 @@ def test_worker_heal_skipped_when_stored_path_equal(lora_lib, tmp_path, monkeypa
 def test_save_settings_atomic_and_crash_safe(tmp_path, monkeypatch):
     lib = build_library(tmp_path)
     assert promptapi.handle_save_settings(lib, {"civitai_api_key": "first-key"})[0] == 200
-    assert list(lib.user_root.glob("*.tmp")) == []  # the tmp was replaced away
+    # pack-wide settings sit one level up, at user/mrln/settings.json (S2)
+    settings_file = lib.user_root.parent / "settings.json"
+    assert list(settings_file.parent.glob("*.tmp")) == []  # the tmp was replaced away
 
     def boom(*args, **kwargs):
         raise OSError("simulated crash mid-write")
@@ -228,7 +230,7 @@ def test_save_settings_atomic_and_crash_safe(tmp_path, monkeypatch):
     assert status == 500
     assert "first-key" not in json.dumps(body) and "second-key" not in json.dumps(body)
     monkeypatch.undo()
-    settings = json.loads((lib.user_root / "settings.json").read_text(encoding="utf-8"))
+    settings = json.loads(settings_file.read_text(encoding="utf-8"))
     assert settings["civitai_api_key"] == "first-key"  # the live file never truncates
 
 

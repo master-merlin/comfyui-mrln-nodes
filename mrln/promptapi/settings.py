@@ -9,6 +9,7 @@ import threading
 from urllib.parse import urlsplit
 
 from .. import promptlib as pl
+from .. import userdir
 from .core import ApiError, _guarded, _require_str, _write_json_atomic
 
 # settings.json and profiles.json are read-modify-write and the handlers
@@ -117,21 +118,36 @@ def backend_url(settings, key, default):
 
 
 def _settings_path(lib):
-    return lib.user_root / "settings.json"
+    """Where a save goes: `user/mrln/settings.json`. These settings are
+    pack-wide (LLM backends and keys, Civitai, retention, thumbs), so they sit
+    at the pack root rather than inside one domain's folder — ECOSYSTEM S2,
+    decided 2026-08-16."""
+    return userdir.settings_path(lib.user_root)
 
 
-def _read_settings(lib):
-    if lib.user_root is None:
-        return {}
-    path = _settings_path(lib)
-    if not path.is_file():
-        return {}
+def _load_settings_file(path):
+    if path is None or not path.is_file():
+        return None
     try:
         with open(path, encoding="utf-8") as fh:
             data = json.load(fh)
-        return data if isinstance(data, dict) else {}
     except (OSError, json.JSONDecodeError):
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _read_settings(lib):
+    """Pack root first, then the pre-0.1.2 location inside the prompt folder.
+    An existing install therefore keeps working with its stored keys the
+    moment it updates, and the first save moves them — reading itself never
+    writes (E7)."""
+    if lib.user_root is None:
         return {}
+    for path in (_settings_path(lib), userdir.legacy_settings_path(lib.user_root)):
+        data = _load_settings_file(path)
+        if data is not None:
+            return data
+    return {}
 
 
 def _llm_settings(settings):
@@ -259,8 +275,9 @@ def handle_save_settings(lib, payload):
                 else:
                     keys.pop(provider, None)  # empty clears, like the Civitai key
             settings["llm_api_keys"] = keys
-        lib.user_root.mkdir(parents=True, exist_ok=True)
-        _write_json_atomic(_settings_path(lib), settings)
+        path = _settings_path(lib)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        _write_json_atomic(path, settings)
     keys = settings.get("llm_api_keys") or {}
     return 200, {
         "ok": True,

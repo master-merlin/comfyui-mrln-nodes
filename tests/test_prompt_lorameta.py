@@ -207,8 +207,9 @@ def test_settings_roundtrip_never_echoes_key(tmp_path):
     status, body = promptapi.handle_settings(lib, {})
     assert body["civitai_key_set"] is True  # the key itself never leaves the server
     assert "secret-123" not in json.dumps(body)
-    # stored server-side in the user tier
-    stored = json.loads((lib.user_root / "settings.json").read_text(encoding="utf-8"))
+    # stored server-side in the user tier, at the PACK root (S2), not inside
+    # the prompt domain's folder
+    stored = json.loads((lib.user_root.parent / "settings.json").read_text(encoding="utf-8"))
     assert stored["civitai_api_key"] == "secret-123"
     # empty clears
     status, body = promptapi.handle_save_settings(lib, {"civitai_api_key": ""})

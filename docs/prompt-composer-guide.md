@@ -810,8 +810,15 @@ a different one.
 | | |
 | --- | --- |
 | Your library | `<ComfyUI>/user/mrln/prompt/` — survives pack updates |
+| Your settings | `<ComfyUI>/user/mrln/settings.json` — API keys and preferences, one level up because they are not the prompt domain's |
 | Shipped library | `mrln/data/prompt/` inside the pack |
 | Endpoints | `/mrln/prompt/*`, registered only inside a running ComfyUI |
+
+Settings used to sit inside `prompt/`. If yours still do, nothing breaks: the
+old file is read until the first time you save something in the Settings tab,
+which writes the new one. The old file is then left where it is rather than
+deleted — it holds your API keys, and tidying a path is not a reason to
+delete a user's secrets.
 
 Same-name **sections compound**: your file extends the factory one (same item
 name wins, new items append, `"hidden": true` tombstones one). Same-name
