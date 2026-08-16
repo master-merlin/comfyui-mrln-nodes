@@ -535,6 +535,15 @@ number of pool themes informed by, these openly licensed collections:
 All factory texts were authored for this pack; no collection content was
 imported verbatim.
 
+## Security
+
+What the pack does with your files, your API keys and the network is written
+down in **[SECURITY.md](SECURITY.md)** — every outbound request and what
+triggers it, the loopback-only gate on LLM backends, why keys never touch a
+node widget, and how to report a vulnerability. Short version: no `eval`, no
+`subprocess`, no runtime installs, no telemetry, no runtime dependencies, and
+nothing contacts the network unless you used the feature that does.
+
 ## License
 
 [MIT](LICENSE)
