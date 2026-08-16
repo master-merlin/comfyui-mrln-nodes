@@ -26,6 +26,27 @@ jobs:
       - run: ruff format --check .
       - run: pytest
 
+  optional-deps:
+    # The three jobs above install requirements-dev.txt only (ruff + pytest),
+    # which is the honest mirror of an empty requirements.txt — but it means
+    # every suite that soft-imports Pillow, aiohttp or PyYAML skips there.
+    # Measured: 1831 tests run on CI against 2032 locally, and the ~200 in the
+    # gap are the thumbnail, image-intake, route-adapter and wildcard-import
+    # suites. This job installs those three FOR THE TEST RUN ONLY so the gap
+    # is covered; requirements.txt stays empty and the pack still installs
+    # into any ComfyUI without them. ComfyUI itself ships all three, so this
+    # is closer to what a user actually runs than the bare jobs are.
+    name: Optional-dependency suites (py3.12)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: pip install pillow aiohttp pyyaml
+      - run: pytest
+
   js-test:
     # The 528 node:test guards were unreachable from CI until now, and one of
     # them had been silently vacuous for exactly that reason: its source anchor
